@@ -6,7 +6,7 @@ Summary:        Codespaces but open-source, client-only and unopinionated.
 License:        MPL-2.0
 URL:            https://github.com/loft-sh/%{name}
 Source0:        %{url}/releases/download/%{version}/DevPod_linux_x86_64.tar.gz
-BuildArch:      x86_64
+ExclusiveArch:  x86_64
 
 Requires:       cairo
 Requires:       cairo-gobject
