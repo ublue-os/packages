@@ -1,0 +1,13 @@
+{
+  "extends": ["config:recommended"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [".*\\.spec"],
+      "matchStrings": [
+        "#\\s?renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?( extractVersion=(?<extractVersion>.*?))?\\s*Version:\\s*(?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    }
+  ]
+}
