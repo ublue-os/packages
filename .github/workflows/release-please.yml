@@ -23,3 +23,5 @@ jobs:
         id: release-please
         with:
           release-type: simple
+          skip-github-release: true
+          skip-github-pull-request: true
