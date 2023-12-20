@@ -24,12 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Find spec files
-        run: |
-          SPECS=$(find ./ -type 'f' | grep "\.spec")
-          echo "SPECS=$SPECS" >> $GITHUB_ENV
-
       - name: Run rpmlint
         uses: EyeCantCU/rpmlint-action@v0.1.0
         with:
-          rpmfiles: ${{ env.SPECS }}
+          rpmfiles: .
