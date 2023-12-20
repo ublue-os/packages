@@ -3,38 +3,28 @@ on:
   pull_request:
     branches:
       - main
-    paths-ignore:
-      - '**.md'
-      - '**.txt'
+    paths:
+      - '**.spec'
+      - '.github/workflows/rpmlint.yml'
   push:
     branches:
       - main
-    paths-ignore:
-      - '**.md'
-      - '**.txt'
+    paths:
+      - '**.spec'
+      - '.github/workflows/rpmlint.yml'
   merge_group:
   workflow_dispatch:
 
 jobs:
-  push-ghcr:
-    name: rpmlint
+  rpmlint:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
-      id-token: write
-    strategy:
-      fail-fast: false
     steps:
-      - name: Perform checkout
+      - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Find spec files
-        run: |
-          SPECS=$(find ./ -type 'f' | grep "\.spec")
-          echo "SPECS=$SPECS" >> $GITHUB_ENV
 
       - name: Run rpmlint
         uses: EyeCantCU/rpmlint-action@v0.1.0
         with:
-          rpmfiles: ${{ env.SPECS }}
+          rpmfiles: .
