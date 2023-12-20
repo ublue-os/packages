@@ -36,4 +36,4 @@ jobs:
       - name: Run rpmlint
         uses: EyeCantCU/rpmlint-action@v0.1.0
         with:
-          rpmfiles: ${{ join(steps.spec-files.outputs.*, '\n') }}
+          rpmfiles: ${{ steps.spec-files.outputs }}
