@@ -3,15 +3,15 @@ on:
   pull_request:
     branches:
       - main
-    paths-ignore:
-      - '**.md'
-      - '**.txt'
+    paths:
+      - '**.spec'
+      - '.github/workflows/rpmlint.yml'
   push:
     branches:
       - main
-    paths-ignore:
-      - '**.md'
-      - '**.txt'
+    paths:
+      - '**.spec'
+      - '.github/workflows/rpmlint.yml'
   merge_group:
   workflow_dispatch:
 
