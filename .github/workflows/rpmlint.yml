@@ -31,7 +31,7 @@ jobs:
 
       - name: Find spec files
         run: |
-          SPECS=$(find ./ -type 'f' | grep ".spec")
+          SPECS=$(find ./ -type 'f' | grep "\.spec")
           echo "SPECS=$SPECS" >> $GITHUB_ENV
 
       - name: Run rpmlint
