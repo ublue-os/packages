@@ -1,0 +1,570 @@
+diff -Naur a/src/app/app.cc b/src/app/app.cc"
+--- a/src/app/app.cc	2023-12-14 08:30:32.000000000 -0800
++++ b/src/app/app.cc	2023-12-15 17:22:01.153749058 -0800
+@@ -2287,6 +2287,26 @@
+ }
+ 
+ static void
++notification_received_cb(VteTerminal *terminal,
++                         const gchar *summary,
++                         const gchar *body)
++{
++        g_print("[%s]: %s\n", summary, body);
++}
++
++static void
++shell_precmd_cb(VteTerminal *terminal)
++{
++        g_print("[shell] showing command prompt\n");
++}
++
++static void
++shell_preexec_cb(VteTerminal *terminal)
++{
++        g_print("[shell] executing command\n");
++}
++
++static void
+ window_lower_window_cb(VteTerminal* terminal,
+                        VteappWindow* window)
+ {
+@@ -2582,8 +2602,12 @@
+         if (options.object_notifications)
+                 g_signal_connect(window->terminal, "notify", G_CALLBACK(window_notify_cb), window);
+ 
+-        /* Settings */
++        g_signal_connect(window->terminal, "notification-received", G_CALLBACK(notification_received_cb), NULL);
++        g_signal_connect(window->terminal, "shell-precmd", G_CALLBACK(shell_precmd_cb), NULL);
++        g_signal_connect(window->terminal, "shell-preexec", G_CALLBACK(shell_preexec_cb), NULL);
++
+ #if VTE_GTK == 3
++        /* Settings */
+         if (options.no_double_buffer) {
+                 G_GNUC_BEGIN_IGNORE_DEPRECATIONS;
+                 gtk_widget_set_double_buffered(GTK_WIDGET(window->terminal), false);
+diff -Naur a/src/marshal.list b/src/marshal.list"
+--- a/src/marshal.list	2023-12-14 08:30:32.000000000 -0800
++++ b/src/marshal.list 	2023-12-15 17:06:00.610320944 -0800
+@@ -1,3 +1,4 @@
+ VOID:STRING,BOXED
+ VOID:STRING,UINT
++VOID:STRING,STRING
+ VOID:UINT,UINT
+diff -Naur a/src/vte/vteterminal.h b/src/vte/vteterminal.h"
+--- a/src/vte/vteterminal.h	2023-12-14 08:30:32.000000000 -0800
++++ b/src/vte/vteterminal.h 	2023-12-15 17:23:12.884190582 -0800
+@@ -109,20 +109,14 @@
+ 
+ 	void (*bell)(VteTerminal* terminal);
+ 
+-#if _VTE_GTK == 3
+-        /* Compatibility padding due to fedora patches intruding on our ABI */
+-        /*< private >*/
+-        gpointer _extra_padding[3];
+-#endif /* _VTE_GTK == 3 */
++        void (*notification_received)(VteTerminal* terminal, const gchar *summary, const gchar *body);
++        void (*shell_precmd)(VteTerminal* terminal);
++        void (*shell_preexec)(VteTerminal* terminal);
+ 
+         /* Add new vfuncs here, and subtract from the padding below. */
+ 
+         /* Padding for future expansion. */
+-#if _VTE_GTK == 3
+-        gpointer _padding[13];
+-#elif _VTE_GTK == 4
+-        gpointer _padding[16];
+-#endif /* _VTE_GTK */
++        gpointer _padding[15];
+ 
+ // FIXMEgtk4 use class private data instead
+         VteTerminalClassPrivate *priv;
+@@ -568,6 +562,10 @@
+ _VTE_PUBLIC
+ const char *vte_terminal_get_window_title(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+ _VTE_PUBLIC
++const char *vte_terminal_get_current_container_name(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
++_VTE_PUBLIC
++const char *vte_terminal_get_current_container_runtime(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
++_VTE_PUBLIC
+ const char *vte_terminal_get_current_directory_uri(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+ _VTE_PUBLIC
+ const char *vte_terminal_get_current_file_uri(VteTerminal *terminal) _VTE_CXX_NOEXCEPT _VTE_GNUC_NONNULL(1);
+diff -Naur a/src/vte.cc b/src/vte.cc"
+--- a/src/vte.cc	2023-12-14 08:30:32.000000000 -0800
++++ b/src/vte.cc 	2023-12-15 17:22:25.734243044 -0800
+@@ -10218,6 +10218,34 @@
+ 
+ 	emit_adjustment_changed();
+ 
++        if (m_pending_changes & vte::to_integral(PendingChanges::NOTIFICATION)) {
++                _vte_debug_print (VTE_DEBUG_SIGNALS,
++                                  "Emitting `notification-received'.\n");
++                g_signal_emit(freezer.get(), signals[SIGNAL_NOTIFICATION_RECEIVED], 0,
++                              m_notification_summary.c_str(),
++                              m_notification_body.c_str());
++        }
++
++        if (m_pending_changes & vte::to_integral(PendingChanges::SHELL_PREEXEC)) {
++                _vte_debug_print (VTE_DEBUG_SIGNALS,
++                                  "Emitting `shell-preexec'.\n");
++                g_signal_emit(freezer.get(), signals[SIGNAL_SHELL_PREEXEC], 0);
++        }
++
++        if (m_pending_changes & vte::to_integral(PendingChanges::SHELL_PRECMD)) {
++                _vte_debug_print (VTE_DEBUG_SIGNALS,
++                                  "Emitting `shell-precmd'.\n");
++                g_signal_emit(freezer.get(), signals[SIGNAL_SHELL_PRECMD], 0);
++        }
++
++        if (m_pending_changes & vte::to_integral(PendingChanges::CONTAINERS)) {
++                _vte_debug_print(VTE_DEBUG_SIGNALS,
++                                 "Notifying `current-container-name' and `current-container-runtime'.\n");
++
++                g_object_notify_by_pspec(freezer.get(), pspecs[PROP_CURRENT_CONTAINER_NAME]);
++                g_object_notify_by_pspec(freezer.get(), pspecs[PROP_CURRENT_CONTAINER_RUNTIME]);
++        }
++
+ 	if (m_pending_changes & vte::to_integral(PendingChanges::TITLE)) {
+                 if (m_window_title != m_window_title_pending) {
+                         m_window_title.swap(m_window_title_pending);
+diff -Naur a/src/vtegtk.cc b/src/vtegtk.cc"
+--- a/src/vtegtk.cc	2023-12-14 08:30:32.000000000 -0800
++++ b/src/vtegtk.cc 	2023-12-15 17:24:09.878335941 -0800
+@@ -963,6 +963,12 @@
+                 case PROP_CURSOR_BLINK_MODE:
+                         g_value_set_enum (value, vte_terminal_get_cursor_blink_mode (terminal));
+                         break;
++                case PROP_CURRENT_CONTAINER_NAME:
++                        g_value_set_string (value, vte_terminal_get_current_container_name (terminal));
++                        break;
++                case PROP_CURRENT_CONTAINER_RUNTIME:
++                        g_value_set_string (value, vte_terminal_get_current_container_runtime (terminal));
++                        break;
+                 case PROP_CURRENT_DIRECTORY_URI:
+                         g_value_set_string (value, vte_terminal_get_current_directory_uri (terminal));
+                         break;
+@@ -1270,6 +1276,9 @@
+ 	klass->child_exited = NULL;
+ 	klass->encoding_changed = NULL;
+ 	klass->char_size_changed = NULL;
++        klass->notification_received = NULL;
++        klass->shell_precmd = NULL;
++        klass->shell_preexec = NULL;
+ 	klass->window_title_changed = NULL;
+ 	klass->icon_title_changed = NULL;
+ 	klass->selection_changed = NULL;
+@@ -1354,6 +1363,60 @@
+                                    g_cclosure_marshal_VOID__INTv);
+ 
+         /**
++         * VteTerminal::notification-received:
++         * @vteterminal: the object which received the signal
++         * @summary: The summary
++         * @body: (allow-none): Extra optional text
++         *
++         * Emitted when a process running in the terminal wants to
++         * send a notification to the desktop environment.
++         */
++        signals[SIGNAL_NOTIFICATION_RECEIVED] =
++                g_signal_new(I_("notification-received"),
++                             G_OBJECT_CLASS_TYPE(klass),
++                             G_SIGNAL_RUN_LAST,
++                             G_STRUCT_OFFSET(VteTerminalClass, notification_received),
++                             NULL,
++                             NULL,
++                             _vte_marshal_VOID__STRING_STRING,
++                             G_TYPE_NONE,
++                             2, G_TYPE_STRING, G_TYPE_STRING);
++
++        /**
++         * VteTerminal::shell-precmd:
++         * @vteterminal: the object which received the signal
++         *
++         * Emitted right before an interactive shell shows a
++         * first-level prompt.
++         */
++        signals[SIGNAL_SHELL_PRECMD] =
++                g_signal_new(I_("shell-precmd"),
++                             G_OBJECT_CLASS_TYPE(klass),
++                             G_SIGNAL_RUN_LAST,
++                             G_STRUCT_OFFSET(VteTerminalClass, shell_precmd),
++                             NULL,
++                             NULL,
++                             g_cclosure_marshal_VOID__VOID,
++                             G_TYPE_NONE, 0);
++
++        /**
++         * VteTerminal::shell-preexec:
++         * @vteterminal: the object which received the signal
++         *
++         * Emitted when the interactive shell has read in a complete
++         * command and is about to execute it.
++         */
++        signals[SIGNAL_SHELL_PREEXEC] =
++                g_signal_new(I_("shell-preexec"),
++                             G_OBJECT_CLASS_TYPE(klass),
++                             G_SIGNAL_RUN_LAST,
++                             G_STRUCT_OFFSET(VteTerminalClass, shell_preexec),
++                             NULL,
++                             NULL,
++                             g_cclosure_marshal_VOID__VOID,
++                             G_TYPE_NONE, 0);
++
++        /**
+          * VteTerminal::window-title-changed:
+          * @vteterminal: the object which received the signal
+          *
+@@ -2190,6 +2253,27 @@
+                                      (GParamFlags) (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY));
+ 
+         /**
++         * VteTerminal:current-container-name:
++         *
++         * The name of the current container, or %NULL if unset.
++         */
++        pspecs[PROP_CURRENT_CONTAINER_NAME] =
++                g_param_spec_string ("current-container-name", NULL, NULL,
++                                     NULL,
++                                     (GParamFlags) (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY));
++
++        /**
++         * VteTerminal:current-container-runtime:
++         *
++         * The name of the runtime toolset used to set up the current
++         * container, or %NULL if unset.
++         */
++        pspecs[PROP_CURRENT_CONTAINER_RUNTIME] =
++                g_param_spec_string ("current-container-runtime", NULL, NULL,
++                                     NULL,
++                                     (GParamFlags) (G_PARAM_READABLE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY));
++
++        /**
+          * VteTerminal:input-enabled:
+          *
+          * Controls whether the terminal allows user input. When user input is disabled,
+@@ -5135,6 +5219,56 @@
+ }
+ 
+ /**
++ * vte_terminal_get_current_container_name:
++ * @terminal: a #VteTerminal
++ *
++ * Returns: (nullable) (transfer none): the name of the current
++ *   container, or %NULL
++ */
++const char *
++vte_terminal_get_current_container_name(VteTerminal *terminal) noexcept
++try
++{
++        g_return_val_if_fail(VTE_IS_TERMINAL(terminal), NULL);
++        auto impl = IMPL(terminal);
++        if (impl->m_containers.empty())
++                return NULL;
++
++        const VteContainer &container = impl->m_containers.top();
++        return container.m_name.c_str();
++}
++catch (...)
++{
++        vte::log_exception();
++        return NULL;
++}
++
++/**
++ * vte_terminal_get_current_container_runtime:
++ * @terminal: a #VteTerminal
++ *
++ * Returns: (nullable) (transfer none): the name of the runtime
++ *   toolset used to set up the current container, or %NULL
++ */
++const char *
++vte_terminal_get_current_container_runtime(VteTerminal *terminal) noexcept
++try
++{
++        g_return_val_if_fail(VTE_IS_TERMINAL(terminal), NULL);
++        auto impl = IMPL(terminal);
++        if (impl->m_containers.empty())
++                return NULL;
++
++        const VteContainer &container = impl->m_containers.top();
++        return container.m_runtime.c_str();
++}
++catch (...)
++{
++        vte::log_exception();
++        return NULL;
++}
++
++/**
+  * vte_terminal_get_current_directory_uri:
+  * @terminal: a #VteTerminal
+  *
+diff -Naur a/src/vtegtk.hh b/src/vtegtk.hh"
+--- a/src/vtegtk.hh	2023-12-14 08:30:32.000000000 -0800
++++ b/src/vtegtk.hh 	2023-12-15 17:24:26.018660306 -0800
+@@ -52,6 +52,9 @@
+         SIGNAL_RESIZE_WINDOW,
+         SIGNAL_RESTORE_WINDOW,
+         SIGNAL_SELECTION_CHANGED,
++        SIGNAL_SHELL_PRECMD,
++        SIGNAL_SHELL_PREEXEC,
++        SIGNAL_NOTIFICATION_RECEIVED,
+         SIGNAL_WINDOW_TITLE_CHANGED,
+         LAST_SIGNAL
+ };
+@@ -69,6 +72,8 @@
+         PROP_CJK_AMBIGUOUS_WIDTH,
+         PROP_CURSOR_BLINK_MODE,
+         PROP_CURSOR_SHAPE,
++        PROP_CURRENT_CONTAINER_NAME,
++        PROP_CURRENT_CONTAINER_RUNTIME,
+         PROP_CURRENT_DIRECTORY_URI,
+         PROP_CURRENT_FILE_URI,
+         PROP_DELETE_BINDING,
+diff -Naur a/src/vteinternal.hh b/src/vteinternal.hh"
+--- a/src/vteinternal.hh	2023-12-14 08:30:32.000000000 -0800
++++ b/src/vteinternal.hh 	2023-12-15 17:25:08.355511115 -0800
+@@ -59,6 +59,7 @@
+ #include <list>
+ #include <queue>
+ #include <optional>
++#include <stack>
+ #include <string>
+ #include <variant>
+ #include <vector>
+@@ -109,6 +110,18 @@
+         VTE_CHARACTER_REPLACEMENT_LINE_DRAWING
+ } VteCharacterReplacement;
+ 
++struct VteContainer {
++public:
++        VteContainer(const std::string &name, const std::string &runtime) :
++                m_name{name},
++                m_runtime{runtime}
++        {
++        }
++
++        std::string m_name;
++        std::string m_runtime;
++};
++
+ typedef struct _VtePaletteColor {
+ 	struct {
+ 		vte::color::rgb color;
+@@ -657,6 +670,12 @@
+         gboolean m_cursor_moved_pending;
+         gboolean m_contents_changed_pending;
+ 
++        /* desktop notification */
++        std::stack<VteContainer> m_containers;
++
++        std::string m_notification_summary;
++        std::string m_notification_body;
++
+         std::string m_window_title{};
+         std::string m_current_directory_uri{};
+         std::string m_current_file_uri{};
+@@ -670,6 +689,10 @@
+                 TITLE = 1u << 0,
+                 CWD   = 1u << 1,
+                 CWF   = 1u << 2,
++                NOTIFICATION = 1u << 3,
++                SHELL_PREEXEC = 1u << 4,
++                SHELL_PRECMD = 1u << 5,
++                CONTAINERS = 1u << 6,
+         };
+         unsigned m_pending_changes{0};
+ 
+@@ -1504,6 +1527,9 @@
+                              int osc) noexcept;
+ 
+         /* OSC handlers */
++        void handle_urxvt_extension(vte::parser::Sequence const& seq,
++                                    vte::parser::StringTokeniser::const_iterator& token,
++                                    vte::parser::StringTokeniser::const_iterator const& endtoken) noexcept;
+         void set_color(vte::parser::Sequence const& seq,
+                        vte::parser::StringTokeniser::const_iterator& token,
+                        vte::parser::StringTokeniser::const_iterator const& endtoken,
+diff -Naur a/src/vteseq.cc b/src/vteseq.cc"
+--- a/src/vteseq.cc	2023-12-14 08:30:32.000000000 -0800
++++ b/src/vteseq.cc 	2023-12-15 17:25:39.921145466 -0800
+@@ -39,6 +39,9 @@
+ #define ST_C0 _VTE_CAP_ST
+ 
+ #include <algorithm>
++#include <string>
++#include <unistd.h>
++#include <sys/types.h>
+ 
+ using namespace std::literals;
+ 
+@@ -263,6 +266,121 @@
+         m_text_deleted_flag = TRUE;
+ }
+ 
++void
++Terminal::handle_urxvt_extension(vte::parser::Sequence const& seq,
++                                 vte::parser::StringTokeniser::const_iterator& token,
++                                 vte::parser::StringTokeniser::const_iterator const& endtoken) noexcept
++{
++        if (token == endtoken)
++                return;
++
++        if (*token == "container") {
++                ++token;
++
++                if (token == endtoken)
++                        return;
++
++                const std::string sub_command = *token;
++                ++token;
++
++                if (sub_command == "pop") {
++                        if (token == endtoken)
++                                return;
++
++                        ++token;
++
++                        if (token == endtoken)
++                                return;
++
++                        ++token;
++
++                        if (token == endtoken) {
++                                if (!m_containers.empty()) {
++                                        m_containers.pop();
++                                        m_pending_changes |= vte::to_integral(PendingChanges::CONTAINERS);
++                                }
++
++                                return;
++                        }
++
++                        const std::string uid_token = *token;
++                        ++token;
++
++                        const uid_t uid = getuid();
++                        const std::string uid_str = std::to_string(uid);
++
++                        if (uid_token == uid_str) {
++                                if (!m_containers.empty()) {
++                                        m_containers.pop();
++                                        m_pending_changes |= vte::to_integral(PendingChanges::CONTAINERS);
++                                }
++
++                                return;
++                        }
++
++                        return;
++                } else if (sub_command == "push") {
++                        if (token == endtoken)
++                                return;
++
++                        const std::string name = *token;
++                        ++token;
++
++                        if (token == endtoken)
++                                return;
++
++                        const std::string runtime = *token;
++                        ++token;
++
++                        if (token == endtoken) {
++                                m_containers.emplace(name, runtime);
++                                m_pending_changes |= vte::to_integral(PendingChanges::CONTAINERS);
++                                return;
++                        }
++
++                        const std::string uid_token = *token;
++                        ++token;
++
++                        const uid_t uid = getuid();
++                        const std::string uid_str = std::to_string(uid);
++
++                        if (uid_token == uid_str) {
++                                m_containers.emplace(name, runtime);
++                                m_pending_changes |= vte::to_integral(PendingChanges::CONTAINERS);
++                                return;
++                        }
++
++                        return;
++                }
++
++                return;
++        }
++
++        if (*token == "notify") {
++                ++token;
++
++                if (token == endtoken)
++                        return;
++
++                m_notification_summary = *token;
++                m_notification_body.clear();
++                m_pending_changes |= vte::to_integral(PendingChanges::NOTIFICATION);
++                ++token;
++
++                if (token == endtoken)
++                        return;
++
++                m_notification_body = *token;
++                return;
++        }
++
++        if (*token == "precmd") {
++                m_pending_changes |= vte::to_integral(PendingChanges::SHELL_PRECMD);
++        } else if (*token == "preexec") {
++                m_pending_changes |= vte::to_integral(PendingChanges::SHELL_PREEXEC);
++        }
++}
++
+ /* Clear the current line. */
+ void
+ Terminal::clear_current_line()
+@@ -6542,6 +6660,10 @@
+                 reset_color(VTE_HIGHLIGHT_FG, VTE_COLOR_SOURCE_ESCAPE);
+                 break;
+ 
++        case VTE_OSC_URXVT_EXTENSION:
++                handle_urxvt_extension(seq, it, cend);
++                break;
++
+         case VTE_OSC_XTERM_SET_ICON_TITLE:
+         case VTE_OSC_XTERM_SET_XPROPERTY:
+         case VTE_OSC_XTERM_SET_COLOR_MOUSE_CURSOR_FG:
+@@ -6583,7 +6705,6 @@
+         case VTE_OSC_URXVT_SET_FONT_BOLD_ITALIC:
+         case VTE_OSC_URXVT_VIEW_UP:
+         case VTE_OSC_URXVT_VIEW_DOWN:
+-        case VTE_OSC_URXVT_EXTENSION:
+         case VTE_OSC_YF_RQGWR:
+         default:
+                 break;
+diff -Naur a/src/vte.sh.in b/src/vte.sh.in"
+--- a/src/vte.sh.in	2023-12-14 08:30:32.000000000 -0800
++++ b/src/vte.sh.in 	2023-12-15 17:11:46.182314193 -0800
+@@ -33,10 +33,12 @@
+ }
+ 
+ __vte_prompt_command() {
++  local command=$(HISTTIMEFORMAT= history 1 | sed 's/^ *[0-9]\+ *//')
++  command="${command//;/ }"
+   local pwd='~'
+   [ "$PWD" != "$HOME" ] && pwd=${PWD/#$HOME\//\~\/}
+   pwd="${pwd//[[:cntrl:]]}"
+-  printf "\033]0;%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${pwd}"
++  printf '\033]777;notify;Command completed;%s\033\\\033]0;%s@%s:%s\033\\' "${command}" "${USER}" "${HOSTNAME%%.*}" "${pwd}"
+   __vte_osc7
+ }
+ 
+@@ -49,9 +51,9 @@
+     # use the __vte_prompt_command function which also sets the title.
+ 
+     if [[ "$(declare -p PROMPT_COMMAND 2>&1)" =~ "declare -a" ]]; then
+-	PROMPT_COMMAND+=(__vte_osc7)
++	PROMPT_COMMAND+=(__vte_osc7) && PS0=$(printf "\033]777;preexec\033\\")
+     else
+-	PROMPT_COMMAND="__vte_prompt_command"
++	PROMPT_COMMAND="__vte_prompt_command" && PS0=$(printf "\033]777;preexec\033\\")
+     fi
+ 
+ elif [[ -n "${ZSH_VERSION:-}" ]]; then
