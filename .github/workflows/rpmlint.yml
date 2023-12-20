@@ -1,0 +1,39 @@
+name: Lint packages
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - '**.txt'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - '**.txt'
+  merge_group:
+  workflow_dispatch:
+
+jobs:
+  push-ghcr:
+    name: rpmlint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Perform checkout
+        uses: actions/checkout@v4
+
+      - name: Find spec files
+        id: spec-files
+        run: find ./*/*/ -type 'f' | grep ".spec"
+
+      - name: Run rpmlint
+        uses: EyeCantCU/rpmlint-action@v0.1.0
+        with:
+          rpmfiles: ${{ join(steps.spec-files.outputs.*, '\n') }}
