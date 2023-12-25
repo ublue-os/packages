@@ -9,8 +9,6 @@ Source0:        https://gitlab.freedesktop.org/hadess/power-profiles-daemon/uplo
 
 # https://gitlab.freedesktop.org/upower/power-profiles-daemon/-/merge_requests/127
 Patch0:         127.patch
-# https://gitlab.freedesktop.org/upower/power-profiles-daemon/-/merge_requests/129
-Patch1:         129.patch
 
 BuildRequires:  meson
 BuildRequires:  gcc
