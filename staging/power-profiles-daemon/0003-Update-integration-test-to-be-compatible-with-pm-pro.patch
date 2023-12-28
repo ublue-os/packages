@@ -1,0 +1,31 @@
+From 0086cd7a5bd2391d97871274da21514f2602edcd Mon Sep 17 00:00:00 2001
+From: Mario Limonciello <superm1@gmail.com>
+Date: Thu, 21 Dec 2023 07:01:54 -0600
+Subject: [PATCH 3/5] Update integration test to be compatible with pm profile
+ check
+
+This is needed for compatbility with https://gitlab.freedesktop.org/upower/power-profiles-daemon/-/merge_requests/128
+---
+ tests/integration-test.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/tests/integration-test.py b/tests/integration-test.py
+index 68d50ae..1eb13ae 100755
+--- a/tests/integration-test.py
++++ b/tests/integration-test.py
+@@ -683,6 +683,12 @@ class Tests(dbusmock.DBusTestCase):
+       self.create_platform_profile()
+       profile = os.path.join(self.testbed.get_root_dir(), "sys/firmware/acpi/platform_profile")
+ 
++      # desktop PM profile
++      dir3 = os.path.join(self.testbed.get_root_dir(), "sys/firmware/acpi/")
++      os.makedirs(dir3, exist_ok=True)
++      with open(os.path.join(dir3, "pm_profile"), 'w') as pm_profile:
++         pm_profile.write("1\n")
++
+       self.start_daemon()
+ 
+       # Verify that both drivers are loaded
+-- 
+2.43.0
+
