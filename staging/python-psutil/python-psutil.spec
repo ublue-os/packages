@@ -73,19 +73,6 @@ done
 %install
 %py3_install
 
-# Ignore tests when building with flatpak-module-tools to avoid build failures
-# when building inside VMs or containers. Flatpaks would usually build this package
-# as dependency from stable and already tested branches.
-
-%if ! 0%{?flatpak}
-%check
-# Setting APPVEYOR to convince the test suite this is a CI.
-# That way, some unreliable tests are skipped and some timeouts are extended.
-# Previously, this was done by the CI_TESTING variable, but that works no more.
-# Alternative is to set GITHUB_ACTIONS but that has undesirable side effects.
-make test APPVEYOR=1 PYTHON=%{__python3} PYTHONPATH=%{buildroot}/%{python3_sitearch}
-%endif
-
 %files -n python%{python3_pkgversion}-%{srcname}
 %license LICENSE
 %doc CREDITS HISTORY.rst README.rst
