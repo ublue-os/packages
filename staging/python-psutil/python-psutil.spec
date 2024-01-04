@@ -3,7 +3,7 @@
 
 Name:           python-%{srcname}
 Version:        5.9.5
-Release:        1%{?dist}.ublue
+Release:        2%{?dist}.ublue
 Summary:        %{sum}
 
 License:        BSD
