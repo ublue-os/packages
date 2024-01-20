@@ -44,7 +44,7 @@ for kernel_version  in %{?kernel_versions} ; do
   pushd _kmod_build_${kernel_version%%___*}/
   cd %{srcname}-%{srccommit}
   make clean
-  make
+  make KVER=${kernel_version%%___*}
   # Rename the module to have rtl prefix for Realtek
   mv %{srcname}.ko %{modname}.ko
   popd
