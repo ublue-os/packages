@@ -6,7 +6,7 @@
 
 Name:     %{modname}
 Version:  5.8.5.1.git
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary:  Realtek RTL8814AU Driver
 License:  GPLv2
 URL:      https://github.com/morrownr/8814au
