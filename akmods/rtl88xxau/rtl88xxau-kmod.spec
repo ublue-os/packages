@@ -1,6 +1,7 @@
-%global srccommit 866a9100c7b3f6508b81b31a22cae19dcacdacb9
-%global modname rtl8814au
-%global srcname 8814au
+%global modname 88XXau
+%global srcversion 5.6.4.2
+%global srcname rtl8812au
+%global pkgname rtl88xxau
 
 %if 0%{?fedora}
 %global buildforkernels akmod
@@ -8,22 +9,20 @@
 %endif
 
 # name should have a -kmod suffix
-Name:           %{modname}-kmod
-# Version comes from include/rtw_version.h
-Version:        5.8.5.1.git
-Release:        2%{?dist}
-Summary:        Realtek RTL8814AU Driver
-Group:          System Environment/Kernel
-License:        GPLv2
-URL:            https://github.com/morrownr/8814au
-Source0:        %{url}/archive/%{srccommit}.zip
+Name:          %{pkgname}-kmod
+Version:       %{srcversion}.git
+Release:       1%{?dist}
+Summary:       Realtek RTL8812AU/21AU and RTL8814AU driver
+License:       GPLv2
+URL:           https://github.com/aircrack-ng/rtl8812au
+Source0:       %{url}/archive/refs/heads/v%{srcversion}.zip
 
 BuildRequires: kmodtool
 
 %{expand:%(kmodtool --target %{_target_cpu} --kmodname %{name} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null) }
 
 %description
-Realtek RTL8814AU Driver
+Realtek RTL8812AU/21AU and RTL8814AU driver with monitor mode and frame injection
 
 %prep
 # error out if there was something wrong with kmodtool
@@ -32,28 +31,23 @@ Realtek RTL8814AU Driver
 # print kmodtool output for debugging purposes:
 kmodtool --target %{_target_cpu} --kmodname %{name} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null
 
-%autosetup -c %{modname}
-
+%autosetup -c %{pkgname}
 for kernel_version  in %{?kernel_versions} ; do
-  mkdir -p _kmod_build_${kernel_version%%___*}
-  cp -a %{srcname}-%{srccommit} _kmod_build_${kernel_version%%___*}/
+  cp -a %{srcname}-%{srcversion} _kmod_build_${kernel_version%%___*}/
 done
 
 %build
 for kernel_version  in %{?kernel_versions} ; do
   pushd _kmod_build_${kernel_version%%___*}/
-  cd %{srcname}-%{srccommit}
   make clean
   make KVER=${kernel_version%%___*}
-  # Rename the module to have rtl prefix for Realtek
-  mv %{srcname}.ko %{modname}.ko
   popd
 done
 
 %install
 for kernel_version in %{?kernel_versions}; do
  mkdir -p %{buildroot}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/
- install -D -m 755 _kmod_build_${kernel_version%%___*}/%{srcname}-%{srccommit}/%{modname}.ko %{buildroot}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/
+ install -D -m 755 _kmod_build_${kernel_version%%___*}/%{modname}.ko %{buildroot}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/
  chmod a+x %{buildroot}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/%{modname}.ko
 done
 %{?akmod_install}
