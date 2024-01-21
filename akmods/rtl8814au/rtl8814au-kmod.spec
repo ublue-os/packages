@@ -58,7 +58,4 @@ for kernel_version in %{?kernel_versions}; do
 done
 %{?akmod_install}
 
-%clean
-rm -rf "%{buildroot}"
-
 %changelog
