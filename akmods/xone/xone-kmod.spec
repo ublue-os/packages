@@ -21,6 +21,8 @@ Source0:        %{url}/archive/v%{version}.tar.gz#/xone-%{version}.tar.gz
 Source0:        %{url}/archive/%{commit0}.tar.gz#/xone-%{shortcommit0}.tar.gz
 %endif
 
+Patch0:         https://github.com/BoukeHaarsma23/xonedo/commit/87d186328b958cd2cd677ac957981918d965f4f3.patch
+
 # Get the needed BuildRequires (in parts depending on what we build for):
 BuildRequires:  kmodtool
 

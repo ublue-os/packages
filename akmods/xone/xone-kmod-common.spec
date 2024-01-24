@@ -12,6 +12,8 @@ Source0:        %{url}/archive/v%{version}.tar.gz#/%{real_name}-%{version}.tar.g
 # Windows driver and firmware file:
 Source1:        http://download.windowsupdate.com/c/msdownload/update/driver/drvs/2017/07/1cd6a87c-623f-4407-a52d-c31be49e925c_e19f60808bdcbfbd3c3df6be3e71ffc52e43261e.cab
 
+Patch0:         https://github.com/BoukeHaarsma23/xonedo/commit/87d186328b958cd2cd677ac957981918d965f4f3.patch
+
 BuildRequires:  cabextract
 # UDev rule location (_udevrulesdir) and systemd macros:
 BuildRequires:  systemd-rpm-macros
