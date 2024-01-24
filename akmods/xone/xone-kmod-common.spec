@@ -1,18 +1,14 @@
 %global real_name xone
 
 Name:           %{real_name}-kmod-common
-Version:        0.3
-Release:        3%{?dist}
-Summary:        Linux kernel driver for Xbox One and Xbox Series X|S accessories common files
+Version:        {{{ git_dir_version }}}
+Release:        1%{?dist}
+Summary:        Linux kernel driver for Xbox One and Xbox Series X|S accessories
 License:        GPLv2
-URL:            https://github.com/medusalix/%{real_name}
+URL:            https://github.com/BoukeHaarsma23/xonedo
 BuildArch:      noarch
 
-Source0:        %{url}/archive/v%{version}.tar.gz#/%{real_name}-%{version}.tar.gz
-# Windows driver and firmware file:
-Source1:        1cd6a87c-623f-4407-a52d-c31be49e925c_e19f60808bdcbfbd3c3df6be3e71ffc52e43261e.cab
-
-Patch0:         https://github.com/BoukeHaarsma23/xonedo/commit/87d186328b958cd2cd677ac957981918d965f4f3.patch
+Source:         %{url}/archive/refs/heads/master.tar.gz
 
 BuildRequires:  cabextract
 # UDev rule location (_udevrulesdir) and systemd macros:
@@ -26,7 +22,7 @@ Provides:       %{real_name}-kmod-common = %{?epoch:%{epoch}:}%{version}
 Linux kernel driver for Xbox One and Xbox Series X|S accessories common files.
  
 %prep
-%autosetup -p1 -n %{real_name}-%{version}
+%autosetup -p1 -n xonedo-master
 
 # Firmware:
 cabextract -F FW_ACC_00U.bin %{SOURCE1}
@@ -48,11 +44,4 @@ install -p -m 0644 -D FW_ACC_00U.bin %{buildroot}%{_prefix}/lib/firmware/xow_don
 %{_prefix}/lib/firmware/xow_dongle.bin
 
 %changelog
-* Wed Jan 17 2024 Simone Caronni <negativo17@gmail.com> - 0.3-3
-- Clean up SPEC file.
-
-* Sat Dec 17 2022 Simone Caronni <negativo17@gmail.com> - 0.3-2
-- Kernel module checks for wireless frequency regulatory compliance.
-
-* Tue Aug 9 2022 Simone Caronni <negativo17@gmail.com> - 0.3-1
-- First build.
+{{{ git_dir_changelog }}}

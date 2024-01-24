@@ -9,19 +9,13 @@
 %global debug_package %{nil}
 
 Name:           xone-kmod
-Version:        0.3
-Release:        4%{!?tag:.%{date}git%{shortcommit0}}%{?dist}
+Version:        {{{ git_dir_version }}}
+Release:        1%{?dist}
 Summary:        Linux kernel driver for Xbox One and Xbox Series X|S accessories
 License:        GPLv2
-URL:            https://github.com/medusalix/xone
+URL:            https://github.com/BoukeHaarsma23/xonedo
 
-%if 0%{?tag:1}
-Source0:        %{url}/archive/v%{version}.tar.gz#/xone-%{version}.tar.gz
-%else
-Source0:        %{url}/archive/%{commit0}.tar.gz#/xone-%{shortcommit0}.tar.gz
-%endif
-
-Patch0:         https://github.com/BoukeHaarsma23/xonedo/commit/87d186328b958cd2cd677ac957981918d965f4f3.patch
+Source:         %{url}/archive/refs/heads/master.tar.gz
 
 # Get the needed BuildRequires (in parts depending on what we build for):
 BuildRequires:  kmodtool
@@ -38,11 +32,7 @@ Linux kernel driver for Xbox One and Xbox Series X|S accessories.
 # Print kmodtool output for debugging purposes:
 kmodtool  --target %{_target_cpu}  --repo negativo17.org --kmodname %{name} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null
 
-%if 0%{?tag:1}
-%autosetup -p1 -n xone-%{version}
-%else
-%autosetup -p1 -n xone-%{commit0}
-%endif
+%autosetup -p1 -n xonedo-master
 
 for kernel_version in %{?kernel_versions}; do
     mkdir _kmod_build_${kernel_version%%___*}
@@ -65,14 +55,4 @@ done
 %{?akmod_install}
 
 %changelog
-* Wed Jan 17 2024 Simone Caronni <negativo17@gmail.com> - 0.3-4.20240116gitaf5e344
-- Update to latest snapshot.
-
-* Wed Nov 15 2023 Simone Caronni <negativo17@gmail.com> - 0.3-3.20230517gitbbf0dcc
-- Drop custom signing and compressing in favour of kmodtool.
-
-* Sun Jun 04 2023 Simone Caronni <negativo17@gmail.com> - 0.3-2.20230517gitbbf0dcc
-- Update to latest commits.
-
-* Tue Aug 9 2022 Simone Caronni <negativo17@gmail.com> - 0.3-1
-- First build.
+{{{ git_dir_changelog }}}
