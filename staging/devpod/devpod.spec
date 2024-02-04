@@ -26,7 +26,7 @@ Requires:       libgcc
 Requires:       libwmf
 Requires:       openssl1.1
 Requires:       pango
-Requires:       webkit2gtk4.0
+Requires:       webkit2gtk4.1
 
 %description
 Codespaces but open-source, client-only and unopinionated: Works with any IDE and lets you use any cloud, kubernetes or just localhost docker.
