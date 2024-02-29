@@ -5,7 +5,7 @@ Version:        {{{ git_dir_version }}}
 Release:        1%{?dist}
 Summary:        Linux kernel driver for Xbox One and Xbox Series X|S accessories
 License:        GPLv2
-URL:            https://github.com/BoukeHaarsma23/xonedo
+URL:            https://github.com/KyleGospo/xonedo
 BuildArch:      noarch
 
 Source:         %{url}/archive/refs/heads/master.tar.gz
