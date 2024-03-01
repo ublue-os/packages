@@ -3,12 +3,13 @@
 Name:           %{real_name}-kmod-common
 Version:        {{{ git_dir_version }}}
 Release:        1%{?dist}
-Summary:        Linux kernel driver for Xbox One and Xbox Series X|S accessories
+Summary:        Linux kernel driver for Xbox One and Xbox Series X|S accessories common files
 License:        GPLv2
-URL:            https://github.com/BoukeHaarsma23/xonedo
+URL:            https://github.com/KyleGospo/xonedo
 BuildArch:      noarch
 
 Source:         %{url}/archive/refs/heads/master.tar.gz
+
 # Windows driver and firmware file:
 Source1:        1cd6a87c-623f-4407-a52d-c31be49e925c_e19f60808bdcbfbd3c3df6be3e71ffc52e43261e.cab
 

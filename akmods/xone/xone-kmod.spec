@@ -1,8 +1,3 @@
-%global commit0 af5e344fb0203738c5892e295aa4f7138889393d
-%global date 20240116
-%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-#global tag %{version}
-
 # Build only the akmod package and no kernel module packages:
 %define buildforkernels akmod
 
@@ -13,7 +8,7 @@ Version:        {{{ git_dir_version }}}
 Release:        1%{?dist}
 Summary:        Linux kernel driver for Xbox One and Xbox Series X|S accessories
 License:        GPLv2
-URL:            https://github.com/BoukeHaarsma23/xonedo
+URL:            https://github.com/KyleGospo/xonedo
 
 Source:         %{url}/archive/refs/heads/master.tar.gz
 
@@ -36,7 +31,7 @@ kmodtool  --target %{_target_cpu}  --repo negativo17.org --kmodname %{name} %{?b
 
 for kernel_version in %{?kernel_versions}; do
     mkdir _kmod_build_${kernel_version%%___*}
-    cp -fr bus driver transport Kbuild _kmod_build_${kernel_version%%___*}
+    cp -fr auth bus driver transport Kbuild _kmod_build_${kernel_version%%___*}
 done
 
 %build
