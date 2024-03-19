@@ -111,6 +111,9 @@ echo "* * * * * root %{_sbindir}/sanoid --cron" > %{buildroot}%{_docdir}/%{name}
 %endif
 
 %changelog
+* Mon Mar 18 2024 John McGee <john@johnmcgee.net> - 3.0.0
+- Remove perl requirement to remove build tools
+- Add perl-interpreter and perl-Sys-Hostname requirements
 * Tue Jul 18 2023 Christoph Klaffl <christoph@phreaker.eu> - 2.2.0
 - Bump to 2.2.0
 * Tue Nov 24 2020 Christoph Klaffl <christoph@phreaker.eu> - 2.1.0
