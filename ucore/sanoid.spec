@@ -56,11 +56,30 @@ cat > %{buildroot}%{_unitdir}/%{name}.service <<EOF
 Description=Snapshot ZFS Pool
 Requires=zfs.target
 After=zfs.target
+Wants=sanoid-prune.service
+Before=sanoid-prune.service
+ConditionFileNotEmpty=/etc/sanoid/sanoid.conf
 
 [Service]
 Environment=TZ=UTC
 Type=oneshot
-ExecStart=%{_sbindir}/sanoid --cron
+ExecStart=/usr/local/sbin/sanoid --take-snapshots --verbose
+EOF
+
+cat > %{buildroot}%{_unitdir}/%{name}-prune.service <<EOF
+[Unit]
+Description=Cleanup ZFS Pool
+Requires=zfs.target
+After=zfs.target sanoid.service
+ConditionFileNotEmpty=/etc/sanoid/sanoid.conf
+
+[Service]
+Environment=TZ=UTC
+Type=oneshot
+ExecStart=/usr/local/sbin/sanoid --prune-snapshots --verbose
+
+[Install]
+WantedBy=sanoid.service
 EOF
 
 cat > %{buildroot}%{_unitdir}/%{name}.timer <<EOF
@@ -114,6 +133,7 @@ echo "* * * * * root %{_sbindir}/sanoid --cron" > %{buildroot}%{_docdir}/%{name}
 * Mon Mar 19 2024 John McGee <john@johnmcgee.net> - 2.2.0-ucore1
 - Remove perl requirement to remove build tools
 - Add perl-interpreter and perl-Sys-Hostname requirements
+- Correct systemd units to incluide sanoid-prune
 * Tue Jul 18 2023 Christoph Klaffl <christoph@phreaker.eu> - 2.2.0
 - Bump to 2.2.0
 * Tue Nov 24 2020 Christoph Klaffl <christoph@phreaker.eu> - 2.1.0
