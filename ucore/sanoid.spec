@@ -5,7 +5,7 @@
 %global _with_systemd 1
 
 Name:		   sanoid
-Version:	   %{version}.ucore1
+Version:	   %{version}
 Release:	   1%{?dist}
 BuildArch:	   noarch
 Summary:	   A policy-driven snapshot management tool for ZFS file systems
@@ -130,7 +130,7 @@ echo "* * * * * root %{_sbindir}/sanoid --cron" > %{buildroot}%{_docdir}/%{name}
 %endif
 
 %changelog
-* Mon Mar 19 2024 John McGee <john@johnmcgee.net> - 2.2.0.ucore1
+* Mon Mar 19 2024 John McGee <john@johnmcgee.net> - 2.2.0-ucore1
 - Remove perl requirement to remove build tools
 - Add perl-interpreter and perl-Sys-Hostname requirements
 - Correct systemd units to incluide sanoid-prune
