@@ -24,7 +24,7 @@ Requires:       libbsd
 Requires:       libdeflate
 Requires:       libgcc
 Requires:       libwmf
-Requires:       openssl1.1
+Requires:       openssl
 Requires:       pango
 Requires:       webkit2gtk4.1
 
