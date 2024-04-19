@@ -12,7 +12,7 @@
 
 %global gnome_major_version 46
 %global gnome_version %{gnome_major_version}.0
-%global tarball_version %%(echo %{version} | tr '~' '.')
+%global tarball_version %%(echo %{gnome_version} | tr '~' '.')
 %global _default_patch_fuzz 2
 
 Name:          mutter
