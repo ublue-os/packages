@@ -1,25 +1,8 @@
-From d577df46a223fc821595b113bd89cfeb19a29014 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
-Date: Tue, 12 Dec 2023 22:41:20 +0100
-Subject: [PATCH 1/4] x11-display: Expose UI scaling factor via D-Bus
-
-This replaces the `legacy-ui-scaling-factor` entry in
-`org.gnome.Mutter.DisplayConfig`, with the motivation being to no longer
-expose X11 specific state via the monitor configuration API.
----
- .../org.gnome.Mutter.DisplayConfig.xml        |  4 --
- data/dbus-interfaces/org.gnome.Mutter.X11.xml |  8 +++
- src/backends/meta-monitor-manager.c           |  7 --
- src/meson.build                               |  5 ++
- src/x11/meta-x11-display.c                    | 64 ++++++++++++++++++-
- 5 files changed, 76 insertions(+), 12 deletions(-)
- create mode 100644 data/dbus-interfaces/org.gnome.Mutter.X11.xml
-
 diff --git a/data/dbus-interfaces/org.gnome.Mutter.DisplayConfig.xml b/data/dbus-interfaces/org.gnome.Mutter.DisplayConfig.xml
-index af78ec0517d..7f1957529f0 100644
+index 2fe8450a8..86421b7b0 100644
 --- a/data/dbus-interfaces/org.gnome.Mutter.DisplayConfig.xml
 +++ b/data/dbus-interfaces/org.gnome.Mutter.DisplayConfig.xml
-@@ -420,10 +420,6 @@
+@@ -426,10 +426,6 @@
  				       always use the same scale. Absence of
  				       this means logical monitor scales can
  				       differ.
@@ -32,7 +15,7 @@ index af78ec0517d..7f1957529f0 100644
        <arg name="serial" direction="out" type="u" />
 diff --git a/data/dbus-interfaces/org.gnome.Mutter.X11.xml b/data/dbus-interfaces/org.gnome.Mutter.X11.xml
 new file mode 100644
-index 00000000000..3d3c8a42f87
+index 000000000..3d3c8a42f
 --- /dev/null
 +++ b/data/dbus-interfaces/org.gnome.Mutter.X11.xml
 @@ -0,0 +1,8 @@
@@ -44,11 +27,47 @@ index 00000000000..3d3c8a42f87
 +    <property name="UiScalingFactor" type="i" access="readwrite" />
 +  </interface>
 +</node>
+diff --git a/data/org.gnome.mutter.gschema.xml.in b/data/org.gnome.mutter.gschema.xml.in
+index 92c97b12e..54f286daa 100644
+--- a/data/org.gnome.mutter.gschema.xml.in
++++ b/data/org.gnome.mutter.gschema.xml.in
+@@ -5,6 +5,7 @@
+     <value nick="kms-modifiers" value="2"/>
+     <value nick="autoclose-xwayland" value="4"/>
+     <value nick="variable-refresh-rate" value="8"/>
++    <value nick="xwayland-native-scaling" value="8"/>
+   </flags>
+ 
+   <schema id="org.gnome.mutter" path="/org/gnome/mutter/"
+@@ -136,6 +137,13 @@
+                                         GPU and DRM driver. Configurable in
+                                         Settings. Requires a restart.
+ 
++        • “xwayland-native-scaling”   — lets Xwayland clients use their native
++                                        scaling support. If scaling is not
++                                        supported by client, the client will
++                                        be unscaled. Setting only takes effect
++                                        when “scale-monitor-framebuffer” is
++                                        enabled as well.
++
+       </description>
+     </key>
+ 
+diff --git a/src/backends/meta-monitor-manager-private.h b/src/backends/meta-monitor-manager-private.h
+index 0760a341a..6ed3fc2c3 100644
+--- a/src/backends/meta-monitor-manager-private.h
++++ b/src/backends/meta-monitor-manager-private.h
+@@ -436,3 +436,5 @@ gboolean meta_monitor_manager_apply_monitors_config (MetaMonitorManager        *
+                                                      MetaMonitorsConfig        *config,
+                                                      MetaMonitorsConfigMethod   method,
+                                                      GError                   **error);
++
++MetaLogicalMonitorLayoutMode meta_monitor_manager_get_layout_mode (MetaMonitorManager *manager);
 diff --git a/src/backends/meta-monitor-manager.c b/src/backends/meta-monitor-manager.c
-index 24995edb6fc..94512cef3e5 100644
+index 77743bc72..45033d966 100644
 --- a/src/backends/meta-monitor-manager.c
 +++ b/src/backends/meta-monitor-manager.c
-@@ -2048,14 +2048,12 @@ meta_monitor_manager_handle_get_current_state (MetaDBusDisplayConfig *skeleton,
+@@ -2051,14 +2051,12 @@ meta_monitor_manager_handle_get_current_state (MetaDBusDisplayConfig *skeleton,
                                                 GDBusMethodInvocation *invocation,
                                                 MetaMonitorManager    *manager)
  {
@@ -63,7 +82,7 @@ index 24995edb6fc..94512cef3e5 100644
    int max_screen_width, max_screen_height;
  
    g_variant_builder_init (&monitors_builder,
-@@ -2244,11 +2242,6 @@ meta_monitor_manager_handle_get_current_state (MetaDBusDisplayConfig *skeleton,
+@@ -2261,11 +2259,6 @@ meta_monitor_manager_handle_get_current_state (MetaDBusDisplayConfig *skeleton,
                               g_variant_new_boolean (TRUE));
      }
  
@@ -75,326 +94,7 @@ index 24995edb6fc..94512cef3e5 100644
    if (meta_monitor_manager_get_max_screen_size (manager,
                                                  &max_screen_width,
                                                  &max_screen_height))
-diff --git a/src/meson.build b/src/meson.build
-index 47ee8f570eb..f6079fd8a85 100644
---- a/src/meson.build
-+++ b/src/meson.build
-@@ -943,6 +943,11 @@ dbus_interfaces = [
-     'interface': 'org.gnome.Mutter.DebugControl.xml',
-     'prefix': 'org.gnome.Mutter',
-   },
-+  {
-+    'name': 'meta-dbus-x11',
-+    'interface': 'org.gnome.Mutter.X11.xml',
-+    'prefix': 'org.gnome.Mutter',
-+  },
- ]
- 
- if have_profiler
-diff --git a/src/x11/meta-x11-display.c b/src/x11/meta-x11-display.c
-index 3c3a65061bb..fa2a33f6eca 100644
---- a/src/x11/meta-x11-display.c
-+++ b/src/x11/meta-x11-display.c
-@@ -70,7 +70,7 @@
- #include "wayland/meta-xwayland-private.h"
- #endif
- 
--G_DEFINE_TYPE (MetaX11Display, meta_x11_display, G_TYPE_OBJECT)
-+#include "meta-dbus-x11.h"
- 
- static GQuark quark_x11_display_logical_monitor_data = 0;
- 
-@@ -89,6 +89,14 @@ typedef struct _MetaX11DisplayLogicalMonitorData
-   int xinerama_index;
- } MetaX11DisplayLogicalMonitorData;
- 
-+typedef struct _MetaX11DisplayPrivate
-+{
-+  MetaDBusX11 *dbus_api;
-+  guint dbus_name_id;
-+} MetaX11DisplayPrivate;
-+
-+G_DEFINE_TYPE_WITH_PRIVATE (MetaX11Display, meta_x11_display, G_TYPE_OBJECT)
-+
- static char *get_screen_name (Display *xdisplay,
-                               int      number);
- 
-@@ -151,13 +159,46 @@ meta_x11_event_filter_free (MetaX11EventFilter *filter)
-   g_free (filter);
- }
- 
-+static void
-+on_bus_acquired (GDBusConnection *connection,
-+                 const char      *name,
-+                 gpointer         user_data)
-+{
-+  MetaX11Display *x11_display = user_data;
-+  MetaX11DisplayPrivate *priv =
-+    meta_x11_display_get_instance_private (x11_display);
-+
-+  g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON (priv->dbus_api),
-+                                    connection,
-+                                    "/org/gnome/Mutter/X11",
-+                                    NULL);
-+}
-+
-+static void
-+update_ui_scaling_factor (MetaX11Display *x11_display)
-+{
-+  MetaX11DisplayPrivate *priv =
-+    meta_x11_display_get_instance_private (x11_display);
-+  MetaBackend *backend = backend_from_x11_display (x11_display);
-+  MetaSettings *settings = meta_backend_get_settings (backend);
-+  int ui_scaling_factor;
-+
-+  ui_scaling_factor = meta_settings_get_ui_scaling_factor (settings);
-+  meta_dbus_x11_set_ui_scaling_factor (priv->dbus_api, ui_scaling_factor);
-+}
-+
- static void
- meta_x11_display_dispose (GObject *object)
- {
-   MetaX11Display *x11_display = META_X11_DISPLAY (object);
-+  MetaX11DisplayPrivate *priv =
-+    meta_x11_display_get_instance_private (x11_display);
- 
-   x11_display->closing = TRUE;
- 
-+  g_clear_handle_id (&priv->dbus_name_id, g_bus_unown_name);
-+  g_clear_object (&priv->dbus_api);
-+
-   g_clear_pointer (&x11_display->alarm_filters, g_ptr_array_unref);
- 
-   g_clear_list (&x11_display->event_funcs,
-@@ -1196,6 +1237,23 @@ meta_x11_display_init_frames_client (MetaX11Display *x11_display)
-                            on_frames_client_died, x11_display);
- }
- 
-+static void
-+initialize_dbus_interface (MetaX11Display *x11_display)
-+{
-+  MetaX11DisplayPrivate *priv =
-+    meta_x11_display_get_instance_private (x11_display);
-+
-+  priv->dbus_api = meta_dbus_x11_skeleton_new ();
-+  priv->dbus_name_id =
-+    g_bus_own_name (G_BUS_TYPE_SESSION,
-+                    "org.gnome.Mutter.X11",
-+                    G_BUS_NAME_OWNER_FLAGS_NONE,
-+                    on_bus_acquired,
-+                    NULL, NULL,
-+                    x11_display, NULL);
-+  update_ui_scaling_factor (x11_display);
-+}
-+
- /**
-  * meta_x11_display_new:
-  *
-@@ -1290,6 +1348,8 @@ meta_x11_display_new (MetaDisplay  *display,
-   x11_display = g_object_new (META_TYPE_X11_DISPLAY, NULL);
-   x11_display->display = display;
- 
-+  initialize_dbus_interface (x11_display);
-+
-   /* here we use XDisplayName which is what the user
-    * probably put in, vs. DisplayString(display) which is
-    * canonicalized by XOpenDisplay()
-@@ -1947,6 +2007,8 @@ on_monitors_changed_internal (MetaMonitorManager *monitor_manager,
-     }
- 
-   x11_display->has_xinerama_indices = FALSE;
-+
-+  update_ui_scaling_factor (x11_display);
- }
- 
- static Bool
--- 
-GitLab
-
-
-From 9a329a024bc2f9de3415fdc7a4ba9d8152b27e5c Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>
-Date: Tue, 20 Feb 2024 23:51:48 +0100
-Subject: [PATCH 2/4] Add an experimental feature for letting Xwayland clients
- scale natively
-
-With the next commits we'll introduce a new mode for scaling of Xwayland apps,
-we'll want to put this mode behind an experimental setting though, so add
-that setting.
----
- data/org.gnome.mutter.gschema.xml.in | 8 ++++++++
- src/backends/meta-settings-private.h | 1 +
- src/backends/meta-settings.c         | 2 ++
- 3 files changed, 11 insertions(+)
-
-diff --git a/data/org.gnome.mutter.gschema.xml.in b/data/org.gnome.mutter.gschema.xml.in
-index fa8cf95dd87..cb60308b6e2 100644
---- a/data/org.gnome.mutter.gschema.xml.in
-+++ b/data/org.gnome.mutter.gschema.xml.in
-@@ -4,6 +4,7 @@
-     <value nick="scale-monitor-framebuffer" value="1"/>
-     <value nick="kms-modifiers" value="2"/>
-     <value nick="autoclose-xwayland" value="4"/>
-+    <value nick="xwayland-native-scaling" value="8"/>
-   </flags>
- 
-   <schema id="org.gnome.mutter" path="/org/gnome/mutter/"
-@@ -129,6 +130,13 @@
-                                         relevant X11 clients are gone.
-                                         Requires a restart.
- 
-+        • “xwayland-native-scaling”   — lets Xwayland clients use their native
-+                                        scaling support. If scaling is not
-+                                        supported by client, the client will
-+                                        be unscaled. Setting only takes effect
-+                                        when “scale-monitor-framebuffer” is
-+                                        enabled as well.
-+
-       </description>
-     </key>
- 
-diff --git a/src/backends/meta-settings-private.h b/src/backends/meta-settings-private.h
-index ca14ce67cb4..90e6998187e 100644
---- a/src/backends/meta-settings-private.h
-+++ b/src/backends/meta-settings-private.h
-@@ -31,6 +31,7 @@ typedef enum _MetaExperimentalFeature
-   META_EXPERIMENTAL_FEATURE_SCALE_MONITOR_FRAMEBUFFER = (1 << 0),
-   META_EXPERIMENTAL_FEATURE_KMS_MODIFIERS  = (1 << 1),
-   META_EXPERIMENTAL_FEATURE_AUTOCLOSE_XWAYLAND  = (1 << 2),
-+  META_EXPERIMENTAL_FEATURE_XWAYLAND_NATIVE_SCALING  = (1 << 3),
- } MetaExperimentalFeature;
- 
- typedef enum _MetaXwaylandExtension
-diff --git a/src/backends/meta-settings.c b/src/backends/meta-settings.c
-index 486ac5abb7f..1042c845b9c 100644
---- a/src/backends/meta-settings.c
-+++ b/src/backends/meta-settings.c
-@@ -294,6 +294,8 @@ experimental_features_handler (GVariant *features_variant,
-         feature = META_EXPERIMENTAL_FEATURE_KMS_MODIFIERS;
-       else if (g_str_equal (feature_str, "autoclose-xwayland"))
-         feature = META_EXPERIMENTAL_FEATURE_AUTOCLOSE_XWAYLAND;
-+      else if (g_str_equal (feature_str, "xwayland-native-scaling"))
-+        feature = META_EXPERIMENTAL_FEATURE_XWAYLAND_NATIVE_SCALING;
- 
-       if (feature)
-         g_message ("Enabling experimental feature '%s'", feature_str);
--- 
-GitLab
-
-
-From 2c3832f66550d62fd733686d7b956c3f9b8a12b1 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
-Date: Tue, 12 Dec 2023 22:42:46 +0100
-Subject: [PATCH 3/4] context: Put Wayland compositor getter in the context
- header
-
----
- src/meta/meta-context.h            | 5 +++++
- src/meta/meta-wayland-compositor.h | 3 ---
- src/meta/types.h                   | 4 ++++
- 3 files changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/src/meta/meta-context.h b/src/meta/meta-context.h
-index ef36bd2c303..2adb9b07e0f 100644
---- a/src/meta/meta-context.h
-+++ b/src/meta/meta-context.h
-@@ -101,3 +101,8 @@ gboolean meta_context_raise_rlimit_nofile (MetaContext  *context,
- META_EXPORT
- gboolean meta_context_restore_rlimit_nofile (MetaContext  *context,
-                                              GError      **error);
-+
-+#ifdef HAVE_WAYLAND
-+META_EXPORT
-+MetaWaylandCompositor * meta_context_get_wayland_compositor (MetaContext *context);
-+#endif
-diff --git a/src/meta/meta-wayland-compositor.h b/src/meta/meta-wayland-compositor.h
-index 7f4a507057c..3df92fda57d 100644
---- a/src/meta/meta-wayland-compositor.h
-+++ b/src/meta/meta-wayland-compositor.h
-@@ -31,9 +31,6 @@ G_DECLARE_FINAL_TYPE (MetaWaylandCompositor,
-                       META, WAYLAND_COMPOSITOR,
-                       GObject)
- 
--META_EXPORT
--MetaWaylandCompositor *meta_context_get_wayland_compositor (MetaContext *context);
--
- META_EXPORT
- struct wl_display *meta_wayland_compositor_get_wayland_display (MetaWaylandCompositor *compositor);
- 
-diff --git a/src/meta/types.h b/src/meta/types.h
-index cbe2a9a3d7f..8fba4a839ef 100644
---- a/src/meta/types.h
-+++ b/src/meta/types.h
-@@ -38,3 +38,7 @@ typedef struct _MetaSettings    MetaSettings;
- 
- typedef struct _MetaWorkspaceManager MetaWorkspaceManager;
- typedef struct _MetaSelection   MetaSelection;
-+
-+#ifdef HAVE_WAYLAND
-+typedef struct _MetaWaylandCompositor MetaWaylandCompositor;
-+#endif
--- 
-GitLab
-
-
-From 24f445e20f7da35df4e53cef13578b91dd372c6a Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
-Date: Tue, 12 Dec 2023 22:52:44 +0100
-Subject: [PATCH 4/4] Add experimental mode to use native scaling of Xwayland
- clients
-
-Allow scale-aware Xwayland clients to scale by an integer scale
-themselves, instead of letting them render them at 1x scale and then
-scaling up the texture, making it look blurry.
-
-When monitor framebuffers are scaled, this special cases Xwayland and
-sends output regions in a way that Xwayland think everything is N times
-as large as the logical region, where N is the ceil of the max monitor
-scale.
-
-This is done by introducing a "stage" vs "protocol" coordinate space for
-X11, where the "protocol" coordinate space is "stage" multiplied by a
-scaling factor.
-
-We're guarding this behind a new experimental feature
-"xwayland-native-scaling", which can only come into effect when enabled
-together with "scale-monitor-framebuffer".
----
- src/backends/meta-monitor-manager-private.h |   2 +
- src/backends/meta-monitor-manager.c         |   6 +
- src/compositor/meta-window-actor-x11.c      |  22 +-
- src/core/frame.c                            | 106 +++++--
- src/wayland/meta-wayland-cursor-surface.c   |  52 ++--
- src/wayland/meta-wayland-outputs.c          |  46 ++-
- src/wayland/meta-wayland-pointer.c          |  14 +
- src/wayland/meta-wayland-private.h          |   2 +
- src/wayland/meta-wayland-surface.c          |  30 +-
- src/wayland/meta-window-xwayland.c          |  71 ++++-
- src/wayland/meta-xwayland-private.h         |   1 +
- src/wayland/meta-xwayland-surface.c         |  10 +-
- src/wayland/meta-xwayland.c                 |  56 ++++
- src/wayland/meta-xwayland.h                 |   2 +
- src/x11/meta-x11-display.c                  | 200 +++++++++++--
- src/x11/window-props.c                      | 104 ++++++-
- src/x11/window-x11.c                        | 305 ++++++++++++++++----
- src/x11/window-x11.h                        |  38 +++
- 18 files changed, 898 insertions(+), 169 deletions(-)
-
-diff --git a/src/backends/meta-monitor-manager-private.h b/src/backends/meta-monitor-manager-private.h
-index 0760a341a86..6ed3fc2c3f5 100644
---- a/src/backends/meta-monitor-manager-private.h
-+++ b/src/backends/meta-monitor-manager-private.h
-@@ -436,3 +436,5 @@ gboolean meta_monitor_manager_apply_monitors_config (MetaMonitorManager        *
-                                                      MetaMonitorsConfig        *config,
-                                                      MetaMonitorsConfigMethod   method,
-                                                      GError                   **error);
-+
-+MetaLogicalMonitorLayoutMode meta_monitor_manager_get_layout_mode (MetaMonitorManager *manager);
-diff --git a/src/backends/meta-monitor-manager.c b/src/backends/meta-monitor-manager.c
-index 94512cef3e5..c8e42a87539 100644
---- a/src/backends/meta-monitor-manager.c
-+++ b/src/backends/meta-monitor-manager.c
-@@ -4099,3 +4099,9 @@ meta_monitor_manager_get_virtual_monitors (MetaMonitorManager *manager)
+@@ -4123,3 +4116,9 @@ meta_monitor_manager_get_virtual_monitors (MetaMonitorManager *manager)
  
    return priv->virtual_monitors;
  }
@@ -404,8 +104,33 @@ index 94512cef3e5..c8e42a87539 100644
 +{
 +  return manager->layout_mode;
 +}
+diff --git a/src/backends/meta-settings-private.h b/src/backends/meta-settings-private.h
+index afbba054a..2081a81b1 100644
+--- a/src/backends/meta-settings-private.h
++++ b/src/backends/meta-settings-private.h
+@@ -32,6 +32,7 @@ typedef enum _MetaExperimentalFeature
+   META_EXPERIMENTAL_FEATURE_KMS_MODIFIERS  = (1 << 1),
+   META_EXPERIMENTAL_FEATURE_AUTOCLOSE_XWAYLAND  = (1 << 2),
+   META_EXPERIMENTAL_FEATURE_VARIABLE_REFRESH_RATE = (1 << 3),
++  META_EXPERIMENTAL_FEATURE_XWAYLAND_NATIVE_SCALING  = (1 << 4),
+ } MetaExperimentalFeature;
+ 
+ typedef enum _MetaXwaylandExtension
+diff --git a/src/backends/meta-settings.c b/src/backends/meta-settings.c
+index 3703b23b0..1ae59d636 100644
+--- a/src/backends/meta-settings.c
++++ b/src/backends/meta-settings.c
+@@ -296,6 +296,8 @@ experimental_features_handler (GVariant *features_variant,
+         feature = META_EXPERIMENTAL_FEATURE_AUTOCLOSE_XWAYLAND;
+       else if (g_str_equal (feature_str, "variable-refresh-rate"))
+         feature = META_EXPERIMENTAL_FEATURE_VARIABLE_REFRESH_RATE;
++      else if (g_str_equal (feature_str, "xwayland-native-scaling"))
++        feature = META_EXPERIMENTAL_FEATURE_XWAYLAND_NATIVE_SCALING;
+ 
+       if (feature)
+         g_message ("Enabling experimental feature '%s'", feature_str);
 diff --git a/src/compositor/meta-window-actor-x11.c b/src/compositor/meta-window-actor-x11.c
-index 19827af331c..7df10e6c151 100644
+index 19827af33..7df10e6c1 100644
 --- a/src/compositor/meta-window-actor-x11.c
 +++ b/src/compositor/meta-window-actor-x11.c
 @@ -688,11 +688,23 @@ meta_window_actor_x11_process_damage (MetaWindowActorX11 *actor_x11,
@@ -438,18 +163,18 @@ index 19827af331c..7df10e6c151 100644
    meta_window_actor_notify_damaged (META_WINDOW_ACTOR (actor_x11));
  }
 diff --git a/src/core/frame.c b/src/core/frame.c
-index 914b144b89d..592d2df8982 100644
+index 145f0b7bd..502622598 100644
 --- a/src/core/frame.c
 +++ b/src/core/frame.c
 @@ -33,6 +33,7 @@
  #include "x11/meta-x11-display-private.h"
- #include "x11/window-x11.h"
+ #include "x11/window-x11-private.h"
  #include "x11/window-props.h"
 +#include "x11/window-x11.h"
  
  #include <X11/Xatom.h>
  #include <X11/extensions/shape.h>
-@@ -66,6 +67,7 @@ meta_window_set_frame_xwindow (MetaWindow *window,
+@@ -66,6 +67,7 @@ meta_window_x11_set_frame_xwindow (MetaWindow *window,
    XSetWindowAttributes attrs;
    gulong create_serial = 0;
    MetaFrame *frame;
@@ -457,7 +182,7 @@ index 914b144b89d..592d2df8982 100644
  
    if (window->frame)
      return;
-@@ -127,11 +129,19 @@ meta_window_set_frame_xwindow (MetaWindow *window,
+@@ -127,11 +129,19 @@ meta_window_x11_set_frame_xwindow (MetaWindow *window,
    meta_stack_tracker_record_remove (window->display->stack_tracker,
                                      meta_window_x11_get_xwindow (window),
                                      XNextRequest (x11_display->xdisplay));
@@ -644,8 +369,63 @@ index 914b144b89d..592d2df8982 100644
    event.xconfigure.border_width = 0;
    event.xconfigure.above = None;
    event.xconfigure.override_redirect = False;
+diff --git a/src/meson.build b/src/meson.build
+index a8cf7e197..ea2dcb2dd 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -943,6 +943,11 @@ dbus_interfaces = [
+     'interface': 'org.gnome.Mutter.DebugControl.xml',
+     'prefix': 'org.gnome.Mutter',
+   },
++  {
++    'name': 'meta-dbus-x11',
++    'interface': 'org.gnome.Mutter.X11.xml',
++    'prefix': 'org.gnome.Mutter',
++  },
+ ]
+ 
+ if have_profiler
+diff --git a/src/meta/meta-context.h b/src/meta/meta-context.h
+index ef36bd2c3..2adb9b07e 100644
+--- a/src/meta/meta-context.h
++++ b/src/meta/meta-context.h
+@@ -101,3 +101,8 @@ gboolean meta_context_raise_rlimit_nofile (MetaContext  *context,
+ META_EXPORT
+ gboolean meta_context_restore_rlimit_nofile (MetaContext  *context,
+                                              GError      **error);
++
++#ifdef HAVE_WAYLAND
++META_EXPORT
++MetaWaylandCompositor * meta_context_get_wayland_compositor (MetaContext *context);
++#endif
+diff --git a/src/meta/meta-wayland-compositor.h b/src/meta/meta-wayland-compositor.h
+index 7f4a50705..3df92fda5 100644
+--- a/src/meta/meta-wayland-compositor.h
++++ b/src/meta/meta-wayland-compositor.h
+@@ -31,9 +31,6 @@ G_DECLARE_FINAL_TYPE (MetaWaylandCompositor,
+                       META, WAYLAND_COMPOSITOR,
+                       GObject)
+ 
+-META_EXPORT
+-MetaWaylandCompositor *meta_context_get_wayland_compositor (MetaContext *context);
+-
+ META_EXPORT
+ struct wl_display *meta_wayland_compositor_get_wayland_display (MetaWaylandCompositor *compositor);
+ 
+diff --git a/src/meta/types.h b/src/meta/types.h
+index cbe2a9a3d..8fba4a839 100644
+--- a/src/meta/types.h
++++ b/src/meta/types.h
+@@ -38,3 +38,7 @@ typedef struct _MetaSettings    MetaSettings;
+ 
+ typedef struct _MetaWorkspaceManager MetaWorkspaceManager;
+ typedef struct _MetaSelection   MetaSelection;
++
++#ifdef HAVE_WAYLAND
++typedef struct _MetaWaylandCompositor MetaWaylandCompositor;
++#endif
 diff --git a/src/wayland/meta-wayland-cursor-surface.c b/src/wayland/meta-wayland-cursor-surface.c
-index 87a8895c886..5a16ce7d879 100644
+index 87a8895c8..5a16ce7d8 100644
 --- a/src/wayland/meta-wayland-cursor-surface.c
 +++ b/src/wayland/meta-wayland-cursor-surface.c
 @@ -92,37 +92,29 @@ cursor_sprite_prepare_at (MetaCursorSprite         *cursor_sprite,
@@ -709,7 +489,7 @@ index 87a8895c886..5a16ce7d879 100644
  
    meta_wayland_surface_update_outputs (surface);
 diff --git a/src/wayland/meta-wayland-outputs.c b/src/wayland/meta-wayland-outputs.c
-index f7a56f2f274..23398eb45b6 100644
+index 89ae86445..6a05e887e 100644
 --- a/src/wayland/meta-wayland-outputs.c
 +++ b/src/wayland/meta-wayland-outputs.c
 @@ -31,6 +31,10 @@
@@ -730,9 +510,9 @@ index f7a56f2f274..23398eb45b6 100644
 +  MetaWaylandCompositor *compositor;
 +
    struct wl_global *global;
-   uint32_t mode_flags;
-   float refresh_rate;
-@@ -427,6 +433,7 @@ meta_wayland_output_new (MetaWaylandCompositor *compositor,
+   GList *resources;
+   GList *xdg_output_resources;
+@@ -422,6 +428,7 @@ meta_wayland_output_new (MetaWaylandCompositor *compositor,
    MetaWaylandOutput *wayland_output;
  
    wayland_output = g_object_new (META_TYPE_WAYLAND_OUTPUT, NULL);
@@ -740,7 +520,7 @@ index f7a56f2f274..23398eb45b6 100644
    wayland_output->global = wl_global_create (compositor->wayland_display,
                                               &wl_output_interface,
                                               META_WL_OUTPUT_VERSION,
-@@ -601,6 +608,19 @@ static const struct zxdg_output_v1_interface
+@@ -596,6 +603,19 @@ static const struct zxdg_output_v1_interface
      meta_xdg_output_destroy,
    };
  
@@ -760,14 +540,14 @@ index f7a56f2f274..23398eb45b6 100644
  static void
  send_xdg_output_events (struct wl_resource *resource,
                          MetaWaylandOutput  *wayland_output,
-@@ -615,8 +635,28 @@ send_xdg_output_events (struct wl_resource *resource,
-   logical_monitor = meta_monitor_get_logical_monitor (monitor);
+@@ -613,18 +633,27 @@ send_xdg_output_events (struct wl_resource *resource,
    layout = meta_logical_monitor_get_layout (logical_monitor);
+   old_layout = wayland_output->layout;
  
--  zxdg_output_v1_send_logical_position (resource, layout.x, layout.y);
--  zxdg_output_v1_send_logical_size (resource, layout.width, layout.height);
+-  if (need_all_events ||
+-      old_layout.x != layout.x || old_layout.y != layout.y)
 +  if (is_xwayland_resource (wayland_output, resource))
-+    {
+     {
 +#ifdef HAVE_XWAYLAND
 +      MetaXWaylandManager *xwayland_manager =
 +        &wayland_output->compositor->xwayland_manager;
@@ -779,19 +559,23 @@ index f7a56f2f274..23398eb45b6 100644
 +      layout.width *= xwayland_scale;
 +      layout.height *= xwayland_scale;
 +
-+      zxdg_output_v1_send_logical_position (resource, layout.x, layout.y);
+       zxdg_output_v1_send_logical_position (resource, layout.x, layout.y);
+-      need_done = TRUE;
 +      zxdg_output_v1_send_logical_size (resource, layout.width, layout.height);
 +#endif
-+    }
+     }
+-
+-  if (need_all_events ||
+-      old_layout.width != layout.width || old_layout.height != layout.height)
 +  else
-+    {
+     {
 +      zxdg_output_v1_send_logical_position (resource, layout.x, layout.y);
-+      zxdg_output_v1_send_logical_size (resource, layout.width, layout.height);
-+    }
+       zxdg_output_v1_send_logical_size (resource, layout.width, layout.height);
+-      need_done = TRUE;
+     }
  
-   version = wl_resource_get_version (resource);
- 
-@@ -736,7 +776,7 @@ meta_wayland_outputs_init (MetaWaylandCompositor *compositor)
+   if (need_all_events && version >= ZXDG_OUTPUT_V1_NAME_SINCE_VERSION)
+@@ -745,7 +774,7 @@ meta_wayland_outputs_init (MetaWaylandCompositor *compositor)
    MetaMonitorManager *monitor_manager =
      meta_backend_get_monitor_manager (backend);
  
@@ -801,10 +585,10 @@ index f7a56f2f274..23398eb45b6 100644
  
    compositor->outputs =
 diff --git a/src/wayland/meta-wayland-pointer.c b/src/wayland/meta-wayland-pointer.c
-index 98534953930..7ceb6a3daa8 100644
+index 88b27f84d..324092970 100644
 --- a/src/wayland/meta-wayland-pointer.c
 +++ b/src/wayland/meta-wayland-pointer.c
-@@ -1190,6 +1190,20 @@ pointer_set_cursor (struct wl_client *client,
+@@ -1244,6 +1244,20 @@ pointer_set_cursor (struct wl_client *client,
        cursor_surface = META_WAYLAND_CURSOR_SURFACE (surface->role);
        meta_wayland_cursor_surface_set_renderer (cursor_surface,
                                                  cursor_renderer);
@@ -826,7 +610,7 @@ index 98534953930..7ceb6a3daa8 100644
                                                 hot_x, hot_y);
  
 diff --git a/src/wayland/meta-wayland-private.h b/src/wayland/meta-wayland-private.h
-index e8d442c0398..834753ffdd3 100644
+index e8d442c03..834753ffd 100644
 --- a/src/wayland/meta-wayland-private.h
 +++ b/src/wayland/meta-wayland-private.h
 @@ -77,6 +77,8 @@ struct _MetaXWaylandManager
@@ -839,10 +623,10 @@ index e8d442c0398..834753ffdd3 100644
  
  struct _MetaWaylandCompositor
 diff --git a/src/wayland/meta-wayland-surface.c b/src/wayland/meta-wayland-surface.c
-index 3761c7b725d..0c06020bb8b 100644
+index b132504d3..0012798df 100644
 --- a/src/wayland/meta-wayland-surface.c
 +++ b/src/wayland/meta-wayland-surface.c
-@@ -773,8 +773,19 @@ meta_wayland_surface_apply_state (MetaWaylandSurface      *surface,
+@@ -770,8 +770,19 @@ meta_wayland_surface_apply_state (MetaWaylandSurface      *surface,
            state->buffer->type != META_WAYLAND_BUFFER_TYPE_SINGLE_PIXEL));
      }
  
@@ -864,7 +648,7 @@ index 3761c7b725d..0c06020bb8b 100644
  
    if (state->has_new_buffer_transform)
      surface->buffer_transform = state->buffer_transform;
-@@ -962,8 +973,9 @@ meta_wayland_surface_commit (MetaWaylandSurface *surface)
+@@ -959,8 +970,9 @@ meta_wayland_surface_commit (MetaWaylandSurface *surface)
        MetaMultiTexture *committed_texture = surface->committed_state.texture;
        int committed_scale = surface->committed_state.scale;
  
@@ -876,7 +660,7 @@ index 3761c7b725d..0c06020bb8b 100644
          {
            if (!surface->role || !META_IS_WAYLAND_CURSOR_SURFACE (surface->role))
              {
-@@ -1497,6 +1509,16 @@ meta_wayland_surface_update_outputs (MetaWaylandSurface *surface)
+@@ -1488,6 +1500,16 @@ meta_wayland_surface_update_outputs (MetaWaylandSurface *surface)
    g_hash_table_foreach (surface->compositor->outputs,
                          update_surface_output_state,
                          surface);
@@ -894,7 +678,7 @@ index 3761c7b725d..0c06020bb8b 100644
  
  void
 diff --git a/src/wayland/meta-window-xwayland.c b/src/wayland/meta-window-xwayland.c
-index 1299a351ca7..5fb00696267 100644
+index 1299a351c..5fb006962 100644
 --- a/src/wayland/meta-window-xwayland.c
 +++ b/src/wayland/meta-window-xwayland.c
 @@ -27,8 +27,9 @@
@@ -991,7 +775,7 @@ index 1299a351ca7..5fb00696267 100644
    gobject_class->get_property = meta_window_xwayland_get_property;
    gobject_class->set_property = meta_window_xwayland_set_property;
 diff --git a/src/wayland/meta-xwayland-private.h b/src/wayland/meta-xwayland-private.h
-index 7a9cb73fdf9..9e06f03155f 100644
+index 7a9cb73fd..9e06f0315 100644
 --- a/src/wayland/meta-xwayland-private.h
 +++ b/src/wayland/meta-xwayland-private.h
 @@ -20,6 +20,7 @@
@@ -1003,7 +787,7 @@ index 7a9cb73fdf9..9e06f03155f 100644
  gboolean
  meta_xwayland_init (MetaXWaylandManager    *manager,
 diff --git a/src/wayland/meta-xwayland-surface.c b/src/wayland/meta-xwayland-surface.c
-index 8fa1c72a969..c6daf9b2670 100644
+index 8fa1c72a9..c6daf9b26 100644
 --- a/src/wayland/meta-xwayland-surface.c
 +++ b/src/wayland/meta-xwayland-surface.c
 @@ -163,13 +163,19 @@ meta_xwayland_surface_get_relative_coordinates (MetaWaylandSurfaceRole *surface_
@@ -1029,7 +813,7 @@ index 8fa1c72a969..c6daf9b2670 100644
  
  static MetaWaylandSurface *
 diff --git a/src/wayland/meta-xwayland.c b/src/wayland/meta-xwayland.c
-index ea9c27d74a0..828e6f64efe 100644
+index ea9c27d74..828e6f64e 100644
 --- a/src/wayland/meta-xwayland.c
 +++ b/src/wayland/meta-xwayland.c
 @@ -1051,6 +1051,29 @@ meta_xwayland_shutdown (MetaWaylandCompositor *compositor)
@@ -1114,7 +898,7 @@ index ea9c27d74a0..828e6f64efe 100644
 +  return 1;
 +}
 diff --git a/src/wayland/meta-xwayland.h b/src/wayland/meta-xwayland.h
-index daf9d1abb03..ae7a06977e4 100644
+index daf9d1abb..ae7a06977 100644
 --- a/src/wayland/meta-xwayland.h
 +++ b/src/wayland/meta-xwayland.h
 @@ -48,3 +48,5 @@ META_EXPORT_TEST
@@ -1124,10 +908,34 @@ index daf9d1abb03..ae7a06977e4 100644
 +
 +int meta_xwayland_get_effective_scale (MetaXWaylandManager *manager);
 diff --git a/src/x11/meta-x11-display.c b/src/x11/meta-x11-display.c
-index fa2a33f6eca..84e639c1b01 100644
+index 438f3bd1e..f2a613392 100644
 --- a/src/x11/meta-x11-display.c
 +++ b/src/x11/meta-x11-display.c
-@@ -130,6 +130,42 @@ backend_from_x11_display (MetaX11Display *x11_display)
+@@ -70,7 +70,7 @@
+ #include "wayland/meta-xwayland-private.h"
+ #endif
+ 
+-G_DEFINE_TYPE (MetaX11Display, meta_x11_display, G_TYPE_OBJECT)
++#include "meta-dbus-x11.h"
+ 
+ static GQuark quark_x11_display_logical_monitor_data = 0;
+ 
+@@ -89,6 +89,14 @@ typedef struct _MetaX11DisplayLogicalMonitorData
+   int xinerama_index;
+ } MetaX11DisplayLogicalMonitorData;
+ 
++typedef struct _MetaX11DisplayPrivate
++{
++  MetaDBusX11 *dbus_api;
++  guint dbus_name_id;
++} MetaX11DisplayPrivate;
++
++G_DEFINE_TYPE_WITH_PRIVATE (MetaX11Display, meta_x11_display, G_TYPE_OBJECT)
++
+ static char *get_screen_name (Display *xdisplay,
+                               int      number);
+ 
+@@ -122,6 +130,42 @@ backend_from_x11_display (MetaX11Display *x11_display)
    return meta_context_get_backend (context);
  }
  
@@ -1170,12 +978,31 @@ index fa2a33f6eca..84e639c1b01 100644
  static void
  meta_x11_display_unmanage_windows (MetaX11Display *x11_display)
  {
-@@ -180,10 +216,32 @@ update_ui_scaling_factor (MetaX11Display *x11_display)
-   MetaX11DisplayPrivate *priv =
-     meta_x11_display_get_instance_private (x11_display);
-   MetaBackend *backend = backend_from_x11_display (x11_display);
--  MetaSettings *settings = meta_backend_get_settings (backend);
--  int ui_scaling_factor;
+@@ -151,13 +195,68 @@ meta_x11_event_filter_free (MetaX11EventFilter *filter)
+   g_free (filter);
+ }
+ 
++static void
++on_bus_acquired (GDBusConnection *connection,
++                 const char      *name,
++                 gpointer         user_data)
++{
++  MetaX11Display *x11_display = user_data;
++  MetaX11DisplayPrivate *priv =
++    meta_x11_display_get_instance_private (x11_display);
++
++  g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON (priv->dbus_api),
++                                    connection,
++                                    "/org/gnome/Mutter/X11",
++                                    NULL);
++}
++
++static void
++update_ui_scaling_factor (MetaX11Display *x11_display)
++{
++  MetaX11DisplayPrivate *priv =
++    meta_x11_display_get_instance_private (x11_display);
++  MetaBackend *backend = backend_from_x11_display (x11_display);
 +  MetaContext *context = meta_backend_get_context (backend);
 +  int ui_scaling_factor = 1;
 +
@@ -1201,12 +1028,26 @@ index fa2a33f6eca..84e639c1b01 100644
 +        break;
 +      }
 +    }
++
++  meta_dbus_x11_set_ui_scaling_factor (priv->dbus_api, ui_scaling_factor);
++}
++
+ static void
+ meta_x11_display_dispose (GObject *object)
+ {
+   MetaX11Display *x11_display = META_X11_DISPLAY (object);
++  MetaX11DisplayPrivate *priv =
++    meta_x11_display_get_instance_private (x11_display);
  
--  ui_scaling_factor = meta_settings_get_ui_scaling_factor (settings);
-   meta_dbus_x11_set_ui_scaling_factor (priv->dbus_api, ui_scaling_factor);
- }
+   x11_display->closing = TRUE;
  
-@@ -613,6 +671,9 @@ set_desktop_geometry_hint (MetaX11Display *x11_display)
++  g_clear_handle_id (&priv->dbus_name_id, g_bus_unown_name);
++  g_clear_object (&priv->dbus_api);
++
+   g_clear_pointer (&x11_display->alarm_filters, g_ptr_array_unref);
+ 
+   g_clear_list (&x11_display->event_funcs,
+@@ -572,6 +671,9 @@ set_desktop_geometry_hint (MetaX11Display *x11_display)
      return;
  
    meta_display_get_size (x11_display->display, &monitor_width, &monitor_height);
@@ -1216,24 +1057,22 @@ index fa2a33f6eca..84e639c1b01 100644
  
    data[0] = monitor_width;
    data[1] = monitor_height;
-@@ -1022,14 +1083,22 @@ set_workspace_work_area_hint (MetaWorkspace  *workspace,
+@@ -981,14 +1083,22 @@ set_workspace_work_area_hint (MetaWorkspace  *workspace,
  
    for (l = logical_monitors; l; l = l->next)
      {
 -      MtkRectangle area;
--
++      MtkRectangle stage_area;
++      MtkRectangle protocol_area;
+ 
 -      meta_workspace_get_work_area_for_logical_monitor (workspace, l->data, &area);
--
++      meta_workspace_get_work_area_for_logical_monitor (workspace, l->data,
++                                                        &stage_area);
+ 
 -      tmp[0] = area.x;
 -      tmp[1] = area.y;
 -      tmp[2] = area.width;
 -      tmp[3] = area.height;
-+      MtkRectangle stage_area;
-+      MtkRectangle protocol_area;
-+
-+      meta_workspace_get_work_area_for_logical_monitor (workspace, l->data,
-+                                                        &stage_area);
-+
 +      stage_to_protocol (x11_display,
 +                         stage_area.x, stage_area.y,
 +                         &protocol_area.x, &protocol_area.y);
@@ -1247,7 +1086,7 @@ index fa2a33f6eca..84e639c1b01 100644
  
        tmp += 4;
      }
-@@ -1058,7 +1127,6 @@ set_work_area_hint (MetaDisplay    *display,
+@@ -1017,7 +1127,6 @@ set_work_area_hint (MetaDisplay    *display,
    int num_workspaces;
    GList *l;
    unsigned long *data, *tmp;
@@ -1255,7 +1094,7 @@ index fa2a33f6eca..84e639c1b01 100644
  
    num_workspaces = meta_workspace_manager_get_n_workspaces (workspace_manager);
    data = g_new (unsigned long, num_workspaces * 4);
-@@ -1067,14 +1135,22 @@ set_work_area_hint (MetaDisplay    *display,
+@@ -1026,14 +1135,22 @@ set_work_area_hint (MetaDisplay    *display,
    for (l = workspace_manager->workspaces; l; l = l->next)
      {
        MetaWorkspace *workspace = l->data;
@@ -1283,10 +1122,27 @@ index fa2a33f6eca..84e639c1b01 100644
  
        tmp += 4;
      }
-@@ -1254,6 +1330,41 @@ initialize_dbus_interface (MetaX11Display *x11_display)
-   update_ui_scaling_factor (x11_display);
+@@ -1196,6 +1313,58 @@ meta_x11_display_init_frames_client (MetaX11Display *x11_display)
+                            on_frames_client_died, x11_display);
  }
  
++static void
++initialize_dbus_interface (MetaX11Display *x11_display)
++{
++  MetaX11DisplayPrivate *priv =
++    meta_x11_display_get_instance_private (x11_display);
++
++  priv->dbus_api = meta_dbus_x11_skeleton_new ();
++  priv->dbus_name_id =
++    g_bus_own_name (G_BUS_TYPE_SESSION,
++                    "org.gnome.Mutter.X11",
++                    G_BUS_NAME_OWNER_FLAGS_NONE,
++                    on_bus_acquired,
++                    NULL, NULL,
++                    x11_display, NULL);
++  update_ui_scaling_factor (x11_display);
++}
++
 +static void
 +experimental_features_changed (MetaSettings           *settings,
 +                               MetaExperimentalFeature old_experimental_features,
@@ -1325,7 +1181,7 @@ index fa2a33f6eca..84e639c1b01 100644
  /**
   * meta_x11_display_new:
   *
-@@ -1272,6 +1383,7 @@ meta_x11_display_new (MetaDisplay  *display,
+@@ -1214,6 +1383,7 @@ meta_x11_display_new (MetaDisplay  *display,
    MetaBackend *backend = meta_context_get_backend (context);
    MetaMonitorManager *monitor_manager =
      meta_backend_get_monitor_manager (backend);
@@ -1333,7 +1189,16 @@ index fa2a33f6eca..84e639c1b01 100644
    g_autoptr (MetaX11Display) x11_display = NULL;
    Display *xdisplay;
    Screen *xscreen;
-@@ -1442,7 +1554,7 @@ meta_x11_display_new (MetaDisplay  *display,
+@@ -1290,6 +1460,8 @@ meta_x11_display_new (MetaDisplay  *display,
+   x11_display = g_object_new (META_TYPE_X11_DISPLAY, NULL);
+   x11_display->display = display;
+ 
++  initialize_dbus_interface (x11_display);
++
+   /* here we use XDisplayName which is what the user
+    * probably put in, vs. DisplayString(display) which is
+    * canonicalized by XOpenDisplay()
+@@ -1382,7 +1554,7 @@ meta_x11_display_new (MetaDisplay  *display,
                             "monitors-changed-internal",
                             G_CALLBACK (on_monitors_changed_internal),
                             x11_display,
@@ -1342,7 +1207,7 @@ index fa2a33f6eca..84e639c1b01 100644
  
    init_leader_window (x11_display, &timestamp);
    x11_display->timestamp = timestamp;
-@@ -1535,6 +1647,11 @@ meta_x11_display_new (MetaDisplay  *display,
+@@ -1475,6 +1647,11 @@ meta_x11_display_new (MetaDisplay  *display,
  
    meta_prefs_add_listener (prefs_changed_callback, x11_display);
  
@@ -1354,7 +1219,7 @@ index fa2a33f6eca..84e639c1b01 100644
    set_work_area_hint (display, x11_display);
  
    g_signal_connect_object (display, "workareas-changed",
-@@ -1744,16 +1861,12 @@ meta_x11_display_reload_cursor (MetaX11Display *x11_display)
+@@ -1683,16 +1860,12 @@ meta_x11_display_reload_cursor (MetaX11Display *x11_display)
  }
  
  static void
@@ -1376,7 +1241,7 @@ index fa2a33f6eca..84e639c1b01 100644
  }
  
  static void
-@@ -1805,8 +1918,37 @@ static void
+@@ -1744,8 +1917,37 @@ static void
  update_cursor_theme (MetaX11Display *x11_display)
  {
    MetaBackend *backend = backend_from_x11_display (x11_display);
@@ -1395,7 +1260,8 @@ index fa2a33f6eca..84e639c1b01 100644
 +          meta_context_get_wayland_compositor (context);
 +        MetaXWaylandManager *xwayland_manager =
 +          &wayland_compositor->xwayland_manager;
-+
+ 
+-  set_cursor_theme (x11_display->xdisplay, backend);
 +        scale = meta_xwayland_get_effective_scale (xwayland_manager);
 +#endif
 +        break;
@@ -1409,13 +1275,12 @@ index fa2a33f6eca..84e639c1b01 100644
 +  size = meta_prefs_get_cursor_size () * scale;
 +
 +  theme = meta_prefs_get_cursor_theme ();
- 
--  set_cursor_theme (x11_display->xdisplay, backend);
++
 +  set_cursor_theme (x11_display->xdisplay, theme, size);
    schedule_reload_x11_cursor (x11_display);
  
    if (META_IS_BACKEND_X11 (backend))
-@@ -1814,7 +1956,7 @@ update_cursor_theme (MetaX11Display *x11_display)
+@@ -1753,7 +1955,7 @@ update_cursor_theme (MetaX11Display *x11_display)
        MetaBackendX11 *backend_x11 = META_BACKEND_X11 (backend);
        Display *xdisplay = meta_backend_x11_get_xdisplay (backend_x11);
  
@@ -1424,8 +1289,17 @@ index fa2a33f6eca..84e639c1b01 100644
        meta_backend_x11_reload_cursor (backend_x11);
      }
  }
+@@ -1946,6 +2148,8 @@ on_monitors_changed_internal (MetaMonitorManager *monitor_manager,
+     }
+ 
+   x11_display->has_xinerama_indices = FALSE;
++
++  update_ui_scaling_factor (x11_display);
+ }
+ 
+ static Bool
 diff --git a/src/x11/window-props.c b/src/x11/window-props.c
-index 73f80395b0c..2c67e91f486 100644
+index c18b3eab5..55c7b8b98 100644
 --- a/src/x11/window-props.c
 +++ b/src/x11/window-props.c
 @@ -305,10 +305,15 @@ reload_icon_geometry (MetaWindow    *window,
@@ -1502,7 +1376,7 @@ index 73f80395b0c..2c67e91f486 100644
     * as if flags were zero
     */
    if (hints)
--    window->size_hints = *hints;
+-    window->size_hints = *(MetaSizeHints*)(hints);
 +    {
 +      MetaWindowX11 *window_x11 = META_WINDOW_X11 (window);
 +
@@ -1562,7 +1436,7 @@ index 73f80395b0c..2c67e91f486 100644
      window->size_hints.flags = 0;
  
 diff --git a/src/x11/window-x11.c b/src/x11/window-x11.c
-index 42981584cce..491d49e5c29 100644
+index e57bc8622..8d2388d2e 100644
 --- a/src/x11/window-x11.c
 +++ b/src/x11/window-x11.c
 @@ -110,6 +110,113 @@ meta_window_x11_get_private (MetaWindowX11 *window_x11)
@@ -1819,7 +1693,7 @@ index 42981584cce..491d49e5c29 100644
                temp = g_new0 (MetaStrut, 1);
                temp->side = 1 << i;
                meta_display_get_size (window->display,
-@@ -2048,9 +2198,10 @@ static void
+@@ -2040,9 +2190,10 @@ static void
  meta_window_x11_constructed (GObject *object)
  {
    MetaWindow *window = META_WINDOW (object);
@@ -1832,7 +1706,7 @@ index 42981584cce..491d49e5c29 100644
  
    meta_verbose ("attrs->map_state = %d (%s)",
                  attrs.map_state,
-@@ -2065,16 +2216,17 @@ meta_window_x11_constructed (GObject *object)
+@@ -2057,16 +2208,17 @@ meta_window_x11_constructed (GObject *object)
    window->client_type = META_WINDOW_CLIENT_TYPE_X11;
    window->override_redirect = attrs.override_redirect;
  
@@ -1858,7 +1732,7 @@ index 42981584cce..491d49e5c29 100644
  
    window->depth = attrs.depth;
    priv->xvisual = attrs.visual;
-@@ -2084,11 +2236,11 @@ meta_window_x11_constructed (GObject *object)
+@@ -2076,11 +2228,11 @@ meta_window_x11_constructed (GObject *object)
  
    window->decorated = TRUE;
    window->hidden = FALSE;
@@ -1873,7 +1747,7 @@ index 42981584cce..491d49e5c29 100644
  
    g_signal_connect (window, "notify::decorated",
                      G_CALLBACK (meta_window_x11_update_input_region),
-@@ -2200,6 +2352,8 @@ meta_window_x11_class_init (MetaWindowX11Class *klass)
+@@ -2192,6 +2344,8 @@ meta_window_x11_class_init (MetaWindowX11Class *klass)
    klass->thaw_commits = meta_window_x11_impl_thaw_commits;
    klass->always_update_shape = meta_window_x11_impl_always_update_shape;
    klass->process_property_notify = meta_window_x11_impl_process_property_notify;
@@ -1882,7 +1756,7 @@ index 42981584cce..491d49e5c29 100644
  
    obj_props[PROP_ATTRIBUTES] =
      g_param_spec_pointer ("attributes", NULL, NULL,
-@@ -2476,7 +2630,10 @@ meta_window_x11_update_input_region (MetaWindow *window)
+@@ -2468,7 +2622,10 @@ meta_window_x11_update_input_region (MetaWindow *window)
        else
          {
            /* Window has a custom shape. */
@@ -1894,7 +1768,7 @@ index 42981584cce..491d49e5c29 100644
          }
  
        meta_XFree (rects);
-@@ -2560,7 +2717,10 @@ meta_window_x11_update_shape_region (MetaWindow *window)
+@@ -2552,7 +2709,10 @@ meta_window_x11_update_shape_region (MetaWindow *window)
  
        if (rects)
          {
@@ -1906,7 +1780,7 @@ index 42981584cce..491d49e5c29 100644
            XFree (rects);
          }
      }
-@@ -2829,6 +2989,7 @@ meta_window_x11_configure_request (MetaWindow *window,
+@@ -2821,6 +2981,7 @@ meta_window_x11_configure_request (MetaWindow *window,
  {
    MetaWindowX11 *window_x11 = META_WINDOW_X11 (window);
    MetaWindowX11Private *priv = meta_window_x11_get_instance_private (window_x11);
@@ -1914,7 +1788,7 @@ index 42981584cce..491d49e5c29 100644
  
    /* Note that x, y is the corner of the window border,
     * and width, height is the size of the window inside
-@@ -2837,15 +2998,25 @@ meta_window_x11_configure_request (MetaWindow *window,
+@@ -2829,15 +2990,25 @@ meta_window_x11_configure_request (MetaWindow *window,
     * requested border here.
     */
    if (event->xconfigurerequest.value_mask & CWBorderWidth)
@@ -1948,7 +1822,7 @@ index 42981584cce..491d49e5c29 100644
  
    /* Handle stacking. We only handle raises/lowers, mostly because
     * stack.c really can't deal with anything else.  I guess we'll fix
-@@ -3340,8 +3511,13 @@ meta_window_x11_client_message (MetaWindow *window,
+@@ -3332,8 +3503,13 @@ meta_window_x11_client_message (MetaWindow *window,
        guint32 timestamp;
        MetaWindowDrag *window_drag;
  
@@ -1964,7 +1838,7 @@ index 42981584cce..491d49e5c29 100644
        action = event->xclient.data.l[2];
        button = event->xclient.data.l[3];
  
-@@ -3503,6 +3679,7 @@ meta_window_x11_client_message (MetaWindow *window,
+@@ -3497,6 +3673,7 @@ meta_window_x11_client_message (MetaWindow *window,
      {
        MetaGravity gravity;
        guint value_mask;
@@ -1972,7 +1846,7 @@ index 42981584cce..491d49e5c29 100644
  
        gravity = (MetaGravity) (event->xclient.data.l[0] & 0xff);
        value_mask = (event->xclient.data.l[0] & 0xf00) >> 8;
-@@ -3511,13 +3688,20 @@ meta_window_x11_client_message (MetaWindow *window,
+@@ -3505,13 +3682,20 @@ meta_window_x11_client_message (MetaWindow *window,
        if (gravity == 0)
          gravity = window->size_hints.win_gravity;
  
@@ -1997,7 +1871,7 @@ index 42981584cce..491d49e5c29 100644
      }
    else if (event->xclient.message_type ==
             x11_display->atom__NET_ACTIVE_WINDOW &&
-@@ -3574,11 +3758,15 @@ meta_window_x11_client_message (MetaWindow *window,
+@@ -3568,11 +3752,15 @@ meta_window_x11_client_message (MetaWindow *window,
    else if (event->xclient.message_type ==
             x11_display->atom__GTK_SHOW_WINDOW_MENU)
      {
@@ -2016,7 +1890,7 @@ index 42981584cce..491d49e5c29 100644
  
        meta_window_show_menu (window, META_WINDOW_MENU_WM, x, y);
      }
-@@ -4100,10 +4288,11 @@ meta_window_x11_configure_notify (MetaWindow      *window,
+@@ -4094,10 +4282,11 @@ meta_window_x11_configure_notify (MetaWindow      *window,
    g_assert (window->override_redirect);
    g_assert (window->frame == NULL);
  
@@ -2033,7 +1907,7 @@ index 42981584cce..491d49e5c29 100644
    priv->client_rect = window->rect;
    window->buffer_rect = window->rect;
 diff --git a/src/x11/window-x11.h b/src/x11/window-x11.h
-index 205eaaa632b..fa3fbea6a84 100644
+index 205eaaa63..fa3fbea6a 100644
 --- a/src/x11/window-x11.h
 +++ b/src/x11/window-x11.h
 @@ -45,6 +45,24 @@ struct _MetaWindowX11Class
@@ -2085,6 +1959,3 @@ index 205eaaa632b..fa3fbea6a84 100644
 +                                        int           *stage_y,
 +                                        int           *stage_width,
 +                                        int           *stage_heigth);
--- 
-GitLab
-
