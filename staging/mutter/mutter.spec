@@ -55,7 +55,7 @@ Patch6: 0003-3304.patch
 
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441/
 # Dynamic triple buffering
-Patch7: 0004-1441.patch
+# Patch7: 0004-1441.patch
 
 BuildRequires: pkgconfig(gobject-introspection-1.0) >= 1.41.0
 BuildRequires: pkgconfig(sm)
