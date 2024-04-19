@@ -25,37 +25,37 @@ URL:           http://www.gnome.org
 Source0:       https://download.gnome.org/sources/%{name}/%{gnome_major_version}/%{name}-%{tarball_version}.tar.xz
 
 # Work-around for OpenJDK's compliance test
-Patch:         0001-window-actor-Special-case-shaped-Java-windows.patch
+Patch0:         0001-window-actor-Special-case-shaped-Java-windows.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1936991
-Patch:         mutter-42.alpha-disable-tegra.patch
+Patch1:         mutter-42.alpha-disable-tegra.patch
 
 # https://pagure.io/fedora-workstation/issue/79
-Patch:         0001-place-Always-center-initial-setup-fedora-welcome.patch
+Patch2:         0001-place-Always-center-initial-setup-fedora-welcome.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=2239128
 # https://gitlab.gnome.org/GNOME/mutter/-/issues/3068
 # not upstreamed because for upstream we'd really want to find a way
 # to fix *both* problems
-Patch:         0001-Revert-x11-Use-input-region-from-frame-window-for-de.patch
+Patch3:         0001-Revert-x11-Use-input-region-from-frame-window-for-de.patch
 
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3329
 # Modified to add the change from
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3329#note_1874837
 # which solves the problems reported with #3329 alone
-Patch: 0001-modified-3329.patch
+Patch4: 0001-modified-3329.patch
 
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3567
 # Scaling for Xwayland applications
-Patch: 0002-3567.patch
+Patch5: 0002-3567.patch
 
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3304/
 # Nvidia secondary GPU copy acceleration
-Patch: 0003-3304.patch
+Patch6: 0003-3304.patch
 
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441/
 # Dynamic triple buffering
-Patch: 0004-1441.patch
+Patch7: 0004-1441.patch
 
 BuildRequires: pkgconfig(gobject-introspection-1.0) >= 1.41.0
 BuildRequires: pkgconfig(sm)
