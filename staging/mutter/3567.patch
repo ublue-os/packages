@@ -1380,7 +1380,7 @@ index c18b3eab5..55c7b8b98 100644
 +    {
 +      MetaWindowX11 *window_x11 = META_WINDOW_X11 (window);
 +
-+      window->size_hints = *hints;
++      window->size_hints = *(MetaSizeHints*)(hints);
 +
 +      meta_window_x11_protocol_to_stage (window_x11,
 +                                         hints->x, hints->y,
