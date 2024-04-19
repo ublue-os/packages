@@ -4844,14 +4844,6 @@ index f5ebc23fe..2f870fdc3 100644
      .loop = g_main_loop_new (NULL, FALSE),
    };
  
-diff --git a/src/tests/ref-tests/wayland_buffer_single-pixel-buffer_7.ref.png b/src/tests/ref-tests/wayland_buffer_single-pixel-buffer_7.ref.png
-new file mode 100644
-index 000000000..c2b0c2ff5
-Binary files /dev/null and b/src/tests/ref-tests/wayland_buffer_single-pixel-buffer_7.ref.png differ
-diff --git a/src/tests/ref-tests/wayland_buffer_single-pixel-buffer_8.ref.png b/src/tests/ref-tests/wayland_buffer_single-pixel-buffer_8.ref.png
-new file mode 100644
-index 000000000..28fc7b266
-Binary files /dev/null and b/src/tests/ref-tests/wayland_buffer_single-pixel-buffer_8.ref.png differ
 diff --git a/src/tests/wayland-test-clients/buffer-transform.c b/src/tests/wayland-test-clients/buffer-transform.c
 index cb78489b4..8591e88d6 100644
 --- a/src/tests/wayland-test-clients/buffer-transform.c
@@ -6931,16 +6923,16 @@ index 59360e30a..3f64758a5 100644
  
  #include "backends/meta-backend-private.h"
  #include "clutter/clutter.h"
-@@ -59,6 +60,8 @@
+@@ -58,6 +59,8 @@
+ #include "wayland/meta-wayland-private.h"
  #include "common/meta-cogl-drm-formats.h"
- #include "common/meta-drm-format-helpers.h"
  #include "compositor/meta-multi-texture-format-private.h"
 +#include "wayland/meta-drm-timeline.h"
 +#include "wayland/meta-wayland-linux-drm-syncobj.h"
  
  #ifdef HAVE_NATIVE_BACKEND
  #include "backends/native/meta-drm-buffer-gbm.h"
-@@ -712,12 +715,43 @@ meta_wayland_buffer_inc_use_count (MetaWaylandBuffer *buffer)
+@@ -711,12 +714,43 @@
  void
  meta_wayland_buffer_dec_use_count (MetaWaylandBuffer *buffer)
  {
@@ -6985,7 +6977,7 @@ index 59360e30a..3f64758a5 100644
  }
  
  gboolean
-@@ -981,6 +1015,7 @@ meta_wayland_buffer_finalize (GObject *object)
+@@ -980,6 +1014,7 @@
  
    clear_tainted_scanout_onscreens (buffer);
    g_clear_pointer (&buffer->tainted_scanout_onscreens, g_hash_table_unref);
@@ -6993,7 +6985,7 @@ index 59360e30a..3f64758a5 100644
  
    g_clear_object (&buffer->egl_image.texture);
  #ifdef HAVE_WAYLAND_EGLSTREAM
-@@ -999,6 +1034,7 @@ meta_wayland_buffer_finalize (GObject *object)
+@@ -998,6 +1033,7 @@
  static void
  meta_wayland_buffer_init (MetaWaylandBuffer *buffer)
  {
@@ -7001,17 +6993,18 @@ index 59360e30a..3f64758a5 100644
  }
  
  static void
-@@ -1091,7 +1127,9 @@ meta_wayland_init_shm (MetaWaylandCompositor *compositor)
+@@ -1090,8 +1126,10 @@
  
        drm_format = shm_to_drm_format (possible_formats[i]);
        format_info = meta_format_info_from_drm_format (drm_format);
 -      g_assert (format_info);
-+
+ 
 +      if (!format_info)
 +        continue;
- 
++      
        if (!context_supports_format (cogl_context, format_info))
          continue;
+ 
 diff --git a/src/wayland/meta-wayland-buffer.h b/src/wayland/meta-wayland-buffer.h
 index 23aea7cb2..a0d59f51b 100644
 --- a/src/wayland/meta-wayland-buffer.h
