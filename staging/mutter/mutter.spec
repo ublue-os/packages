@@ -16,7 +16,7 @@
 %global _default_patch_fuzz 2
 
 Name:          mutter
-Version:       %{gnome_version}.xscaling.1
+Version:       %{gnome_version}.xscaling.2
 Release:       %autorelease
 Summary:       Window and compositing manager based on Clutter
 
@@ -47,7 +47,15 @@ Patch: 0001-modified-3329.patch
 
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3567
 # Scaling for Xwayland applications
-Patch: 3567.patch
+Patch: 0002-3567.patch
+
+# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3304/
+# Nvidia secondary GPU copy acceleration
+Patch: 0003-3304.patch
+
+# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441/
+# Dynamic triple buffering
+Patch: 0004-1441.patch
 
 BuildRequires: pkgconfig(gobject-introspection-1.0) >= 1.41.0
 BuildRequires: pkgconfig(sm)
