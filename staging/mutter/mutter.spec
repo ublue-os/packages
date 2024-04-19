@@ -16,7 +16,7 @@
 %global _default_patch_fuzz 2
 
 Name:          mutter
-Version:       %{gnome_version}.xscaling.4
+Version:       %{gnome_version}.xscaling.5
 Release:       %autorelease
 Summary:       Window and compositing manager based on Clutter
 
@@ -126,7 +126,7 @@ Requires: startup-notification
 Requires: dbus
 
 # Need common
-Requires: %{name}-common = %{version}-%{release}
+Requires: %{name}-common = %{gnome_version}-%{release}
 
 Recommends: mesa-dri-drivers%{?_isa}
 
