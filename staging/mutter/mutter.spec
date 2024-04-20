@@ -16,7 +16,7 @@
 %global _default_patch_fuzz 2
 
 Name:          mutter
-Version:       %{gnome_version}.xscaling.7
+Version:       %{gnome_version}.xscaling.8
 Release:       %autorelease
 Summary:       Window and compositing manager based on Clutter
 
@@ -37,7 +37,7 @@ Patch2:         0001-place-Always-center-initial-setup-fedora-welcome.patch
 # https://gitlab.gnome.org/GNOME/mutter/-/issues/3068
 # not upstreamed because for upstream we'd really want to find a way
 # to fix *both* problems
-# Patch3:         0001-Revert-x11-Use-input-region-from-frame-window-for-de.patch
+Patch3:         0001-Revert-x11-Use-input-region-from-frame-window-for-de.patch
 
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3329
 # Modified to add the change from
@@ -47,7 +47,7 @@ Patch4: 0001-modified-3329.patch
 
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3567
 # Scaling for Xwayland applications
-Patch5: 0002-3567.patch
+# Patch5: 0002-3567.patch
 
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3304/
 # Nvidia secondary GPU copy acceleration
