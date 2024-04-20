@@ -3340,40 +3340,6 @@ index 3032d34c2..0d6cf40db 100644
  }
  
  static void
-diff --git a/src/backends/meta-egl.c b/src/backends/meta-egl.c
-index 9a57c52de..2f8247b3a 100644
---- a/src/backends/meta-egl.c
-+++ b/src/backends/meta-egl.c
-@@ -260,6 +260,14 @@ meta_egl_has_extensions (MetaEgl      *egl,
-   return has_extensions;
- }
- 
-+const char *
-+meta_egl_query_string (MetaEgl    *egl,
-+                       EGLDisplay  display,
-+                       EGLint      name)
-+{
-+  return eglQueryString (display, name);
-+}
-+
- gboolean
- meta_egl_initialize (MetaEgl   *egl,
-                      EGLDisplay display,
-diff --git a/src/backends/meta-egl.h b/src/backends/meta-egl.h
-index 09bee954a..8b955c90c 100644
---- a/src/backends/meta-egl.h
-+++ b/src/backends/meta-egl.h
-@@ -47,6 +47,10 @@ gboolean meta_egl_has_extensions (MetaEgl      *egl,
-                                   const char   *first_extension,
-                                   ...);
- 
-+const char * meta_egl_query_string (MetaEgl    *egl,
-+                                    EGLDisplay  display,
-+                                    EGLint      name);
-+
- gboolean meta_egl_initialize (MetaEgl   *egl,
-                               EGLDisplay display,
-                               GError   **error);
 diff --git a/src/backends/meta-stage-impl.c b/src/backends/meta-stage-impl.c
 index 7aa24439d..727e1a5f3 100644
 --- a/src/backends/meta-stage-impl.c
@@ -3512,7 +3478,7 @@ index 743401406..f6b19520b 100644
                          MetaKmsFlags   flags,
                          GError       **error);
 diff --git a/src/backends/native/meta-onscreen-native.c b/src/backends/native/meta-onscreen-native.c
-index e40b03f3e..9836663d0 100644
+index 2710352d1..9836663d0 100644
 --- a/src/backends/native/meta-onscreen-native.c
 +++ b/src/backends/native/meta-onscreen-native.c
 @@ -51,6 +51,7 @@
@@ -3750,17 +3716,7 @@ index e40b03f3e..9836663d0 100644
                                       &dst_rect);
          }
        else
-@@ -840,6 +883,9 @@ copy_shared_framebuffer_gpu (CoglOnscreen                        *onscreen,
-   COGL_TRACE_BEGIN_SCOPED (CopySharedFramebufferSecondaryGpu,
-                            "copy_shared_framebuffer_gpu()");
- 
-+  if (renderer_gpu_data->secondary.needs_explicit_sync)
-+    cogl_framebuffer_finish (COGL_FRAMEBUFFER (onscreen));
-+
-   render_device = renderer_gpu_data->render_device;
-   egl_display = meta_render_device_get_egl_display (render_device);
- 
-@@ -915,12 +961,17 @@ static MetaDrmBufferDumb *
+@@ -918,12 +961,17 @@ static MetaDrmBufferDumb *
  secondary_gpu_get_next_dumb_buffer (MetaOnscreenNativeSecondaryGpuState *secondary_gpu_state)
  {
    MetaDrmBufferDumb *current_dumb_fb;
@@ -3782,17 +3738,7 @@ index e40b03f3e..9836663d0 100644
  }
  
  static MetaDrmBuffer *
-@@ -947,8 +998,7 @@ copy_shared_framebuffer_primary_gpu (CoglOnscreen                        *onscre
-   COGL_TRACE_BEGIN_SCOPED (CopySharedFramebufferPrimaryGpu,
-                            "copy_shared_framebuffer_primary_gpu()");
- 
--  if (!secondary_gpu_state ||
--      secondary_gpu_state->egl_surface == EGL_NO_SURFACE)
-+  if (!secondary_gpu_state)
-     return NULL;
- 
-   primary_gpu = meta_renderer_native_get_primary_gpu (renderer_native);
-@@ -1253,10 +1303,17 @@ swap_buffer_result_feedback (const MetaKmsFeedback *kms_feedback,
+@@ -1255,10 +1303,17 @@ swap_buffer_result_feedback (const MetaKmsFeedback *kms_feedback,
      g_warning ("Page flip failed: %s", error->message);
  
    frame_info = cogl_onscreen_peek_head_frame_info (onscreen);
@@ -3813,7 +3759,7 @@ index e40b03f3e..9836663d0 100644
  }
  
  static const MetaKmsResultListenerVtable swap_buffer_result_listener_vtable = {
-@@ -1277,35 +1334,58 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1279,35 +1334,58 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
    CoglRendererEGL *cogl_renderer_egl = cogl_renderer->winsys;
    MetaRendererNativeGpuData *renderer_gpu_data = cogl_renderer_egl->platform;
    MetaRendererNative *renderer_native = renderer_gpu_data->renderer_native;
@@ -3881,7 +3827,7 @@ index e40b03f3e..9836663d0 100644
    parent_class = COGL_ONSCREEN_CLASS (meta_onscreen_native_parent_class);
    parent_class->swap_buffers_with_damage (onscreen,
                                            rectangles,
-@@ -1359,11 +1439,32 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1361,11 +1439,32 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
    switch (renderer_gpu_data->mode)
      {
      case META_RENDERER_NATIVE_MODE_GBM:
@@ -3915,7 +3861,7 @@ index e40b03f3e..9836663d0 100644
        break;
      case META_RENDERER_NATIVE_MODE_SURFACELESS:
        break;
-@@ -1373,6 +1474,9 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1375,6 +1474,9 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
  #endif
      }
  
@@ -3925,7 +3871,7 @@ index e40b03f3e..9836663d0 100644
    /*
     * If we changed EGL context, cogl will have the wrong idea about what is
     * current, making it fail to set it when it needs to. Avoid that by making
-@@ -1382,12 +1486,78 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1384,12 +1486,78 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
    if (egl_context_changed)
      _cogl_winsys_egl_ensure_current (cogl_display);
  
@@ -4006,7 +3952,7 @@ index e40b03f3e..9836663d0 100644
        kms_update = meta_frame_native_ensure_kms_update (frame_native,
                                                          kms_device);
        meta_kms_update_add_result_listener (kms_update,
-@@ -1402,15 +1572,13 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1404,15 +1572,13 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
                                        onscreen_native->crtc,
                                        kms_update,
                                        META_KMS_ASSIGN_PLANE_FLAG_NONE,
@@ -4024,7 +3970,7 @@ index e40b03f3e..9836663d0 100644
        return;
      }
  
-@@ -1430,8 +1598,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1432,8 +1598,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
            kms_update = meta_frame_native_steal_kms_update (frame_native);
            meta_renderer_native_queue_mode_set_update (renderer_native,
                                                        kms_update);
@@ -4033,7 +3979,7 @@ index e40b03f3e..9836663d0 100644
            return;
          }
        else if (meta_renderer_native_has_pending_mode_set (renderer_native))
-@@ -1445,8 +1611,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1447,8 +1611,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
  
            meta_frame_native_steal_kms_update (frame_native);
            meta_renderer_native_post_mode_set_updates (renderer_native);
@@ -4042,7 +3988,7 @@ index e40b03f3e..9836663d0 100644
            return;
          }
        break;
-@@ -1462,8 +1626,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1464,8 +1626,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
                                                        kms_update);
  
            meta_renderer_native_post_mode_set_updates (renderer_native);
@@ -4051,7 +3997,7 @@ index e40b03f3e..9836663d0 100644
            return;
          }
        break;
-@@ -1478,7 +1640,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1480,7 +1640,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
    kms_update = meta_frame_native_steal_kms_update (frame_native);
    meta_kms_device_post_update (kms_device, kms_update,
                                 META_KMS_UPDATE_FLAG_NONE);
@@ -4059,7 +4005,7 @@ index e40b03f3e..9836663d0 100644
  }
  
  gboolean
-@@ -1549,7 +1710,7 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
+@@ -1551,7 +1710,7 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
  
        g_warning ("Direct scanout page flip failed: %s", error->message);
  
@@ -4068,7 +4014,7 @@ index e40b03f3e..9836663d0 100644
                                    onscreen);
        clutter_stage_view_add_redraw_clip (view, NULL);
        clutter_stage_view_schedule_update_now (view);
-@@ -1559,7 +1720,7 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
+@@ -1561,7 +1720,7 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
    frame_info->flags |= COGL_FRAME_INFO_FLAG_SYMBOLIC;
  
    meta_onscreen_native_notify_frame_complete (onscreen);
@@ -4077,7 +4023,7 @@ index e40b03f3e..9836663d0 100644
  }
  
  static const MetaKmsResultListenerVtable scanout_result_listener_vtable = {
-@@ -1611,6 +1772,18 @@ meta_onscreen_native_direct_scanout (CoglOnscreen   *onscreen,
+@@ -1613,6 +1772,18 @@ meta_onscreen_native_direct_scanout (CoglOnscreen   *onscreen,
        return FALSE;
      }
  
@@ -4096,7 +4042,7 @@ index e40b03f3e..9836663d0 100644
    renderer_gpu_data = meta_renderer_native_get_gpu_data (renderer_native,
                                                           render_gpu);
  
-@@ -1726,11 +1899,7 @@ meta_onscreen_native_before_redraw (CoglOnscreen *onscreen,
+@@ -1728,11 +1899,7 @@ meta_onscreen_native_before_redraw (CoglOnscreen *onscreen,
                                      ClutterFrame *frame)
  {
    MetaOnscreenNative *onscreen_native = META_ONSCREEN_NATIVE (onscreen);
@@ -4108,7 +4054,7 @@ index e40b03f3e..9836663d0 100644
    maybe_update_frame_sync (onscreen_native, frame);
  }
  
-@@ -1846,22 +2015,79 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
+@@ -1848,22 +2015,79 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
    MetaKmsDevice *kms_device = meta_kms_crtc_get_device (kms_crtc);
    MetaFrameNative *frame_native = meta_frame_native_from_frame (frame);
    MetaKmsUpdate *kms_update;
@@ -4196,7 +4142,7 @@ index e40b03f3e..9836663d0 100644
    meta_kms_update_add_result_listener (kms_update,
                                         &finish_frame_result_listener_vtable,
                                         NULL,
-@@ -1884,7 +2110,19 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
+@@ -1886,7 +2110,19 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
    meta_kms_update_set_flushing (kms_update, kms_crtc);
    meta_kms_device_post_update (kms_device, kms_update,
                                 META_KMS_UPDATE_FLAG_NONE);
@@ -4217,23 +4163,7 @@ index e40b03f3e..9836663d0 100644
  }
  
  static gboolean
-@@ -2417,6 +2655,15 @@ init_secondary_gpu_state_gpu_copy_mode (MetaRendererNative         *renderer_nat
-                                     width, height,
-                                     format,
-                                     GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
-+
-+  if (!gbm_surface)
-+    {
-+      gbm_surface = gbm_surface_create (gbm_device,
-+                                        width, height,
-+                                        format,
-+                                        0);
-+    }
-+
-   if (!gbm_surface)
-     {
-       g_set_error (error, G_IO_ERROR, G_IO_ERROR_FAILED,
-@@ -2790,8 +3037,11 @@ meta_onscreen_native_dispose (GObject *object)
+@@ -2801,8 +3037,11 @@ meta_onscreen_native_dispose (GObject *object)
      {
      case META_RENDERER_NATIVE_MODE_GBM:
        g_clear_object (&onscreen_native->gbm.next_fb);
@@ -4246,7 +4176,7 @@ index e40b03f3e..9836663d0 100644
        break;
      case META_RENDERER_NATIVE_MODE_SURFACELESS:
        g_assert_not_reached ();
-@@ -2825,6 +3075,10 @@ meta_onscreen_native_dispose (GObject *object)
+@@ -2836,6 +3075,10 @@ meta_onscreen_native_dispose (GObject *object)
  
    g_clear_object (&onscreen_native->output);
    g_clear_object (&onscreen_native->crtc);
@@ -4270,414 +4200,11 @@ index 0e1193325..e30357d19 100644
  void meta_onscreen_native_set_view (CoglOnscreen     *onscreen,
                                      MetaRendererView *view);
  
-diff --git a/src/backends/native/meta-renderer-native-gles3.c b/src/backends/native/meta-renderer-native-gles3.c
-index cf27ba8d4..0d50de177 100644
---- a/src/backends/native/meta-renderer-native-gles3.c
-+++ b/src/backends/native/meta-renderer-native-gles3.c
-@@ -3,6 +3,7 @@
- /*
-  * Copyright (C) 2017 Red Hat
-  * Copyright (c) 2018 DisplayLink (UK) Ltd.
-+ * Copyright (c) 2023 Canonical Ltd.
-  *
-  * This program is free software; you can redistribute it and/or
-  * modify it under the terms of the GNU General Public License as
-@@ -34,6 +35,7 @@
- #include "backends/meta-egl-ext.h"
- #include "backends/meta-gles3.h"
- #include "backends/meta-gles3-table.h"
-+#include "meta/meta-debug.h"
- 
- /*
-  * GL/gl.h being included may conflict with gl3.h on some architectures.
-@@ -43,17 +45,240 @@
- #error "Somehow included OpenGL headers when we shouldn't have"
- #endif
- 
-+typedef struct _ContextData
-+{
-+  GArray *buffer_support;
-+  GLuint shader_program;
-+} ContextData;
-+
-+typedef struct
-+{
-+  uint32_t drm_format;
-+  uint64_t drm_modifier;
-+  gboolean can_blit;
-+} BufferTypeSupport;
-+
- static void
--paint_egl_image (MetaGles3   *gles3,
--                 EGLImageKHR  egl_image,
--                 int          width,
--                 int          height)
-+context_data_free (ContextData *context_data)
-+{
-+  g_array_free (context_data->buffer_support, TRUE);
-+  g_free (context_data);
-+}
-+
-+static GQuark
-+get_quark_for_egl_context (EGLContext egl_context)
-+{
-+  char key[128];
-+
-+  g_snprintf (key, sizeof key, "EGLContext %p", egl_context);
-+
-+  return g_quark_from_string (key);
-+}
-+
-+static gboolean
-+can_blit_buffer (ContextData *context_data,
-+                 MetaEgl     *egl,
-+                 EGLDisplay   egl_display,
-+                 uint32_t     drm_format,
-+                 uint64_t     drm_modifier)
-+{
-+  EGLint num_modifiers;
-+  EGLuint64KHR *modifiers;
-+  EGLBoolean *external_only;
-+  g_autoptr (GError) error = NULL;
-+  int i;
-+  gboolean can_blit;
-+  BufferTypeSupport support;
-+
-+  can_blit = drm_modifier == DRM_FORMAT_MOD_LINEAR;
-+
-+  for (i = 0; i < context_data->buffer_support->len; i++)
-+    {
-+      BufferTypeSupport *support =
-+        &g_array_index (context_data->buffer_support, BufferTypeSupport, i);
-+
-+      if (support->drm_format == drm_format &&
-+          support->drm_modifier == drm_modifier)
-+        return support->can_blit;
-+    }
-+
-+  if (!meta_egl_has_extensions (egl, egl_display, NULL,
-+                                "EGL_EXT_image_dma_buf_import_modifiers",
-+                                NULL))
-+    {
-+      meta_topic (META_DEBUG_RENDER,
-+                  "No support for EGL_EXT_image_dma_buf_import_modifiers, "
-+                  "assuming blitting linearly will still work.");
-+      goto out;
-+    }
-+
-+  if (!meta_egl_query_dma_buf_modifiers (egl, egl_display,
-+                                         drm_format, 0, NULL, NULL,
-+                                         &num_modifiers, &error))
-+    {
-+      meta_topic (META_DEBUG_RENDER,
-+                  "Failed to query supported DMA buffer modifiers (%s), "
-+                  "assuming blitting linearly will still work.",
-+                  error->message);
-+      goto out;
-+    }
-+
-+  if (num_modifiers == 0)
-+    goto out;
-+
-+  modifiers = g_alloca0 (sizeof (EGLuint64KHR) * num_modifiers);
-+  external_only = g_alloca0 (sizeof (EGLBoolean) * num_modifiers);
-+  if (!meta_egl_query_dma_buf_modifiers (egl, egl_display,
-+                                         drm_format, num_modifiers,
-+                                         modifiers, external_only,
-+                                         &num_modifiers, &error))
-+    {
-+      g_warning ("Failed to requery supported DMA buffer modifiers: %s",
-+                 error->message);
-+      can_blit = FALSE;
-+      goto out;
-+    }
-+
-+  can_blit = FALSE;
-+  for (i = 0; i < num_modifiers; i++)
-+    {
-+      if (drm_modifier == modifiers[i])
-+        {
-+          can_blit = !external_only[i];
-+          goto out;
-+        }
-+    }
-+
-+out:
-+  support = (BufferTypeSupport) {
-+    .drm_format = drm_format,
-+    .drm_modifier = drm_modifier,
-+    .can_blit = can_blit,
-+  };
-+  g_array_append_val (context_data->buffer_support, support);
-+  return can_blit;
-+}
-+
-+static GLuint
-+load_shader (const char *src,
-+             GLenum      type)
-+{
-+  GLuint shader = glCreateShader (type);
-+
-+  if (shader)
-+    {
-+      GLint compiled;
-+
-+      glShaderSource (shader, 1, &src, NULL);
-+      glCompileShader (shader);
-+      glGetShaderiv (shader, GL_COMPILE_STATUS, &compiled);
-+      if (!compiled)
-+        {
-+          GLchar log[1024];
-+
-+          glGetShaderInfoLog (shader, sizeof (log) - 1, NULL, log);
-+          log[sizeof (log) - 1] = '\0';
-+          g_warning ("load_shader compile failed: %s", log);
-+          glDeleteShader (shader);
-+          shader = 0;
-+        }
-+    }
-+
-+  return shader;
-+}
-+
-+static void
-+ensure_shader_program (ContextData *context_data,
-+                       MetaGles3   *gles3)
-+{
-+  static const char vertex_shader_source[] =
-+    "#version 100\n"
-+    "attribute vec2 position;\n"
-+    "attribute vec2 texcoord;\n"
-+    "varying vec2 v_texcoord;\n"
-+    "\n"
-+    "void main()\n"
-+    "{\n"
-+    "  gl_Position = vec4(position, 0.0, 1.0);\n"
-+    "  v_texcoord = texcoord;\n"
-+    "}\n";
-+
-+  static const char fragment_shader_source[] =
-+    "#version 100\n"
-+    "#extension GL_OES_EGL_image_external : require\n"
-+    "precision mediump float;\n"
-+    "uniform samplerExternalOES s_texture;\n"
-+    "varying vec2 v_texcoord;\n"
-+    "\n"
-+    " void main()\n"
-+    "{\n"
-+    "  gl_FragColor = texture2D(s_texture, v_texcoord);\n"
-+    "}\n";
-+
-+  static const GLfloat box[] =
-+  { /* position    texcoord */
-+    -1.0f, +1.0f, 0.0f, 0.0f,
-+    +1.0f, +1.0f, 1.0f, 0.0f,
-+    +1.0f, -1.0f, 1.0f, 1.0f,
-+    -1.0f, -1.0f, 0.0f, 1.0f,
-+  };
-+  GLint linked;
-+  GLuint vertex_shader, fragment_shader;
-+  GLint position_attrib, texcoord_attrib;
-+  GLuint shader_program;
-+
-+  if (context_data->shader_program)
-+    return;
-+
-+  shader_program = glCreateProgram ();
-+  g_return_if_fail (shader_program);
-+  context_data->shader_program = shader_program;
-+
-+  vertex_shader = load_shader (vertex_shader_source, GL_VERTEX_SHADER);
-+  g_return_if_fail (vertex_shader);
-+  fragment_shader = load_shader (fragment_shader_source, GL_FRAGMENT_SHADER);
-+  g_return_if_fail (fragment_shader);
-+
-+  GLBAS (gles3, glAttachShader, (shader_program, vertex_shader));
-+  GLBAS (gles3, glAttachShader, (shader_program, fragment_shader));
-+  GLBAS (gles3, glLinkProgram, (shader_program));
-+  GLBAS (gles3, glGetProgramiv, (shader_program, GL_LINK_STATUS, &linked));
-+  if (!linked)
-+    {
-+      GLchar log[1024];
-+
-+      glGetProgramInfoLog (shader_program, sizeof (log) - 1, NULL, log);
-+      log[sizeof (log) - 1] = '\0';
-+      g_warning ("Link failed: %s", log);
-+      return;
-+    }
-+
-+  GLBAS (gles3, glUseProgram, (shader_program));
-+
-+  position_attrib = glGetAttribLocation (shader_program, "position");
-+  GLBAS (gles3, glEnableVertexAttribArray, (position_attrib));
-+  GLBAS (gles3, glVertexAttribPointer,
-+         (position_attrib, 2, GL_FLOAT, GL_FALSE, 4 * sizeof (GLfloat), box));
-+
-+  texcoord_attrib = glGetAttribLocation (shader_program, "texcoord");
-+  GLBAS (gles3, glEnableVertexAttribArray, (texcoord_attrib));
-+  GLBAS (gles3, glVertexAttribPointer,
-+         (texcoord_attrib, 2, GL_FLOAT, GL_FALSE, 4 * sizeof (GLfloat), box + 2));
-+}
-+
-+static void
-+blit_egl_image (MetaGles3   *gles3,
-+                EGLImageKHR  egl_image,
-+                int          width,
-+                int          height)
- {
-   GLuint texture;
-   GLuint framebuffer;
- 
-   meta_gles3_clear_error (gles3);
- 
-+  GLBAS (gles3, glViewport, (0, 0, width, height));
-+
-   GLBAS (gles3, glGenFramebuffers, (1, &framebuffer));
-   GLBAS (gles3, glBindFramebuffer, (GL_READ_FRAMEBUFFER, framebuffer));
- 
-@@ -85,6 +310,43 @@ paint_egl_image (MetaGles3   *gles3,
-   GLBAS (gles3, glDeleteFramebuffers, (1, &framebuffer));
- }
- 
-+static void
-+paint_egl_image (ContextData *context_data,
-+                 MetaGles3   *gles3,
-+                 EGLImageKHR  egl_image,
-+                 int          width,
-+                 int          height)
-+{
-+  GLuint texture;
-+
-+  meta_gles3_clear_error (gles3);
-+  ensure_shader_program (context_data, gles3);
-+
-+  GLBAS (gles3, glViewport, (0, 0, width, height));
-+
-+  GLBAS (gles3, glActiveTexture, (GL_TEXTURE0));
-+  GLBAS (gles3, glGenTextures, (1, &texture));
-+  GLBAS (gles3, glBindTexture, (GL_TEXTURE_EXTERNAL_OES, texture));
-+  GLEXT (gles3, glEGLImageTargetTexture2DOES, (GL_TEXTURE_EXTERNAL_OES,
-+                                               egl_image));
-+  GLBAS (gles3, glTexParameteri, (GL_TEXTURE_EXTERNAL_OES,
-+                                  GL_TEXTURE_MAG_FILTER,
-+                                  GL_NEAREST));
-+  GLBAS (gles3, glTexParameteri, (GL_TEXTURE_EXTERNAL_OES,
-+                                  GL_TEXTURE_MIN_FILTER,
-+                                  GL_NEAREST));
-+  GLBAS (gles3, glTexParameteri, (GL_TEXTURE_EXTERNAL_OES,
-+                                  GL_TEXTURE_WRAP_S,
-+                                  GL_CLAMP_TO_EDGE));
-+  GLBAS (gles3, glTexParameteri, (GL_TEXTURE_EXTERNAL_OES,
-+                                  GL_TEXTURE_WRAP_T,
-+                                  GL_CLAMP_TO_EDGE));
-+
-+  GLBAS (gles3, glDrawArrays, (GL_TRIANGLE_FAN, 0, 4));
-+
-+  GLBAS (gles3, glDeleteTextures, (1, &texture));
-+}
-+
- gboolean
- meta_renderer_native_gles3_blit_shared_bo (MetaEgl        *egl,
-                                            MetaGles3      *gles3,
-@@ -105,6 +367,28 @@ meta_renderer_native_gles3_blit_shared_bo (MetaEgl        *egl,
-   uint32_t format;
-   EGLImageKHR egl_image;
-   gboolean use_modifiers;
-+  GQuark context_data_quark;
-+  ContextData *context_data;
-+  gboolean can_blit;
-+
-+  context_data_quark = get_quark_for_egl_context (egl_context);
-+  context_data = g_object_get_qdata (G_OBJECT (gles3), context_data_quark);
-+  if (!context_data)
-+    {
-+      context_data = g_new0 (ContextData, 1);
-+      context_data->buffer_support = g_array_new (FALSE, FALSE,
-+                                                  sizeof (BufferTypeSupport));
-+
-+      g_object_set_qdata_full (G_OBJECT (gles3),
-+                               context_data_quark,
-+                               context_data,
-+                               (GDestroyNotify) context_data_free);
-+    }
-+
-+  can_blit = can_blit_buffer (context_data,
-+                              egl, egl_display,
-+                              gbm_bo_get_format (shared_bo),
-+                              gbm_bo_get_modifier (shared_bo));
- 
-   shared_bo_fd = gbm_bo_get_fd (shared_bo);
-   if (shared_bo_fd < 0)
-@@ -150,9 +434,21 @@ meta_renderer_native_gles3_blit_shared_bo (MetaEgl        *egl,
-   if (!egl_image)
-     return FALSE;
- 
--  paint_egl_image (gles3, egl_image, width, height);
-+  if (can_blit)
-+    blit_egl_image (gles3, egl_image, width, height);
-+  else
-+    paint_egl_image (context_data, gles3, egl_image, width, height);
- 
-   meta_egl_destroy_image (egl, egl_display, egl_image, NULL);
- 
-   return TRUE;
- }
-+
-+void
-+meta_renderer_native_gles3_forget_context (MetaGles3  *gles3,
-+                                           EGLContext  egl_context)
-+{
-+  GQuark context_data_quark = get_quark_for_egl_context (egl_context);
-+
-+  g_object_set_qdata (G_OBJECT (gles3), context_data_quark, NULL);
-+}
-diff --git a/src/backends/native/meta-renderer-native-gles3.h b/src/backends/native/meta-renderer-native-gles3.h
-index 591ff82e1..f5791a171 100644
---- a/src/backends/native/meta-renderer-native-gles3.h
-+++ b/src/backends/native/meta-renderer-native-gles3.h
-@@ -26,10 +26,13 @@
- #include "backends/meta-egl.h"
- #include "backends/meta-gles3.h"
- 
--gboolean meta_renderer_native_gles3_blit_shared_bo (MetaEgl       *egl,
--                                                    MetaGles3     *gles3,
--                                                    EGLDisplay     egl_display,
--                                                    EGLContext     egl_context,
--                                                    EGLSurface     egl_surface,
--                                                    struct gbm_bo *shared_bo,
--                                                    GError       **error);
-+gboolean meta_renderer_native_gles3_blit_shared_bo (MetaEgl        *egl,
-+                                                    MetaGles3      *gles3,
-+                                                    EGLDisplay      egl_display,
-+                                                    EGLContext      egl_context,
-+                                                    EGLSurface      egl_surface,
-+                                                    struct gbm_bo  *shared_bo,
-+                                                    GError        **error);
-+
-+void meta_renderer_native_gles3_forget_context (MetaGles3  *gles3,
-+                                                EGLContext  egl_context);
-diff --git a/src/backends/native/meta-renderer-native-private.h b/src/backends/native/meta-renderer-native-private.h
-index 997fe6f69..2d3fe1971 100644
---- a/src/backends/native/meta-renderer-native-private.h
-+++ b/src/backends/native/meta-renderer-native-private.h
-@@ -60,6 +60,7 @@ typedef struct _MetaRendererNativeGpuData
-   struct {
-     MetaSharedFramebufferCopyMode copy_mode;
-     gboolean has_EGL_EXT_image_dma_buf_import_modifiers;
-+    gboolean needs_explicit_sync;
- 
-     /* For GPU blit mode */
-     EGLContext egl_context;
 diff --git a/src/backends/native/meta-renderer-native.c b/src/backends/native/meta-renderer-native.c
-index 7b64ff3f4..3c22b4e86 100644
+index 893ee4216..3c22b4e86 100644
 --- a/src/backends/native/meta-renderer-native.c
 +++ b/src/backends/native/meta-renderer-native.c
-@@ -63,10 +63,12 @@
- #include "backends/native/meta-output-kms.h"
- #include "backends/native/meta-render-device-gbm.h"
- #include "backends/native/meta-render-device-surfaceless.h"
-+#include "backends/native/meta-renderer-native-gles3.h"
- #include "backends/native/meta-renderer-native-private.h"
+@@ -68,6 +68,7 @@
  #include "backends/native/meta-renderer-view-native.h"
  #include "cogl/cogl.h"
  #include "common/meta-cogl-drm-formats.h"
@@ -4685,17 +4212,7 @@ index 7b64ff3f4..3c22b4e86 100644
  #include "core/boxes-private.h"
  
  #ifdef HAVE_EGL_DEVICE
-@@ -136,6 +138,9 @@ meta_renderer_native_gpu_data_free (MetaRendererNativeGpuData *renderer_gpu_data
-       MetaRendererNative *renderer_native = renderer_gpu_data->renderer_native;
-       MetaEgl *egl = meta_renderer_native_get_egl (renderer_native);
- 
-+      meta_renderer_native_gles3_forget_context (renderer_native->gles3,
-+                                                 renderer_gpu_data->secondary.egl_context);
-+
-       meta_egl_destroy_context (egl,
-                                 egl_display,
-                                 renderer_gpu_data->secondary.egl_context,
-@@ -726,12 +731,18 @@ static gboolean
+@@ -730,12 +731,18 @@ static gboolean
  dummy_power_save_page_flip_cb (gpointer user_data)
  {
    MetaRendererNative *renderer_native = user_data;
@@ -4716,7 +4233,7 @@ index 7b64ff3f4..3c22b4e86 100644
    renderer_native->power_save_page_flip_source_id = 0;
  
    return G_SOURCE_REMOVE;
-@@ -743,6 +754,9 @@ meta_renderer_native_queue_power_save_page_flip (MetaRendererNative *renderer_na
+@@ -747,6 +754,9 @@ meta_renderer_native_queue_power_save_page_flip (MetaRendererNative *renderer_na
  {
    const unsigned int timeout_ms = 100;
  
@@ -4726,7 +4243,7 @@ index 7b64ff3f4..3c22b4e86 100644
    if (!renderer_native->power_save_page_flip_source_id)
      {
        renderer_native->power_save_page_flip_source_id =
-@@ -1524,6 +1538,26 @@ detach_onscreens (MetaRenderer *renderer)
+@@ -1528,6 +1538,26 @@ detach_onscreens (MetaRenderer *renderer)
      }
  }
  
@@ -4753,7 +4270,7 @@ index 7b64ff3f4..3c22b4e86 100644
  static void
  meta_renderer_native_rebuild_views (MetaRenderer *renderer)
  {
-@@ -1534,6 +1568,7 @@ meta_renderer_native_rebuild_views (MetaRenderer *renderer)
+@@ -1538,6 +1568,7 @@ meta_renderer_native_rebuild_views (MetaRenderer *renderer)
    MetaRendererClass *parent_renderer_class =
      META_RENDERER_CLASS (meta_renderer_native_parent_class);
  
@@ -4761,26 +4278,6 @@ index 7b64ff3f4..3c22b4e86 100644
    meta_kms_discard_pending_page_flips (kms);
    g_hash_table_remove_all (renderer_native->mode_set_updates);
  
-@@ -1805,6 +1840,7 @@ init_secondary_gpu_data_gpu (MetaRendererNativeGpuData *renderer_gpu_data,
-   CoglContext *cogl_context;
-   CoglDisplay *cogl_display;
-   const char **missing_gl_extensions;
-+  const char *egl_vendor;
- 
-   egl_display = meta_render_device_get_egl_display (render_device);
-   if (egl_display == EGL_NO_DISPLAY)
-@@ -1871,6 +1907,11 @@ init_secondary_gpu_data_gpu (MetaRendererNativeGpuData *renderer_gpu_data,
-     meta_egl_has_extensions (egl, egl_display, NULL,
-                              "EGL_EXT_image_dma_buf_import_modifiers",
-                              NULL);
-+
-+  egl_vendor = meta_egl_query_string (egl, egl_display, EGL_VENDOR);
-+  if (!g_strcmp0 (egl_vendor, "NVIDIA"))
-+    renderer_gpu_data->secondary.needs_explicit_sync = TRUE;
-+
-   ret = TRUE;
- out:
-   maybe_restore_cogl_egl_api (renderer_native);
 diff --git a/src/backends/x11/nested/meta-stage-x11-nested.c b/src/backends/x11/nested/meta-stage-x11-nested.c
 index 41b78ec18..02eccc77d 100644
 --- a/src/backends/x11/nested/meta-stage-x11-nested.c
@@ -5293,346 +4790,6 @@ index a8cf7e197..05df3bfd2 100644
    ]
    if have_wayland_eglstream
      wayland_eglstream_protocols_dir = wayland_eglstream_protocols_dep.get_variable('pkgdatadir')
-diff --git a/src/meta/common.h b/src/meta/common.h
-index ee978ac6a..ed3aa81ef 100644
---- a/src/meta/common.h
-+++ b/src/meta/common.h
-@@ -27,6 +27,7 @@
- #include <glib.h>
- 
- #include "clutter/clutter.h"
-+#include "meta/meta-base.h"
- #include "meta/meta-enums.h"
- 
- /**
-@@ -42,8 +43,6 @@
- /* Replacement for X11 CurrentTime */
- #define META_CURRENT_TIME 0L
- 
--#define META_EXPORT __attribute__((visibility("default"))) extern
--
- #define MAX_BUTTONS_PER_CORNER META_BUTTON_FUNCTION_LAST
- 
- /* Keep array size in sync with MAX_BUTTONS_PER_CORNER */
-diff --git a/src/meta/meson.build b/src/meta/meson.build
-index 655dedeaf..bc3910408 100644
---- a/src/meta/meson.build
-+++ b/src/meta/meson.build
-@@ -9,6 +9,7 @@ mutter_public_headers = [
-   'keybindings.h',
-   'main.h',
-   'meta-backend.h',
-+  'meta-base.h',
-   'meta-background.h',
-   'meta-background-actor.h',
-   'meta-background-content.h',
-@@ -17,6 +18,7 @@ mutter_public_headers = [
-   'meta-close-dialog.h',
-   'meta-cursor-tracker.h',
-   'meta-context.h',
-+  'meta-debug.h',
-   'meta-dnd.h',
-   'meta-enums.h',
-   'meta-idle-monitor.h',
-diff --git a/src/meta/meta-base.h b/src/meta/meta-base.h
-new file mode 100644
-index 000000000..e344b2221
---- /dev/null
-+++ b/src/meta/meta-base.h
-@@ -0,0 +1,21 @@
-+/*
-+ * Copyright (C) 2001 Havoc Pennington
-+ * Copyright (C) 2005 Elijah Newren
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of the
-+ * License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#pragma once
-+
-+#define META_EXPORT __attribute__((visibility("default"))) extern
-diff --git a/src/meta/meta-debug.h b/src/meta/meta-debug.h
-new file mode 100644
-index 000000000..b4c70144b
---- /dev/null
-+++ b/src/meta/meta-debug.h
-@@ -0,0 +1,127 @@
-+/*
-+ * Copyright (C) 2001 Havoc Pennington
-+ * Copyright (C) 2005 Elijah Newren
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of the
-+ * License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#pragma once
-+
-+#include "meta/meta-base.h"
-+
-+/**
-+ * MetaDebugTopic:
-+ * @META_DEBUG_VERBOSE: verbose logging
-+ * @META_DEBUG_FOCUS: focus
-+ * @META_DEBUG_WORKAREA: workarea
-+ * @META_DEBUG_STACK: stack
-+ * @META_DEBUG_SM: session management
-+ * @META_DEBUG_EVENTS: events
-+ * @META_DEBUG_WINDOW_STATE: window state
-+ * @META_DEBUG_WINDOW_OPS: window operations
-+ * @META_DEBUG_GEOMETRY: geometry
-+ * @META_DEBUG_PLACEMENT: window placement
-+ * @META_DEBUG_PING: ping
-+ * @META_DEBUG_KEYBINDINGS: keybindings
-+ * @META_DEBUG_SYNC: sync
-+ * @META_DEBUG_STARTUP: startup
-+ * @META_DEBUG_PREFS: preferences
-+ * @META_DEBUG_GROUPS: groups
-+ * @META_DEBUG_RESIZING: resizing
-+ * @META_DEBUG_SHAPES: shapes
-+ * @META_DEBUG_EDGE_RESISTANCE: edge resistance
-+ * @META_DEBUG_WAYLAND: Wayland
-+ * @META_DEBUG_KMS: kernel mode setting
-+ * @META_DEBUG_SCREEN_CAST: screencasting
-+ * @META_DEBUG_REMOTE_DESKTOP: remote desktop
-+ * @META_DEBUG_BACKEND: backend
-+ * @META_DEBUG_RENDER: native backend rendering
-+ * @META_DEBUG_COLOR: color management
-+ * @META_DEBUG_INPUT_EVENTS: input events
-+ * @META_DEBUG_EIS: eis state
-+ */
-+typedef enum
-+{
-+  META_DEBUG_VERBOSE         = -1,
-+  META_DEBUG_FOCUS           = 1 << 0,
-+  META_DEBUG_WORKAREA        = 1 << 1,
-+  META_DEBUG_STACK           = 1 << 2,
-+  META_DEBUG_SM              = 1 << 3,
-+  META_DEBUG_EVENTS          = 1 << 4,
-+  META_DEBUG_WINDOW_STATE    = 1 << 5,
-+  META_DEBUG_WINDOW_OPS      = 1 << 6,
-+  META_DEBUG_GEOMETRY        = 1 << 7,
-+  META_DEBUG_PLACEMENT       = 1 << 8,
-+  META_DEBUG_PING            = 1 << 9,
-+  META_DEBUG_KEYBINDINGS     = 1 << 10,
-+  META_DEBUG_SYNC            = 1 << 11,
-+  META_DEBUG_STARTUP         = 1 << 12,
-+  META_DEBUG_PREFS           = 1 << 13,
-+  META_DEBUG_GROUPS          = 1 << 14,
-+  META_DEBUG_RESIZING        = 1 << 15,
-+  META_DEBUG_SHAPES          = 1 << 16,
-+  META_DEBUG_EDGE_RESISTANCE = 1 << 17,
-+  META_DEBUG_DBUS            = 1 << 18,
-+  META_DEBUG_INPUT           = 1 << 19,
-+  META_DEBUG_WAYLAND         = 1 << 20,
-+  META_DEBUG_KMS             = 1 << 21,
-+  META_DEBUG_SCREEN_CAST     = 1 << 22,
-+  META_DEBUG_REMOTE_DESKTOP  = 1 << 23,
-+  META_DEBUG_BACKEND         = 1 << 24,
-+  META_DEBUG_RENDER          = 1 << 25,
-+  META_DEBUG_COLOR           = 1 << 26,
-+  META_DEBUG_INPUT_EVENTS    = 1 << 27,
-+  META_DEBUG_EIS             = 1 << 28,
-+} MetaDebugTopic;
-+
-+META_EXPORT
-+gboolean meta_is_topic_enabled (MetaDebugTopic topic);
-+
-+/* To disable verbose mode, we make these functions into no-ops */
-+#ifdef WITH_VERBOSE_MODE
-+
-+const char * meta_topic_to_string (MetaDebugTopic topic);
-+
-+META_EXPORT
-+void meta_log (const char *format, ...) G_GNUC_PRINTF (1, 2);
-+
-+#define meta_topic(debug_topic, ...) \
-+  G_STMT_START \
-+    { \
-+      if (meta_is_topic_enabled (debug_topic)) \
-+        { \
-+          g_autofree char *_topic_message = NULL; \
-+\
-+          _topic_message = g_strdup_printf (__VA_ARGS__); \
-+          meta_log ("%s: %s", meta_topic_to_string (debug_topic), \
-+                     _topic_message); \
-+        } \
-+    } \
-+  G_STMT_END
-+
-+#define meta_verbose(...) meta_topic (META_DEBUG_VERBOSE, __VA_ARGS__)
-+
-+#else
-+
-+#  ifdef G_HAVE_ISO_VARARGS
-+#    define meta_verbose(...)
-+#    define meta_topic(...)
-+#  elif defined(G_HAVE_GNUC_VARARGS)
-+#    define meta_verbose(format...)
-+#    define meta_topic(format...)
-+#  else
-+#    error "This compiler does not support varargs macros and thus verbose mode can't be disabled meaningfully"
-+#  endif
-+
-+#endif /* !WITH_VERBOSE_MODE */
-diff --git a/src/meta/util.h b/src/meta/util.h
-index 0019c8078..ca8ca2ade 100644
---- a/src/meta/util.h
-+++ b/src/meta/util.h
-@@ -26,6 +26,7 @@
- #include <glib-object.h>
- 
- #include "meta/common.h"
-+#include "meta/meta-debug.h"
- #include "meta/meta-later.h"
- 
- META_EXPORT
-@@ -46,71 +47,6 @@ META_EXPORT
- void meta_fatal      (const char *format,
-                       ...) G_GNUC_PRINTF (1, 2) G_GNUC_NORETURN G_ANALYZER_NORETURN;
- 
--/**
-- * MetaDebugTopic:
-- * @META_DEBUG_VERBOSE: verbose logging
-- * @META_DEBUG_FOCUS: focus
-- * @META_DEBUG_WORKAREA: workarea
-- * @META_DEBUG_STACK: stack
-- * @META_DEBUG_SM: session management
-- * @META_DEBUG_EVENTS: events
-- * @META_DEBUG_WINDOW_STATE: window state
-- * @META_DEBUG_WINDOW_OPS: window operations
-- * @META_DEBUG_GEOMETRY: geometry
-- * @META_DEBUG_PLACEMENT: window placement
-- * @META_DEBUG_PING: ping
-- * @META_DEBUG_KEYBINDINGS: keybindings
-- * @META_DEBUG_SYNC: sync
-- * @META_DEBUG_STARTUP: startup
-- * @META_DEBUG_PREFS: preferences
-- * @META_DEBUG_GROUPS: groups
-- * @META_DEBUG_RESIZING: resizing
-- * @META_DEBUG_SHAPES: shapes
-- * @META_DEBUG_EDGE_RESISTANCE: edge resistance
-- * @META_DEBUG_WAYLAND: Wayland
-- * @META_DEBUG_KMS: kernel mode setting
-- * @META_DEBUG_SCREEN_CAST: screencasting
-- * @META_DEBUG_REMOTE_DESKTOP: remote desktop
-- * @META_DEBUG_BACKEND: backend
-- * @META_DEBUG_RENDER: native backend rendering
-- * @META_DEBUG_COLOR: color management
-- * @META_DEBUG_INPUT_EVENTS: input events
-- * @META_DEBUG_EIS: eis state
-- */
--typedef enum
--{
--  META_DEBUG_VERBOSE         = -1,
--  META_DEBUG_FOCUS           = 1 << 0,
--  META_DEBUG_WORKAREA        = 1 << 1,
--  META_DEBUG_STACK           = 1 << 2,
--  META_DEBUG_SM              = 1 << 3,
--  META_DEBUG_EVENTS          = 1 << 4,
--  META_DEBUG_WINDOW_STATE    = 1 << 5,
--  META_DEBUG_WINDOW_OPS      = 1 << 6,
--  META_DEBUG_GEOMETRY        = 1 << 7,
--  META_DEBUG_PLACEMENT       = 1 << 8,
--  META_DEBUG_PING            = 1 << 9,
--  META_DEBUG_KEYBINDINGS     = 1 << 10,
--  META_DEBUG_SYNC            = 1 << 11,
--  META_DEBUG_STARTUP         = 1 << 12,
--  META_DEBUG_PREFS           = 1 << 13,
--  META_DEBUG_GROUPS          = 1 << 14,
--  META_DEBUG_RESIZING        = 1 << 15,
--  META_DEBUG_SHAPES          = 1 << 16,
--  META_DEBUG_EDGE_RESISTANCE = 1 << 17,
--  META_DEBUG_DBUS            = 1 << 18,
--  META_DEBUG_INPUT           = 1 << 19,
--  META_DEBUG_WAYLAND         = 1 << 20,
--  META_DEBUG_KMS             = 1 << 21,
--  META_DEBUG_SCREEN_CAST     = 1 << 22,
--  META_DEBUG_REMOTE_DESKTOP  = 1 << 23,
--  META_DEBUG_BACKEND         = 1 << 24,
--  META_DEBUG_RENDER          = 1 << 25,
--  META_DEBUG_COLOR           = 1 << 26,
--  META_DEBUG_INPUT_EVENTS    = 1 << 27,
--  META_DEBUG_EIS             = 1 << 28,
--} MetaDebugTopic;
--
- /**
-  * MetaDebugPaintFlag:
-  * @META_DEBUG_PAINT_NONE: default
-@@ -122,9 +58,6 @@ typedef enum
-   META_DEBUG_PAINT_OPAQUE_REGION = 1 << 0,
- } MetaDebugPaintFlag;
- 
--META_EXPORT
--gboolean meta_is_topic_enabled (MetaDebugTopic topic);
--
- META_EXPORT
- void meta_add_verbose_topic    (MetaDebugTopic topic);
- 
-@@ -155,44 +88,6 @@ char* meta_external_binding_name_for_action (guint keybinding_action);
- META_EXPORT
- char* meta_g_utf8_strndup (const gchar *src, gsize n);
- 
--/* To disable verbose mode, we make these functions into no-ops */
--#ifdef WITH_VERBOSE_MODE
--
--const char * meta_topic_to_string (MetaDebugTopic topic);
--
--META_EXPORT
--void meta_log (const char *format, ...) G_GNUC_PRINTF (1, 2);
--
--#define meta_topic(debug_topic, ...) \
--  G_STMT_START \
--    { \
--      if (meta_is_topic_enabled (debug_topic)) \
--        { \
--          g_autofree char *_topic_message = NULL; \
--\
--          _topic_message = g_strdup_printf (__VA_ARGS__); \
--          meta_log ("%s: %s", meta_topic_to_string (debug_topic), \
--                     _topic_message); \
--        } \
--    } \
--  G_STMT_END
--
--#define meta_verbose(...) meta_topic (META_DEBUG_VERBOSE, __VA_ARGS__)
--
--#else
--
--#  ifdef G_HAVE_ISO_VARARGS
--#    define meta_verbose(...)
--#    define meta_topic(...)
--#  elif defined(G_HAVE_GNUC_VARARGS)
--#    define meta_verbose(format...)
--#    define meta_topic(format...)
--#  else
--#    error "This compiler does not support varargs macros and thus verbose mode can't be disabled meaningfully"
--#  endif
--
--#endif /* !WITH_VERBOSE_MODE */
--
- typedef enum
- {
-   META_LOCALE_DIRECTION_LTR,
 diff --git a/src/tests/mtk/region-tests.c b/src/tests/mtk/region-tests.c
 index 7e41a53f0..c9ebc2adb 100644
 --- a/src/tests/mtk/region-tests.c

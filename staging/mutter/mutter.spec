@@ -45,17 +45,13 @@ Patch3:         0001-Revert-x11-Use-input-region-from-frame-window-for-de.patch
 # which solves the problems reported with #3329 alone
 Patch4: 0001-modified-3329.patch
 
-# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3567
-# Scaling for Xwayland applications
-# Patch5: 0002-3567.patch
-
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3304/
 # Nvidia secondary GPU copy acceleration
-Patch6: 0003-3304.patch
+Patch5: 0003-3304.patch
 
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441/
 # Dynamic triple buffering
-Patch7: 0004-1441.patch
+Patch6: 0004-1441.patch
 
 BuildRequires: pkgconfig(gobject-introspection-1.0) >= 1.41.0
 BuildRequires: pkgconfig(sm)
