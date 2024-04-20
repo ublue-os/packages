@@ -33,10 +33,10 @@ index 09bee954a..8b955c90c 100644
                                EGLDisplay display,
                                GError   **error);
 diff --git a/src/backends/native/meta-onscreen-native.c b/src/backends/native/meta-onscreen-native.c
-index 405ce80a4..086e217cb 100644
+index e40b03f3e..2710352d1 100644
 --- a/src/backends/native/meta-onscreen-native.c
 +++ b/src/backends/native/meta-onscreen-native.c
-@@ -841,6 +841,9 @@ copy_shared_framebuffer_gpu (CoglOnscreen                        *onscreen,
+@@ -840,6 +840,9 @@ copy_shared_framebuffer_gpu (CoglOnscreen                        *onscreen,
    COGL_TRACE_BEGIN_SCOPED (CopySharedFramebufferSecondaryGpu,
                             "copy_shared_framebuffer_gpu()");
  
@@ -46,7 +46,7 @@ index 405ce80a4..086e217cb 100644
    render_device = renderer_gpu_data->render_device;
    egl_display = meta_render_device_get_egl_display (render_device);
  
-@@ -948,8 +951,7 @@ copy_shared_framebuffer_primary_gpu (CoglOnscreen                        *onscre
+@@ -947,8 +950,7 @@ copy_shared_framebuffer_primary_gpu (CoglOnscreen                        *onscre
    COGL_TRACE_BEGIN_SCOPED (CopySharedFramebufferPrimaryGpu,
                             "copy_shared_framebuffer_primary_gpu()");
  
@@ -56,7 +56,7 @@ index 405ce80a4..086e217cb 100644
      return NULL;
  
    primary_gpu = meta_renderer_native_get_primary_gpu (renderer_native);
-@@ -2418,6 +2420,15 @@ init_secondary_gpu_state_gpu_copy_mode (MetaRendererNative         *renderer_nat
+@@ -2417,6 +2419,15 @@ init_secondary_gpu_state_gpu_copy_mode (MetaRendererNative         *renderer_nat
                                      width, height,
                                      format,
                                      GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
@@ -471,7 +471,7 @@ index 997fe6f69..2d3fe1971 100644
      /* For GPU blit mode */
      EGLContext egl_context;
 diff --git a/src/backends/native/meta-renderer-native.c b/src/backends/native/meta-renderer-native.c
-index 5ffbafb58..aa76d018c 100644
+index 7b64ff3f4..893ee4216 100644
 --- a/src/backends/native/meta-renderer-native.c
 +++ b/src/backends/native/meta-renderer-native.c
 @@ -63,6 +63,7 @@
@@ -482,7 +482,7 @@ index 5ffbafb58..aa76d018c 100644
  #include "backends/native/meta-renderer-native-private.h"
  #include "backends/native/meta-renderer-view-native.h"
  #include "cogl/cogl.h"
-@@ -137,6 +138,9 @@ meta_renderer_native_gpu_data_free (MetaRendererNativeGpuData *renderer_gpu_data
+@@ -136,6 +137,9 @@ meta_renderer_native_gpu_data_free (MetaRendererNativeGpuData *renderer_gpu_data
        MetaRendererNative *renderer_native = renderer_gpu_data->renderer_native;
        MetaEgl *egl = meta_renderer_native_get_egl (renderer_native);
  
@@ -492,7 +492,7 @@ index 5ffbafb58..aa76d018c 100644
        meta_egl_destroy_context (egl,
                                  egl_display,
                                  renderer_gpu_data->secondary.egl_context,
-@@ -1806,6 +1810,7 @@ init_secondary_gpu_data_gpu (MetaRendererNativeGpuData *renderer_gpu_data,
+@@ -1805,6 +1809,7 @@ init_secondary_gpu_data_gpu (MetaRendererNativeGpuData *renderer_gpu_data,
    CoglContext *cogl_context;
    CoglDisplay *cogl_display;
    const char **missing_gl_extensions;
@@ -500,7 +500,7 @@ index 5ffbafb58..aa76d018c 100644
  
    egl_display = meta_render_device_get_egl_display (render_device);
    if (egl_display == EGL_NO_DISPLAY)
-@@ -1872,6 +1877,11 @@ init_secondary_gpu_data_gpu (MetaRendererNativeGpuData *renderer_gpu_data,
+@@ -1871,6 +1876,11 @@ init_secondary_gpu_data_gpu (MetaRendererNativeGpuData *renderer_gpu_data,
      meta_egl_has_extensions (egl, egl_display, NULL,
                               "EGL_EXT_image_dma_buf_import_modifiers",
                               NULL);

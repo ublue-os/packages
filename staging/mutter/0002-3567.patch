@@ -163,7 +163,7 @@ index 7d5e46ac7..577ed2760 100644
    meta_window_actor_notify_damaged (META_WINDOW_ACTOR (actor_x11));
  }
 diff --git a/src/core/frame.c b/src/core/frame.c
-index 1c90ce423..dbd111d76 100644
+index 145f0b7bd..502622598 100644
 --- a/src/core/frame.c
 +++ b/src/core/frame.c
 @@ -33,6 +33,7 @@
@@ -173,8 +173,8 @@ index 1c90ce423..dbd111d76 100644
 +#include "x11/window-x11.h"
  
  #include <X11/Xatom.h>
- 
-@@ -65,6 +66,7 @@ meta_window_x11_set_frame_xwindow (MetaWindow *window,
+ #include <X11/extensions/shape.h>
+@@ -66,6 +67,7 @@ meta_window_x11_set_frame_xwindow (MetaWindow *window,
    XSetWindowAttributes attrs;
    gulong create_serial = 0;
    MetaFrame *frame;
@@ -182,7 +182,7 @@ index 1c90ce423..dbd111d76 100644
  
    if (window->frame)
      return;
-@@ -123,11 +125,19 @@ meta_window_x11_set_frame_xwindow (MetaWindow *window,
+@@ -127,11 +129,19 @@ meta_window_x11_set_frame_xwindow (MetaWindow *window,
    meta_stack_tracker_record_remove (window->display->stack_tracker,
                                      meta_window_x11_get_xwindow (window),
                                      XNextRequest (x11_display->xdisplay));
@@ -204,7 +204,7 @@ index 1c90ce423..dbd111d76 100644
    window->reparents_pending += 1;
    /* FIXME handle this error */
    mtk_x11_error_trap_pop (x11_display->xdisplay);
-@@ -197,6 +207,8 @@ meta_window_destroy_frame (MetaWindow *window)
+@@ -201,6 +211,8 @@ meta_window_destroy_frame (MetaWindow *window)
  
    if (!x11_display->closing)
      {
@@ -213,7 +213,7 @@ index 1c90ce423..dbd111d76 100644
        if (!window->unmanaging)
          {
            meta_stack_tracker_record_add (window->display->stack_tracker,
-@@ -204,6 +216,14 @@ meta_window_destroy_frame (MetaWindow *window)
+@@ -208,6 +220,14 @@ meta_window_destroy_frame (MetaWindow *window)
                                           XNextRequest (x11_display->xdisplay));
          }
  
@@ -228,7 +228,7 @@ index 1c90ce423..dbd111d76 100644
        XReparentWindow (x11_display->xdisplay,
                         meta_window_x11_get_xwindow (window),
                         x11_display->xroot,
-@@ -211,8 +231,7 @@ meta_window_destroy_frame (MetaWindow *window)
+@@ -215,8 +235,7 @@ meta_window_destroy_frame (MetaWindow *window)
                          * coordinates here means we'll need to ensure a configure
                          * notify event is sent; see bug 399552.
                          */
@@ -238,7 +238,7 @@ index 1c90ce423..dbd111d76 100644
        window->reparents_pending += 1;
      }
  
-@@ -263,6 +282,7 @@ meta_frame_query_borders (MetaFrame        *frame,
+@@ -270,6 +289,7 @@ meta_frame_query_borders (MetaFrame        *frame,
                            MetaFrameBorders *borders)
  {
    MetaWindow *window = frame->window;
@@ -246,7 +246,7 @@ index 1c90ce423..dbd111d76 100644
    MetaX11Display *x11_display = window->display->x11_display;
    int format, res;
    Atom type;
-@@ -288,12 +308,22 @@ meta_frame_query_borders (MetaFrame        *frame,
+@@ -295,12 +315,22 @@ meta_frame_query_borders (MetaFrame        *frame,
  
    if (res == Success && nitems == 4)
      {
@@ -275,7 +275,7 @@ index 1c90ce423..dbd111d76 100644
      }
  
    g_clear_pointer (&data, XFree);
-@@ -314,12 +344,21 @@ meta_frame_query_borders (MetaFrame        *frame,
+@@ -321,12 +351,21 @@ meta_frame_query_borders (MetaFrame        *frame,
  
    if (res == Success && nitems == 4)
      {
@@ -303,7 +303,7 @@ index 1c90ce423..dbd111d76 100644
      }
  
    g_clear_pointer (&data, XFree);
-@@ -363,7 +402,9 @@ meta_frame_sync_to_window (MetaFrame *frame,
+@@ -370,7 +409,9 @@ meta_frame_sync_to_window (MetaFrame *frame,
                             gboolean   need_resize)
  {
    MetaWindow *window = frame->window;
@@ -313,7 +313,7 @@ index 1c90ce423..dbd111d76 100644
  
    meta_topic (META_DEBUG_GEOMETRY,
                "Syncing frame geometry %d,%d %dx%d (SE: %d,%d)",
-@@ -374,12 +415,22 @@ meta_frame_sync_to_window (MetaFrame *frame,
+@@ -381,12 +422,22 @@ meta_frame_sync_to_window (MetaFrame *frame,
  
    mtk_x11_error_trap_push (x11_display->xdisplay);
  
@@ -340,7 +340,7 @@ index 1c90ce423..dbd111d76 100644
  
    mtk_x11_error_trap_pop (x11_display->xdisplay);
  
-@@ -416,6 +467,7 @@ static void
+@@ -423,6 +474,7 @@ static void
  send_configure_notify (MetaFrame *frame)
  {
    MetaX11Display *x11_display = frame->window->display->x11_display;
@@ -348,7 +348,7 @@ index 1c90ce423..dbd111d76 100644
    XEvent event = { 0 };
  
    /* We never get told by the frames client, just reassert the
-@@ -425,10 +477,16 @@ send_configure_notify (MetaFrame *frame)
+@@ -432,10 +484,16 @@ send_configure_notify (MetaFrame *frame)
    event.xconfigure.display = x11_display->xdisplay;
    event.xconfigure.event = frame->xwindow;
    event.xconfigure.window = frame->xwindow;
@@ -1299,7 +1299,7 @@ index 5c0760daa..f67e9e427 100644
  
  static Bool
 diff --git a/src/x11/window-props.c b/src/x11/window-props.c
-index c18b3eab5..55c7b8b98 100644
+index c18b3eab5..6adb69bb8 100644
 --- a/src/x11/window-props.c
 +++ b/src/x11/window-props.c
 @@ -305,10 +305,15 @@ reload_icon_geometry (MetaWindow    *window,
@@ -1436,7 +1436,7 @@ index c18b3eab5..55c7b8b98 100644
      window->size_hints.flags = 0;
  
 diff --git a/src/x11/window-x11.c b/src/x11/window-x11.c
-index c2ae6bad7..45506120e 100644
+index a60650732..839759bc4 100644
 --- a/src/x11/window-x11.c
 +++ b/src/x11/window-x11.c
 @@ -110,6 +110,113 @@ meta_window_x11_get_private (MetaWindowX11 *window_x11)
@@ -1745,9 +1745,9 @@ index c2ae6bad7..45506120e 100644
 +                                     attrs.border_width, 0, 0, 0,
 +                                     &priv->border_width, NULL, NULL, NULL);
  
-   G_OBJECT_CLASS (meta_window_x11_parent_class)->constructed (object);
- }
-@@ -2188,6 +2340,8 @@ meta_window_x11_class_init (MetaWindowX11Class *klass)
+   g_signal_connect (window, "notify::decorated",
+                     G_CALLBACK (meta_window_x11_update_input_region),
+@@ -2192,6 +2344,8 @@ meta_window_x11_class_init (MetaWindowX11Class *klass)
    klass->thaw_commits = meta_window_x11_impl_thaw_commits;
    klass->always_update_shape = meta_window_x11_impl_always_update_shape;
    klass->process_property_notify = meta_window_x11_impl_process_property_notify;
@@ -1756,7 +1756,7 @@ index c2ae6bad7..45506120e 100644
  
    obj_props[PROP_ATTRIBUTES] =
      g_param_spec_pointer ("attributes", NULL, NULL,
-@@ -2459,7 +2613,10 @@ meta_window_x11_update_input_region (MetaWindow *window)
+@@ -2468,7 +2622,10 @@ meta_window_x11_update_input_region (MetaWindow *window)
        else
          {
            /* Window has a custom shape. */
@@ -1768,7 +1768,7 @@ index c2ae6bad7..45506120e 100644
          }
  
        meta_XFree (rects);
-@@ -2543,7 +2700,10 @@ meta_window_x11_update_shape_region (MetaWindow *window)
+@@ -2552,7 +2709,10 @@ meta_window_x11_update_shape_region (MetaWindow *window)
  
        if (rects)
          {
@@ -1780,7 +1780,7 @@ index c2ae6bad7..45506120e 100644
            XFree (rects);
          }
      }
-@@ -2821,6 +2981,7 @@ meta_window_x11_configure_request (MetaWindow *window,
+@@ -2830,6 +2990,7 @@ meta_window_x11_configure_request (MetaWindow *window,
  {
    MetaWindowX11 *window_x11 = META_WINDOW_X11 (window);
    MetaWindowX11Private *priv = meta_window_x11_get_instance_private (window_x11);
@@ -1788,7 +1788,7 @@ index c2ae6bad7..45506120e 100644
  
    /* Note that x, y is the corner of the window border,
     * and width, height is the size of the window inside
-@@ -2829,15 +2990,25 @@ meta_window_x11_configure_request (MetaWindow *window,
+@@ -2838,15 +2999,25 @@ meta_window_x11_configure_request (MetaWindow *window,
     * requested border here.
     */
    if (event->xconfigurerequest.value_mask & CWBorderWidth)
@@ -1822,7 +1822,7 @@ index c2ae6bad7..45506120e 100644
  
    /* Handle stacking. We only handle raises/lowers, mostly because
     * stack.c really can't deal with anything else.  I guess we'll fix
-@@ -3332,8 +3503,13 @@ meta_window_x11_client_message (MetaWindow *window,
+@@ -3341,8 +3512,13 @@ meta_window_x11_client_message (MetaWindow *window,
        guint32 timestamp;
        MetaWindowDrag *window_drag;
  
@@ -1838,7 +1838,7 @@ index c2ae6bad7..45506120e 100644
        action = event->xclient.data.l[2];
        button = event->xclient.data.l[3];
  
-@@ -3497,6 +3673,7 @@ meta_window_x11_client_message (MetaWindow *window,
+@@ -3506,6 +3682,7 @@ meta_window_x11_client_message (MetaWindow *window,
      {
        MetaGravity gravity;
        guint value_mask;
@@ -1846,7 +1846,7 @@ index c2ae6bad7..45506120e 100644
  
        gravity = (MetaGravity) (event->xclient.data.l[0] & 0xff);
        value_mask = (event->xclient.data.l[0] & 0xf00) >> 8;
-@@ -3505,13 +3682,20 @@ meta_window_x11_client_message (MetaWindow *window,
+@@ -3514,13 +3691,20 @@ meta_window_x11_client_message (MetaWindow *window,
        if (gravity == 0)
          gravity = window->size_hints.win_gravity;
  
@@ -1871,7 +1871,7 @@ index c2ae6bad7..45506120e 100644
      }
    else if (event->xclient.message_type ==
             x11_display->atom__NET_ACTIVE_WINDOW &&
-@@ -3568,11 +3752,15 @@ meta_window_x11_client_message (MetaWindow *window,
+@@ -3577,11 +3761,15 @@ meta_window_x11_client_message (MetaWindow *window,
    else if (event->xclient.message_type ==
             x11_display->atom__GTK_SHOW_WINDOW_MENU)
      {
@@ -1890,7 +1890,7 @@ index c2ae6bad7..45506120e 100644
  
        meta_window_show_menu (window, META_WINDOW_MENU_WM, x, y);
      }
-@@ -4094,10 +4282,11 @@ meta_window_x11_configure_notify (MetaWindow      *window,
+@@ -4103,10 +4291,11 @@ meta_window_x11_configure_notify (MetaWindow      *window,
    g_assert (window->override_redirect);
    g_assert (window->frame == NULL);
  
