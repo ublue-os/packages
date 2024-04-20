@@ -5046,14 +5046,6 @@ index f5ebc23fe..2f870fdc3 100644
      .loop = g_main_loop_new (NULL, FALSE),
    };
  
-diff --git a/src/tests/ref-tests/wayland_buffer_single-pixel-buffer_7.ref.png b/src/tests/ref-tests/wayland_buffer_single-pixel-buffer_7.ref.png
-new file mode 100644
-index 000000000..c2b0c2ff5
-Binary files /dev/null and b/src/tests/ref-tests/wayland_buffer_single-pixel-buffer_7.ref.png differ
-diff --git a/src/tests/ref-tests/wayland_buffer_single-pixel-buffer_8.ref.png b/src/tests/ref-tests/wayland_buffer_single-pixel-buffer_8.ref.png
-new file mode 100644
-index 000000000..28fc7b266
-Binary files /dev/null and b/src/tests/ref-tests/wayland_buffer_single-pixel-buffer_8.ref.png differ
 diff --git a/src/tests/wayland-test-clients/buffer-transform.c b/src/tests/wayland-test-clients/buffer-transform.c
 index cb78489b4..8591e88d6 100644
 --- a/src/tests/wayland-test-clients/buffer-transform.c
