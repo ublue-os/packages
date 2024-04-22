@@ -19,7 +19,6 @@ package:
       - sed
       - starship
       - ublue-base
-      - uutils
       - zoxide
       - zsh
 
