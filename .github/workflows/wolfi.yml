@@ -28,6 +28,12 @@ jobs:
       - name: Generate package list
         run: |
           cd wolfi
+          # Copy package resources to workdir
+          RESOURCES=$(ls -d */)
+          for resource in $RESOURCES; do
+            cp -r $resource/* .
+          done
+          # Create package list
           APK_LIST=$(find *.yaml -type 'f' | tr '\n' ',')
           echo "APK_LIST=$APK_LIST" >> $GITHUB_ENV
 
