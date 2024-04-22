@@ -27,7 +27,8 @@ jobs:
 
       - name: Generate package list
         run: |
-          APK_LIST=$(ls wolfi | tr '\n' ',')
+          cd wolfi
+          APK_LIST=$(find *.yaml -type 'f' | tr '\n' ',')
           echo "APK_LIST=$APK_LIST" >> $GITHUB_ENV
 
       # Build APKs with melange
