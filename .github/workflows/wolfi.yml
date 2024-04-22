@@ -1,7 +1,7 @@
 name: Build and Upload Wolfi Packages
 on:
   schedule:
-    - cron: '0 5,17 * * *'  # 5am and 5pm every day
+    - cron: '50 5,17 * * *'  # 5:50 AM and 5:50 PM UTC every day
   pull_request:
   merge_group:
   workflow_dispatch:
