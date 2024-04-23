@@ -29,7 +29,7 @@ A kernel module that exposes the Framework Laptop (13, 16)'s battery charge limi
 # Print kmodtool output for debugging purposes:
 kmodtool  --target %{_target_cpu} --kmodname %{name} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null
 
-%autosetup -p1 -n %{real_name}-kmod-master
+%autosetup -p1 -n %{real_name}-kmod-main
 
 for kernel_version  in %{?kernel_versions} ; do
   mkdir -p _kmod_build_${kernel_version%%___*}
