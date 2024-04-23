@@ -33,7 +33,7 @@ kmodtool  --target %{_target_cpu} --kmodname %{name} %{?buildforkernels:--%{buil
 
 for kernel_version  in %{?kernel_versions} ; do
   mkdir -p _kmod_build_${kernel_version%%___*}
-  cp -a %{modname}.c %{modname}.h Makefile _kmod_build_${kernel_version%%___*}/
+  cp -a %{modname}.c Makefile _kmod_build_${kernel_version%%___*}/
 done
 
 %build
