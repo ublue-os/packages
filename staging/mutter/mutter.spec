@@ -16,8 +16,8 @@
 %global _default_patch_fuzz 2
 
 Name:          mutter
-Version:       %{gnome_version}
-Release:       2%{?dist}.xscaling.{{{ git_dir_version }}}
+Version:       %{gnome_version}.xscaling.{{{ git_dir_version }}}
+Release:       2%{?dist}
 Summary:       Window and compositing manager based on Clutter
 
 License:       GPLv2+
