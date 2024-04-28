@@ -20,8 +20,8 @@
 %global major_version %%(echo %{gnome_version} | cut -f 1 -d '~' | cut -f 1 -d '.')
 
 Name:           gnome-settings-daemon
-Version:        %{gnome_version}.xscaling.9
-Release:        %autorelease
+Version:        %{gnome_version}
+Release:        %autorelease.xscaling.{{{ git_dir_version }}}
 Summary:        The daemon sharing settings from GNOME to GTK+/KDE applications
 
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later

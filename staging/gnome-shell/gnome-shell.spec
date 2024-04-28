@@ -3,7 +3,7 @@
 
 Name:           gnome-shell
 Version:        %{major_version}.0
-Release:        %autorelease.bazzite.{{{ git_dir_version }}}
+Release:        %autorelease.switcheroo.{{{ git_dir_version }}}
 Summary:        Window management and application launching for GNOME
 
 License:        GPL-2.0-or-later
