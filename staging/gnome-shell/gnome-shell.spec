@@ -70,7 +70,7 @@ BuildRequires:  python3
 BuildRequires:  libXfixes-devel >= 5.0
 # used in unused BigThemeImage
 BuildRequires:  librsvg2-devel
-BuildRequires:  mutter-devel >= %{mutter_version}
+BuildRequires:  mutter-devel
 BuildRequires:  pkgconfig(libpulse)
 %ifnarch s390 s390x ppc ppc64 ppc64p7
 BuildRequires:  gnome-bluetooth-libs-devel >= %{gnome_bluetooth_version}
