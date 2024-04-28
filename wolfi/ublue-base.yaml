@@ -88,10 +88,20 @@ pipeline:
 
       # Make some symlinks
       ln -sf /bin/sh "${{targets.contextdir}}"/usr/bin/sh
+
+      # Symlink host tools
       ln -sf /usr/bin/distrobox-host-exec "${{targets.contextdir}}"/usr/local/bin/docker
-      ln -sf /usr/bin/distrobox-host-exec "${{targets.contextdir}}"/usr/local/bin/flatpak
       ln -sf /usr/bin/distrobox-host-exec "${{targets.contextdir}}"/usr/local/bin/podman
+
+      # Symlink host package managers
+      ln -sf /usr/bin/distrobox-host-exec "${{targets.contextdir}}"/usr/local/bin/apt
+      ln -sf /usr/bin/distrobox-host-exec "${{targets.contextdir}}"/usr/local/bin/apt-get
+      ln -sf /usr/bin/distrobox-host-exec "${{targets.contextdir}}"/usr/local/bin/dnf
+      ln -sf /usr/bin/distrobox-host-exec "${{targets.contextdir}}"/usr/local/bin/flatpak
+      ln -sf /usr/bin/distrobox-host-exec "${{targets.contextdir}}"/usr/local/bin/pacman
       ln -sf /usr/bin/distrobox-host-exec "${{targets.contextdir}}"/usr/local/bin/rpm-ostree
+      ln -sf /usr/bin/distrobox-host-exec "${{targets.contextdir}}"/usr/local/bin/snap
+      ln -sf /usr/bin/distrobox-host-exec "${{targets.contextdir}}"/usr/local/bin/zypper
 
 update:
   manual: true
