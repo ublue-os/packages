@@ -41,6 +41,8 @@ if test "$(id -u)" -gt "0"; then
   fi
 
   if test ! -f /etc/linuxbrew.firstrun; then
+    # Remove local repository added at buildtime
+    sudo sed -zi "s|\./packages\n||" /etc/apk/repositories
     sudo touch /etc/linuxbrew.firstrun
     printf "\nBluefin-CLI first run complete!\n\n"
   fi
