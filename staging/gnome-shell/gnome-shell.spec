@@ -1,8 +1,9 @@
 %global tarball_version %%(echo %{version} | tr '~' '.')
 %global major_version 46
+%global minor_version 1
 
 Name:           gnome-shell
-Version:        %{major_version}.0
+Version:        %{major_version}.%{minor_version}
 Release:        %autorelease.switcheroo.{{{ git_dir_version }}}
 Summary:        Window management and application launching for GNOME
 
