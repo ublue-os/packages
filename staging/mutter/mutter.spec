@@ -17,7 +17,7 @@
 
 Name:          mutter
 Version:       %{gnome_version}
-Release:       100.%autorelease.xscaling.{{{ git_dir_version }}}
+Release:       2%{?dist}.xscaling.{{{ git_dir_version }}}
 Summary:       Window and compositing manager based on Clutter
 
 License:       GPLv2+
