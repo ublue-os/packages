@@ -44,7 +44,7 @@ package:
       - procps
       - rsync
       - shadow
-      - su-exec
+      - sudo
       - tcpdump
       - tree
       - tzdata
@@ -74,8 +74,7 @@ pipeline:
       mkdir -p "${{targets.contextdir}}"/usr/bin
       mkdir -p "${{targets.contextdir}}"/usr/local/bin
 
-      # Setup fake sudo and pinentry
-      install -Dm755 sudo "${{targets.contextdir}}"/usr/bin/sudo
+      # Setup fake pinentry
       install -Dm755 pinentry "${{targets.contextdir}}"/usr/bin/pinentry
 
       # Get Distrobox-host-exec and host-spawn
