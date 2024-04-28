@@ -11,7 +11,7 @@
 %global mutter_api_version 14
 
 %global gnome_major_version 46
-%global gnome_version %{gnome_major_version}.0
+%global gnome_version %{gnome_major_version}.1
 %global tarball_version %%(echo %{gnome_version} | tr '~' '.')
 %global _default_patch_fuzz 2
 
@@ -45,13 +45,8 @@ Patch3:         0001-Revert-x11-Use-input-region-from-frame-window-for-de.patch
 # which solves the problems reported with #3329 alone
 Patch4: 0001-modified-3329.patch
 
-# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3304/
-# Nvidia secondary GPU copy acceleration
-Patch5: 0003-3304.patch
-
-# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441/
-# Dynamic triple buffering
-Patch6: 0004-1441.patch
+# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3567
+Patch5: 3567.patch
 
 BuildRequires: pkgconfig(gobject-introspection-1.0) >= 1.41.0
 BuildRequires: pkgconfig(sm)

@@ -1,8 +1,56 @@
-From 1d5c47f8970c2027de5f6fa49b84de73d55b419b Mon Sep 17 00:00:00 2001
+From 21680b2f4edb064ff524cb91e9e20ace91deda6d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Florian=20M=C3=BCllner?= <fmuellner@gnome.org>
+Date: Sun, 21 Apr 2024 16:54:52 +0200
+Subject: [PATCH 1/2] Revert "x11/window: Update comment and variable name to
+ reflect current behavior"
+
+This reverts commit e4763d00e8512aeb408ae118597d753f12217487.
+---
+ src/x11/window-x11.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/src/x11/window-x11.c b/src/x11/window-x11.c
+index 6d2016e3ec..f6f7d87dfe 100644
+--- a/src/x11/window-x11.c
++++ b/src/x11/window-x11.c
+@@ -2476,20 +2476,21 @@ meta_window_x11_update_input_region (MetaWindow *window)
+ 
+   if (region != NULL)
+     {
+-      MtkRectangle bounding_rect;
++      MtkRectangle client_area;
+ 
+-      bounding_rect.x = 0;
+-      bounding_rect.y = 0;
+-      bounding_rect.width = window->buffer_rect.width;
+-      bounding_rect.height = window->buffer_rect.height;
++      client_area.x = 0;
++      client_area.y = 0;
++      client_area.width = window->buffer_rect.width;
++      client_area.height = window->buffer_rect.height;
+ 
+       /* The shape we get back from the client may have coordinates
+        * outside of the frame. The X SHAPE Extension requires that
+        * the overall shape the client provides never exceeds the
+        * "bounding rectangle" of the window -- the shape that the
+-       * window would have gotten if it was unshaped.
++       * window would have gotten if it was unshaped. In our case,
++       * this is simply the client area.
+        */
+-      mtk_region_intersect_rectangle (region, &bounding_rect);
++      mtk_region_intersect_rectangle (region, &client_area);
+     }
+ 
+   meta_window_set_input_region (window, region);
+-- 
+2.44.0
+
+
+From f1996e67ad8a5a0009e90c38767c8906e015ba70 Mon Sep 17 00:00:00 2001
 From: Adam Williamson <awilliam@redhat.com>
 Date: Thu, 5 Oct 2023 13:09:46 -0700
-Subject: [PATCH] Revert "x11: Use input region from frame window for decorated
- windows"
+Subject: [PATCH 2/2] Revert "x11: Use input region from frame window for
+ decorated windows"
 
 This reverts commit d991961ae2a5c8cf2e58ff1072239f4902b0f767. It
 seems to cause the broken mouse interaction bug reported in
@@ -15,7 +63,7 @@ Closes: https://gitlab.gnome.org/GNOME/mutter/-/issues/3068
  2 files changed, 10 insertions(+), 26 deletions(-)
 
 diff --git a/src/core/frame.c b/src/core/frame.c
-index 145f0b7bd7..1c90ce4231 100644
+index c74a2e04ec..5feb854805 100644
 --- a/src/core/frame.c
 +++ b/src/core/frame.c
 @@ -35,7 +35,6 @@
@@ -47,7 +95,7 @@ index 145f0b7bd7..1c90ce4231 100644
                     meta_window_x11_get_xwindow (window),
                     x11_display->atom__MUTTER_NEEDS_FRAME);
 diff --git a/src/x11/window-x11.c b/src/x11/window-x11.c
-index 745c45db18..8edff883c9 100644
+index f6f7d87dfe..1bc5c57a1a 100644
 --- a/src/x11/window-x11.c
 +++ b/src/x11/window-x11.c
 @@ -2082,10 +2082,6 @@ meta_window_x11_constructed (GObject *object)
@@ -111,5 +159,5 @@ index 745c45db18..8edff883c9 100644
        /* The shape we get back from the client may have coordinates
         * outside of the frame. The X SHAPE Extension requires that
 -- 
-2.43.2
+2.44.0
 
