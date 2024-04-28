@@ -16,7 +16,7 @@
 %global _default_patch_fuzz 2
 
 Name:          mutter
-Version:       %{gnome_version}.xscaling.8
+Version:       %{gnome_version}.xscaling.9
 Release:       %autorelease
 Summary:       Window and compositing manager based on Clutter
 
