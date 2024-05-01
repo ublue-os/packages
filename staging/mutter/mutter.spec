@@ -117,7 +117,7 @@ Requires: startup-notification
 Requires: dbus
 
 # Need common
-Requires: %{name}-common = %{gnome_version}-%{release}
+Requires: %{name}-common = %{version}-%{release}
 
 Recommends: mesa-dri-drivers%{?_isa}
 
@@ -127,6 +127,8 @@ Provides: firstboot(windowmanager) = mutter
 # significantly since then.
 Provides: bundled(cogl) = 1.22.0
 Provides: bundled(clutter) = 1.26.0
+
+Provides: mutter = %{gnome_version}-%{release}
 
 Conflicts: mutter < 45~beta.1-2
 
@@ -150,6 +152,7 @@ behaviors to meet the needs of the environment.
 Summary: Common files used by %{name} and forks of %{name}
 BuildArch: noarch
 Conflicts: mutter < 45~beta.1-2
+Provides: mutter-common = %{gnome_version}-%{release}
 
 %description common
 Common files used by Mutter and soft forks of Mutter
