@@ -1,6 +1,6 @@
 Name:           devpod
 # renovate: datasource=github-releases depName=loft-sh/devpod
-Version:        v0.5.4
+Version:        v0.5.6
 Release:        1%{?dist}
 Summary:        Codespaces but open-source, client-only and unopinionated.
 
@@ -9,24 +9,8 @@ URL:            https://github.com/loft-sh/%{name}
 Source0:        %{url}/releases/download/%{version}/DevPod_linux_x86_64.tar.gz
 ExclusiveArch:  x86_64
 
-Requires:       cairo
-Requires:       cairo-gobject
-Requires:       dbus-libs
-Requires:       gdk-pixbuf2
-Requires:       glib2
-Requires:       glibc
-Requires:       gtk3
-Requires:       gtk3-immodules
-Requires:       javascriptcoregtk4.0
-Requires:       libXdmcp
 Requires:       libappindicator-gtk3
-Requires:       libbsd
-Requires:       libdeflate
-Requires:       libgcc
-Requires:       libwmf
-Requires:       openssl
-Requires:       pango
-Requires:       webkit2gtk4.1
+Requires:       webkit2gtk4.0
 
 %description
 Codespaces but open-source, client-only and unopinionated: Works with any IDE and lets you use any cloud, kubernetes or just localhost docker.
