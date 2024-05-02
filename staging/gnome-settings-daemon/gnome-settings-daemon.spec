@@ -20,8 +20,8 @@
 %global major_version %%(echo %{gnome_version} | cut -f 1 -d '~' | cut -f 1 -d '.')
 
 Name:           gnome-settings-daemon
-Version:        %{gnome_version}
-Release:        %autorelease.xscaling.{{{ git_dir_version }}}
+Version:        %{gnome_version}.xscaling.{{{ git_dir_version }}}
+Release:        1%{?dist}
 Summary:        The daemon sharing settings from GNOME to GTK+/KDE applications
 
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later
@@ -78,6 +78,8 @@ Requires: gnome-desktop3%{?_isa} >= %{gnome_desktop_version}
 Requires: gsettings-desktop-schemas%{?_isa} >= %{gsettings_desktop_schemas_version}
 Requires: gtk3%{?_isa} >= %{gtk3_version}
 Requires: libgweather4%{?_isa}
+
+Provides: gnome-settings-daemon = %{gnome_version}-%{release}
 
 %description
 A daemon to share settings from GNOME to other applications. It also
