@@ -1138,7 +1138,7 @@ index ea9c27d74..828e6f64e 100644
 +                                                         META_EXPERIMENTAL_FEATURE_XWAYLAND_NATIVE_SCALING) &&
 +          meta_settings_is_experimental_feature_enabled (settings,
 +                                                         META_EXPERIMENTAL_FEATURE_SCALE_MONITOR_FRAMEBUFFER))
-+        return max(ceil(manager->highest_monitor_scale), 1);
++        return fmax(ceil(manager->highest_monitor_scale), 1);
 +    }
 +
 +  return 1;
