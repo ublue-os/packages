@@ -343,7 +343,7 @@ index ed57ad16..07a9e993 100644
                         vte::parser::StringTokeniser::const_iterator& token,
                         vte::parser::StringTokeniser::const_iterator const& endtoken,
 diff --git a/src/vteseq.cc b/src/vteseq.cc
-index 904837e1..26f7b0d6 100644
+index 2c5b1e12..d68104aa 100644
 --- a/src/vteseq.cc
 +++ b/src/vteseq.cc
 @@ -39,6 +39,9 @@
@@ -478,7 +478,7 @@ index 904837e1..26f7b0d6 100644
  bool
  Terminal::get_osc_color_index(int osc,
                                          int value,
-@@ -6596,6 +6714,10 @@ Terminal::OSC(vte::parser::Sequence const& seq)
+@@ -6599,6 +6717,10 @@ Terminal::OSC(vte::parser::Sequence const& seq)
                  reset_color(VTE_HIGHLIGHT_FG, VTE_COLOR_SOURCE_ESCAPE);
                  break;
  
@@ -489,7 +489,7 @@ index 904837e1..26f7b0d6 100644
          case VTE_OSC_XTERM_SET_ICON_TITLE:
          case VTE_OSC_XTERM_SET_XPROPERTY:
          case VTE_OSC_XTERM_SET_COLOR_MOUSE_CURSOR_FG:
-@@ -6636,7 +6758,6 @@ Terminal::OSC(vte::parser::Sequence const& seq)
+@@ -6639,7 +6761,6 @@ Terminal::OSC(vte::parser::Sequence const& seq)
          case VTE_OSC_URXVT_SET_FONT_BOLD_ITALIC:
          case VTE_OSC_URXVT_VIEW_UP:
          case VTE_OSC_URXVT_VIEW_DOWN:
