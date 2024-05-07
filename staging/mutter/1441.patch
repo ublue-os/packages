@@ -777,18 +777,37 @@ index f5188e2ac..d53e37785 100644
    _clutter_stage_window_finish_frame (stage_window, view, frame);
  
 diff --git a/cogl/cogl/cogl-onscreen-private.h b/cogl/cogl/cogl-onscreen-private.h
-index 785f67aca..86d8ea2d5 100644
+index 959a60533..86d8ea2d5 100644
 --- a/cogl/cogl/cogl-onscreen-private.h
 +++ b/cogl/cogl/cogl-onscreen-private.h
-@@ -78,7 +78,7 @@ COGL_EXPORT CoglFrameInfo *
+@@ -78,4 +78,7 @@ COGL_EXPORT CoglFrameInfo *
  cogl_onscreen_peek_tail_frame_info (CoglOnscreen *onscreen);
  
  COGL_EXPORT CoglFrameInfo *
 -cogl_onscreen_pop_head_frame_info (CoglOnscreen *onscreen);
 +cogl_onscreen_pop_head_frame_info  (CoglOnscreen *onscreen);
++
++COGL_EXPORT unsigned int
++cogl_onscreen_count_pending_frames (CoglOnscreen *onscreen);
+diff --git a/cogl/cogl/cogl-onscreen.c b/cogl/cogl/cogl-onscreen.c
+index afb648bcd..086be7ed7 100644
+--- a/cogl/cogl/cogl-onscreen.c
++++ b/cogl/cogl/cogl-onscreen.c
+@@ -515,6 +515,14 @@ cogl_onscreen_pop_head_frame_info (CoglOnscreen *onscreen)
+   return g_queue_pop_head (&priv->pending_frame_infos);
+ }
  
- COGL_EXPORT unsigned int
- cogl_onscreen_count_pending_frames (CoglOnscreen *onscreen);
++unsigned int
++cogl_onscreen_count_pending_frames (CoglOnscreen *onscreen)
++{
++  CoglOnscreenPrivate *priv = cogl_onscreen_get_instance_private (onscreen);
++
++  return g_queue_get_length (&priv->pending_frame_infos);
++}
++
+ CoglFrameClosure *
+ cogl_onscreen_add_frame_callback (CoglOnscreen *onscreen,
+                                   CoglFrameCallback callback,
 diff --git a/src/backends/meta-stage-impl.c b/src/backends/meta-stage-impl.c
 index 7aa24439d..727e1a5f3 100644
 --- a/src/backends/meta-stage-impl.c
