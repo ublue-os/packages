@@ -16,7 +16,7 @@
 %global _default_patch_fuzz 2
 
 Name:          mutter
-Version:       %{gnome_version}.xscaling.{{{ git_dir_version }}}
+Version:       %{gnome_version}.ublue.{{{ git_dir_version }}}
 Release:       2%{?dist}
 Summary:       Window and compositing manager based on Clutter
 
@@ -45,8 +45,11 @@ Patch3:         0001-Revert-x11-Use-input-region-from-frame-window-for-de.patch
 # which solves the problems reported with #3329 alone
 Patch4: 0001-modified-3329.patch
 
+# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
+Patch5: 1441.patch
+
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3567
-Patch5: 3567.patch
+# Patch6: 3567.patch
 
 BuildRequires: pkgconfig(gobject-introspection-1.0) >= 1.41.0
 BuildRequires: pkgconfig(sm)
