@@ -5,7 +5,7 @@ Summary:        Prompt is a terminal for GNOME with first-class support for cont
 
 License:        GPLv3
 URL:            https://gitlab.gnome.org/chergert/ptyxis
-Source:         %{url}/-/archive/main/ptyxis-main.tar.gz
+Source:         %{url}/-/archive/gnome-46/ptyxis-gnome-46.tar.gz
 
 BuildRequires:  meson >= 0.54.0
 BuildRequires:  ninja-build
@@ -24,7 +24,7 @@ BuildRequires:  pkgconfig(json-glib-1.0)
 Ptyxis is a terminal for GNOME with first-class support for containers.
 
 %prep
-%autosetup -n ptyxis-main
+%autosetup -n ptyxis-gnome-46
 
 %build
 %meson \
