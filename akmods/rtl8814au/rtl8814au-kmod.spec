@@ -11,7 +11,7 @@
 Name:           %{modname}-kmod
 # Version comes from include/rtw_version.h
 Version:        5.8.5.1.git
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Realtek RTL8814AU Driver
 Group:          System Environment/Kernel
 License:        GPLv2
