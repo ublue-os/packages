@@ -1,4 +1,4 @@
-%global srccommit 866a9100c7b3f6508b81b31a22cae19dcacdacb9
+%global srccommit 810573647b837d88c4191597a0ea6d226f69f64c
 %global modname rtl8814au
 %global srcname 8814au
 
@@ -11,7 +11,7 @@
 Name:           %{modname}-kmod
 # Version comes from include/rtw_version.h
 Version:        5.8.5.1.git
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Realtek RTL8814AU Driver
 Group:          System Environment/Kernel
 License:        GPLv2
