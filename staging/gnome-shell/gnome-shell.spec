@@ -21,7 +21,10 @@ Patch: optional-portal-helper.patch
 # downstream patch to stop trying on configuration errors.
 Patch: 0001-gdm-Work-around-failing-fingerprint-auth.patch
 
-# shell-app: improve discrete GPU detectio
+# https://gitlab.gnome.org/GNOME/gnome-shell/-/merge_requests/3303
+Patch: screencast-bus-name.patch 
+
+# shell-app: improve discrete GPU detection
 # https://gitlab.gnome.org/GNOME/gnome-shell/-/merge_requests/3193
 Patch: 3193.patch
 
