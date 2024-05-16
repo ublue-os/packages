@@ -9,7 +9,7 @@
 
 Name:     %{pkgname}
 Version:  %{srcversion}.git
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary:  Realtek RTL8812AU/21AU and RTL8814AU driver
 License:  GPLv2
 URL:      https://github.com/aircrack-ng/rtl8812au
