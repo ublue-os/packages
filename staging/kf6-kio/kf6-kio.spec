@@ -4,14 +4,14 @@
 %global majmin_ver_kf6 6.2
 
 Name:    kf6-%{framework}
-Version: %{majmin_ver_kf6}.0.switcheroo.{{{ git_dir_version }}}
-Release: 2%{?dist}
+Version: %{majmin_ver_kf6}.0
+Release: 2%{?dist}.switcheroo.{{{ git_dir_version }}}
 Summary: KDE Frameworks 6 Tier 3 solution for filesystem abstraction
 
 License: BSD-2-Clause AND BSD-3-Clause AND CC0-1.0 AND GPL-2.0-only AND GPL-2.0-or-later AND GPL-3.0-only AND LGPL-2.0-only AND LGPL-2.0-or-later AND LGPL-2.1-only AND LGPL-2.1-or-later AND LGPL-3.0-only AND (GPL-2.0-only OR GPL-3.0-only) AND (LGPL-2.1-only OR LGPL-3.0-only) AND MIT
 URL:     https://invent.kde.org/frameworks/%{framework}
 
-Source0: https://download.kde.org/%{stable_kf6}/frameworks/%{majmin_ver_kf6}/%{framework}-%{majmin_ver_kf6}.0.tar.xz
+Source0: https://download.kde.org/%{stable_kf6}/frameworks/%{majmin_ver_kf6}/%{framework}-%{version}.tar.xz
 
 # https://invent.kde.org/frameworks/kio/-/issues/26
 # I'm not sending this upstream because I'm not sure it's really
