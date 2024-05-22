@@ -48,8 +48,8 @@ Patch4: 0001-modified-3329.patch
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
 Patch5: 1441.patch
 
-# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3567
-# Patch6: 3567.patch
+https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3567
+Patch6: 3567.patch
 
 BuildRequires: pkgconfig(gobject-introspection-1.0) >= 1.41.0
 BuildRequires: pkgconfig(sm)
