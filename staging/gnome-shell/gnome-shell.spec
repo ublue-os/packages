@@ -1,6 +1,6 @@
 %global tarball_version %%(echo %{version} | tr '~' '.')
 %global major_version 46
-%global minor_version 1
+%global minor_version 2
 
 Name:           gnome-shell
 Version:        %{major_version}.%{minor_version}
@@ -20,9 +20,6 @@ Patch: optional-portal-helper.patch
 # Some users might have a broken PAM config, so we really need this
 # downstream patch to stop trying on configuration errors.
 Patch: 0001-gdm-Work-around-failing-fingerprint-auth.patch
-
-# https://gitlab.gnome.org/GNOME/gnome-shell/-/merge_requests/3303
-Patch: screencast-bus-name.patch 
 
 # shell-app: improve discrete GPU detection
 # https://gitlab.gnome.org/GNOME/gnome-shell/-/merge_requests/3193
