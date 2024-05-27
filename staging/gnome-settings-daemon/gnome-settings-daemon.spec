@@ -20,7 +20,7 @@
 %global major_version %%(echo %{gnome_version} | cut -f 1 -d '~' | cut -f 1 -d '.')
 
 Name:           gnome-settings-daemon
-Version:        %{gnome_version}.ublue.{{{ git_dir_version }}}
+Version:        %{gnome_version}.xscaling.{{{ git_dir_version }}}
 Release:        1%{?dist}
 Summary:        The daemon sharing settings from GNOME to GTK+/KDE applications
 
