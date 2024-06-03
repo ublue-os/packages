@@ -17,7 +17,7 @@
 
 Name:          mutter
 Version:       %{gnome_version}.ublue.{{{ git_dir_version }}}
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Window and compositing manager based on Clutter
 
 License:       GPLv2+

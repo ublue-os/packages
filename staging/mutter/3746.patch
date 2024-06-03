@@ -1,8 +1,70 @@
+diff --git a/src/backends/meta-crtc.c b/src/backends/meta-crtc.c
+index 646a508b9..71b9bcbe9 100644
+--- a/src/backends/meta-crtc.c
++++ b/src/backends/meta-crtc.c
+@@ -130,6 +130,10 @@ void
+ meta_crtc_unset_config (MetaCrtc *crtc)
+ {
+   MetaCrtcPrivate *priv = meta_crtc_get_instance_private (crtc);
++  MetaCrtcClass *klass = META_CRTC_GET_CLASS (crtc);
++
++  if (klass->unset_config)
++    klass->unset_config (crtc);
+ 
+   g_clear_pointer (&priv->config, g_free);
+ }
+@@ -470,3 +474,14 @@ meta_crtc_config_new (graphene_rect_t      *layout,
+ 
+   return config;
+ }
++
++gboolean
++meta_crtc_is_leased (MetaCrtc *crtc)
++{
++  MetaCrtcClass *klass = META_CRTC_GET_CLASS (crtc);
++
++  if (klass->is_leased)
++    return klass->is_leased (crtc);
++  else
++    return FALSE;
++}
+diff --git a/src/backends/meta-crtc.h b/src/backends/meta-crtc.h
+index 0b1eb8b67..3c6abfe35 100644
+--- a/src/backends/meta-crtc.h
++++ b/src/backends/meta-crtc.h
+@@ -55,6 +55,10 @@ struct _MetaCrtcClass
+   void (* set_config) (MetaCrtc             *crtc,
+                        const MetaCrtcConfig *config,
+                        gpointer              backend_private);
++
++  void (* unset_config) (MetaCrtc *crtc);
++
++  gboolean (* is_leased) (MetaCrtc *crtc);
+ };
+ 
+ META_EXPORT_TEST
+@@ -132,4 +136,6 @@ MetaCrtcConfig * meta_crtc_config_new (graphene_rect_t      *layout,
+                                        MetaCrtcMode         *mode,
+                                        MetaMonitorTransform  transform);
+ 
++gboolean meta_crtc_is_leased (MetaCrtc *crtc);
++
+ G_DEFINE_AUTOPTR_CLEANUP_FUNC (MetaGammaLut, meta_gamma_lut_free)
 diff --git a/src/backends/meta-monitor-config-manager.c b/src/backends/meta-monitor-config-manager.c
-index 5fcb10b4e..2c39575e1 100644
+index 5fcb10b4e..f84f64485 100644
 --- a/src/backends/meta-monitor-config-manager.c
 +++ b/src/backends/meta-monitor-config-manager.c
-@@ -383,9 +383,9 @@ meta_monitor_config_manager_assign (MetaMonitorManager *manager,
+@@ -99,6 +99,9 @@ is_crtc_assigned (MetaCrtc  *crtc,
+ {
+   unsigned int i;
+ 
++  if (meta_crtc_is_leased (crtc))
++    return TRUE;
++
+   for (i = 0; i < crtc_assignments->len; i++)
+     {
+       MetaCrtcAssignment *assigned_crtc_assignment =
+@@ -383,9 +386,9 @@ meta_monitor_config_manager_assign (MetaMonitorManager *manager,
                                      GPtrArray         **out_output_assignments,
                                      GError            **error)
  {
@@ -15,7 +77,7 @@ index 5fcb10b4e..2c39575e1 100644
    GList *l;
  
    crtc_assignments =
-@@ -432,18 +432,11 @@ meta_monitor_config_manager_assign (MetaMonitorManager *manager,
+@@ -432,18 +435,11 @@ meta_monitor_config_manager_assign (MetaMonitorManager *manager,
                                           config, logical_monitor_config,
                                           crtc_assignments, output_assignments,
                                           reserved_crtcs, error))
@@ -37,3 +99,2663 @@ index 5fcb10b4e..2c39575e1 100644
  
    return TRUE;
  }
+diff --git a/src/backends/native/meta-crtc-kms.c b/src/backends/native/meta-crtc-kms.c
+index 3498f922a..f4bd93125 100644
+--- a/src/backends/native/meta-crtc-kms.c
++++ b/src/backends/native/meta-crtc-kms.c
+@@ -206,6 +206,15 @@ meta_crtc_kms_set_gamma_lut (MetaCrtc           *crtc,
+   clutter_stage_schedule_update (CLUTTER_STAGE (stage));
+ }
+ 
++static gboolean
++meta_crtc_kms_is_leased (MetaCrtc *crtc)
++{
++  MetaCrtcKms *crtc_kms = META_CRTC_KMS (crtc);
++  MetaKmsCrtc *kms_crtc = meta_crtc_kms_get_kms_crtc (crtc_kms);
++
++  return meta_kms_crtc_is_leased (kms_crtc);
++}
++
+ typedef struct _CrtcKmsAssignment
+ {
+   MetaKmsPlane *primary_plane;
+@@ -247,6 +256,25 @@ is_plane_assigned (MetaKmsPlane     *plane,
+   return FALSE;
+ }
+ 
++static gboolean
++is_plane_leased (MetaKmsDevice *kms_device,
++                 MetaKmsPlane  *kms_plane)
++{
++  GList *l;
++
++  for (l = meta_kms_device_get_crtcs (kms_device); l; l = l->next)
++    {
++      MetaKmsCrtc *kms_crtc = l->data;
++      MetaCrtcKms *crtc_kms = meta_crtc_kms_from_kms_crtc (kms_crtc);
++
++      if (meta_kms_crtc_is_leased (kms_crtc) &&
++          crtc_kms->assigned_primary_plane == kms_plane)
++        return TRUE;
++    }
++
++  return FALSE;
++}
++
+ static MetaKmsPlane *
+ find_unassigned_plane (MetaCrtcKms      *crtc_kms,
+                        MetaKmsPlaneType  kms_plane_type,
+@@ -270,6 +298,9 @@ find_unassigned_plane (MetaCrtcKms      *crtc_kms,
+                              crtc_assignments))
+         continue;
+ 
++      if (is_plane_leased (kms_device, kms_plane))
++        continue;
++
+       return kms_plane;
+     }
+ 
+@@ -326,6 +357,27 @@ meta_crtc_kms_set_config (MetaCrtc             *crtc,
+   crtc_kms->assigned_cursor_plane = kms_assignment->cursor_plane;
+ }
+ 
++void
++meta_crtc_kms_assign_planes (MetaCrtcKms  *crtc_kms,
++                             MetaKmsPlane *primary_plane,
++                             MetaKmsPlane *cursor_plane)
++{
++  crtc_kms->assigned_primary_plane = primary_plane;
++  crtc_kms->assigned_cursor_plane = cursor_plane;
++}
++
++static void
++meta_crtc_kms_unset_config (MetaCrtc *crtc)
++{
++  MetaCrtcKms *crtc_kms = META_CRTC_KMS (crtc);
++
++  if (meta_crtc_kms_is_leased (crtc))
++    return;
++
++  crtc_kms->assigned_primary_plane = NULL;
++  crtc_kms->assigned_cursor_plane = NULL;
++}
++
+ static gboolean
+ meta_crtc_kms_is_transform_handled (MetaCrtcNative       *crtc_native,
+                                     MetaMonitorTransform  transform)
+@@ -476,6 +528,8 @@ meta_crtc_kms_class_init (MetaCrtcKmsClass *klass)
+   crtc_class->set_gamma_lut = meta_crtc_kms_set_gamma_lut;
+   crtc_class->assign_extra = meta_crtc_kms_assign_extra;
+   crtc_class->set_config = meta_crtc_kms_set_config;
++  crtc_class->unset_config = meta_crtc_kms_unset_config;
++  crtc_class->is_leased = meta_crtc_kms_is_leased;
+ 
+   crtc_native_class->is_transform_handled = meta_crtc_kms_is_transform_handled;
+   crtc_native_class->is_hw_cursor_supported = meta_crtc_kms_is_hw_cursor_supported;
+diff --git a/src/backends/native/meta-crtc-kms.h b/src/backends/native/meta-crtc-kms.h
+index c132b9907..382982534 100644
+--- a/src/backends/native/meta-crtc-kms.h
++++ b/src/backends/native/meta-crtc-kms.h
+@@ -41,6 +41,10 @@ MetaKmsPlane * meta_crtc_kms_get_assigned_primary_plane (MetaCrtcKms *crtc_kms);
+ 
+ MetaKmsPlane * meta_crtc_kms_get_assigned_cursor_plane (MetaCrtcKms *crtc_kms);
+ 
++void meta_crtc_kms_assign_planes (MetaCrtcKms  *crtc_kms,
++                                  MetaKmsPlane *primary_plane,
++                                  MetaKmsPlane *cursor_plane);
++
+ void meta_crtc_kms_set_mode (MetaCrtcKms   *crtc_kms,
+                              MetaKmsUpdate *kms_update);
+ 
+diff --git a/src/backends/native/meta-gpu-kms.c b/src/backends/native/meta-gpu-kms.c
+index 3e0ad99c5..3b4356ca6 100644
+--- a/src/backends/native/meta-gpu-kms.c
++++ b/src/backends/native/meta-gpu-kms.c
+@@ -348,13 +348,14 @@ init_outputs (MetaGpuKms *gpu_kms)
+   for (l = meta_kms_device_get_connectors (gpu_kms->kms_device); l; l = l->next)
+     {
+       MetaKmsConnector *kms_connector = l->data;
+-      const MetaKmsConnectorState *connector_state;
+       MetaOutputKms *output_kms;
+       MetaOutput *old_output;
+       GError *error = NULL;
+ 
+-      connector_state = meta_kms_connector_get_current_state (kms_connector);
+-      if (!connector_state || connector_state->non_desktop)
++      if (!meta_kms_connector_get_current_state (kms_connector))
++        continue;
++
++      if (meta_kms_connector_is_for_lease (kms_connector))
+         continue;
+ 
+       old_output =
+diff --git a/src/backends/native/meta-kms-connector.c b/src/backends/native/meta-kms-connector.c
+index d47d9c835..38d169264 100644
+--- a/src/backends/native/meta-kms-connector.c
++++ b/src/backends/native/meta-kms-connector.c
+@@ -164,6 +164,31 @@ meta_kms_connector_get_current_state (MetaKmsConnector *connector)
+   return connector->current_state;
+ }
+ 
++gboolean
++meta_kms_connector_is_for_lease (MetaKmsConnector *connector)
++{
++  const char *lease_connectors_str;
++
++  if (!connector->current_state)
++    return FALSE;
++
++  lease_connectors_str = getenv ("MUTTER_DEBUG_LEASE_CONNECTORS");
++  if (lease_connectors_str && *lease_connectors_str != '\0')
++    {
++      int n;
++      g_auto (GStrv) names;
++
++      names = g_strsplit (lease_connectors_str, ":", -1);
++      for (n = 0; n < g_strv_length (names); n++)
++        {
++          if (g_str_equal (meta_kms_connector_get_name (connector), names[n]))
++            return TRUE;
++        }
++    }
++
++  return connector->current_state->non_desktop;
++}
++
+ static gboolean
+ has_privacy_screen_software_toggle (MetaKmsConnector *connector)
+ {
+diff --git a/src/backends/native/meta-kms-connector.h b/src/backends/native/meta-kms-connector.h
+index cb71b4987..c10326d2a 100644
+--- a/src/backends/native/meta-kms-connector.h
++++ b/src/backends/native/meta-kms-connector.h
+@@ -101,3 +101,5 @@ MetaKmsMode * meta_kms_connector_get_preferred_mode (MetaKmsConnector *connector
+ 
+ META_EXPORT_TEST
+ const MetaKmsConnectorState * meta_kms_connector_get_current_state (MetaKmsConnector *connector);
++
++gboolean meta_kms_connector_is_for_lease (MetaKmsConnector *connector);
+diff --git a/src/backends/native/meta-kms-crtc-private.h b/src/backends/native/meta-kms-crtc-private.h
+index 299482d6e..237a73625 100644
+--- a/src/backends/native/meta-kms-crtc-private.h
++++ b/src/backends/native/meta-kms-crtc-private.h
+@@ -58,3 +58,6 @@ gboolean meta_kms_crtc_determine_deadline (MetaKmsCrtc  *crtc,
+                                            int64_t      *out_next_deadline_us,
+                                            int64_t      *out_next_presentation_us,
+                                            GError      **error);
++
++void meta_kms_crtc_set_is_leased (MetaKmsCrtc *crtc,
++                                  gboolean     leased);
+diff --git a/src/backends/native/meta-kms-crtc.c b/src/backends/native/meta-kms-crtc.c
+index a0872089a..40237fff9 100644
+--- a/src/backends/native/meta-kms-crtc.c
++++ b/src/backends/native/meta-kms-crtc.c
+@@ -50,6 +50,8 @@ struct _MetaKmsCrtc
+   MetaKmsCrtcState current_state;
+ 
+   MetaKmsCrtcPropTable prop_table;
++
++  gboolean is_leased;
+ };
+ 
+ G_DEFINE_TYPE (MetaKmsCrtc, meta_kms_crtc, G_TYPE_OBJECT)
+@@ -107,6 +109,19 @@ meta_kms_crtc_is_active (MetaKmsCrtc *crtc)
+   return crtc->current_state.is_active;
+ }
+ 
++gboolean
++meta_kms_crtc_is_leased (MetaKmsCrtc *crtc)
++{
++  return crtc->is_leased;
++}
++
++void
++meta_kms_crtc_set_is_leased (MetaKmsCrtc *crtc,
++                             gboolean     leased)
++{
++  crtc->is_leased = leased;
++}
++
+ static void
+ read_crtc_gamma (MetaKmsCrtc       *crtc,
+                  MetaKmsCrtcState  *crtc_state,
+diff --git a/src/backends/native/meta-kms-crtc.h b/src/backends/native/meta-kms-crtc.h
+index 580ee9a89..af6538cd3 100644
+--- a/src/backends/native/meta-kms-crtc.h
++++ b/src/backends/native/meta-kms-crtc.h
+@@ -65,3 +65,5 @@ int meta_kms_crtc_get_idx (MetaKmsCrtc *crtc);
+ 
+ META_EXPORT_TEST
+ gboolean meta_kms_crtc_is_active (MetaKmsCrtc *crtc);
++
++gboolean meta_kms_crtc_is_leased (MetaKmsCrtc *crtc);
+diff --git a/src/backends/native/meta-kms-device.c b/src/backends/native/meta-kms-device.c
+index 127a05de7..b3fcc71bd 100644
+--- a/src/backends/native/meta-kms-device.c
++++ b/src/backends/native/meta-kms-device.c
+@@ -423,6 +423,145 @@ meta_kms_device_handle_flush (MetaKmsDevice *device,
+   return needs_flush;
+ }
+ 
++typedef struct
++{
++  MetaKmsDevice *device;
++  GList *connectors;
++  GList *crtcs;
++  GList *planes;
++
++  int fd;
++  uint32_t lessee_id;
++} LeaseRequestData;
++
++static gpointer
++lease_objects_in_impl (MetaThreadImpl  *thread_impl,
++                       gpointer         user_data,
++                       GError         **error)
++{
++  LeaseRequestData *data = user_data;
++  MetaKmsImplDevice *impl_device =
++    meta_kms_device_get_impl_device (data->device);
++  uint32_t lessee_id;
++  int fd;
++
++  if (!meta_kms_impl_device_lease_objects (impl_device,
++                                           data->connectors,
++                                           data->crtcs,
++                                           data->planes,
++                                           &fd,
++                                           &lessee_id,
++                                           error))
++    return GINT_TO_POINTER (FALSE);
++
++  data->fd = fd;
++  data->lessee_id = lessee_id;
++
++  return GINT_TO_POINTER (TRUE);
++}
++
++gboolean
++meta_kms_device_lease_objects (MetaKmsDevice  *device,
++                               GList          *connectors,
++                               GList          *crtcs,
++                               GList          *planes,
++                               int            *out_fd,
++                               uint32_t       *out_lessee_id,
++                               GError        **error)
++{
++  LeaseRequestData data = {};
++
++  data.device = device;
++  data.connectors = connectors;
++  data.crtcs = crtcs;
++  data.planes = planes;
++
++  if (!meta_kms_run_impl_task_sync (device->kms, lease_objects_in_impl, &data,
++                                    error))
++    return FALSE;
++
++  *out_fd = data.fd;
++  *out_lessee_id = data.lessee_id;
++  return TRUE;
++}
++
++typedef struct
++{
++  MetaKmsDevice *device;
++  uint32_t lessee_id;
++} RevokeLeaseData;
++
++static gpointer
++revoke_lease_in_impl (MetaThreadImpl  *thread_impl,
++                      gpointer         user_data,
++                      GError         **error)
++{
++  LeaseRequestData *data = user_data;
++  MetaKmsImplDevice *impl_device =
++    meta_kms_device_get_impl_device (data->device);
++
++  if (!meta_kms_impl_device_revoke_lease (impl_device, data->lessee_id, error))
++    return GINT_TO_POINTER (FALSE);
++  else
++    return GINT_TO_POINTER (TRUE);
++}
++
++gboolean
++meta_kms_device_revoke_lease (MetaKmsDevice  *device,
++                              uint32_t        lessee_id,
++                              GError        **error)
++{
++  LeaseRequestData data = {};
++
++  data.device = device;
++  data.lessee_id = lessee_id;
++
++  return !!meta_kms_run_impl_task_sync (device->kms, revoke_lease_in_impl, &data,
++                                        error);
++}
++
++typedef struct
++{
++  MetaKmsDevice *device;
++  uint32_t **out_lessee_ids;
++  int *out_num_lessee_ids;
++} ListLesseesData;
++
++static gpointer
++list_lessees_in_impl (MetaThreadImpl  *thread_impl,
++                      gpointer         user_data,
++                      GError         **error)
++{
++  ListLesseesData *data = user_data;
++  MetaKmsImplDevice *impl_device = meta_kms_device_get_impl_device (data->device);
++
++  if (!meta_kms_impl_device_list_lessees (impl_device,
++                                          data->out_lessee_ids,
++                                          data->out_num_lessee_ids,
++                                          error))
++    return GINT_TO_POINTER (FALSE);
++  else
++    return GINT_TO_POINTER (TRUE);
++}
++
++gboolean
++meta_kms_device_list_lessees (MetaKmsDevice  *device,
++                              uint32_t      **out_lessee_ids,
++                              int            *out_num_lessee_ids,
++                              GError        **error)
++{
++  ListLesseesData data = {};
++
++  data.device = device;
++  data.out_lessee_ids = out_lessee_ids;
++  data.out_num_lessee_ids = out_num_lessee_ids;
++
++  return !!meta_kms_run_impl_task_sync (device->kms,
++                                        list_lessees_in_impl,
++                                        &data,
++                                        error);
++}
++
+ typedef struct _CreateImplDeviceData
+ {
+   MetaKmsDevice *device;
+diff --git a/src/backends/native/meta-kms-device.h b/src/backends/native/meta-kms-device.h
+index 00dafb16c..0b39f7df5 100644
+--- a/src/backends/native/meta-kms-device.h
++++ b/src/backends/native/meta-kms-device.h
+@@ -86,6 +86,23 @@ gboolean meta_kms_device_handle_flush (MetaKmsDevice *device,
+ META_EXPORT_TEST
+ void meta_kms_device_disable (MetaKmsDevice *device);
+ 
++gboolean meta_kms_device_lease_objects (MetaKmsDevice  *device,
++                                        GList          *connectors,
++                                        GList          *crtcs,
++                                        GList          *planes,
++                                        int            *out_fd,
++                                        uint32_t       *out_lessee_id,
++                                        GError        **error);
++
++gboolean meta_kms_device_revoke_lease (MetaKmsDevice  *device,
++                                       uint32_t        lessee_id,
++                                       GError        **error);
++
++gboolean meta_kms_device_list_lessees (MetaKmsDevice  *device,
++                                       uint32_t      **out_lessee_ids,
++                                       int            *out_num_lessee_ids,
++                                       GError        **error);
++
+ MetaKmsDevice * meta_kms_device_new (MetaKms            *kms,
+                                      const char         *path,
+                                      MetaKmsDeviceFlag   flags,
+diff --git a/src/backends/native/meta-kms-impl-device.c b/src/backends/native/meta-kms-impl-device.c
+index 315ed2717..d67964f20 100644
+--- a/src/backends/native/meta-kms-impl-device.c
++++ b/src/backends/native/meta-kms-impl-device.c
+@@ -20,6 +20,7 @@
+ #include "backends/native/meta-kms-impl-device.h"
+ 
+ #include <errno.h>
++#include <fcntl.h>
+ #include <glib/gstdio.h>
+ #include <linux/dma-buf.h>
+ #include <sys/ioctl.h>
+@@ -263,6 +264,188 @@ meta_kms_impl_device_get_path (MetaKmsImplDevice *impl_device)
+   return priv->path;
+ }
+ 
++static MetaDeviceFile *
++meta_kms_impl_device_open_device_file (MetaKmsImplDevice  *impl_device,
++                                       const char         *path,
++                                       GError            **error)
++{
++  MetaKmsImplDevicePrivate *priv =
++    meta_kms_impl_device_get_instance_private (impl_device);
++  MetaKmsImplDeviceClass *klass = META_KMS_IMPL_DEVICE_GET_CLASS (impl_device);
++
++  return klass->open_device_file (impl_device, priv->path, error);
++}
++
++static gpointer
++kms_event_dispatch_in_impl (MetaThreadImpl  *impl,
++                            gpointer         user_data,
++                            GError         **error)
++{
++  MetaKmsImplDevice *impl_device = user_data;
++  gboolean ret;
++
++  ret = meta_kms_impl_device_dispatch (impl_device, error);
++  return GINT_TO_POINTER (ret);
++}
++
++static gboolean
++ensure_device_file (MetaKmsImplDevice  *impl_device,
++                    GError            **error)
++{
++  MetaKmsImplDevicePrivate *priv =
++    meta_kms_impl_device_get_instance_private (impl_device);
++  MetaDeviceFile *device_file;
++
++  if (priv->device_file)
++    return TRUE;
++
++  device_file = meta_kms_impl_device_open_device_file (impl_device,
++                                                       priv->path,
++                                                       error);
++  if (!device_file)
++    return FALSE;
++
++  priv->device_file = device_file;
++
++  if (!(priv->flags & META_KMS_DEVICE_FLAG_NO_MODE_SETTING))
++    {
++      priv->fd_source =
++        meta_thread_impl_register_fd (META_THREAD_IMPL (priv->impl),
++                                      meta_device_file_get_fd (device_file),
++                                      kms_event_dispatch_in_impl,
++                                      impl_device);
++      g_source_set_priority (priv->fd_source, G_PRIORITY_HIGH);
++    }
++
++  return TRUE;
++}
++
++gboolean
++meta_kms_impl_device_lease_objects (MetaKmsImplDevice  *impl_device,
++                                    GList              *connectors,
++                                    GList              *crtcs,
++                                    GList              *planes,
++                                    int                *out_fd,
++                                    uint32_t           *out_lessee_id,
++                                    GError            **error)
++{
++  MetaKmsImplDevicePrivate *priv =
++    meta_kms_impl_device_get_instance_private (impl_device);
++  uint32_t *object_ids;
++  int n_object_ids;
++  GList *l;
++  int retval;
++  uint32_t lessee_id;
++  int i = 0;
++
++  meta_assert_in_kms_impl (meta_kms_impl_get_kms (priv->impl));
++
++  if (!ensure_device_file (impl_device, error))
++    return FALSE;
++
++  meta_kms_impl_device_hold_fd (impl_device);
++
++  n_object_ids = (g_list_length (connectors) +
++                  g_list_length (crtcs) +
++                  g_list_length (planes));
++  object_ids = g_alloca (sizeof (uint32_t) * n_object_ids);
++
++  for (l = connectors; l; l = l->next)
++    {
++      MetaKmsConnector *connector = l->data;
++
++      object_ids[i++] = meta_kms_connector_get_id (connector);
++    }
++
++  for (l = crtcs; l; l = l->next)
++    {
++      MetaKmsCrtc *crtc = l->data;
++
++      object_ids[i++] = meta_kms_crtc_get_id (crtc);
++    }
++
++  for (l = planes; l; l = l->next)
++    {
++      MetaKmsPlane *plane = l->data;
++
++      object_ids[i++] = meta_kms_plane_get_id (plane);
++    }
++
++  retval = drmModeCreateLease (meta_kms_impl_device_get_fd (impl_device),
++                               object_ids, n_object_ids, 0,
++                               &lessee_id);
++
++  if (retval < 0)
++    {
++      meta_kms_impl_device_unhold_fd (impl_device);
++      g_set_error (error, G_IO_ERROR, g_io_error_from_errno (-retval),
++                   "Failed to create lease: %s", g_strerror (-retval));
++      return FALSE;
++    }
++
++  *out_fd = retval;
++  *out_lessee_id = lessee_id;
++
++  return TRUE;
++}
++
++gboolean
++meta_kms_impl_device_revoke_lease (MetaKmsImplDevice  *impl_device,
++                                   uint32_t            lessee_id,
++                                   GError            **error)
++{
++  MetaKmsImplDevicePrivate *priv =
++    meta_kms_impl_device_get_instance_private (impl_device);
++  int retval;
++
++  meta_assert_in_kms_impl (meta_kms_impl_get_kms (priv->impl));
++
++  retval = drmModeRevokeLease (meta_kms_impl_device_get_fd (impl_device),
++                               lessee_id);
++  meta_kms_impl_device_unhold_fd (impl_device);
++
++  if (retval != 0)
++    {
++      g_set_error (error, G_IO_ERROR, g_io_error_from_errno (-retval),
++                   "Failed to revoke lease: %s", g_strerror (-retval));
++      return FALSE;
++    }
++
++  return TRUE;
++}
++
++gboolean
++meta_kms_impl_device_list_lessees (MetaKmsImplDevice  *impl_device,
++                                   uint32_t          **out_lessee_ids,
++                                   int                *out_num_lessee_ids,
++                                   GError            **error)
++{
++  MetaKmsImplDevicePrivate *priv =
++    meta_kms_impl_device_get_instance_private (impl_device);
++  drmModeLesseeListRes *list;
++  int i;
++  uint32_t *lessee_ids;
++
++  meta_assert_in_kms_impl (meta_kms_impl_get_kms (priv->impl));
++
++  list = drmModeListLessees (meta_kms_impl_device_get_fd (impl_device));
++
++  if (!list)
++    {
++      g_set_error (error, G_IO_ERROR, G_IO_ERROR_FAILED,
++                   "Failed to list lessees");
++      return FALSE;
++    }
++
++  lessee_ids = g_new0 (uint32_t, list->count);
++  for (i = 0; i < list->count; i++)
++    lessee_ids[i] = list->lessees[i];
++
++  *out_lessee_ids = lessee_ids;
++  *out_num_lessee_ids = list->count;
++  return TRUE;
++}
++
+ gboolean
+ meta_kms_impl_device_dispatch (MetaKmsImplDevice  *impl_device,
+                                GError            **error)
+@@ -313,18 +496,6 @@ meta_kms_impl_device_dispatch (MetaKmsImplDevice  *impl_device,
+   return TRUE;
+ }
+ 
+-static gpointer
+-kms_event_dispatch_in_impl (MetaThreadImpl  *impl,
+-                            gpointer         user_data,
+-                            GError         **error)
+-{
+-  MetaKmsImplDevice *impl_device = user_data;
+-  gboolean ret;
+-
+-  ret = meta_kms_impl_device_dispatch (impl_device, error);
+-  return GINT_TO_POINTER (ret);
+-}
+-
+ drmModePropertyPtr
+ meta_kms_impl_device_find_property (MetaKmsImplDevice       *impl_device,
+                                     drmModeObjectProperties *props,
+@@ -889,50 +1060,6 @@ init_fallback_modes (MetaKmsImplDevice *impl_device)
+   priv->fallback_modes = g_list_reverse (modes);
+ }
+ 
+-static MetaDeviceFile *
+-meta_kms_impl_device_open_device_file (MetaKmsImplDevice  *impl_device,
+-                                       const char         *path,
+-                                       GError            **error)
+-{
+-  MetaKmsImplDevicePrivate *priv =
+-    meta_kms_impl_device_get_instance_private (impl_device);
+-  MetaKmsImplDeviceClass *klass = META_KMS_IMPL_DEVICE_GET_CLASS (impl_device);
+-
+-  return klass->open_device_file (impl_device, priv->path, error);
+-}
+-
+-static gboolean
+-ensure_device_file (MetaKmsImplDevice  *impl_device,
+-                    GError            **error)
+-{
+-  MetaKmsImplDevicePrivate *priv =
+-    meta_kms_impl_device_get_instance_private (impl_device);
+-  MetaDeviceFile *device_file;
+-
+-  if (priv->device_file)
+-    return TRUE;
+-
+-  device_file = meta_kms_impl_device_open_device_file (impl_device,
+-                                                       priv->path,
+-                                                       error);
+-  if (!device_file)
+-    return FALSE;
+-
+-  priv->device_file = device_file;
+-
+-  if (!(priv->flags & META_KMS_DEVICE_FLAG_NO_MODE_SETTING))
+-    {
+-      priv->fd_source =
+-        meta_thread_impl_register_fd (META_THREAD_IMPL (priv->impl),
+-                                      meta_device_file_get_fd (device_file),
+-                                      kms_event_dispatch_in_impl,
+-                                      impl_device);
+-      g_source_set_priority (priv->fd_source, G_PRIORITY_HIGH);
+-    }
+-
+-  return TRUE;
+-}
+-
+ static void
+ ensure_latched_fd_hold (MetaKmsImplDevice *impl_device)
+ {
+@@ -1066,6 +1193,49 @@ meta_kms_impl_device_get_fd (MetaKmsImplDevice *impl_device)
+   return meta_device_file_get_fd (priv->device_file);
+ }
+ 
++/**
++ * meta_kms_impl_device_open_non_privileged_fd:
++ * @impl_device: a #MetaKmsImplDevice object
++ *
++ * Returns a non-master file descriptor for the given impl_device. The caller is
++ * responsable of closing the file descriptor.
++ *
++ * On error, returns a negative value.
++ */
++int
++meta_kms_impl_device_open_non_privileged_fd (MetaKmsImplDevice *impl_device)
++{
++  int fd;
++  const char *path;
++  MetaKmsImplDevicePrivate *priv =
++    meta_kms_impl_device_get_instance_private (impl_device);
++
++  path = meta_device_file_get_path (priv->device_file);
++
++  fd = open (path, O_RDWR | O_CLOEXEC);
++  if (fd < 0)
++    {
++      meta_topic (META_DEBUG_KMS,
++                  "Error getting non-master fd for device at '%s': %s",
++                  path,
++                  g_strerror (errno));
++      return -1;
++    }
++
++  if (drmIsMaster (fd))
++    {
++      if (drmDropMaster (fd) < 0)
++        {
++          meta_topic (META_DEBUG_KMS,
++                      "Error dropping master for device at '%s'",
++                      path);
++          return -1;
++        }
++    }
++
++  return fd;
++}
++
+ /**
+  * meta_kms_impl_device_get_signaled_sync_file:
+  * @impl_device: a #MetaKmsImplDevice object
+diff --git a/src/backends/native/meta-kms-impl-device.h b/src/backends/native/meta-kms-impl-device.h
+index d32e06630..0bbbefa75 100644
+--- a/src/backends/native/meta-kms-impl-device.h
++++ b/src/backends/native/meta-kms-impl-device.h
+@@ -132,6 +132,23 @@ const char * meta_kms_impl_device_get_driver_description (MetaKmsImplDevice *imp
+ 
+ const char * meta_kms_impl_device_get_path (MetaKmsImplDevice *impl_device);
+ 
++gboolean meta_kms_impl_device_lease_objects (MetaKmsImplDevice  *impl_device,
++                                             GList              *connectors,
++                                             GList              *crtcs,
++                                             GList              *planes,
++                                             int                *out_fd,
++                                             uint32_t           *out_lessee_id,
++                                             GError            **error);
++
++gboolean meta_kms_impl_device_revoke_lease (MetaKmsImplDevice  *impl_device,
++                                            uint32_t            lessee_id,
++                                            GError            **error);
++
++gboolean meta_kms_impl_device_list_lessees (MetaKmsImplDevice  *impl_device,
++                                            uint32_t          **out_lessee_ids,
++                                            int                *out_num_lessee_ids,
++                                            GError            **error);
++
+ gboolean meta_kms_impl_device_dispatch (MetaKmsImplDevice  *impl_device,
+                                         GError            **error);
+ 
+@@ -148,6 +165,8 @@ void meta_kms_impl_device_hold_fd (MetaKmsImplDevice *impl_device);
+ 
+ void meta_kms_impl_device_unhold_fd (MetaKmsImplDevice *impl_device);
+ 
++int meta_kms_impl_device_open_non_privileged_fd (MetaKmsImplDevice *impl_device);
++
+ int meta_kms_impl_device_get_signaled_sync_file (MetaKmsImplDevice *impl_device);
+ 
+ MetaKmsResourceChanges meta_kms_impl_device_update_states (MetaKmsImplDevice *impl_device,
+diff --git a/src/backends/native/meta-kms-lease.c b/src/backends/native/meta-kms-lease.c
+new file mode 100644
+index 000000000..80ecb2262
+--- /dev/null
++++ b/src/backends/native/meta-kms-lease.c
+@@ -0,0 +1,814 @@
++/*
++ * Copyright (C) 2023 Red Hat
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include "config.h"
++
++#include "backends/native/meta-kms-lease.h"
++
++#include <glib.h>
++
++#include "backends/native/meta-crtc-kms.h"
++#include "backends/native/meta-kms.h"
++#include "backends/native/meta-kms-connector.h"
++#include "backends/native/meta-kms-crtc-private.h"
++#include "backends/native/meta-kms-device.h"
++#include "backends/native/meta-kms-plane.h"
++
++enum
++{
++  PROP_0,
++
++  PROP_MANAGER_META_KMS,
++
++  N_PROPS_MANAGER,
++};
++
++static GParamSpec *props_manager[N_PROPS_MANAGER] = { NULL };
++
++enum
++{
++  MANAGER_CONNECTORS_CHANGED,
++
++  N_SIGNALS_MANAGER,
++};
++
++static guint signals_manager[N_SIGNALS_MANAGER] = { 0 };
++
++enum
++{
++  LEASE_REVOKED,
++
++  N_SIGNALS_LEASE,
++};
++
++static guint signals_lease[N_SIGNALS_LEASE] = { 0 };
++
++struct _MetaKmsLeaseManager
++{
++  GObject parent;
++
++  MetaKms *kms;
++
++  gulong device_added_handler_id;
++  gulong resources_changed_handler_id;
++  gulong lease_changed_handler_id;
++
++  GHashTable *leases;
++  GHashTable *connectors;
++};
++
++G_DEFINE_TYPE (MetaKmsLeaseManager, meta_kms_lease_manager, G_TYPE_OBJECT)
++
++typedef struct _LeasingKmsAssignment
++{
++  MetaKmsConnector *connector;
++  MetaKmsCrtc *crtc;
++  MetaKmsPlane *primary_plane;
++  MetaKmsPlane *cursor_plane;
++} LeasingKmsAssignment;
++
++struct _MetaKmsLease
++{
++  GObject parent;
++
++  uint32_t lessee_id;
++  int fd;
++  MetaKmsDevice *kms_device;
++  GList *assignments;
++};
++
++G_DEFINE_TYPE (MetaKmsLease, meta_kms_lease, G_TYPE_OBJECT)
++
++static MetaKmsCrtc *
++find_crtc_to_lease (MetaKmsConnector *kms_connector)
++{
++  MetaKmsDevice *device = meta_kms_connector_get_device (kms_connector);
++  const MetaKmsConnectorState *connector_state =
++    meta_kms_connector_get_current_state (kms_connector);
++  GList *l;
++
++  for (l = meta_kms_device_get_crtcs (device); l; l = l->next)
++    {
++      MetaKmsCrtc *kms_crtc = l->data;
++      MetaCrtcKms *crtc_kms = meta_crtc_kms_from_kms_crtc (kms_crtc);
++      uint32_t crtc_idx;
++
++      if (meta_crtc_is_leased (META_CRTC (crtc_kms)))
++        continue;
++
++      if (meta_crtc_get_outputs (META_CRTC (crtc_kms)) != NULL)
++        continue;
++
++      crtc_idx = meta_kms_crtc_get_idx (kms_crtc);
++      if (!(connector_state->common_possible_crtcs & (1 << crtc_idx)))
++        continue;
++
++      return kms_crtc;
++    }
++
++  return NULL;
++}
++
++static gboolean
++is_plane_assigned (MetaKmsDevice *kms_device,
++                   MetaKmsPlane  *kms_plane)
++{
++  GList *l;
++
++  for (l = meta_kms_device_get_crtcs (kms_device); l; l = l->next)
++    {
++      MetaKmsCrtc *kms_crtc = l->data;
++      MetaCrtcKms *crtc_kms = meta_crtc_kms_from_kms_crtc (kms_crtc);
++
++      if (meta_crtc_kms_get_assigned_primary_plane (crtc_kms) == kms_plane)
++        return TRUE;
++    }
++
++  return FALSE;
++}
++
++static MetaKmsPlane *
++find_plane_to_lease (MetaKmsCrtc      *kms_crtc,
++                     MetaKmsPlaneType  plane_type)
++{
++  MetaKmsDevice *kms_device = meta_kms_crtc_get_device (kms_crtc);
++  GList *l;
++
++  for (l = meta_kms_device_get_planes (kms_device); l; l = l->next)
++    {
++      MetaKmsPlane *kms_plane = l->data;
++
++      if (meta_kms_plane_get_plane_type (kms_plane) != plane_type)
++        continue;
++
++      if (!meta_kms_plane_is_usable_with (kms_plane, kms_crtc))
++        continue;
++
++      if (is_plane_assigned (kms_device, kms_plane))
++        continue;
++
++      return kms_plane;
++    }
++
++  return NULL;
++}
++
++static gboolean
++find_resources_to_lease (MetaKmsLeaseManager  *lease_manager,
++                         MetaKmsDevice        *kms_device,
++                         GList                *connectors,
++                         GList               **out_assignments,
++                         GList               **out_crtcs,
++                         GList               **out_planes,
++                         GError              **error)
++{
++  MetaKms *kms = lease_manager->kms;
++  g_autoptr (GList) assignments = NULL;
++  g_autoptr (GList) crtcs = NULL;
++  g_autoptr (GList) planes = NULL;
++  GList *available_devices;
++  GList *available_connectors;
++  GList *l;
++
++  if (!kms_device)
++    {
++      g_set_error (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
++                   "Cannot create lease without device");
++      return FALSE;
++    }
++
++  if (!connectors)
++    {
++      g_set_error (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
++                   "Cannot create lease without connectors");
++      return FALSE;
++    }
++
++  available_devices = meta_kms_get_devices (kms);
++  if (!g_list_find (available_devices, kms_device))
++    {
++      g_set_error (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
++                   "Failed to find KMS device %s",
++                   meta_kms_device_get_path (kms_device));
++      return FALSE;
++    }
++
++  available_connectors = meta_kms_device_get_connectors (kms_device);
++
++  for (l = connectors; l; l = l->next)
++    {
++      MetaKmsConnector *connector = l->data;
++      MetaKmsDevice *connector_device;
++
++      if (!g_list_find (available_connectors, connector) ||
++          !meta_kms_connector_is_for_lease (connector))
++        {
++          g_set_error (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
++                       "Failed to find connector %u (%s)",
++                       meta_kms_connector_get_id (connector),
++                       meta_kms_device_get_path (kms_device));
++          return FALSE;
++        }
++
++      connector_device = meta_kms_connector_get_device (connector);
++      if (connector_device != kms_device)
++        {
++          g_set_error (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
++                       "Cannot create lease on multiple devices");
++          return FALSE;
++        }
++    }
++
++  for (l = connectors; l; l = l->next)
++    {
++      MetaKmsConnector *connector = l->data;
++      LeasingKmsAssignment *assignment;
++      MetaKmsCrtc *crtc;
++      MetaKmsPlane *primary_plane;
++      MetaKmsPlane *cursor_plane;
++
++      crtc = find_crtc_to_lease (connector);
++      if (!crtc)
++        {
++          g_set_error (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
++                       "Failed to find CRTC to lease with connector %u (%s)",
++                       meta_kms_connector_get_id (connector),
++                       meta_kms_device_get_path (kms_device));
++          return FALSE;
++        }
++
++      crtcs = g_list_append (crtcs, crtc);
++
++      primary_plane = find_plane_to_lease (crtc, META_KMS_PLANE_TYPE_PRIMARY);
++      if (!primary_plane)
++        {
++          g_set_error (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
++                       "Failed to find primary plane "
++                       "to lease with connector %u (%s)",
++                       meta_kms_connector_get_id (connector),
++                       meta_kms_device_get_path (kms_device));
++          return FALSE;
++        }
++
++      planes = g_list_append (planes, primary_plane);
++
++      cursor_plane = find_plane_to_lease (crtc, META_KMS_PLANE_TYPE_CURSOR);
++      if (!cursor_plane)
++        {
++          g_warning ("Failed to find cursor plane "
++                     "to lease with connector %u (%s)",
++                     meta_kms_connector_get_id (connector),
++                     meta_kms_device_get_path (kms_device));
++        }
++      else
++        {
++          planes = g_list_append (planes, cursor_plane);
++        }
++
++      assignment = g_new0 (LeasingKmsAssignment, 1);
++      assignment->connector = connector;
++      assignment->crtc = crtc;
++      assignment->primary_plane = primary_plane;
++      assignment->cursor_plane = cursor_plane;
++
++      assignments = g_list_append (assignments, assignment);
++    }
++
++  *out_assignments = g_steal_pointer (&assignments);
++  *out_crtcs = g_steal_pointer (&crtcs);
++  *out_planes = g_steal_pointer (&planes);
++  return TRUE;
++}
++
++uint32_t
++meta_kms_lease_get_id (MetaKmsLease *lease)
++{
++  return lease->lessee_id;
++}
++
++int
++meta_kms_lease_steal_fd (MetaKmsLease *lease)
++{
++  int fd = lease->fd;
++  lease->fd = -1;
++  return fd;
++}
++
++gboolean
++meta_kms_lease_is_active (MetaKmsLease *lease)
++{
++  return lease->lessee_id != 0;
++}
++
++static void
++meta_kms_lease_assign (MetaKmsLease *lease)
++{
++  GList *l;
++
++  for (l = lease->assignments; l; l = l->next)
++    {
++      LeasingKmsAssignment *assignment = l->data;
++      MetaCrtcKms *crtc_kms = meta_crtc_kms_from_kms_crtc (assignment->crtc);
++
++      meta_kms_crtc_set_is_leased (assignment->crtc, TRUE);
++      meta_crtc_kms_assign_planes (crtc_kms,
++                                   assignment->primary_plane,
++                                   assignment->cursor_plane);
++    }
++}
++
++static void
++meta_kms_lease_unassign (MetaKmsLease *lease)
++{
++  GList *l;
++
++  for (l = lease->assignments; l; l = l->next)
++    {
++      LeasingKmsAssignment *assignment = l->data;
++      MetaCrtcKms *crtc_kms = meta_crtc_kms_from_kms_crtc (assignment->crtc);
++
++      meta_kms_crtc_set_is_leased (assignment->crtc, FALSE);
++      meta_crtc_kms_assign_planes (crtc_kms, NULL, NULL);
++    }
++}
++
++static void
++mark_revoked (MetaKmsLease *lease)
++{
++  meta_kms_lease_unassign (lease);
++
++  g_signal_emit (lease, signals_lease[LEASE_REVOKED], 0);
++  lease->lessee_id = 0;
++}
++
++void
++meta_kms_lease_revoke (MetaKmsLease *lease)
++{
++  g_autoptr (GError) error;
++
++  if (!lease->lessee_id)
++    return;
++
++  if (!meta_kms_device_revoke_lease (lease->kms_device, lease->lessee_id, &error))
++    {
++      g_warning ("Failed to revoke DRM lease on %s: %s",
++                 meta_kms_device_get_path (lease->kms_device),
++                 error->message);
++      return;
++    }
++
++  mark_revoked (lease);
++}
++
++static void
++meta_kms_lease_disappeared (MetaKmsLease *lease)
++{
++  mark_revoked (lease);
++}
++
++static void
++meta_kms_lease_dispose (GObject *object)
++{
++  MetaKmsLease *lease = META_KMS_LEASE (object);
++
++  g_clear_object (&lease->kms_device);
++
++  if (lease->assignments)
++    {
++      g_list_free_full (lease->assignments, g_free);
++      lease->assignments = NULL;
++    }
++
++  G_OBJECT_CLASS (meta_kms_lease_parent_class)->dispose (object);
++}
++
++static void
++meta_kms_lease_finalize (GObject *object)
++{
++  MetaKmsLease *lease = META_KMS_LEASE (object);
++
++  close (lease->fd);
++
++  G_OBJECT_CLASS (meta_kms_lease_parent_class)->finalize (object);
++}
++
++static void
++meta_kms_lease_class_init (MetaKmsLeaseClass *klass)
++{
++  GObjectClass *object_class = G_OBJECT_CLASS (klass);
++
++  object_class->dispose = meta_kms_lease_dispose;
++  object_class->finalize = meta_kms_lease_finalize;
++
++  signals_lease[LEASE_REVOKED] =
++    g_signal_new ("revoked",
++                  G_TYPE_FROM_CLASS (klass),
++                  G_SIGNAL_RUN_LAST,
++                  0,
++                  NULL, NULL, NULL,
++                  G_TYPE_NONE, 0);
++}
++
++static void
++meta_kms_lease_init (MetaKmsLease *lease)
++{
++}
++
++static void
++on_lease_revoked (MetaKmsLease        *lease,
++                  MetaKmsLeaseManager *lease_manager)
++{
++  GHashTableIter iter;
++  MetaKmsConnector *connector;
++  MetaKmsLease *other_lease;
++
++  g_signal_handlers_disconnect_by_func (lease,
++                                        on_lease_revoked,
++                                        lease_manager);
++
++  g_hash_table_iter_init (&iter, lease_manager->connectors);
++  while (g_hash_table_iter_next (&iter,
++                                 (gpointer *)&connector,
++                                 (gpointer *)&other_lease))
++    {
++      if (lease == other_lease)
++        g_hash_table_insert (lease_manager->connectors, connector, NULL);
++    }
++
++  g_hash_table_remove (lease_manager->leases,
++                       GUINT_TO_POINTER (lease->lessee_id));
++
++  g_signal_emit (lease_manager, signals_manager[MANAGER_CONNECTORS_CHANGED], 0);
++}
++
++MetaKmsLease *
++meta_kms_lease_manager_lease_connectors (MetaKmsLeaseManager  *lease_manager,
++                                         MetaKmsDevice        *kms_device,
++                                         GList                *connectors,
++                                         GError              **error)
++{
++  MetaKmsLease *lease;
++  g_autoptr (GList) assignments = NULL;
++  g_autoptr (GList) crtcs = NULL;
++  g_autoptr (GList) planes = NULL;
++  int fd;
++  uint32_t lessee_id;
++  GList *l;
++
++  if (!find_resources_to_lease (lease_manager,
++                                kms_device, connectors,
++                                &assignments, &crtcs, &planes,
++                                error))
++    return NULL;
++
++  if (!meta_kms_device_lease_objects (kms_device,
++                                      connectors, crtcs, planes,
++                                      &fd, &lessee_id,
++                                      error))
++    return NULL;
++
++  lease = g_object_new (META_TYPE_KMS_LEASE, NULL);
++  lease->lessee_id = lessee_id;
++  lease->fd = fd;
++  lease->kms_device = g_object_ref (kms_device);
++  lease->assignments = g_steal_pointer (&assignments);
++
++  meta_kms_lease_assign (lease);
++
++  g_signal_connect_after (lease, "revoked", G_CALLBACK (on_lease_revoked),
++                          lease_manager);
++
++  for (l = connectors; l; l = l->next)
++    {
++      MetaKmsConnector *connector = l->data;
++
++      g_hash_table_insert (lease_manager->connectors,
++                           connector, lease);
++    }
++
++  g_hash_table_insert (lease_manager->leases,
++                       GUINT_TO_POINTER (lessee_id), g_object_ref (lease));
++
++  g_signal_emit (lease_manager,
++                 signals_manager[MANAGER_CONNECTORS_CHANGED], 0);
++
++  return lease;
++}
++
++GList *
++meta_kms_lease_manager_get_connectors (MetaKmsLeaseManager *lease_manager)
++{
++  return g_hash_table_get_keys (lease_manager->connectors);
++}
++
++MetaKmsConnector *
++meta_kms_lease_manager_get_connector_from_id (MetaKmsLeaseManager *lease_manager,
++                                              uint32_t             connector_id)
++{
++  GHashTableIter iter;
++  MetaKmsConnector *connector;
++
++  g_hash_table_iter_init (&iter, lease_manager->connectors);
++  while (g_hash_table_iter_next (&iter, (gpointer *)&connector, NULL))
++    {
++      if (meta_kms_connector_get_id (connector) == connector_id)
++        return connector;
++    }
++
++  return NULL;
++}
++
++MetaKmsLease *
++meta_kms_lease_manager_get_lease_from_connector (MetaKmsLeaseManager *lease_manager,
++                                                 MetaKmsConnector    *kms_connector)
++{
++  return g_hash_table_lookup (lease_manager->connectors, kms_connector);
++}
++
++
++
++MetaKmsLease *
++meta_kms_lease_manager_get_lease_from_id (MetaKmsLeaseManager *lease_manager,
++                                          uint32_t             lessee_id)
++{
++  return g_hash_table_lookup (lease_manager->leases,
++                              GUINT_TO_POINTER (lessee_id));
++}
++
++static void
++update_connectors (MetaKmsLeaseManager *lease_manager)
++{
++  MetaKms *kms = lease_manager->kms;
++  GHashTable *new_connectors;
++  MetaKmsLease *lease;
++  GList *l;
++  GList *o;
++  gboolean has_new = FALSE;
++
++  new_connectors = g_hash_table_new_similar (lease_manager->connectors);
++
++  for (l = meta_kms_get_devices (kms); l; l = l->next)
++    {
++      MetaKmsDevice *kms_device = l->data;
++
++      for (o = meta_kms_device_get_connectors (kms_device); o; o = o->next)
++        {
++          MetaKmsConnector *kms_connector = o->data;
++
++          if (!meta_kms_connector_is_for_lease (kms_connector))
++            continue;
++
++          if (!g_hash_table_steal_extended (lease_manager->connectors,
++                                            kms_connector,
++                                            NULL, (gpointer *) &lease))
++            has_new = TRUE;
++          g_hash_table_insert (new_connectors, kms_connector, lease);
++        }
++    }
++
++  if (has_new || g_hash_table_size (lease_manager->connectors) != 0)
++    {
++      g_signal_emit (lease_manager,
++                     signals_manager[MANAGER_CONNECTORS_CHANGED], 0);
++    }
++
++  g_clear_pointer (&lease_manager->connectors, g_hash_table_unref);
++  lease_manager->connectors = new_connectors;
++}
++
++static void
++lease_disappeared (MetaKmsLeaseManager *lease_manager,
++                   MetaKmsLease        *lease)
++{
++  GList *l;
++
++  for (l = lease->assignments; l; l = l->next)
++    {
++      LeasingKmsAssignment *assignment = l->data;
++      MetaKmsConnector *kms_connector = assignment->connector;
++
++      if (g_hash_table_lookup_extended (lease_manager->connectors,
++                                        kms_connector,
++                                        NULL, NULL))
++        g_hash_table_insert (lease_manager->connectors, kms_connector, NULL);
++    }
++
++  meta_kms_lease_disappeared (lease);
++}
++
++static gboolean
++did_lease_disappear (MetaKmsLease  *lease,
++                     uint32_t      *lessees,
++                     int            num_lessees,
++                     MetaKmsDevice *kms_device)
++{
++  int i;
++
++  if (lease->kms_device != kms_device)
++    return FALSE;
++
++  for (i = 0; i < num_lessees; i++)
++    {
++      if (lease->lessee_id == lessees[i])
++        return FALSE;
++    }
++
++  return TRUE;
++}
++
++static void
++update_leases (MetaKmsLeaseManager *lease_manager)
++{
++  MetaKms *kms = lease_manager->kms;
++  MetaKmsLease *lease;
++  GList *l;
++  g_autoptr (GList) disappeared_leases = NULL;
++
++  for (l = meta_kms_get_devices (kms); l; l = l->next)
++    {
++      MetaKmsDevice *kms_device = l->data;
++      g_autofree uint32_t *lessees = NULL;
++      int num_lessees;
++      g_autoptr (GError) error = NULL;
++      GHashTableIter iter;
++
++      if (!meta_kms_device_list_lessees (kms_device,
++                                         &lessees, &num_lessees,
++                                         &error))
++        {
++          g_warning ("Failed to list leases: %s", error->message);
++          continue;
++        }
++
++      g_hash_table_iter_init (&iter, lease_manager->leases);
++      while (g_hash_table_iter_next (&iter, NULL, (gpointer *)&lease))
++        {
++          if (did_lease_disappear (lease, lessees, num_lessees, kms_device))
++            disappeared_leases = g_list_append (disappeared_leases, lease);
++        }
++    }
++
++  for (l = disappeared_leases; l; l = l->next)
++    {
++      lease = l->data;
++
++      lease_disappeared (lease_manager, lease);
++    }
++}
++
++static void
++on_device_added (MetaKms             *kms,
++                 MetaKmsDevice       *kms_device,
++                 MetaKmsLeaseManager *lease_manager)
++{
++  update_connectors (lease_manager);
++}
++
++static void
++on_resources_changed (MetaKms                *kms,
++                      MetaKmsResourceChanges  changes,
++                      MetaKmsLeaseManager    *lease_manager)
++{
++  if (changes != META_KMS_RESOURCE_CHANGE_FULL)
++    return;
++
++  update_connectors (lease_manager);
++}
++
++static void
++on_lease_changed (MetaKms             *kms,
++                  MetaKmsLeaseManager *lease_manager)
++{
++  update_leases (lease_manager);
++}
++
++static void
++meta_kms_lease_manager_constructed (GObject *object)
++{
++  MetaKmsLeaseManager *lease_manager = META_KMS_LEASE_MANAGER (object);
++  MetaKms *kms = lease_manager->kms;
++
++  lease_manager->device_added_handler_id =
++    g_signal_connect (kms, "device-added",
++                      G_CALLBACK (on_device_added),
++                      lease_manager);
++  lease_manager->resources_changed_handler_id =
++    g_signal_connect (kms, "resources-changed",
++                      G_CALLBACK (on_resources_changed),
++                      lease_manager);
++  lease_manager->lease_changed_handler_id =
++    g_signal_connect (kms, "lease-changed",
++                      G_CALLBACK (on_lease_changed),
++                      lease_manager);
++
++  lease_manager->leases =
++    g_hash_table_new_full (NULL, NULL,
++                           NULL,
++                           (GDestroyNotify) g_object_unref);
++
++  lease_manager->connectors =
++    g_hash_table_new_full (NULL, NULL,
++                           NULL, NULL);
++
++  update_connectors (lease_manager);
++
++  G_OBJECT_CLASS (meta_kms_lease_manager_parent_class)->constructed (object);
++}
++
++static void
++meta_kms_lease_manager_set_property (GObject      *object,
++                                     guint         prop_id,
++                                     const GValue *value,
++                                     GParamSpec   *pspec)
++{
++  MetaKmsLeaseManager *lease_manager = META_KMS_LEASE_MANAGER (object);
++  switch (prop_id)
++    {
++    case PROP_MANAGER_META_KMS:
++      lease_manager->kms = g_value_get_object (value);
++      break;
++    default:
++      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
++    }
++}
++
++static void
++meta_kms_lease_manager_get_property (GObject    *object,
++                                     guint       prop_id,
++                                     GValue     *value,
++                                     GParamSpec *pspec)
++{
++  MetaKmsLeaseManager *lease_manager = META_KMS_LEASE_MANAGER (object);
++  switch (prop_id)
++    {
++    case PROP_MANAGER_META_KMS:
++      g_value_set_object (value, lease_manager->kms);
++      break;
++    default:
++      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
++    }
++}
++
++static void
++meta_kms_lease_manager_dispose (GObject *object)
++{
++  MetaKmsLeaseManager *lease_manager = META_KMS_LEASE_MANAGER (object);
++  MetaKms *kms = lease_manager->kms;
++
++  g_clear_signal_handler (&lease_manager->device_added_handler_id, kms);
++  g_clear_signal_handler (&lease_manager->resources_changed_handler_id, kms);
++  g_clear_signal_handler (&lease_manager->lease_changed_handler_id, kms);
++
++  g_clear_pointer (&lease_manager->leases, g_hash_table_unref);
++  g_clear_pointer (&lease_manager->connectors, g_hash_table_unref);
++
++  G_OBJECT_CLASS (meta_kms_lease_manager_parent_class)->dispose (object);
++}
++
++static void
++meta_kms_lease_manager_class_init (MetaKmsLeaseManagerClass *klass)
++{
++  GObjectClass *object_class = G_OBJECT_CLASS (klass);
++
++  object_class->constructed = meta_kms_lease_manager_constructed;
++  object_class->set_property = meta_kms_lease_manager_set_property;
++  object_class->get_property = meta_kms_lease_manager_get_property;
++  object_class->dispose = meta_kms_lease_manager_dispose;
++
++  props_manager[PROP_MANAGER_META_KMS] =
++    g_param_spec_object ("meta-kms", NULL, NULL,
++                         META_TYPE_KMS,
++                         G_PARAM_READWRITE |
++                         G_PARAM_CONSTRUCT_ONLY |
++                         G_PARAM_STATIC_STRINGS);
++
++  g_object_class_install_properties (object_class,
++                                     N_PROPS_MANAGER, props_manager);
++
++  signals_manager[MANAGER_CONNECTORS_CHANGED] =
++    g_signal_new ("connectors-changed",
++                  G_TYPE_FROM_CLASS (klass),
++                  G_SIGNAL_RUN_LAST,
++                  0,
++                  NULL, NULL, NULL,
++                  G_TYPE_NONE, 0);
++}
++
++static void
++meta_kms_lease_manager_init (MetaKmsLeaseManager *lease_manager)
++{
++}
+diff --git a/src/backends/native/meta-kms-lease.h b/src/backends/native/meta-kms-lease.h
+new file mode 100644
+index 000000000..22ad1879a
+--- /dev/null
++++ b/src/backends/native/meta-kms-lease.h
+@@ -0,0 +1,54 @@
++/*
++ * Copyright (C) 2023 Red Hat
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++
++#pragma once
++
++#include <glib-object.h>
++
++#include "backends/native/meta-backend-native.h"
++
++#define META_TYPE_KMS_LEASE (meta_kms_lease_get_type ())
++G_DECLARE_FINAL_TYPE (MetaKmsLease, meta_kms_lease,
++                      META, KMS_LEASE, GObject)
++
++#define META_TYPE_KMS_LEASE_MANAGER (meta_kms_lease_manager_get_type ())
++G_DECLARE_FINAL_TYPE (MetaKmsLeaseManager, meta_kms_lease_manager,
++                      META, KMS_LEASE_MANAGER, GObject)
++
++uint32_t meta_kms_lease_get_id (MetaKmsLease *lease);
++
++int meta_kms_lease_steal_fd (MetaKmsLease *lease);
++
++gboolean meta_kms_lease_is_active (MetaKmsLease *lease);
++
++void meta_kms_lease_revoke (MetaKmsLease *lease);
++
++MetaKmsLease * meta_kms_lease_manager_lease_connectors (MetaKmsLeaseManager  *lease_manager,
++                                                        MetaKmsDevice        *kms_device,
++                                                        GList                *connectors,
++                                                        GError              **error);
++
++GList * meta_kms_lease_manager_get_connectors (MetaKmsLeaseManager *lease_manager);
++
++MetaKmsConnector * meta_kms_lease_manager_get_connector_from_id (MetaKmsLeaseManager *lease_manager,
++                                                                 uint32_t             connector_id);
++
++MetaKmsLease * meta_kms_lease_manager_get_lease_from_connector (MetaKmsLeaseManager *lease_manager,
++                                                                MetaKmsConnector    *kms_connector);
++
++MetaKmsLease * meta_kms_lease_manager_get_lease_from_id (MetaKmsLeaseManager *lease_manager,
++                                                         uint32_t             lessee_id);
+diff --git a/src/backends/native/meta-kms.c b/src/backends/native/meta-kms.c
+index 70d1e792c..34115a698 100644
+--- a/src/backends/native/meta-kms.c
++++ b/src/backends/native/meta-kms.c
+@@ -34,6 +34,8 @@
+ enum
+ {
+   RESOURCES_CHANGED,
++  DEVICE_ADDED,
++  LEASE_CHANGED,
+ 
+   N_SIGNALS
+ };
+@@ -47,6 +49,7 @@ struct _MetaKms
+   MetaKmsFlags flags;
+ 
+   gulong hotplug_handler_id;
++  gulong lease_handler_id;
+   gulong removed_handler_id;
+ 
+   MetaKmsImpl *impl;
+@@ -309,6 +312,14 @@ on_udev_device_removed (MetaUdev    *udev,
+   handle_hotplug_event (kms, NULL, META_KMS_RESOURCE_CHANGE_NONE);
+ }
+ 
++static void
++on_udev_lease (MetaUdev    *udev,
++               GUdevDevice *udev_device,
++               MetaKms     *kms)
++{
++  g_signal_emit (kms, signals[LEASE_CHANGED], 0);
++}
++
+ MetaBackend *
+ meta_kms_get_backend (MetaKms *kms)
+ {
+@@ -338,6 +349,8 @@ meta_kms_create_device (MetaKms            *kms,
+ 
+   kms->devices = g_list_append (kms->devices, device);
+ 
++  g_signal_emit (kms, signals[DEVICE_ADDED], 0, device);
++
+   return device;
+ }
+ 
+@@ -398,6 +411,8 @@ meta_kms_new (MetaBackend   *backend,
+     {
+       kms->hotplug_handler_id =
+         g_signal_connect (udev, "hotplug", G_CALLBACK (on_udev_hotplug), kms);
++      kms->lease_handler_id =
++        g_signal_connect (udev, "lease", G_CALLBACK (on_udev_lease), kms);
+     }
+ 
+   kms->removed_handler_id =
+@@ -428,6 +443,7 @@ meta_kms_finalize (GObject *object)
+   g_list_free_full (kms->devices, g_object_unref);
+ 
+   g_clear_signal_handler (&kms->hotplug_handler_id, udev);
++  g_clear_signal_handler (&kms->lease_handler_id, udev);
+   g_clear_signal_handler (&kms->removed_handler_id, udev);
+ 
+   G_OBJECT_CLASS (meta_kms_parent_class)->finalize (object);
+@@ -456,6 +472,23 @@ meta_kms_class_init (MetaKmsClass *klass)
+                   G_TYPE_NONE, 1,
+                   META_TYPE_KMS_RESOURCE_CHANGES);
+ 
++  signals[DEVICE_ADDED] =
++    g_signal_new ("device-added",
++                  G_TYPE_FROM_CLASS (klass),
++                  G_SIGNAL_RUN_LAST,
++                  0,
++                  NULL, NULL, NULL,
++                  G_TYPE_NONE, 1,
++                  META_TYPE_KMS_DEVICE);
++
++  signals[LEASE_CHANGED] =
++    g_signal_new ("lease-changed",
++                  G_TYPE_FROM_CLASS (klass),
++                  G_SIGNAL_RUN_LAST,
++                  0,
++                  NULL, NULL, NULL,
++                  G_TYPE_NONE, 0);
++
+   meta_thread_class_register_impl_type (thread_class, META_TYPE_KMS_IMPL);
+ }
+ 
+diff --git a/src/backends/native/meta-udev.c b/src/backends/native/meta-udev.c
+index 097e8a283..c6974b9c6 100644
+--- a/src/backends/native/meta-udev.c
++++ b/src/backends/native/meta-udev.c
+@@ -28,6 +28,7 @@
+ enum
+ {
+   HOTPLUG,
++  LEASE,
+   DEVICE_ADDED,
+   DEVICE_REMOVED,
+ 
+@@ -221,6 +222,9 @@ on_uevent (GUdevClient *client,
+ 
+   if (g_udev_device_get_property_as_boolean (device, "HOTPLUG"))
+     g_signal_emit (udev, signals[HOTPLUG], 0, device);
++
++  if (g_udev_device_get_property_as_boolean (device, "LEASE"))
++    g_signal_emit (udev, signals[LEASE], 0, device);
+ }
+ 
+ MetaUdev *
+@@ -282,6 +286,13 @@ meta_udev_class_init (MetaUdevClass *klass)
+                   0, NULL, NULL, NULL,
+                   G_TYPE_NONE, 1,
+                   G_UDEV_TYPE_DEVICE);
++  signals[LEASE] =
++    g_signal_new ("lease",
++                  G_TYPE_FROM_CLASS (object_class),
++                  G_SIGNAL_RUN_LAST,
++                  0, NULL, NULL, NULL,
++                  G_TYPE_NONE, 1,
++                  G_UDEV_TYPE_DEVICE);
+   signals[DEVICE_ADDED] =
+     g_signal_new ("device-added",
+                   G_TYPE_FROM_CLASS (object_class),
+diff --git a/src/meson.build b/src/meson.build
+index 05df3bfd2..d0d179fd3 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -724,6 +724,13 @@ if have_wayland
+       'wayland/meta-xwayland-surface.h',
+     ]
+   endif
++
++  if have_native_backend
++    mutter_sources += [
++      'wayland/meta-wayland-drm-lease.c',
++      'wayland/meta-wayland-drm-lease.h',
++    ]
++  endif
+ endif
+ 
+ if have_native_backend
+@@ -807,6 +814,8 @@ if have_native_backend
+     'backends/native/meta-kms-impl-device.h',
+     'backends/native/meta-kms-impl.c',
+     'backends/native/meta-kms-impl.h',
++    'backends/native/meta-kms-lease.c',
++    'backends/native/meta-kms-lease.h',
+     'backends/native/meta-kms-mode.c',
+     'backends/native/meta-kms-mode.h',
+     'backends/native/meta-kms-page-flip.c',
+@@ -1063,6 +1072,7 @@ if have_wayland
+   #  - protocol stability ('private', 'stable' or 'unstable')
+   #  - protocol version (if stability is 'unstable')
+   wayland_protocols = [
++    ['drm-lease', 'staging', 'v1', ],
+     ['fractional-scale', 'staging', 'v1', ],
+     ['gtk-shell', 'private', ],
+     ['idle-inhibit', 'unstable', 'v1', ],
+diff --git a/src/wayland/meta-wayland-drm-lease.c b/src/wayland/meta-wayland-drm-lease.c
+new file mode 100644
+index 000000000..2a40263f8
+--- /dev/null
++++ b/src/wayland/meta-wayland-drm-lease.c
+@@ -0,0 +1,778 @@
++/*
++ * Copyright (C) 2016 Red Hat Inc.
++ * Copyright (C) 2017 Intel Corporation
++ * Copyright (C) 2018,2019 DisplayLink (UK) Ltd.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
++ * 02111-1307, USA.
++ *
++ */
++
++#include "config.h"
++
++#include "wayland/meta-wayland-drm-lease.h"
++
++#include <glib.h>
++#include <glib/gstdio.h>
++
++#include "backends/native/meta-backend-native.h"
++#include "backends/native/meta-kms-connector.h"
++#include "backends/native/meta-kms-device.h"
++#include "backends/native/meta-kms-device-private.h"
++#include "backends/native/meta-kms-impl-device.h"
++#include "backends/native/meta-kms-lease.h"
++#include "backends/native/meta-kms.h"
++#include "backends/edid.h"
++#include "wayland/meta-wayland-private.h"
++
++#include "drm-lease-v1-server-protocol.h"
++
++struct _MetaWaylandDrmLeaseManager
++{
++  MetaWaylandCompositor *compositor;
++  MetaKmsLeaseManager *kms_lease_manager;
++
++  /* Key:   MetaKmsDevice *kms_device
++   * Value: MetaWaylandDrmLeaseDevice *lease_device
++   */
++  GHashTable *devices;
++
++  GList *leases;
++};
++
++typedef struct _MetaWaylandDrmLeaseDevice
++{
++  MetaWaylandDrmLeaseManager *lease_manager;
++
++  struct wl_global *global;
++  MetaKmsDevice *kms_device;
++
++  /* Key:   MetaKmsConnector *kms_connector
++   * Value: MetaWaylandDrmLeaseConnector *lease_connector
++   */
++  GHashTable *connectors;
++
++  GList *resources;
++} MetaWaylandDrmLeaseDevice;
++
++typedef struct _MetaWaylandDrmLeaseConnector
++{
++  MetaWaylandDrmLeaseDevice *lease_device;
++
++  MetaKmsConnector *kms_connector;
++  char *description;
++
++  GList *resources;
++} MetaWaylandDrmLeaseConnector;
++
++typedef struct _MetaWaylandDrmLeaseRequest
++{
++  MetaWaylandDrmLeaseDevice *lease_device;
++  GList *lease_connectors;
++  struct wl_resource *resource;
++} MetaWaylandDrmLeaseRequest;
++
++typedef struct _MetaWaylandDrmLease
++{
++  MetaWaylandDrmLeaseManager *lease_manager;
++  MetaWaylandDrmLeaseDevice *lease_device;
++  GList *lease_connectors;
++  uint32_t lessee_id;
++  struct wl_resource *resource;
++} MetaWaylandDrmLease;
++
++static void
++meta_wayland_drm_lease_device_free (MetaWaylandDrmLeaseDevice *lease_device)
++{
++  g_object_unref (lease_device->kms_device);
++  g_clear_pointer (&lease_device->connectors, g_hash_table_unref);
++}
++
++static void
++meta_wayland_drm_lease_device_release (MetaWaylandDrmLeaseDevice *lease_device)
++{
++  g_rc_box_release_full (lease_device,
++                         (GDestroyNotify) meta_wayland_drm_lease_device_free);
++}
++
++static void
++meta_wayland_drm_lease_connector_free (MetaWaylandDrmLeaseConnector *lease_connector)
++{
++  g_object_unref (lease_connector->kms_connector);
++  g_free (lease_connector->description);
++  meta_wayland_drm_lease_device_release (lease_connector->lease_device);
++}
++
++static void
++meta_wayland_drm_lease_connector_release (MetaWaylandDrmLeaseConnector *lease_connector)
++{
++  g_rc_box_release_full (lease_connector,
++                         (GDestroyNotify) meta_wayland_drm_lease_connector_free);
++}
++
++static void
++meta_wayland_drm_lease_free (MetaWaylandDrmLease *lease)
++{
++  meta_wayland_drm_lease_device_release (lease->lease_device);
++  g_list_foreach (lease->lease_connectors,
++                  (GFunc) meta_wayland_drm_lease_connector_release,
++                  NULL);
++}
++
++static void
++meta_wayland_drm_lease_release (MetaWaylandDrmLease *lease)
++{
++  g_rc_box_release_full (lease, (GDestroyNotify) meta_wayland_drm_lease_free);
++}
++
++static void
++meta_wayland_drm_lease_revoke (MetaWaylandDrmLease *lease)
++{
++  MetaKmsLease *kms_lease =
++    meta_kms_lease_manager_get_lease_from_id (lease->lease_manager->kms_lease_manager,
++                                              lease->lessee_id);
++
++  if (kms_lease)
++    {
++      meta_kms_lease_revoke (kms_lease);
++      wp_drm_lease_v1_send_finished (lease->resource);
++    }
++}
++
++static void
++wp_drm_lease_destroy (struct wl_client   *client,
++                      struct wl_resource *resource)
++{
++  MetaWaylandDrmLease *lease = wl_resource_get_user_data (resource);
++
++  meta_wayland_drm_lease_revoke (lease);
++
++  wl_resource_destroy (resource);
++}
++
++static const struct wp_drm_lease_v1_interface drm_lease_implementation = {
++  wp_drm_lease_destroy,
++};
++
++static void
++wp_drm_lease_destructor (struct wl_resource *resource)
++{
++  MetaWaylandDrmLease *lease = wl_resource_get_user_data (resource);
++
++  meta_wayland_drm_lease_revoke (lease);
++
++  lease->lease_manager->leases = g_list_remove (lease->lease_manager->leases,
++                                                lease);
++  meta_wayland_drm_lease_release (lease);
++}
++
++static void
++wp_drm_lease_request_request_connector (struct wl_client   *client,
++                                        struct wl_resource *resource,
++                                        struct wl_resource *connector)
++{
++  MetaWaylandDrmLeaseRequest *lease_request =
++    wl_resource_get_user_data (resource);
++  MetaWaylandDrmLeaseConnector *lease_connector =
++    wl_resource_get_user_data (connector);
++
++  if (lease_request->lease_device != lease_connector->lease_device)
++    {
++      wl_resource_post_error (resource,
++                              WP_DRM_LEASE_REQUEST_V1_ERROR_WRONG_DEVICE,
++                              "Wrong lease device");
++      return;
++    }
++
++  if (g_list_find (lease_request->lease_connectors, lease_connector))
++    {
++      wl_resource_post_error (resource,
++                              WP_DRM_LEASE_REQUEST_V1_ERROR_DUPLICATE_CONNECTOR,
++                              "Connector requested twice");
++      return;
++    }
++
++  lease_request->lease_connectors =
++    g_list_append (lease_request->lease_connectors,
++                   g_rc_box_acquire (lease_connector));
++}
++
++static void
++wp_drm_lease_request_submit (struct wl_client   *client,
++                             struct wl_resource *resource,
++                             uint32_t            id)
++{
++  MetaWaylandDrmLeaseRequest *lease_request =
++    wl_resource_get_user_data (resource);
++  MetaWaylandDrmLeaseDevice *lease_device = lease_request->lease_device;
++  MetaWaylandDrmLeaseManager *lease_manager = lease_device->lease_manager;
++  MetaKmsDevice *kms_device = lease_device->kms_device;
++  MetaKmsLeaseManager *kms_lease_manager = lease_manager->kms_lease_manager;
++  MetaWaylandDrmLease *lease;
++  g_autoptr (GList) connectors = NULL;
++  g_autoptr (MetaKmsLease) kms_lease = NULL;
++  g_autoptr (GError) error = NULL;
++  g_autofd int fd = -1;
++  GList *l;
++
++  if (!lease_request->lease_connectors)
++    {
++      wl_resource_post_error (resource,
++                              WP_DRM_LEASE_REQUEST_V1_ERROR_EMPTY_LEASE,
++                              "Empty DRM lease request");
++      wl_resource_destroy (resource);
++      return;
++    }
++
++  lease = g_rc_box_new0 (MetaWaylandDrmLease);
++  lease->lease_manager = lease_manager;
++  lease->lease_device = g_rc_box_acquire (lease_device);
++  lease->resource =
++    wl_resource_create (client, &wp_drm_lease_v1_interface,
++                        wl_resource_get_version (resource), id);
++
++  wl_resource_set_implementation (lease->resource,
++                                  &drm_lease_implementation,
++                                  lease,
++                                  wp_drm_lease_destructor);
++
++  lease_manager->leases = g_list_append (lease_manager->leases, lease);
++
++  for (l = lease_request->lease_connectors; l; l = l->next)
++    {
++      MetaWaylandDrmLeaseConnector *lease_connector = l->data;
++      MetaKmsConnector *kms_connector = lease_connector->kms_connector;
++
++      lease->lease_connectors =
++        g_list_append (lease->lease_connectors,
++                       g_rc_box_acquire (lease_connector));
++      connectors = g_list_append (connectors, kms_connector);
++    }
++
++  kms_lease = meta_kms_lease_manager_lease_connectors (kms_lease_manager,
++                                                       kms_device,
++                                                       connectors,
++                                                       &error);
++  if (!kms_lease)
++    {
++      g_warning ("Failed to create lease from connector list: %s",
++                 error->message);
++      wp_drm_lease_v1_send_finished (lease->resource);
++      wl_resource_destroy (resource);
++      return;
++    }
++
++  fd = meta_kms_lease_steal_fd (kms_lease);
++  wp_drm_lease_v1_send_lease_fd (lease->resource, fd);
++
++  lease->lessee_id = meta_kms_lease_get_id (kms_lease);
++
++  wl_resource_destroy (resource);
++}
++
++static const struct wp_drm_lease_request_v1_interface drm_lease_request_implementation = {
++  wp_drm_lease_request_request_connector,
++  wp_drm_lease_request_submit,
++};
++
++static void
++wp_drm_lease_request_destructor (struct wl_resource *resource)
++{
++  MetaWaylandDrmLeaseRequest *lease_request =
++    wl_resource_get_user_data (resource);
++
++  meta_wayland_drm_lease_device_release (lease_request->lease_device);
++  g_list_foreach (lease_request->lease_connectors,
++                  (GFunc) meta_wayland_drm_lease_connector_release,
++                  NULL);
++  g_free (lease_request);
++}
++
++static void
++wp_drm_lease_device_create_lease_request (struct wl_client   *client,
++                                          struct wl_resource *resource,
++                                          uint32_t            id)
++{
++  MetaWaylandDrmLeaseDevice *lease_device =
++    wl_resource_get_user_data (resource);
++  MetaWaylandDrmLeaseRequest *lease_request;
++
++  lease_request = g_new0 (MetaWaylandDrmLeaseRequest, 1);
++  lease_request->lease_device = g_rc_box_acquire (lease_device);
++  lease_request->resource =
++    wl_resource_create (client, &wp_drm_lease_request_v1_interface,
++                        wl_resource_get_version (resource), id);
++
++  wl_resource_set_implementation (lease_request->resource,
++                                  &drm_lease_request_implementation,
++                                  lease_request,
++                                  wp_drm_lease_request_destructor);
++}
++
++static void
++wp_drm_lease_device_release (struct wl_client   *client,
++                             struct wl_resource *resource)
++{
++  wp_drm_lease_device_v1_send_released (resource);
++  wl_resource_destroy (resource);
++}
++
++static const struct wp_drm_lease_device_v1_interface drm_lease_device_implementation = {
++  wp_drm_lease_device_create_lease_request,
++  wp_drm_lease_device_release,
++};
++
++static MetaWaylandDrmLeaseConnector *
++meta_wayland_drm_lease_connector_new (MetaWaylandDrmLeaseDevice *lease_device,
++                                      MetaKmsConnector          *kms_connector)
++{
++  MetaWaylandDrmLeaseConnector *lease_connector;
++  const MetaKmsConnectorState *connector_state;
++
++  lease_connector = g_rc_box_new0 (MetaWaylandDrmLeaseConnector);
++  lease_connector->lease_device = g_rc_box_acquire (lease_device);
++  lease_connector->kms_connector = g_object_ref (kms_connector);
++
++  connector_state = meta_kms_connector_get_current_state (kms_connector);
++  if (connector_state->edid_data)
++    {
++      gconstpointer edid_data;
++      g_autofree MetaEdidInfo *edid_info = NULL;
++      size_t edid_size;
++      g_autofree char *vendor = NULL;
++      g_autofree char *product = NULL;
++      GString *description;
++
++      edid_data = g_bytes_get_data (connector_state->edid_data, &edid_size);
++      edid_info = meta_edid_info_new_parse (edid_data, edid_size);
++
++      description = g_string_new (NULL);
++
++      vendor = g_strndup (edid_info->manufacturer_code, 4);
++      if (vendor && g_utf8_validate (vendor, -1, NULL))
++        g_string_append_printf (description, "%s", vendor);
++
++      product = g_strndup (edid_info->dsc_product_name, 14);
++      if (product && g_utf8_validate (product, -1, NULL))
++        {
++          if (description->len > 0)
++            g_string_append_c (description, ' ');
++          g_string_append_printf (description, "%s", product);
++        }
++
++      if (description->len == 0)
++        {
++          g_string_append_printf (description, "%s",
++                                  meta_kms_connector_get_name (kms_connector));
++        }
++
++      lease_connector->description = g_string_free (description, FALSE);
++    }
++  else
++    {
++      lease_connector->description = g_strdup ("");
++    }
++
++  return lease_connector;
++}
++
++static void
++meta_wayland_drm_lease_connector_send_withdrawn (MetaWaylandDrmLeaseConnector *lease_connector)
++{
++  GList *l;
++
++  for (l = lease_connector->resources; l; l = l->next)
++    {
++      struct wl_resource *resource = l->data;
++
++      if (wl_resource_get_user_data (resource) == lease_connector)
++        wp_drm_lease_connector_v1_send_withdrawn (resource);
++    }
++}
++
++static void
++drm_lease_connector_destroy (struct wl_client   *client,
++                             struct wl_resource *resource)
++{
++  wl_resource_destroy (resource);
++}
++
++static const struct wp_drm_lease_connector_v1_interface drm_lease_connector_implementation = {
++  drm_lease_connector_destroy,
++};
++
++static void
++wp_drm_lease_connector_destructor (struct wl_resource *resource)
++{
++  MetaWaylandDrmLeaseConnector *lease_connector =
++    wl_resource_get_user_data (resource);
++
++  lease_connector->resources = g_list_remove (lease_connector->resources,
++                                              resource);
++  meta_wayland_drm_lease_connector_release (lease_connector);
++}
++
++static void
++send_new_connector_resource (MetaWaylandDrmLeaseDevice    *lease_device,
++                             struct wl_resource           *device_resource,
++                             MetaWaylandDrmLeaseConnector *lease_connector)
++{
++  struct wl_resource *connector_resource;
++  const char *connector_name;
++  uint32_t connector_id;
++
++  connector_resource =
++    wl_resource_create (wl_resource_get_client (device_resource),
++                        &wp_drm_lease_connector_v1_interface,
++                        wl_resource_get_version (device_resource),
++                        0);
++  wl_resource_set_implementation (connector_resource,
++                                  &drm_lease_connector_implementation,
++                                  g_rc_box_acquire (lease_connector),
++                                  wp_drm_lease_connector_destructor);
++
++  lease_connector->resources = g_list_append (lease_connector->resources,
++                                              connector_resource);
++
++  connector_name = meta_kms_connector_get_name (lease_connector->kms_connector);
++  connector_id = meta_kms_connector_get_id (lease_connector->kms_connector);
++
++  wp_drm_lease_device_v1_send_connector (device_resource, connector_resource);
++  wp_drm_lease_connector_v1_send_name (connector_resource, connector_name);
++  wp_drm_lease_connector_v1_send_description (connector_resource,
++                                              lease_connector->description);
++  wp_drm_lease_connector_v1_send_connector_id (connector_resource,
++                                               connector_id);
++  wp_drm_lease_connector_v1_send_done (connector_resource);
++}
++
++static void
++send_connectors (MetaWaylandDrmLeaseDevice *lease_device,
++                 struct wl_resource        *device_resource)
++{
++  GHashTableIter iter;
++  MetaWaylandDrmLeaseConnector *lease_connector;
++
++  g_hash_table_iter_init (&iter, lease_device->connectors);
++  while (g_hash_table_iter_next (&iter, NULL, (gpointer *) &lease_connector))
++    send_new_connector_resource (lease_device, device_resource, lease_connector);
++}
++
++static void
++send_drm_fd (struct wl_client          *client,
++             MetaWaylandDrmLeaseDevice *lease_device,
++             struct wl_resource        *device_resource)
++{
++  g_autofd int fd = -1;
++  MetaKmsImplDevice *impl_device;
++
++  impl_device = meta_kms_device_get_impl_device (lease_device->kms_device);
++  fd = meta_kms_impl_device_open_non_privileged_fd (impl_device);
++  if (fd < 0)
++    {
++      wl_client_post_implementation_error (client,
++                                           "Error getting DRM lease device fd");
++      return;
++    }
++
++  wp_drm_lease_device_v1_send_drm_fd (device_resource, fd);
++}
++
++static void
++wp_drm_lease_device_destructor (struct wl_resource *resource)
++{
++  MetaWaylandDrmLeaseDevice *lease_device =
++    wl_resource_get_user_data (resource);
++
++  lease_device->resources = g_list_remove (lease_device->resources, resource);
++  meta_wayland_drm_lease_device_release (lease_device);
++}
++
++static void
++lease_device_bind (struct wl_client *client,
++                   void             *user_data,
++                   uint32_t          version,
++                   uint32_t          id)
++{
++  MetaWaylandDrmLeaseDevice *lease_device = user_data;
++  struct wl_resource *resource;
++
++  resource = wl_resource_create (client, &wp_drm_lease_device_v1_interface,
++                                 version, id);
++  wl_resource_set_implementation (resource,
++                                  &drm_lease_device_implementation,
++                                  g_rc_box_acquire (lease_device),
++                                  wp_drm_lease_device_destructor);
++
++  send_drm_fd (client, lease_device, resource);
++  send_connectors (lease_device, resource);
++  wp_drm_lease_device_v1_send_done (resource);
++
++  lease_device->resources = g_list_prepend (lease_device->resources, resource);
++}
++
++static void
++meta_wayland_drm_lease_device_add_connector (MetaKmsConnector          *kms_connector,
++                                             MetaWaylandDrmLeaseDevice *lease_device)
++{
++  MetaWaylandDrmLeaseConnector *lease_connector;
++
++  if (!meta_kms_connector_is_for_lease (kms_connector))
++    return;
++
++  lease_connector = meta_wayland_drm_lease_connector_new (lease_device,
++                                                          kms_connector);
++  g_hash_table_insert (lease_device->connectors,
++                       kms_connector,
++                       g_steal_pointer (&lease_connector));
++}
++
++static void
++meta_wayland_drm_lease_device_update_connectors (MetaWaylandDrmLeaseDevice *lease_device)
++{
++  GList *kms_connectors;
++  GList *l;
++  GHashTable *new_connectors;
++  MetaWaylandDrmLeaseConnector *lease_connector;
++  GHashTableIter iter;
++  gboolean needs_done = FALSE;
++
++  new_connectors = g_hash_table_new_similar (lease_device->connectors);
++
++  kms_connectors = meta_kms_device_get_connectors (lease_device->kms_device);
++  for (l = kms_connectors; l; l = l->next)
++    {
++      MetaKmsConnector *kms_connector = l->data;
++
++      if (!meta_kms_connector_is_for_lease (kms_connector))
++        continue;
++
++      if (!g_hash_table_steal_extended (lease_device->connectors,
++                                        kms_connector,
++                                        NULL,
++                                        (gpointer *) &lease_connector))
++        {
++          GList *lc;
++
++          lease_connector =
++            meta_wayland_drm_lease_connector_new (lease_device, kms_connector);
++
++          for (lc = lease_device->resources; lc; lc = lc->next)
++            {
++              struct wl_resource *resource = lc->data;
++
++              if (wl_resource_get_user_data (resource) == lease_device)
++                {
++                  send_new_connector_resource (lease_device,
++                                               resource,
++                                               lease_connector);
++                  needs_done = TRUE;
++                }
++            }
++        }
++
++      g_hash_table_insert (new_connectors, kms_connector, lease_connector);
++    }
++
++  g_hash_table_iter_init (&iter, lease_device->connectors);
++  while (g_hash_table_iter_next (&iter, NULL, (gpointer *) &lease_connector))
++    {
++      needs_done = TRUE;
++
++      for (l = lease_device->lease_manager->leases; l; l = l->next)
++        {
++          MetaWaylandDrmLease *lease = l->data;
++
++          if (g_list_find (lease->lease_connectors, lease_connector))
++            meta_wayland_drm_lease_revoke (lease);
++        }
++
++      meta_wayland_drm_lease_connector_send_withdrawn (lease_connector);
++    }
++
++  if (needs_done)
++    {
++      g_list_foreach (lease_device->resources,
++                      (GFunc) wp_drm_lease_device_v1_send_done,
++                      NULL);
++    }
++
++  g_hash_table_unref (lease_device->connectors);
++  lease_device->connectors = new_connectors;
++}
++
++static MetaWaylandDrmLeaseDevice *
++meta_wayland_drm_lease_device_new (MetaWaylandDrmLeaseManager *lease_manager,
++                                   MetaKmsDevice              *kms_device)
++{
++  struct wl_display *wayland_display =
++    meta_wayland_compositor_get_wayland_display (lease_manager->compositor);
++  MetaWaylandDrmLeaseDevice *lease_device;
++
++  lease_device = g_rc_box_new0 (MetaWaylandDrmLeaseDevice);
++  lease_device->lease_manager = lease_manager;
++  lease_device->kms_device = g_object_ref (kms_device);
++
++  lease_device->connectors =
++    g_hash_table_new_full (NULL, NULL,
++                           NULL,
++                           (GDestroyNotify) meta_wayland_drm_lease_connector_release);
++
++  g_list_foreach (meta_kms_device_get_connectors (kms_device),
++                  (GFunc) meta_wayland_drm_lease_device_add_connector,
++                  lease_device);
++
++  lease_device->global = wl_global_create (wayland_display,
++                                           &wp_drm_lease_device_v1_interface,
++                                           META_WP_DRM_LEASE_DEVICE_V1_VERSION,
++                                           lease_device,
++                                           lease_device_bind);
++
++  return lease_device;
++}
++
++static void
++meta_wayland_drm_lease_manager_add_device (MetaKmsDevice              *kms_device,
++                                           MetaWaylandDrmLeaseManager *lease_manager)
++{
++  MetaWaylandDrmLeaseDevice *lease_device;
++
++  lease_device = meta_wayland_drm_lease_device_new (lease_manager, kms_device);
++  g_hash_table_insert (lease_manager->devices,
++                       kms_device,
++                       g_steal_pointer (&lease_device));
++}
++
++static void
++meta_wayland_drm_lease_update_devices (MetaKms                    *kms,
++                                       MetaWaylandDrmLeaseManager *lease_manager)
++{
++  GList *kms_devices;
++  GList *l;
++  GHashTable *new_devices;
++  MetaWaylandDrmLeaseDevice *lease_device;
++  GHashTableIter iter;
++
++  new_devices = g_hash_table_new_similar (lease_manager->devices);
++
++  kms_devices = meta_kms_get_devices (kms);
++  for (l = kms_devices; l; l = l->next)
++    {
++      MetaKmsDevice *kms_device = l->data;
++
++      if (!g_hash_table_steal_extended (lease_manager->devices,
++                                        kms_device,
++                                        NULL,
++                                        (gpointer *) &lease_device))
++        {
++          lease_device =
++            meta_wayland_drm_lease_device_new (lease_manager, kms_device);
++        }
++
++      g_hash_table_insert (new_devices, kms_device, lease_device);
++    }
++
++  g_hash_table_iter_init (&iter, lease_manager->devices);
++  while (g_hash_table_iter_next (&iter, NULL, (gpointer *) &lease_device))
++    {
++      for (l = lease_device->lease_manager->leases; l; l = l->next)
++        {
++          MetaWaylandDrmLease *lease = l->data;
++
++          if (lease->lease_device == lease_device)
++            meta_wayland_drm_lease_revoke (lease);
++        }
++
++      wl_global_remove (lease_device->global);
++    }
++
++  g_hash_table_unref (lease_manager->devices);
++  lease_manager->devices = new_devices;
++}
++
++static void
++on_resources_changed (MetaKms                    *kms,
++                      MetaKmsResourceChanges      changes,
++                      MetaWaylandDrmLeaseManager *lease_manager)
++{
++  GHashTableIter iter;
++  MetaWaylandDrmLeaseDevice *lease_device;
++
++  if (changes != META_KMS_RESOURCE_CHANGE_FULL)
++    return;
++
++  meta_wayland_drm_lease_update_devices (kms, lease_manager);
++
++  g_hash_table_iter_init (&iter, lease_manager->devices);
++  while (g_hash_table_iter_next (&iter, NULL, (gpointer *) &lease_device))
++    meta_wayland_drm_lease_device_update_connectors (lease_device);
++}
++
++static MetaWaylandDrmLeaseManager *
++meta_wayland_drm_lease_manager_new (MetaWaylandCompositor *compositor)
++{
++  MetaContext *context = meta_wayland_compositor_get_context (compositor);
++  MetaBackend *backend = meta_context_get_backend (context);
++  MetaBackendNative *backend_native;
++  MetaKms *kms;
++  MetaWaylandDrmLeaseManager *lease_manager;
++
++  if (!META_IS_BACKEND_NATIVE (backend))
++    return NULL;
++
++  backend_native = META_BACKEND_NATIVE (backend);
++  kms = meta_backend_native_get_kms (backend_native);
++
++  lease_manager = g_new0 (MetaWaylandDrmLeaseManager, 1);
++  lease_manager->compositor = compositor;
++  lease_manager->kms_lease_manager = g_object_new (META_TYPE_KMS_LEASE_MANAGER,
++                                                   "meta-kms", kms,
++                                                   NULL);
++  lease_manager->devices =
++    g_hash_table_new_full (NULL, NULL,
++                           NULL,
++                           (GDestroyNotify) meta_wayland_drm_lease_device_release);
++
++  g_list_foreach (meta_kms_get_devices (kms),
++                  (GFunc) meta_wayland_drm_lease_manager_add_device,
++                  lease_manager);
++
++  g_signal_connect (kms, "resources-changed",
++                    G_CALLBACK (on_resources_changed),
++                    lease_manager);
++
++  return lease_manager;
++}
++
++static void
++meta_wayland_drm_lease_manager_free (gpointer data)
++{
++  MetaWaylandDrmLeaseManager *lease_manager = data;
++
++  g_clear_pointer (&lease_manager->devices, g_hash_table_unref);
++  g_object_unref (lease_manager->kms_lease_manager);
++  g_list_foreach (lease_manager->leases,
++                  (GFunc) meta_wayland_drm_lease_release,
++                  NULL);
++  g_free (lease_manager);
++}
++
++void
++meta_wayland_drm_lease_manager_init (MetaWaylandCompositor *compositor)
++{
++  g_object_set_data_full (G_OBJECT (compositor), "-meta-wayland-drm-lease",
++                          meta_wayland_drm_lease_manager_new (compositor),
++                          meta_wayland_drm_lease_manager_free);
++}
+diff --git a/src/wayland/meta-wayland-drm-lease.h b/src/wayland/meta-wayland-drm-lease.h
+new file mode 100644
+index 000000000..c223daca8
+--- /dev/null
++++ b/src/wayland/meta-wayland-drm-lease.h
+@@ -0,0 +1,25 @@
++/*
++ * Copyright (C) 2021 Red Hat Inc.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
++ * 02111-1307, USA.
++ *
++ */
++
++#pragma once
++
++#include "wayland/meta-wayland-types.h"
++
++void meta_wayland_drm_lease_manager_init (MetaWaylandCompositor *compositor);
+diff --git a/src/wayland/meta-wayland-types.h b/src/wayland/meta-wayland-types.h
+index 4f224a900..99b2dc5ad 100644
+--- a/src/wayland/meta-wayland-types.h
++++ b/src/wayland/meta-wayland-types.h
+@@ -71,3 +71,5 @@ typedef struct _MetaWaylandXdgForeign MetaWaylandXdgForeign;
+ typedef struct _MetaWaylandFilterManager MetaWaylandFilterManager;
+ 
+ typedef struct _MetaWaylandClient MetaWaylandClient;
++
++typedef struct _MetaWaylandDrmLeaseManager MetaWaylandDrmLeaseManager;
+diff --git a/src/wayland/meta-wayland-versions.h b/src/wayland/meta-wayland-versions.h
+index 900f30d78..ec9b93acd 100644
+--- a/src/wayland/meta-wayland-versions.h
++++ b/src/wayland/meta-wayland-versions.h
+@@ -57,3 +57,4 @@
+ #define META_WP_SINGLE_PIXEL_BUFFER_V1_VERSION 1
+ #define META_MUTTER_X11_INTEROP_VERSION 1
+ #define META_WP_FRACTIONAL_SCALE_VERSION 1
++#define META_WP_DRM_LEASE_DEVICE_V1_VERSION 1
+diff --git a/src/wayland/meta-wayland.c b/src/wayland/meta-wayland.c
+index 501b69a91..e6de25007 100644
+--- a/src/wayland/meta-wayland.c
++++ b/src/wayland/meta-wayland.c
+@@ -69,6 +69,7 @@
+ #ifdef HAVE_NATIVE_BACKEND
+ #include "backends/native/meta-frame-native.h"
+ #include "backends/native/meta-renderer-native.h"
++#include "wayland/meta-wayland-drm-lease.h"
+ #endif
+ 
+ enum
+@@ -871,6 +872,10 @@ meta_wayland_compositor_new (MetaContext *context)
+   meta_wayland_idle_inhibit_init (compositor);
+   meta_wayland_drm_syncobj_init (compositor);
+ 
++#ifdef HAVE_NATIVE_BACKEND
++  meta_wayland_drm_lease_manager_init (compositor);
++#endif
++
+ #ifdef HAVE_WAYLAND_EGLSTREAM
+   {
+     gboolean should_enable_eglstream_controller = TRUE;
