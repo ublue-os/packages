@@ -17,7 +17,7 @@
 
 Name:          mutter
 Version:       %{gnome_version}.ublue.{{{ git_dir_version }}}
-Release:       3%{?dist}
+Release:       2%{?dist}
 Summary:       Window and compositing manager based on Clutter
 
 License:       GPLv2+
@@ -48,11 +48,8 @@ Patch4: 0001-modified-3329.patch
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
 Patch5: 1441.patch
 
-# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3746
-Patch6: 3746.patch
-
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3567
-# Patch7: 3567.patch
+# Patch6: 3567.patch
 
 BuildRequires: pkgconfig(gobject-introspection-1.0) >= 1.41.0
 BuildRequires: pkgconfig(sm)
