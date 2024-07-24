@@ -48,8 +48,8 @@
 
 Summary:   Firmware update daemon
 Name:      fwupd
-Version:   100.1.9.21
-Release:   %autorelease.ublue
+Version:   1.9.21
+Release:   100.ublue
 License:   LGPL-2.1-or-later
 URL:       https://github.com/fwupd/fwupd
 Source0:   http://people.freedesktop.org/~hughsient/releases/%{name}-%{version}.tar.xz
