@@ -11,7 +11,8 @@ Source:         %{pypi_source topgrade}
 
 BuildArch:      noarch
 BuildRequires:  python3-devel
-
+BuildRequires:  cargo
+BuildRequires:  rust
 
 # Fill in the actual package description to submit package to Fedora
 %global _description %{expand:
