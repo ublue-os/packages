@@ -11,7 +11,7 @@
 %global mutter_api_version 14
 
 %global gnome_major_version 46
-%global gnome_version %{gnome_major_version}.2
+%global gnome_version %{gnome_major_version}.4
 %global tarball_version %%(echo %{gnome_version} | tr '~' '.')
 %global _default_patch_fuzz 2
 
@@ -39,20 +39,14 @@ Patch2:         0001-place-Always-center-initial-setup-fedora-welcome.patch
 # to fix *both* problems
 Patch3:         0001-Revert-x11-Use-input-region-from-frame-window-for-de.patch
 
-# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3329
-# Modified to add the change from
-# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3329#note_1874837
-# which solves the problems reported with #3329 alone
-Patch4: 0001-modified-3329.patch
-
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
-Patch5: 1441.patch
+Patch4: 1441.patch
 
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3746
-Patch6: 3746.patch
+Patch5: 3746.patch
 
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3567
-# Patch7: 3567.patch
+# Patch6: 3567.patch
 
 BuildRequires: pkgconfig(gobject-introspection-1.0) >= 1.41.0
 BuildRequires: pkgconfig(sm)
