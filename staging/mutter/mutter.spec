@@ -37,7 +37,7 @@ Patch2:        0001-place-Always-center-initial-setup-fedora-welcome.patch
 # https://gitlab.gnome.org/GNOME/mutter/-/issues/3068
 # not upstreamed because for upstream we'd really want to find a way
 # to fix *both* problems
-Patch3:        0001-Revert-x11-Use-input-region-from-frame-window-for-de.patch
+# Patch3:        0001-Revert-x11-Use-input-region-from-frame-window-for-de.patch
 
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
 Patch4:        1441.patch
