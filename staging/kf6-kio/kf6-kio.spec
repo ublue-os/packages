@@ -1,10 +1,10 @@
 %global framework kio
 
 %global stable_kf6 stable
-%global majmin_ver_kf6 6.3
+%global majmin_ver_kf6 6.4
 
 Name:    kf6-%{framework}
-Version: %{majmin_ver_kf6}.0
+Version: %{majmin_ver_kf6}.1
 Release: 2%{?dist}.switcheroo.{{{ git_dir_version }}}
 Summary: KDE Frameworks 6 Tier 3 solution for filesystem abstraction
 
@@ -28,7 +28,7 @@ Patch101: kio-no-help-protocol.patch
 # https://invent.kde.org/frameworks/kio/-/merge_requests/1556
 Patch201: 1556.patch
 
-BuildRequires:  extra-cmake-modules >= %{version}
+BuildRequires:  extra-cmake-modules
 BuildRequires:  gcc-c++
 BuildRequires:  kf6-rpm-macros
 BuildRequires:  cmake
@@ -223,6 +223,9 @@ Developer Documentation files for %{name} for use with KDevelop or QtCreator.
 %{_qt6_docdir}/*.qch
 
 %changelog
+* Fri Jul 19 2024 Steve Cossette <farchord@gmail.com> - 6.4.1-1
+- 6.4.1 
+
 * Sat Jun 01 2024 Marc Deop i Argemí <marcdeop@fedoraproject.org> - 6.3.0-1
 - 6.3.0 
 
