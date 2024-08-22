@@ -1,10 +1,10 @@
 %global framework kio
 
 %global stable_kf6 stable
-%global majmin_ver_kf6 6.4
+%global majmin_ver_kf6 6.5
 
 Name:    kf6-%{framework}
-Version: %{majmin_ver_kf6}.1
+Version: %{majmin_ver_kf6}.0
 Release: 2%{?dist}.switcheroo.{{{ git_dir_version }}}
 Summary: KDE Frameworks 6 Tier 3 solution for filesystem abstraction
 
@@ -223,6 +223,9 @@ Developer Documentation files for %{name} for use with KDevelop or QtCreator.
 %{_qt6_docdir}/*.qch
 
 %changelog
+* Sat Aug 10 2024 Steve Cossette <farchord@gmail.com> - 6.5.0-1
+- 6.5.0 
+
 * Fri Jul 19 2024 Steve Cossette <farchord@gmail.com> - 6.4.1-1
 - 6.4.1 
 
