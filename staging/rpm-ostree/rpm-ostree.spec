@@ -4,12 +4,15 @@
 Summary: Hybrid image/package system
 Name: rpm-ostree
 Version: 2024.7
-Release: %autorelease
+Release: %autorelease.bazzite
 License: LGPL-2.0-or-later
 URL: https://github.com/coreos/rpm-ostree
 # This tarball is generated via "cd packaging && make -f Makefile.dist-packaging dist-snapshot"
 # in the upstream git.  It also contains vendored Rust sources.
 Source0: https://github.com/coreos/rpm-ostree/releases/download/v%{version}/rpm-ostree-%{version}.tar.xz
+
+# https://github.com/coreos/rpm-ostree/pull/5069
+Patch0: 5069.patch
 
 ExclusiveArch: %{rust_arches}
 
