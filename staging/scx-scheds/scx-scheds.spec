@@ -30,7 +30,7 @@ Requires:  jq
 sched_ext is a Linux kernel feature which enables implementing kernel thread schedulers in BPF and dynamically loading them. This repository contains various scheduler implementations and support utilities.
 
 %prep
-%autosetup
+%autosetup -n scx-%{version}
 
 %build
 %meson \
