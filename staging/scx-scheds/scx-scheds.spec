@@ -46,3 +46,4 @@ sched_ext is a Linux kernel feature which enables implementing kernel thread sch
 %{_bindir}/*
 %{_prefix}/lib/systemd/system/scx.service
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/default/scx
+%attr(0644,root,root) %config(noreplace) %{_datadir}/dbus-1/system.d/org.scx.Loader.conf
