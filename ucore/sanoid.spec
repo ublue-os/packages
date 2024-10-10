@@ -63,7 +63,7 @@ ConditionFileNotEmpty=/etc/sanoid/sanoid.conf
 [Service]
 Environment=TZ=UTC
 Type=oneshot
-ExecStart=/usr/local/sbin/sanoid --take-snapshots --verbose
+ExecStart=/usr/sbin/sanoid --take-snapshots --verbose
 EOF
 
 cat > %{buildroot}%{_unitdir}/%{name}-prune.service <<EOF
@@ -76,7 +76,7 @@ ConditionFileNotEmpty=/etc/sanoid/sanoid.conf
 [Service]
 Environment=TZ=UTC
 Type=oneshot
-ExecStart=/usr/local/sbin/sanoid --prune-snapshots --verbose
+ExecStart=/usr/sbin/sanoid --prune-snapshots --verbose
 
 [Install]
 WantedBy=sanoid.service
@@ -131,6 +131,8 @@ echo "* * * * * root %{_sbindir}/sanoid --cron" > %{buildroot}%{_docdir}/%{name}
 %endif
 
 %changelog
+* Wed Oct 09 2024 John mcGee <john@johnmcgee.net> - 2.2.0.ucore1
+- Correct systemctl scripts Exec path
 * Tue Mar 19 2024 John McGee <john@johnmcgee.net> - 2.2.0.ucore
 - Remove perl requirement to remove build tools
 - Add perl-interpreter and perl-Sys-Hostname requirements
