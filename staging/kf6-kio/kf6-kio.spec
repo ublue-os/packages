@@ -1,7 +1,10 @@
 %global framework kio
 
+%global stable_kf6 stable
+%global majmin_ver_kf6 6.6
+
 Name:    kf6-%{framework}
-Version: 6.7.0
+Version: %{majmin_ver_kf6}.0
 Release: 1%{?dist}.switcheroo.{{{ git_dir_version }}}
 Summary: KDE Frameworks 6 Tier 3 solution for filesystem abstraction
 
@@ -220,23 +223,29 @@ Developer Documentation files for %{name} for use with KDevelop or QtCreator.
 %{_qt6_docdir}/*.qch
 
 %changelog
-* Fri Oct 04 2024 Steve Cossette <farchord@gmail.com> - 6.7.0-1
-- 6.7.0 
-
 * Mon Sep 16 2024 Steve Cossette <farchord@gmail.com> - 6.6.0-1
-- 6.6.0 
+- 6.6.0
 
 * Sat Aug 10 2024 Steve Cossette <farchord@gmail.com> - 6.5.0-1
-- 6.5.0 
+- 6.5.0
 
 * Fri Jul 19 2024 Steve Cossette <farchord@gmail.com> - 6.4.1-1
-- 6.4.1 
+- 6.4.1
+
+* Thu Jul 18 2024 Steve Cossette <farchord@gmail.com> - 6.4.0-3
+- Fix for a regression in Frameworks 6.4.0
+
+* Thu Jul 18 2024 Fedora Release Engineering <releng@fedoraproject.org> - 6.4.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
+
+* Sat Jul 06 2024 Marc Deop i Argemí <marcdeop@fedoraproject.org> - 6.4.0-1
+- 6.4.0
 
 * Sat Jun 01 2024 Marc Deop i Argemí <marcdeop@fedoraproject.org> - 6.3.0-1
-- 6.3.0 
+- 6.3.0
 
 * Sat May 04 2024 Marc Deop i Argemí <marcdeop@fedoraproject.org> - 6.2.0-1
-- 6.2.0 
+- 6.2.0
 
 * Thu Apr 18 2024 Jan Grulich <jgrulich@redhat.com> - 6.1.0-2
 - Rebuild (qt6)
