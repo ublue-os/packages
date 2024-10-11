@@ -1,10 +1,7 @@
 %global framework kio
 
-%global stable_kf6 stable
-%global majmin_ver_kf6 6.7
-
 Name:    kf6-%{framework}
-Version: %{majmin_ver_kf6}.0
+Version: 6.7.0
 Release: 1%{?dist}.switcheroo.{{{ git_dir_version }}}
 Summary: KDE Frameworks 6 Tier 3 solution for filesystem abstraction
 
