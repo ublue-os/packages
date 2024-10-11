@@ -1,6 +1,6 @@
 %global tarball_version %%(echo %{version} | tr '~' '.')
 %global major_version 46
-%global minor_version 4
+%global minor_version 5
 
 Name:           gnome-shell
 Version:        %{major_version}.%{minor_version}
