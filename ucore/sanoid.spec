@@ -6,7 +6,7 @@
 
 Name:		   sanoid
 Version:	   %{version}
-Release:	   1%{?dist}.ucore1
+Release:	   1%{?dist}.ucore2
 BuildArch:	   noarch
 Summary:	   A policy-driven snapshot management tool for ZFS file systems
 Group:		   Applications/System
@@ -84,7 +84,7 @@ EOF
 
 cat > %{buildroot}%{_unitdir}/%{name}.timer <<EOF
 [Unit]
-Description=Run Sanoid Every Minute
+Description=Run Sanoid Every 15 Minutes
 
 [Timer]
 OnCalendar=*:0/15
@@ -131,6 +131,8 @@ echo "* * * * * root %{_sbindir}/sanoid --cron" > %{buildroot}%{_docdir}/%{name}
 %endif
 
 %changelog
+* Wed Oct 13 2024 John McGee <john@johnmcgee.net> - 2.2.0.ucore2
+- Correct typo in systemctl description
 * Wed Oct 09 2024 John McGee <john@johnmcgee.net> - 2.2.0.ucore1
 - Correct systemctl scripts Exec path
 * Tue Mar 19 2024 John McGee <john@johnmcgee.net> - 2.2.0.ucore
