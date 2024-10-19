@@ -1,7 +1,7 @@
 %global framework kio
 
 %global stable_kf6 stable
-%global majmin_ver_kf6 6.6
+%global majmin_ver_kf6 6.7
 
 Name:    kf6-%{framework}
 Version: %{majmin_ver_kf6}.0
@@ -223,6 +223,9 @@ Developer Documentation files for %{name} for use with KDevelop or QtCreator.
 %{_qt6_docdir}/*.qch
 
 %changelog
+* Fri Oct 04 2024 Steve Cossette <farchord@gmail.com> - 6.7.0-1
+- 6.7.0
+
 * Mon Sep 16 2024 Steve Cossette <farchord@gmail.com> - 6.6.0-1
 - 6.6.0
 
@@ -246,9 +249,6 @@ Developer Documentation files for %{name} for use with KDevelop or QtCreator.
 
 * Sat May 04 2024 Marc Deop i Argemí <marcdeop@fedoraproject.org> - 6.2.0-1
 - 6.2.0
-
-* Thu Apr 18 2024 Jan Grulich <jgrulich@redhat.com> - 6.1.0-2
-- Rebuild (qt6)
 
 * Wed Apr 10 2024 Marc Deop i Argemí <marcdeop@fedoraproject.org> - 6.1.0-1
 - 6.1.0

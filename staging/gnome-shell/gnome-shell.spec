@@ -1,6 +1,12 @@
 %global tarball_version %%(echo %{version} | tr '~' '.')
-%global major_version 46
-%global minor_version 5
+%global major_version 47
+%global minor_version 1
+
+%if 0%{?rhel}
+%global portal_helper 0
+%else
+%global portal_helper 1
+%endif
 
 Name:           gnome-shell
 Version:        %{major_version}.%{minor_version}
@@ -14,12 +20,13 @@ Source0:        https://download.gnome.org/sources/gnome-shell/%{major_version}/
 # Replace Epiphany with Firefox in the default favourite apps list
 Patch: gnome-shell-favourite-apps-firefox.patch
 
-# No portal helper if WebKitGTK is not installed
-Patch: optional-portal-helper.patch
-
 # Some users might have a broken PAM config, so we really need this
 # downstream patch to stop trying on configuration errors.
 Patch: 0001-gdm-Work-around-failing-fingerprint-auth.patch
+
+Patch: 0001-status-keyboard-Add-a-catch-around-reload-call.patch
+Patch: 0002-status-keyboard-Load-keyboard-from-system-settings-i.patch
+Patch: 0003-status-keyboard-Use-gnome-desktop-API-for-getting-de.patch
 
 # shell-app: improve discrete GPU detection
 # https://gitlab.gnome.org/GNOME/gnome-shell/-/merge_requests/3193
@@ -27,21 +34,21 @@ Patch: 3193.patch
 
 %define eds_version 3.45.1
 %define gnome_desktop_version 44.0-7
-%define glib2_version 2.56.0
+%define glib2_version 2.79.2
 %define gobject_introspection_version 1.49.1
 %define gjs_version 1.73.1
 %define gtk4_version 4.0.0
-%define adwaita_version 1.0.0
-%define mutter_version 46.0
+%define adwaita_version 1.5.0
+%define mutter_version 47.0
 %define polkit_version 0.100
-%define gsettings_desktop_schemas_version 46~beta
+%define gsettings_desktop_schemas_version 47~alpha
 %define ibus_version 1.5.2
 %define gnome_bluetooth_version 1:42.3
 %define gstreamer_version 1.4.5
 %define pipewire_version 0.3.0
 %define gnome_settings_daemon_version 3.37.1
 
-BuildRequires:  bash-completion
+BuildRequires:  pkgconfig(bash-completion)
 BuildRequires:  gcc
 BuildRequires:  meson
 BuildRequires:  git
@@ -67,6 +74,8 @@ BuildRequires:  pkgconfig(gtk4) >= %{gtk4_version}
 BuildRequires:  gettext >= 0.19.6
 BuildRequires:  python3
 
+# for rst2man
+BuildRequires:  python3-docutils
 # for barriers
 BuildRequires:  libXfixes-devel >= 5.0
 # used in unused BigThemeImage
@@ -82,10 +91,6 @@ BuildRequires: gtk-doc
 Recommends:     gnome-bluetooth%{?_isa} >= %{gnome_bluetooth_version}
 %endif
 Requires:       gnome-desktop3%{?_isa} >= %{gnome_desktop_version}
-%if 0%{?rhel} != 7
-# Disabled on RHEL 7 to allow logging into KDE session by default
-Recommends:     gnome-session-xsession
-%endif
 Requires:       gcr%{?_isa}
 Requires:       gobject-introspection%{?_isa} >= %{gobject_introspection_version}
 Requires:       gjs%{?_isa} >= %{gjs_version}
@@ -135,9 +140,9 @@ Requires:       xdg-desktop-portal-gnome
 # needed by the welcome dialog
 Recommends:     gnome-tour
 
-%if !0%{?rhel}
+%if %{portal_helper}
 # needed for captive portal helper
-Recommends:     webkitgtk6.0%{?_isa}
+Requires:     webkitgtk6.0%{?_isa}
 %endif
 
 # https://github.com/containers/composefs/pull/229#issuecomment-1838735764
@@ -176,7 +181,14 @@ easy to use experience.
 %autosetup -S git -n %{name}-%{tarball_version}
 
 %build
-%meson -Dextensions_app=false
+%meson \
+  -Dextensions_app=false \
+%if %{portal_helper}
+  -Dportal_helper=true \
+%else
+  -Dportal_helper=false \
+%endif
+  %{nil}
 %meson_build
 
 %install
@@ -191,21 +203,22 @@ mkdir -p %{buildroot}%{_datadir}/gnome-shell/search-providers
 %check
 desktop-file-validate %{buildroot}%{_datadir}/applications/org.gnome.Shell.desktop
 desktop-file-validate %{buildroot}%{_datadir}/applications/org.gnome.Shell.Extensions.desktop
+
+%if %{portal_helper}
 desktop-file-validate %{buildroot}%{_datadir}/applications/org.gnome.Shell.PortalHelper.desktop
+%endif
 
 %files -f %{name}.lang
 %license COPYING
 %doc NEWS README.md
 %{_bindir}/gnome-shell
 %{_bindir}/gnome-extensions
-%{_bindir}/gnome-shell-extension-prefs
 %{_bindir}/gnome-shell-extension-tool
 %{_bindir}/gnome-shell-test-tool
 %{_datadir}/glib-2.0/schemas/*.xml
 %{_datadir}/glib-2.0/schemas/00_org.gnome.shell.gschema.override
 %{_datadir}/applications/org.gnome.Shell.Extensions.desktop
 %{_datadir}/applications/org.gnome.Shell.desktop
-%{_datadir}/applications/org.gnome.Shell.PortalHelper.desktop
 %{_datadir}/bash-completion/completions/gnome-extensions
 %{_datadir}/gnome-control-center/keybindings/50-gnome-shell-launchers.xml
 %{_datadir}/gnome-control-center/keybindings/50-gnome-shell-screenshots.xml
@@ -216,7 +229,6 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/org.gnome.Shell.Porta
 %{_datadir}/dbus-1/services/org.gnome.Shell.Extensions.service
 %{_datadir}/dbus-1/services/org.gnome.Shell.HotplugSniffer.service
 %{_datadir}/dbus-1/services/org.gnome.Shell.Notifications.service
-%{_datadir}/dbus-1/services/org.gnome.Shell.PortalHelper.service
 %{_datadir}/dbus-1/services/org.gnome.Shell.Screencast.service
 %{_datadir}/dbus-1/interfaces/org.gnome.Shell.Extensions.xml
 %{_datadir}/dbus-1/interfaces/org.gnome.Shell.Introspect.xml
@@ -235,9 +247,16 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/org.gnome.Shell.Porta
 %{_libexecdir}/gnome-shell-calendar-server
 %{_libexecdir}/gnome-shell-perf-helper
 %{_libexecdir}/gnome-shell-hotplug-sniffer
-%{_libexecdir}/gnome-shell-portal-helper
 %{_mandir}/man1/gnome-extensions.1*
 %{_mandir}/man1/gnome-shell.1*
+
+%if %{portal_helper}
+%{_datadir}/applications/org.gnome.Shell.PortalHelper.desktop
+%{_datadir}/dbus-1/services/org.gnome.Shell.PortalHelper.service
+%{_datadir}/icons/hicolor/scalable/apps/org.gnome.Shell.CaptivePortal.svg
+%{_datadir}/icons/hicolor/symbolic/apps/org.gnome.Shell.CaptivePortal-symbolic.svg
+%{_libexecdir}/gnome-shell-portal-helper
+%endif
 
 %changelog
 %autochangelog

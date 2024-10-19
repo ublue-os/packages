@@ -1,46 +1,49 @@
 %global glib_version 2.75.1
 %global gtk3_version 3.19.8
 %global gtk4_version 4.0.0
-%global gsettings_desktop_schemas_version 40~alpha
-%global json_glib_version 0.12.0
+%global gsettings_desktop_schemas_version 47~beta
 %global libinput_version 1.19.0
 %global pipewire_version 0.3.33
 %global lcms2_version 2.6
 %global colord_version 1.4.5
-%global libei_version 1.0.0
-%global mutter_api_version 14
+%global libei_version 1.0.901
+%global mutter_api_version 15
 
-%global gnome_major_version 46
-%global gnome_version %{gnome_major_version}.5
+%global gnome_major_version 47
+%global gnome_version %{gnome_major_version}.1
 %global tarball_version %%(echo %{gnome_version} | tr '~' '.')
 %global _default_patch_fuzz 2
 
 Name:          mutter
 Version:       %{gnome_version}.ublue.{{{ git_dir_version }}}
-Release:       3%{?dist}
+Release:       1%{?dist}
 Summary:       Window and compositing manager based on Clutter
 
-License:       GPLv2+
+# Automatically converted from old format: GPLv2+ - review is highly recommended.
+License:       GPL-2.0-or-later
 URL:           http://www.gnome.org
-Source0:       https://download.gnome.org/sources/%{name}/%{gnome_major_version}/%{name}-%{tarball_version}.tar.xz
+Source0:       http://download.gnome.org/sources/%{name}/47/%{name}-%{tarball_version}.tar.xz
 
 # Work-around for OpenJDK's compliance test
-Patch0:        0001-window-actor-Special-case-shaped-Java-windows.patch
+Patch:         0001-window-actor-Special-case-shaped-Java-windows.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1936991
-Patch1:        mutter-42.alpha-disable-tegra.patch
+Patch:         mutter-42.alpha-disable-tegra.patch
 
 # https://pagure.io/fedora-workstation/issue/79
-Patch2:        0001-place-Always-center-initial-setup-fedora-welcome.patch
+Patch:         0001-place-Always-center-initial-setup-fedora-welcome.patch
+
+# https://pagure.io/fedora-workstation/issue/357
+Patch:         0001-gschema-Enable-fractional-scaling-experimental-featu.patch
+
+# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
+Patch:         1441.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=2239128
 # https://gitlab.gnome.org/GNOME/mutter/-/issues/3068
 # not upstreamed because for upstream we'd really want to find a way
 # to fix *both* problems
-Patch3:        0001-Revert-x11-Use-input-region-from-frame-window-for-de.patch
-
-# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
-Patch4:        1441.patch
+Patch:         0001-Revert-x11-Use-input-region-from-frame-window-for-de.patch
 
 BuildRequires: pkgconfig(gobject-introspection-1.0) >= 1.41.0
 BuildRequires: pkgconfig(sm)
@@ -71,10 +74,10 @@ BuildRequires: pkgconfig(libpipewire-0.3) >= %{pipewire_version}
 BuildRequires: pkgconfig(sysprof-capture-4)
 BuildRequires: sysprof-devel
 BuildRequires: pkgconfig(libsystemd)
-BuildRequires: xorg-x11-server-Xorg
 BuildRequires: xorg-x11-server-Xvfb
 BuildRequires: pkgconfig(xkeyboard-config)
 BuildRequires: desktop-file-utils
+BuildRequires: cvt
 # Bootstrap requirements
 BuildRequires: gettext-devel git-core
 BuildRequires: pkgconfig(libcanberra)
@@ -94,7 +97,6 @@ BuildRequires: pkgconfig(colord) >= %{colord_version}
 BuildRequires: pkgconfig(libei-1.0) >= %{libei_version}
 BuildRequires: pkgconfig(libeis-1.0) >= %{libei_version}
 
-BuildRequires: pkgconfig(json-glib-1.0) >= %{json_glib_version}
 BuildRequires: pkgconfig(libinput) >= %{libinput_version}
 BuildRequires: pkgconfig(xwayland)
 
@@ -104,7 +106,6 @@ Requires: control-center-filesystem
 Requires: gsettings-desktop-schemas%{?_isa} >= %{gsettings_desktop_schemas_version}
 Requires: gnome-settings-daemon
 Requires: gtk4%{?_isa} >= %{gtk4_version}
-Requires: json-glib%{?_isa} >= %{json_glib_version}
 Requires: libinput%{?_isa} >= %{libinput_version}
 Requires: pipewire%{_isa} >= %{pipewire_version}
 Requires: startup-notification
@@ -121,8 +122,6 @@ Provides: firstboot(windowmanager) = mutter
 # significantly since then.
 Provides: bundled(cogl) = 1.22.0
 Provides: bundled(clutter) = 1.26.0
-
-Provides: mutter = %{gnome_version}-%{release}
 
 Conflicts: mutter < 45~beta.1-2
 
@@ -146,7 +145,6 @@ behaviors to meet the needs of the environment.
 Summary: Common files used by %{name} and forks of %{name}
 BuildArch: noarch
 Conflicts: mutter < 45~beta.1-2
-Provides: mutter-common = %{gnome_version}-%{release}
 
 %description common
 Common files used by Mutter and soft forks of Mutter
