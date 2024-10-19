@@ -18,7 +18,7 @@
 %global enable_dummy 1
 
 # fwupd.efi is only available on these arches
-%ifarch x86_64 aarch64
+%ifarch x86_64 aarch64 riscv64
 %global have_uefi 1
 %endif
 
@@ -28,7 +28,7 @@
 %endif
 
 # flashrom is only available on these arches
-%ifarch i686 x86_64 armv7hl aarch64 ppc64le
+%ifarch i686 x86_64 armv7hl aarch64 ppc64le riscv64
 %global have_flashrom 1
 %endif
 
@@ -46,9 +46,13 @@
 %global have_modem_manager 1
 %endif
 
+%if 0%{?fedora}
+%global have_passim 1
+%endif
+
 Summary:   Firmware update daemon
 Name:      fwupd
-Version:   1.9.21
+Version:   1.9.26
 Release:   100.ublue
 License:   LGPL-2.1-or-later
 URL:       https://github.com/fwupd/fwupd
@@ -70,7 +74,7 @@ BuildRequires: systemd >= %{systemd_version}
 BuildRequires: systemd-devel
 BuildRequires: libarchive-devel
 BuildRequires: libcbor-devel
-%if 0%{?rhel} >= 10 || 0%{?fedora} >= 28
+%if 0%{?have_passim}
 BuildRequires: passim-devel
 %endif
 BuildRequires: gobject-introspection-devel
@@ -123,7 +127,7 @@ Provides: dbxtool
 Recommends: udisks2
 Recommends: bluez
 Recommends: jq
-%if 0%{?rhel} >= 10 || 0%{?fedora} >= 28
+%if 0%{?have_passim}
 Recommends: passim
 %endif
 
@@ -231,6 +235,11 @@ or server machines.
 %else
     -Dplugin_modem_manager=disabled \
 %endif
+%if 0%{?have_passim}
+    -Dpassim=enabled \
+%else
+    -Dpassim=disabled \
+%endif
     -Dman=true \
     -Dsystemd_unit_user="" \
     -Dbluez=enabled \
@@ -305,7 +314,12 @@ systemctl --no-reload preset fwupd-refresh.timer &>/dev/null || :
 %{_datadir}/bash-completion/completions/fwupdmgr
 %{_datadir}/bash-completion/completions/fwupdtool
 %{_datadir}/fish/vendor_completions.d/fwupdmgr.fish
+%dir %{_datadir}/fwupd
+%dir %{_datadir}/fwupd/metainfo
 %{_datadir}/fwupd/metainfo/org.freedesktop.fwupd*.metainfo.xml
+%dir %{_datadir}/fwupd/remotes.d
+%dir %{_datadir}/fwupd/remotes.d/vendor
+%dir %{_datadir}/fwupd/remotes.d/vendor/firmware
 %{_datadir}/fwupd/remotes.d/vendor/firmware/README.md
 %{_datadir}/dbus-1/interfaces/org.freedesktop.fwupd.xml
 %{_datadir}/polkit-1/actions/org.freedesktop.fwupd.policy
