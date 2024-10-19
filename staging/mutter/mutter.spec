@@ -24,26 +24,26 @@ License:       GPL-2.0-or-later
 URL:           http://www.gnome.org
 Source0:       https://download.gnome.org/sources/%{name}/%{gnome_major_version}/%{name}-%{tarball_version}.tar.xz
 
-# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
-Patch0:        1441.patch
-
 # Work-around for OpenJDK's compliance test
-Patch1:        0001-window-actor-Special-case-shaped-Java-windows.patch
+Patch0:        0001-window-actor-Special-case-shaped-Java-windows.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1936991
-Patch2:        mutter-42.alpha-disable-tegra.patch
+Patch1:        mutter-42.alpha-disable-tegra.patch
 
 # https://pagure.io/fedora-workstation/issue/79
-Patch3:        0001-place-Always-center-initial-setup-fedora-welcome.patch
+Patch2:        0001-place-Always-center-initial-setup-fedora-welcome.patch
 
 # https://pagure.io/fedora-workstation/issue/357
-Patch4:        0001-gschema-Enable-fractional-scaling-experimental-featu.patch
+Patch3:        0001-gschema-Enable-fractional-scaling-experimental-featu.patch
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=2239128
 # https://gitlab.gnome.org/GNOME/mutter/-/issues/3068
 # not upstreamed because for upstream we'd really want to find a way
 # to fix *both* problems
-Patch5:        0001-Revert-x11-Use-input-region-from-frame-window-for-de.patch
+Patch4:        0001-Revert-x11-Use-input-region-from-frame-window-for-de.patch
+
+# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
+Patch5:        1441.patch
 
 BuildRequires: pkgconfig(gobject-introspection-1.0) >= 1.41.0
 BuildRequires: pkgconfig(sm)
