@@ -42,8 +42,8 @@ Patch3:        0001-gschema-Enable-fractional-scaling-experimental-featu.patch
 # to fix *both* problems
 Patch4:        0001-Revert-x11-Use-input-region-from-frame-window-for-de.patch
 
-# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
-Patch5:        1441.patch
+# https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4083
+Patch5:        4083.patch
 
 BuildRequires: pkgconfig(gobject-introspection-1.0) >= 1.41.0
 BuildRequires: pkgconfig(sm)
