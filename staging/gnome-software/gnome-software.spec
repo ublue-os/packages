@@ -13,6 +13,7 @@
 # Disable parental control for RHEL builds
 %bcond malcontent %[!0%{?rhel}]
 # Disable rpm-ostree support for RHEL builds
+# Universal Blue: Disable entirely
 %bcond rpmostree 0
 # Disable DKMS/akmods support for RHEL builds
 # Universal Blue: Disable entirely
