@@ -28,7 +28,7 @@
 
 Name:      gnome-software
 Version:   47.1
-Release:   100.ublue%{?dist}
+Release:   101.ublue%{?dist}
 Summary:   A software center for GNOME
 
 License:   GPL-2.0-or-later
