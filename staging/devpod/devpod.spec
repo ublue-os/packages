@@ -40,3 +40,5 @@ rm -rf usr
 %{_datadir}/applications/dev-pod.desktop
 
 %changelog
+* Sun Nov 03 2024 - Zeglius <33781398+Zeglius@users.noreply.github.com>
+  - Dummy changelog
