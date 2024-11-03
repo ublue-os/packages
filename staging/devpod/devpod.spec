@@ -1,3 +1,7 @@
+%if 0%{?fedora} == 41
+    _missing_build_ids_terminate_build 0
+%endif
+
 Name:           devpod
 # renovate: datasource=github-releases depName=loft-sh/devpod
 Version:        v0.5.21
