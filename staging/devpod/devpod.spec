@@ -1,7 +1,3 @@
-%if 0%{?fedora} == 41
-    %global _missing_build_ids_terminate_build 0
-%endif
-
 Name:           devpod
 # renovate: datasource=github-releases depName=loft-sh/devpod
 Version:        v0.5.21
@@ -18,6 +14,11 @@ Requires:       webkit2gtk4.0
 
 %description
 Codespaces but open-source, client-only and unopinionated: Works with any IDE and lets you use any cloud, kubernetes or just localhost docker.
+
+%if 0%{?fedora} == 41
+    %global _missing_build_ids_terminate_build 0
+    %global debug_package %{nil}
+%endif
 
 %prep
 %autosetup -c
