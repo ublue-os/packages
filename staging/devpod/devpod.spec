@@ -1,5 +1,5 @@
 %if 0%{?fedora} == 41
-    _missing_build_ids_terminate_build 0
+    %global _missing_build_ids_terminate_build 0
 %endif
 
 Name:           devpod
