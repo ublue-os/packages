@@ -1,6 +1,6 @@
 Name:           devpod
 # renovate: datasource=github-releases depName=loft-sh/devpod
-Version:        v0.5.21
+Version:        v0.5.22
 Release:        1%{?dist}
 Summary:        Codespaces but open-source, client-only and unopinionated.
 
