@@ -13,7 +13,8 @@
 # Disable parental control for RHEL builds
 %bcond malcontent %[!0%{?rhel}]
 # Disable rpm-ostree support for RHEL builds
-%bcond rpmostree %[!0%{?rhel}]
+# Universal Blue: Disable entirely
+%bcond rpmostree 0
 # Disable DKMS/akmods support for RHEL builds
 # Universal Blue: Disable entirely
 %bcond dkms 0
@@ -27,7 +28,7 @@
 
 Name:      gnome-software
 Version:   47.1
-Release:   100.ublue%{?dist}
+Release:   101.ublue%{?dist}
 Summary:   A software center for GNOME
 
 License:   GPL-2.0-or-later
