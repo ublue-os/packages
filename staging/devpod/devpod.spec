@@ -34,11 +34,11 @@ rm -rf usr
 
 %files
 %{_bindir}/devpod-cli
-%{_bindir}/dev-pod
-%{_datadir}/icons/hicolor/256x256@2/apps/dev-pod.png
-%{_datadir}/icons/hicolor/128x128/apps/dev-pod.png
-%{_datadir}/icons/hicolor/32x32/apps/dev-pod.png
-%{_datadir}/applications/dev-pod.desktop
+%{_bindir}/DevPod
+%{_datadir}/icons/hicolor/256x256@2/apps/DevPod.png
+%{_datadir}/icons/hicolor/128x128/apps/DevPod.png
+%{_datadir}/icons/hicolor/32x32/apps/DevPod.png
+%{_datadir}/applications/DevPod.desktop
 
 %changelog
 * Sun Nov 03 2024 - Zeglius <33781398+Zeglius@users.noreply.github.com>
