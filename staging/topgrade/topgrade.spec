@@ -1,13 +1,13 @@
 %global debug_package %{nil}
 
 Name:           topgrade
-Version:        15.0.0
-Release:        1%{?dist}
+Version:        16.0.1
+Release:        2%{?dist}
 Summary:        Upgrade all the things
 
 License:        GPL-3.0-or-later
 URL:            https://github.com/topgrade-rs/%{name}
-Source:         https://github.com/topgrade-rs/%{name}/archive/refs/tags/v%{version}.tar.gz
+Source:         https://github.com/topgrade-rs/%{name}/archive/14155d75c449a7d2df63b649cd359093550ddb07.tar.gz
 
 BuildRequires:  cargo
 BuildRequires:  rust
@@ -19,7 +19,7 @@ To remedy this, Topgrade detects which tools you use and
 runs the appropriate commands to update them.
 
 %prep
-%autosetup -n %{name}-%{version}
+%autosetup -n %{name}-14155d75c449a7d2df63b649cd359093550ddb07
 
 %build
 cargo build --release --locked
