@@ -1,3 +1,607 @@
+* Wed Jul 17 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256.2-9
+- Backport udma buffer access patch (rhbz#2298422)
+
+* Tue Jul 16 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 256.2-8
+- Add support for building from a specific branch
+
+* Tue Jul 16 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 256.2-7
+- Update PR patch metadata
+
+* Mon Jul 15 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256.2-6
+- In standalone subpackages, suggest coreutils-single
+
+* Mon Jul 15 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256.2-5
+- Drop versions from Conflicts for standalone packages
+
+* Sun Jul 14 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256.2-4
+- Use a more precise Recommends for libkxbcommon
+
+* Thu Jul 11 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 256.2-3
+- Drop machined revert
+
+* Tue Jul 09 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256.2-2
+- Rebuilt for the bin-sbin merge
+
+* Mon Jul 08 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256.2-1
+- Version 256.2
+- A bunch of various small fixes
+
+* Mon Jul 08 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256.1-13
+- Link systemd-executor statically
+
+* Fri Jul 05 2024 Yaakov Selkowitz <yselkowi@redhat.com> - 256.1-12
+- Update dracut workaround
+
+* Fri Jul 05 2024 Yaakov Selkowitz <yselkowi@redhat.com> - 256.1-11
+- Fix ELN build
+
+* Fri Jul 05 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 256.1-10
+- Only exclude dracut conflicts on non-fedora on upstream builds
+
+* Fri Jul 05 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 256.1-9
+- Conditionalize dracut Conflicts more
+
+* Tue Jul 02 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 256.1-8
+- Use vmlinux.h from kernel-devel
+
+* Tue Jul 02 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256.1-7
+- Pull in openssl-devel-engine
+
+* Mon Jul 01 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 256.1-6
+- Only add Requires on python3-zstd on Fedora
+
+* Mon Jul 01 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 256.1-5
+- Drop BuildRequires on python3-zstd
+
+* Tue Jun 25 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256.1-4
+- Revert "Remove tmpfiles snippet for /home and /srv"
+
+* Tue Jun 18 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256.1-3
+- Remove tmpfiles snippet for /home and /srv
+
+* Tue Jun 18 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256.1-2
+- Soft-disable tmpfiles --purge until a good use case comes up
+
+* Tue Jun 18 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256.1-1
+- Version 256.1
+
+* Sun Jun 16 2024 U2FsdGVkX1 <U2FsdGVkX1@gmail.com> - 256-2
+- disable auto-features when bootstrapping
+
+* Tue Jun 11 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256-1
+- Version 256
+- Only minor changes since -rc4.
+- Hardward db is updated.
+
+* Fri Jun 07 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256~rc4-2
+- Restore patch to drop varlink method call
+
+* Thu Jun 06 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256~rc4-1
+- Version 256~rc4
+
+* Thu Jun 06 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256~rc3-6
+- Drop sysusers.d/basic.conf
+- We rely on setup to provide all necessary groups.
+
+* Sun Jun 02 2024 Adam Williamson <awilliam@redhat.com> - 256~rc3-4
+- Partially backport PR #33016 to fix crashes in KDE 6.3.0
+
+* Wed May 29 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256~rc3-2
+- Add patch to work-around libbpf bug (rhbz#2280935)
+
+* Thu May 23 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256~rc3-1
+- Version 256~rc3
+
+* Wed May 15 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256~rc2-6
+- Version 256~rc2
+- Various small changes all over
+- A fix for rhbz#2273069
+
+* Mon May 13 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256~rc1^20240509git1781de1-4
+- Make %%release_override overridable from outside
+
+* Sat May 11 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256~rc1^20240509git1781de1-2
+- Temporarily drop call to varlink method to avoid SELinux denial
+
+* Thu May 09 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256~rc1^20240509git1781de1-1
+- Version 256-rc1^20240509git
+- There were some fixes merged upstream, so let's try again before v256-rc2
+  is released.
+
+* Thu May 02 2024 Jan Macku <jamacku@redhat.com> - 256~rc1-6
+- spec: `systemd-ukify` should depend on `systemd-boot`
+
+* Sat Apr 27 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256~rc1-4
+- Add additional daemon-reexec for upgrades from old systemd versions
+
+* Sat Apr 27 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256~rc1-3
+- Drop trigger scriptlets for upgrades from systemd < 247
+
+* Sat Apr 27 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256~rc1-2
+- Add Recommends for dlopen libraries
+
+* Fri Apr 26 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 256~rc1-1
+- Version 256~rc1
+- See https://raw.githubusercontent.com/systemd/systemd/v256-rc1/NEWS. Too
+  many changes to list or discuss here.
+
+* Wed Apr 24 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.5-3
+- Reexec systemd in %%postun
+  (https://github.com/systemd/systemd/issues/5096)
+- The workaround dbus issues in upgrades from systemd-239 is dropped
+
+* Wed Apr 24 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.5-2
+- Drop workaround to run generators without sandboxing (requirement on
+  dracut >= 60 is added)
+
+* Wed Apr 24 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.5-1
+- Version 255.5
+- Many different small fixes: systemd itself, systemd-networkd, systemd-
+  journal-remote, compilation fixes for newer kernels and clang, systemd-
+  homed, systemd-resolved, ukify, systemd-tmpfiles, various other.
+
+* Wed Apr 10 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.4-16
+- Prepare for bin-sbin merge
+
+* Wed Mar 27 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.4-13
+- spec: add %%bcond to build without documentation
+
+* Fri Mar 22 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.4-11
+- Revert "Adjust release tag for riscv64"
+
+* Fri Mar 22 2024 David Abdurachmanov <davidlt@rivosinc.com> - 255.4-10
+- Enable bootloader stack for riscv64
+
+* Fri Mar 22 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.4-9
+- Adjust release tag for riscv64
+
+* Wed Mar 20 2024 David Tardon <dtardon@redhat.com> - 255.4-5
+- Make Requires(*) on systemd versioned
+
+* Wed Mar 20 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.4-4
+- Add R:systemd-udev to systemd-networkd subpackage (rhbz#2173425)
+
+* Mon Mar 18 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 255.4-3
+- Add psutil dependency to systemd-tests
+
+* Thu Mar 07 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 255.4-2
+- Build in developer mode when building for upstream
+
+* Fri Mar 01 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.4-1
+- Version 255.4
+
+* Wed Feb 21 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 255.3-13
+- Allow setting extra configure options using
+  %%meson_extra_configure_options
+
+* Wed Feb 21 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 255.3-12
+- Apply pam patch when building for upstream
+
+* Wed Feb 21 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 255.3-11
+- Use %%version_override/%%release_override to specify version/release by
+  users
+
+* Tue Feb 20 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.3-10
+- Let libkmod be a dlopen'ed dependency
+
+* Sat Feb 17 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 255.3-9
+- Allow overriding the version and release using macros
+
+* Sat Feb 17 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 255.3-8
+- Stop passing %%{release} to meson when building in upstream mode
+
+* Sat Feb 17 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 255.3-7
+- Don't pass b_lto to meson
+
+* Thu Feb 15 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 255.3-6
+- Update usage of meson-vcs-tag.sh to account for upstream changes
+
+* Sun Feb 11 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 255.3-5
+- Replace inplace macro with upstream macro
+
+* Sun Feb 11 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 255.3-4
+- Remove reconfiguration logic
+
+* Sun Feb 11 2024 Daan De Meyer <daan.j.demeyer@gmail.com> - 255.3-3
+- Stop depending on filelists
+
+* Mon Jan 29 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.3-2
+- Conflicts/Provides with systemd-standalone-repart are moved udev
+  subpackage
+
+* Thu Jan 25 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.3-1
+- Version 255.3
+- A bunch of various fixes for memory and behaviour, in many different
+  components (bootctl, systemd, udev, systemd-networkd, systemd-homed,
+  systemd-logind, systemd-resolve, systemd-repart, systemd-analyze,
+  systemd-dissect, systemd-boot, pam modules, systemd-storagetm, systemd-
+  journal-remote, kernel-install)
+- Improved detection of virtualization (Google Compute Engine, Apple Virt)
+- Updates for shell completions and docs
+- An update for hardware database
+
+* Tue Jan 23 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.2-3
+- Add temporary patch to adjust uid range classification (rhbz#2251843)
+
+* Tue Jan 09 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.2-1
+- Version 255.2
+- Fixes missing DNSSEC validity check in SOA DNS packets (CVE-2023-7008)
+- systemd-resolved and systemd-networkd are restarted after an upgrade.
+
+* Tue Jan 09 2024 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.1-2
+- Add missing %%postun scriptlets for systemd-{resolved,networkd}
+  (rhbz#2255718)
+
+* Sat Dec 16 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255.1-1
+- Version 255.1
+
+* Wed Dec 13 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255-7
+- Do not remove modified config files
+
+* Fri Dec 08 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255-4
+- Add /etc/ssh/sshd_config.d to the file list
+
+* Fri Dec 08 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255-3
+- Move config files to /usr/lib/systemd (e.g. /etc/systemd/system.conf →
+  /usr/lib/systemd/systemd.conf). Both config file locations were already
+  supported, and the files installed in /etc/ were "empty" (i.e. they had
+  only comments and section headers). The move does not change the
+  configuration, but just makes /etc more empty by default. See
+  https://github.com/systemd/systemd/commit/6495361c7d for more discussion
+  and details.
+
+* Fri Dec 08 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255-2
+- Move systemd-bsod is to udev subpackage
+
+* Wed Dec 06 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255-1
+- Version 255
+- Just a few bugfixes since 255-rc4: seccomp filters, logging,
+  documentation, systemd-repart
+- Includes a hardware database update.
+
+* Sat Dec 02 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255~rc4-1
+- Version 255~rc4
+
+* Fri Dec 01 2023 Adam Williamson <awilliam@redhat.com> - 255~rc3-4
+- Backport PRs #30170 and #30266 to fix BPF denials (RHBZ #2250930)
+
+* Wed Nov 29 2023 Adam Williamson <awilliam@redhat.com> - 255~rc3-3
+- Backport #30197 to fix vconsole startup (RHBZ #2251394)
+
+* Thu Nov 23 2023 Peter Robinson <pbrobinson@gmail.com> - 255~rc3-2
+- de-dupe LICENSE.LGPL2.1 in licenses
+
+* Wed Nov 22 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255~rc3-1
+- Version 255~rc3
+
+* Wed Nov 22 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255~rc2-2
+- Add systemd-networkd-defaults subpackage
+
+* Wed Nov 15 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255~rc2-1
+- Version 255~rc2
+- See See https://raw.githubusercontent.com/systemd/systemd/v255-rc2/NEWS
+
+* Wed Nov 08 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl>
+- Add Conflicts with older dracut which doesn't have required patches
+
+* Tue Nov 07 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255~rc1-3
+- Also build systemd-vmspawn
+
+* Tue Nov 07 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255~rc1-2
+- Move oomd to systemd-udev
+
+* Tue Nov 07 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 255~rc1-1
+- Version 255~rc1
+- See https://raw.githubusercontent.com/systemd/systemd/v255-rc1/NEWS
+- All the files and services related to pcrs are moved to -udev subpackage.
+  This includes the new systemd-pcrlock binary.
+
+* Wed Sep 27 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254.5-2
+- Pull in more patches for keyboard layout matching
+
+* Wed Sep 27 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254.5-1
+- Version 254.5
+- Resolves rhbz#29216.
+
+* Wed Sep 27 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254.2-14
+- Pull in patches to add PollLimit setting
+
+* Wed Sep 27 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254.2-13
+- Change versioned Conflicts to rich Requires (rhbz#2240828)
+
+* Tue Sep 19 2023 Adam Williamson <awilliam@redhat.com> - 254.2-12
+- Backport PR #29215 to improve keyboard layout matching
+
+* Mon Sep 18 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254.2-7
+- Fix creation of installkernel symlink
+
+* Fri Sep 15 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254.2-6
+- Provide /usr/sbin/installkernel (rhbz#2239008).
+
+* Thu Sep 07 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254.2-2
+- Make inter-subpackage dependencies archful
+
+* Thu Sep 07 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254.2-1
+- Version 254.2
+- A bunch of fixes in various areas: manager, coredump, sysupdate,
+  hibernation, journal.
+- Should fix rhbz#2234653.
+
+* Wed Sep 06 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254.1-8
+- Actually reload user managers and backport unit reload macros
+
+* Sat Sep 02 2023 Daan De Meyer <daan.j.demeyer@gmail.com> - 254.1-7
+- ukify: Drop obsolete dependency on objcopy
+
+* Sat Sep 02 2023 Daan De Meyer <daan.j.demeyer@gmail.com> - 254.1-6
+- Add missing ukify dependency on python-cryptography
+
+* Sun Aug 20 2023 Yu Watanabe <watanabe.yu+github@gmail.com> - 254.1-5
+- spec: also explicitly enable/disable ukify support
+
+* Sun Aug 13 2023 Yu Watanabe <watanabe.yu+github@gmail.com> - 254.1-4
+- spec: explicitly enable/disable xen support
+
+* Wed Aug 09 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254.1-1
+- Version 254.1 (rhbz#2228089, possibly partial fix for rhbz#2229524)
+
+* Wed Aug 09 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254-5
+- Do daemon-reexec of user managers after package upgrade
+
+* Mon Aug 07 2023 Daan De Meyer <daan.j.demeyer@gmail.com> - 254-4
+- Revert "Supress errors on selinux systems"
+
+* Thu Aug 03 2023 Daan De Meyer <daan.j.demeyer@gmail.com> - 254-3
+- Add a custom %%clean implementation
+
+* Thu Aug 03 2023 Daan De Meyer <daan.j.demeyer@gmail.com> - 254-2
+- Update libbpf soname
+
+* Fri Jul 28 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254-1
+- Version 254 (just a bunch of bugfixes, mostly for unusual architectures,
+  since rc3)
+- rhbz#2226908
+- See https://raw.githubusercontent.com/systemd/systemd/v254-rc1/NEWS for
+  the full changeset.
+
+* Mon Jul 24 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254~rc3-1
+- Version 254~rc3
+- A bunch of fixes, e.g. rhbz#2223795. Also a bunch of reverts of commits
+  which were found to cause problems.
+
+* Sat Jul 22 2023 Fedora Release Engineering <releng@fedoraproject.org> - 254~rc2-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild
+
+* Mon Jul 17 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254~rc2-4
+- Fix scriptlets for various services and remote-cryptsetup.target
+  (rhbz#2217997)
+
+* Sun Jul 16 2023 Stewart Smith <stewart@flamingspork.com> - 254~rc2-3
+- Convert existing bcond_with[out] to plain bcond
+
+* Sun Jul 16 2023 Stewart Smith <trawets@amazon.com> - 254~rc2-2
+- Move gnutls, zlib, bzip2, lz4, xz, and zstd to bconds
+
+* Sat Jul 15 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254~rc2-1
+- Version 254~rc2
+- Various bug fixes, in particular kernel-install should again work without
+  /proc.
+
+* Thu Jul 13 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 254~rc1-1
+- Version 254~rc1
+- Way too many changes to list. See
+  https://raw.githubusercontent.com/systemd/systemd/v254-rc1/NEWS
+- Fix regression in socket activation of services (rhbz#2213660).
+
+* Mon Jun 26 2023 Yaakov Selkowitz <yselkowi@redhat.com> - 253.5-7
+- Use rpm sysuser provide generation on RHEL >= 10
+
+* Thu Jun 22 2023 Panu Matilainen <pmatilai@redhat.com> - 253.5-6
+- Use rpm's sysuser provide generation on Fedora >= 39
+
+* Wed Jun 21 2023 Anita Zhang <the.anitazha@gmail.com> - 253.5-5
+- fix typos in standalone package provides
+
+* Mon Jun 05 2023 Yaakov Selkowitz <yselkowi@redhat.com> - 253.5-4
+- Avoid pillow and pyflakes in RHEL builds
+
+* Mon Jun 05 2023 Yaakov Selkowitz <yselkowi@redhat.com> - 253.5-3
+- Avoid qrencode dependency in RHEL builds
+
+* Fri Jun 02 2023 Alessandro Astone <ales.astone@gmail.com> - 253.5-2
+- Increase vm.max_map_count
+
+* Thu Jun 01 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253.5-1
+- Version 253.5
+
+* Thu May 11 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253.4-1
+- Version 253.4
+
+* Thu May 11 2023 Michael Catanzaro <mcatanzaro@redhat.com> - 253.2-6
+- Raise ManagedOOMMemoryPressureLimit from 50%% to 80%%
+
+* Tue May 09 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253.2-5
+- Add forgotten Provides and Conflicts for standalones
+
+* Wed Apr 26 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253.2-4
+- sysusers.generate-pre.sh: properly escape quotes in description strings
+  (rhbz#2104141)
+
+* Wed Apr 26 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253.2-3
+- sysusers.generate-pre.sh: fix indentation in generated scripts
+
+* Wed Mar 29 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253.2-1
+- Version 253.2
+
+* Wed Mar 29 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253.1-7
+- oomd: stop monitoring user-*.slice slices (rhbz#2177722)
+
+* Thu Mar 09 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253.1-6
+- Move /usr/lib/systemd/boot/ to systemd-boot-unsigned subpackage
+
+* Fri Mar 03 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253.1-2
+- Fix build with gnu-efi-3.0.11-13
+
+* Fri Mar 03 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253.1-1
+- Version 253.1
+- Fixes rhbz#2148464
+
+* Wed Mar 01 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253-7
+- Move man pages for sd-boot into systemd-boot-unsigned
+
+* Wed Feb 22 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253-6
+- Set TimeoutStopFailureMode=abort for services (see
+  https://fedoraproject.org/wiki/Changes/Shorter_Shutdown_Timer)
+
+* Tue Feb 21 2023 Dusty Mabe <dusty@dustymabe.com> - 253-5
+- remove group write permission from 98-default-mac-none.link
+
+* Tue Feb 21 2023 Dusty Mabe <dusty@dustymabe.com> - 253-4
+- fix comment instructions for 98-default-mac-none.link
+
+* Tue Feb 21 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253-3
+- Backport patch for container compatibility (rhbz#2165004)
+
+* Tue Feb 21 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253-2
+- Add workaround patch for dracut generator issue (rhbz#2164404)
+
+* Mon Feb 20 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253-1
+- Version 253 (mostly some documentation fixes since -rc3).
+
+* Fri Feb 10 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253~rc3-1
+- Version 253-rc3
+- A bunch of bugfixes for regressions, some documentation and bug fixes
+  too.
+- Really fix rhbz#2165692 (previous build carried an unapplied patch).
+
+* Thu Feb 09 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253~rc2-7
+- Revert patch switch causes problems for 'systemctl isolate'
+  (rhbz#2165692)
+
+* Wed Feb 08 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253~rc2-6
+- Disable systemd-boot-update.service in presets
+
+* Wed Feb 08 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253~rc2-4
+- Update License to SPDX
+
+* Mon Feb 06 2023 Thomas Haller <thaller@redhat.com> - 253~rc2-3
+- add "98-default-mac-none.link" to keep default MAC address of
+  bridge/bond/team
+
+* Thu Feb 02 2023 Michael Catanzaro <mcatanzaro@redhat.com> - 253~rc2-2
+- Shorten shutdown timeout to 45 s
+
+* Thu Feb 02 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253~rc2-1
+- Version 253~rc2
+- Sysusers fixup (rhbz#2156900) + other small changes
+
+* Thu Feb 02 2023 Yaakov Selkowitz <yselkowi@redhat.com> - 253~rc1-5
+- Build with xen only on Fedora
+
+* Thu Jan 26 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253~rc1-3
+- Reenable systemd-journald-audit.socket after upgrades (rhbz#2164594)
+
+* Wed Jan 25 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253~rc1-2
+- Add Requires on Python modules to systemd-ukify and Recommends for
+  libp11-kit
+
+* Tue Jan 24 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 253~rc1-1
+- Version 253~rc1
+- See https://raw.githubusercontent.com/systemd/systemd/v253-rc1/NEWS
+- New subpackages: systemd-repart-standalone, systemd-shutdown-standalone,
+  and systemd-ukify.
+
+* Sun Jan 22 2023 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 252.4-4
+- Backport patches to fix issues gcc-13 and -D_FORTIFY_SOURCE=3
+
+* Sat Jan 21 2023 Fedora Release Engineering <releng@fedoraproject.org> - 252.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_38_Mass_Rebuild
+
+* Thu Jan 05 2023 Daan De Meyer <daan.j.demeyer@gmail.com> - 252.4-2
+- Add python3 to BuildRequires
+
+* Tue Dec 20 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 252.4-1
+- Version 252.4
+- Fixes a few different issues (systemd-timesyncd connectivity problems,
+  broken emoji output on the console, crashes in pid1 unit dependency
+  logic)
+- CVE-2022-4415: systemd: coredump not respecting fs.suid_dumpable kernel
+  setting
+
+* Sat Dec 17 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 252.3-4
+- boot: add Provides:systemd-boot(isa)
+
+* Wed Dec 14 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 252.3-2
+- Use upstream pam systemd-auth file with a patch, add pam_keyinit
+
+* Thu Dec 08 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 252.3-1
+- Version 252.3 (rhbz#2136916, rhbz#2083900)
+
+* Fri Dec 02 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 252.2-2
+- Split out systemd-boot-unsigned package
+
+* Thu Nov 24 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 252.2-1
+- Version 252.2
+- Latest batch of bugfixes (rhbz#2137631)
+
+* Thu Nov 24 2022 Martin Osvald <mosvald@redhat.com> - 252.1-3
+- Support user:group notation by sysusers.generate-pre.sh script
+
+* Tue Nov 08 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 252.1-1
+- Version 252.1 (just some small fixes).
+
+* Mon Oct 31 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 252-1
+- Version 252
+
+* Tue Oct 25 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 252~rc3-1
+- Version 252-rc3 (#2135778)
+
+* Tue Oct 18 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 252~rc2-28
+- Version 252-rc2 (#2134741, #2133792)
+
+* Fri Oct 14 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 252~rc1-31
+- Fix upgrade detection in %%posttrans scriptlet (rhbz#2115094)
+
+* Sun Oct 09 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 252~rc1-30
+- Fix indentation in %%sysusers_create_compat macro (rhbz#2132835)
+
+* Sun Oct 09 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 252~rc1-29
+- Correctly move systemd-measure to systemd-udev subpackage
+
+* Fri Oct 07 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 252~rc1-28
+- Version 252-rc1 (for details see
+  https://raw.githubusercontent.com/systemd/systemd/v252-rc1/NEWS)
+
+* Sat Oct 01 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 251.5-29
+- Fix permissions on %%ghost files (rhbz#2122889)
+
+* Sat Oct 01 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 251.5-28
+- Version 251.5 (rhbz#2129343, rhbz#2121106, rhbz#2130188)
+
+* Fri Sep 30 2022 Yu Watanabe <watanabe.yu+github@gmail.com> - 251.4-41
+- Replace patch for test-mountpoint-util
+
+* Fri Sep 30 2022 Yu Watanabe <watanabe.yu+github@gmail.com> - 251.4-40
+- patch: fix regression in bfq patch
+
+* Fri Sep 30 2022 Luca BRUNO <lucab@lucabruno.net> - 251.4-39
+- sysusers/generate: bridge 'm' entries to usermod
+
+* Fri Sep 30 2022 Anita Zhang <the.anitazha@gmail.com> - 251.4-38
+- Update systemd-oomd defaults to friendlier values
+- Remove swap policy. Default amount of swap (8GB?) is a lot lower than
+  what we use internally with the swap policy. Which frequently leads to
+  GNOME getting killed (e.g.
+  https://bugzilla.redhat.com/show_bug.cgi?id=1941170, and other BZs not
+  linked here). Internally we use 0.5x-1x size of physical memory for swap
+  via swapfiles (this will be documented in systemd upstream). In simple
+  cases of using more memory than is available (but without memory
+  pressure), the Kernel OOM killer can handle killing the offending
+  process.
+
+* Thu Sep 29 2022 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 251.4-37
+- Make systemd-devel conditionally pull in systemd-rpm-macros
+
 * Fri Aug 19 2022 Neal Gompa <ngompa@fedoraproject.org> - 251.4-53
 - Set compile-time fallback hostname to "localhost"
   https://fedoraproject.org/wiki/Changes/FallbackHostname
