@@ -1,4 +1,4 @@
-From 1e788a7fb535a37a8268aa7dc5130f670eb72a6b Mon Sep 17 00:00:00 2001
+From 45cfee930ab4067348cea5244c9c2dc31c64d14d Mon Sep 17 00:00:00 2001
 From: Daan De Meyer <daan.j.demeyer@gmail.com>
 Date: Tue, 23 Jul 2024 13:14:05 +0200
 Subject: [PATCH] tmpfiles: make --purge hard to (mis-)use
@@ -10,10 +10,10 @@ Follow-up for https://github.com/systemd/systemd/pull/33383.
  2 files changed, 19 insertions(+), 2 deletions(-)
 
 diff --git a/src/tmpfiles/tmpfiles.c b/src/tmpfiles/tmpfiles.c
-index 8cc8c1ccd6..14048545db 100644
+index 5a4f989668..c5b544f1df 100644
 --- a/src/tmpfiles/tmpfiles.c
 +++ b/src/tmpfiles/tmpfiles.c
-@@ -4197,6 +4197,7 @@ static int parse_argv(int argc, char *argv[]) {
+@@ -4213,6 +4213,7 @@ static int parse_argv(int argc, char *argv[]) {
                  ARG_IMAGE_POLICY,
                  ARG_REPLACE,
                  ARG_DRY_RUN,
@@ -21,7 +21,7 @@ index 8cc8c1ccd6..14048545db 100644
                  ARG_NO_PAGER,
          };
  
-@@ -4220,10 +4221,18 @@ static int parse_argv(int argc, char *argv[]) {
+@@ -4236,10 +4237,18 @@ static int parse_argv(int argc, char *argv[]) {
                  { "replace",        required_argument,   NULL, ARG_REPLACE        },
                  { "dry-run",        no_argument,         NULL, ARG_DRY_RUN        },
                  { "no-pager",       no_argument,         NULL, ARG_NO_PAGER       },
@@ -40,7 +40,7 @@ index 8cc8c1ccd6..14048545db 100644
  
          assert(argc >= 0);
          assert(argv);
-@@ -4330,6 +4339,10 @@ static int parse_argv(int argc, char *argv[]) {
+@@ -4346,6 +4355,10 @@ static int parse_argv(int argc, char *argv[]) {
                          arg_dry_run = true;
                          break;
  
@@ -51,7 +51,7 @@ index 8cc8c1ccd6..14048545db 100644
                  case ARG_NO_PAGER:
                          arg_pager_flags |= PAGER_DISABLE;
                          break;
-@@ -4349,6 +4362,10 @@ static int parse_argv(int argc, char *argv[]) {
+@@ -4365,6 +4378,10 @@ static int parse_argv(int argc, char *argv[]) {
                  return log_error_errno(SYNTHETIC_ERRNO(EINVAL),
                                         "Refusing --purge without specification of a configuration file.");
  
@@ -63,26 +63,27 @@ index 8cc8c1ccd6..14048545db 100644
                  return log_error_errno(SYNTHETIC_ERRNO(EINVAL),
                                         "Option --replace= is not supported with --cat-config/--tldr.");
 diff --git a/test/units/TEST-22-TMPFILES.18.sh b/test/units/TEST-22-TMPFILES.18.sh
-index 5d24197c81..de23bbb95f 100755
+index c81f6bd0ef..dd536172d4 100755
 --- a/test/units/TEST-22-TMPFILES.18.sh
 +++ b/test/units/TEST-22-TMPFILES.18.sh
-@@ -21,7 +21,7 @@ systemd-tmpfiles --purge --dry-run - <<<"$c"
- test -f /tmp/somedir/somefile
+@@ -24,7 +24,7 @@ test -f /tmp/somedir/somefile
  grep -q baz /tmp/somedir/somefile
+ grep -q qux /tmp/someotherfile
  
 -systemd-tmpfiles --purge - <<<"$c"
 +systemd-tmpfiles --purge --destroy-data - <<<"$c"
  test ! -f /tmp/somedir/somefile
  test ! -d /tmp/somedir/
- 
-@@ -29,6 +29,6 @@ systemd-tmpfiles --create --purge --dry-run - <<<"$c"
- test ! -f /tmp/somedir/somefile
+ grep -q qux /tmp/someotherfile
+@@ -34,7 +34,7 @@ test ! -f /tmp/somedir/somefile
  test ! -d /tmp/somedir/
+ grep -q qux /tmp/someotherfile
  
 -systemd-tmpfiles --create --purge - <<<"$c"
 +systemd-tmpfiles --create --destroy-data --purge - <<<"$c"
  test -f /tmp/somedir/somefile
  grep -q baz /tmp/somedir/somefile
+ grep -q qux /tmp/someotherfile
 -- 
-2.45.2
+2.47.0
 

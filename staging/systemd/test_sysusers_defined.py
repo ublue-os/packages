@@ -11,7 +11,7 @@ def parse_sysusers_file(filename):
             continue
         words = line.split()
         match words[0]:
-            case 'u':
+            case 'u'|'u!':
                 users.add(words[1])
             case 'g':
                 groups.add(words[1])
