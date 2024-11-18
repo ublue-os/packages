@@ -6,6 +6,8 @@
 # directory.
 %global __requires_exclude pkg-config
 
+%global _default_patch_fuzz 2
+
 %global pkgdir %{_prefix}/lib/systemd
 %global system_unit_dir %{pkgdir}/system
 %global user_unit_dir %{pkgdir}/user
