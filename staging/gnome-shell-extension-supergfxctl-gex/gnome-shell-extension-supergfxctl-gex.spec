@@ -7,7 +7,7 @@ Summary:        Extension for visualizing supergfxctl settings and status.
 
 License:        MIT
 URL:            https://extensions.gnome.org/extension/5344/supergfxctl-gex
-Source0:        https://extensions.gnome.org/extension-data/supergfxctl-gexasus-linux.org.v33.shell-extension.zip
+Source0:        https://extensions.gnome.org/extension-data/supergfxctl-gexasus-linux.org.v%{version}.shell-extension.zip
 BuildArch:      noarch
 
 BuildRequires:  wget
@@ -21,7 +21,7 @@ Requires:       supergfxctl
 Extension for visualizing supergfxctl settings and status.
 
 %prep
-wget -q https://extensions.gnome.org/extension-data/supergfxctl-gexasus-linux.org.v33.shell-extension.zip -O %{name}.zip
+wget -q %{SOURCE0} -O %{name}.zip
 unzip %{name}.zip
 rm -f %{name}.zip
 
