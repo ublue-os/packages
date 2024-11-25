@@ -10,8 +10,6 @@ URL:            https://extensions.gnome.org/extension/5344/supergfxctl-gex
 Source0:        https://extensions.gnome.org/extension-data/supergfxctl-gexasus-linux.org.v%{version}.shell-extension.zip
 BuildArch:      noarch
 
-BuildRequires:  wget
-
 Requires:       gnome-shell-extension-common
 Requires:       dconf-editor
 Requires:       dconf
@@ -20,14 +18,9 @@ Requires:       supergfxctl
 %description
 Extension for visualizing supergfxctl settings and status.
 
-%prep
-wget -q %{SOURCE0} -O %{name}.zip
-unzip %{name}.zip
-rm -f %{name}.zip
-
 %install
-mkdir -p %{buildroot}%{extdir}/
-mv * %{buildroot}%{extdir}/
+mkdir -p %{buildroot}%{extdir}
+unzip %{SOURCE0} -d %{buildroot}%{extdir}
 
 %files
 %{extdir}
