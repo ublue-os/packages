@@ -9,5 +9,16 @@
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": [".*\\.spec"],
+      "matchStrings": [
+        "# renovate: datasource=yum repo=(?<registryUrl>[^\\s]+)\\s+(?<depName>[^\\s]+)-(?<currentValue>[^\\s-]+-[^\\s-]+)"
+      ],
+      "datasourceTemplate": "npm",
+      "versioningTemplate": "loose",
+      "registryUrlTemplate": "https://yum2npm.io/repos/{{replace '/' '/modules/' registryUrl}}/packages"
+    }
   ]
 }
