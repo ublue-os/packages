@@ -8,17 +8,17 @@
         "#\\s?renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?( extractVersion=(?<extractVersion>.*?))?\\s*Version:\\s*(?<currentValue>.*)\\s"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
-    }
-  ],
-  "regexManagers": [
+    },
     {
+      "customType": "regex",
       "fileMatch": [".*\\.spec"],
       "matchStrings": [
-        "# renovate: datasource=yum repo=(?<registryUrl>[^\\s]+)\\s+(?<depName>[^\\s]+)-(?<currentValue>[^\\s-]+-[^\\s-]+)"
+        "# renovate: datasource=yum repo=(?<registryUrl>[^\\s]+) pkg=(?<depName>[^\\s]+)\\s*%global majmin_ver_kf6 (?<currentValue>[^\\s]+)"
       ],
       "datasourceTemplate": "npm",
       "versioningTemplate": "loose",
       "registryUrlTemplate": "https://yum2npm.io/repos/{{replace '/' '/modules/' registryUrl}}/packages"
     }
+
   ]
 }
