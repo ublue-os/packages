@@ -8,6 +8,16 @@ from pathlib import Path
 import json
 
 TEST_CASES = {
+    "loft-sh/devpod": {
+       "path": "staging/devpod/devpod.spec",
+       "match": r"Version:        v0.\d+\.\d+",
+       "replace": r"Version:        v0.6.0",
+    },
+    "topgrade-rs/topgrade": {
+       "path": "staging/topgrade/topgrade.spec",
+       "match": r"Version:        \d+\.\d+\.\d+",
+       "replace": "Version:        14.0.0",
+    },
     "kf6-kio": {
        "path": "staging/kf6-kio/kf6-kio.spec",
        "match": r"%global majmin_ver_kf6 6\.\d+",
@@ -20,7 +30,6 @@ TEST_CASES = {
     }
 }
 
-OUTPUT_LOG = "renovate-log.ndjson"
 
 def validate_output(payload):
     packages_with_updates = set()
@@ -43,10 +52,12 @@ def validate_output(payload):
 
 
 def main():
+    log_filename = "renovate-log.ndjson"
+
     os.environ["LOG_LEVEL"] = "debug"
     os.environ["RENOVATE_PLATFORM"] = "local"
     os.environ["RENOVATE_CONFIG_FILE"] = str(Path(".github/renovate.json5").resolve())
-    os.environ["RENOVATE_LOG_FILE"] = OUTPUT_LOG
+    os.environ["RENOVATE_LOG_FILE"] = log_filename
 
     for test_name, test_case in TEST_CASES.items():
         with open(test_case["path"], 'r+') as file:
@@ -63,7 +74,7 @@ def main():
 
     found_payload = False
     validated = False
-    with open(OUTPUT_LOG, 'r') as file:
+    with open(log_filename, 'r') as file:
         for line in file.readlines():
             parsed_line = json.loads(line)
             if "config" in parsed_line and "regex" in parsed_line["config"]:

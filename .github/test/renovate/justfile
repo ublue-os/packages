@@ -2,8 +2,8 @@ test-local:
   #!/bin/bash
   set -eo pipefail
 
-  if [[ -z "$GITHUB_TOKEN" ]]; then
-    echo '$GITHUB_TOKEN environment variable not set -- some tests may fail'
+  if [[ -z "$GITHUB_COM_TOKEN" ]]; then
+    echo '$GITHUB_COM_TOKEN environment variable not set -- some tests may fail'
   fi
 
   tmpdir=$(mktemp -d)
@@ -11,7 +11,7 @@ test-local:
   echo "Working in $tmpdir"
   cp -r ../../../* ../../../.* $tmpdir
   podman run -it --rm -v ${tmpdir}:/usr/src/app --security-opt label=disable -u root \
-    -e RENOVATE_TOKEN=$GITHUB_TOKEN \
-    -e GITHUB_TOKEN=$GITHUB_TOKEN \
+    -e RENOVATE_TOKEN=$GITHUB_COM_TOKEN \
+    -e GITHUB_COM_TOKEN=$GITHUB_COM_TOKEN \
     renovate/renovate:39 /usr/bin/python3 /usr/src/app/.github/test/renovate/test_renovate.py
   rm -rf $tmpdir
