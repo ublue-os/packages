@@ -3,8 +3,7 @@ test-local:
   set -eo pipefail
 
   if [[ -z "$GITHUB_TOKEN" ]]; then
-    echo 'Must set $GITHUB_TOKEN environment variable'
-    exit 1
+    echo '$GITHUB_TOKEN environment variable not set -- some tests may fail'
   fi
 
   tmpdir=$(mktemp -d)
