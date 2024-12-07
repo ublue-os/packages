@@ -59,7 +59,7 @@ def main():
             file.write(new_content)
             file.truncate()
 
-    subprocess.call(["/usr/local/sbin/renovate"])
+    subprocess.call(["/usr/local/sbin/renovate"], shell=False)
 
     found_payload = False
     validated = False
