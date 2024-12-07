@@ -59,7 +59,7 @@ def main():
             file.write(new_content)
             file.truncate()
 
-    subprocess.run("renovate", shell=True)
+    subprocess.run("renovate")
 
     found_payload = False
     validated = False
