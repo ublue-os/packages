@@ -19,6 +19,17 @@
       "extractVersionTemplate": "^(?<version>\\d\\.\\d)",
       "versioningTemplate": "loose",
       "registryUrlTemplate": "https://yum2npm.io/repos/{{replace '/' '/modules/' registryUrl}}/packages"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [".*\\.spec"],
+      "matchStrings": [
+        "# renovate: datasource=yum repo=(?<registryUrl>[^\\s]+) pkg=(?<depName>[^\\s]+)\\s*[^\\s]+\\s+(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "npm",
+      "extractVersionTemplate": "^(?<version>\\d\\.\\d+\\.\\d+)",
+      "versioningTemplate": "loose",
+      "registryUrlTemplate": "https://yum2npm.io/repos/{{replace '/' '/modules/' registryUrl}}/packages"
     }
 
   ]
