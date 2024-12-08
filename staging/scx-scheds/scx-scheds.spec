@@ -1,6 +1,6 @@
 Name:           scx-scheds
 # renovate: datasource=github-releases depName=sched-ext/scx
-Version:        1.0.5
+Version:        1.0.7
 Release:        1%{?dist}
 Summary:        Sched_ext Schedulers and Tools
 
