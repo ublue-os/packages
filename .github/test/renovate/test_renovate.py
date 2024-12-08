@@ -32,6 +32,16 @@ TEST_CASES = {
        "path": "staging/scx-scheds/scx-scheds.spec",
        "match": r"Version:        1\.\d+\.\d+",
        "replace": r"Version:   1.0.4",
+    },
+    "rpm-ostree": {
+       "path": "staging/rpm-ostree/rpm-ostree.spec",
+       "match": r"Version: 202\d.\d",
+       "replace": r"Version:   2024.6",
+    },
+    "GSConnect/gnome-shell-extension-gsconnect": {
+       "path": "staging/gnome-shell-extension-gsconnect/gnome-shell-extension-gsconnect.spec",
+       "match": r"Version:\s+\d+",
+       "replace": r"Version: 57",
     }
 }
 

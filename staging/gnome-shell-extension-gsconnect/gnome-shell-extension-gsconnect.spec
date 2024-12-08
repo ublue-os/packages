@@ -5,7 +5,7 @@
 %global app_id org.gnome.Shell.Extensions.GSConnect
 
 Name:           gnome-shell-extension-gsconnect
-# renovate: datasource=github-releases depName=GSConnect/gnome-shell-extension-gsconnect
+# renovate: datasource=github-releases depName=GSConnect/gnome-shell-extension-gsconnect versioning=semver-major
 Version:        58
 Release:        1%{?dist}
 Summary:        KDE Connect implementation for GNOME Shell
