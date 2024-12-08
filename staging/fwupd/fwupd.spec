@@ -52,6 +52,7 @@
 
 Summary:   Firmware update daemon
 Name:      fwupd
+# renovate: datasource=yum repo=fedora-41-x86_64 pkg=fwupd
 Version:   1.9.26
 Release:   100.ublue
 License:   LGPL-2.1-or-later
