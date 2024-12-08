@@ -3,6 +3,7 @@
 
 Summary: Hybrid image/package system
 Name: rpm-ostree
+# renovate: datasource=yum repo=fedora-41-x86_64 pkg=rpm-ostree
 Version: 2024.7
 Release: %autorelease.ublue
 License: LGPL-2.0-or-later
