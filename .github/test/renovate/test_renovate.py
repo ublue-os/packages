@@ -27,6 +27,11 @@ TEST_CASES = {
        "path": "staging/fwupd/fwupd.spec",
        "match": r"Version:   1.\d+\.\d+",
        "replace": r"Version:   1.8.0",
+    },
+    "sched-ext/scx": {
+       "path": "staging/scx-scheds/scx-scheds.spec",
+       "match": r"Version:        1\.\d+\.\d+",
+       "replace": r"Version:   1.0.4",
     }
 }
 
