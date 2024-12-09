@@ -25,6 +25,7 @@ extract package="staging/devpod/devpod.spec" extract_rpm="0":
     PKGNAME={{package}}
     PKGNAME="${PKGNAME##*/}"
     PKGNAME="${PKGNAME%.*}"
+    rm -rf output
     mkdir -p output
     podman export $(podman create localhost/${PKGNAME}:latest) | tar xf - -C output
     if [ {{extract_rpm}} -ne 1 ] ; then

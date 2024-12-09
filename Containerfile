@@ -6,13 +6,16 @@ COPY . /app
 RUN dnf update -y && dnf upgrade -y && dnf install rpkg spectool -y && dnf clean all
 
 WORKDIR /app
-RUN rpkg --path $(dirname $TARGET_SPEC) spec --outdir /tmp --spec $(basename $TARGET_SPEC)
+RUN cp -rf $(dirname $TARGET_SPEC)/* /tmp && \
+    rpkg --path $(dirname $TARGET_SPEC) spec --outdir /tmp --spec $(basename $TARGET_SPEC)
+
 WORKDIR /tmp
 RUN export SPEC=$(basename $TARGET_SPEC) && \
     dnf -y builddep $SPEC && \
     spectool -ag $SPEC -C /tmp && \
-    rpkg local --spec $SPEC
+    rpkg local --spec $SPEC --outdir /tmp && \
+    find /tmp
 
 FROM scratch AS artifacts
 
-COPY --from=builder /tmp/rpkg/*/*/*.rpm /
+COPY --from=builder /tmp/*/*.rpm /
