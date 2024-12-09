@@ -36,3 +36,6 @@ extract package="staging/devpod/devpod.spec" extract_rpm="0":
         rpm2cpio "$rpm_file" | cpio -idmv
     done
     popd
+
+clean:
+    rm -rf output
