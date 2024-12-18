@@ -1,7 +1,7 @@
 %global tarball_version %%(echo %{version} | tr '~' '.')
 # renovate: datasource=yum repo=fedora-41-x86_64-updates pkg=gnome-shell
 %global major_version 47
-%global minor_version 1
+%global minor_version 2
 
 %if 0%{?rhel}
 %global portal_helper 0
