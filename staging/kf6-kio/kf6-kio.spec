@@ -3,7 +3,7 @@
 %global stable_kf6 stable
 
 # renovate: datasource=yum repo=fedora-41-x86_64-updates pkg=kf6-kio
-%global majmin_ver_kf6 6.8
+%global majmin_ver_kf6 6.9
 
 Name:    kf6-%{framework}
 Version: %{majmin_ver_kf6}.0
