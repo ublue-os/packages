@@ -1,32 +1,16 @@
-<background>
-        <starttime>
-                <year>2018</year>
-                <month>1</month>
-                <day>1</day>
-                <hour>5</hour>
-                <minute>30</minute>
-                <second>0</second>
-        </starttime>
+<!-- REMOVE THIS LINE TO ENABLE
 
-        <static>
-                <file>/usr/share/backgrounds/bluefin/05-bluefin-day.jxl</file>
-                <duration>41400.0</duration>
-        </static>
+<?xml version="1.0"?>
+<!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
+<wallpapers>
+  <wallpaper deleted="false">
+    <name>Bluefin 05 - May</name>
+    <filename>/usr/share/backgrounds/bluefin/05-bluefin.xml</filename>
+    <options>zoom</options>
+    <shade_type>solid</shade_type>
+    <pcolor>#464646</pcolor>
+    <scolor>#464646</scolor>
+  </wallpaper>
+</wallpapers>
 
-        <transition type="overlay">
-                <duration>7200.0</duration>
-                <from>/usr/share/backgrounds/bluefin/05-bluefin-day.jxl</from>
-                <to>/usr/share/backgrounds/bluefin/05-bluefin-night.jxl</to>
-        </transition>
-
-        <static>
-                <file>/usr/share/backgrounds/bluefin/05-bluefin-night.jxl</file>
-                <duration>30600.0</duration>
-        </static>
-
-        <transition type="overlay">
-                <duration>7200.0</duration>
-                <from>/usr/share/backgrounds/bluefin/05-bluefin-night.jxl</from>
-                <to>/usr/share/backgrounds/bluefin/05-bluefin-day.jxl</to>
-        </transition>
-</background>
+REMOVE THIS LINE TO ENABLE -->
