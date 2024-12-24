@@ -1,5 +1,5 @@
 %global debug_package %{nil}
-%global vendor projectbluefin
+%global vendor bluefin
 
 Name:           bluefin-wallpapers
 Version:        0.1.0
@@ -19,15 +19,14 @@ Bluefin wallpapers
 
 %install
 mkdir -p -m0755 \
-    %{buildroot}%{_datadir}/backgrounds/%{VENDOR} \
+    %{buildroot}%{_datadir}/backgrounds/%{vendor} \
     %{buildroot}%{_datadir}/gnome-background-properties \
-    %{buildroot}%{_datadir}/wallpapers/${VENDOR}
+    %{buildroot}%{_datadir}/wallpapers/${vendor}
 mv src/*.xml %{buildroot}%{_datadir}/gnome-background-properties
-mv src/* %{buildroot}%{_datadir}/backgrounds/%{VENDOR}
-# ln -sf %{_buildroot}/backgrounds/%{VENDOR} %{_datadir}/wallpapers/%{VENDOR}
+mv src/* %{buildroot}%{_datadir}/backgrounds/%{vendor}
 
 %files
-%attr(0755,root,root) %{_datadir}/backgrounds/%{VENDOR}/*
+%attr(0755,root,root) %{_datadir}/backgrounds/%{vendor}/*
 %attr(0755,root,root) %{_datadir}/gnome-background-properties/*.xml
 
 %changelog
