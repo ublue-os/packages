@@ -42,6 +42,11 @@ TEST_CASES = {
        "path": "staging/gnome-shell-extension-gsconnect/gnome-shell-extension-gsconnect.spec",
        "match": r"Version:\s+\d+",
        "replace": r"Version: 57",
+    },
+    "ublue-os/uupd": {
+       "path": "staging/uupd/uupd.spec",
+       "match": r"Version:\s+\d+",
+       "replace": r"Version: 0.4",
     }
 }
 
