@@ -1,6 +1,6 @@
 Name:           uupd
 # renovate: datasource=github-releases depName=ublue-os/uupd
-Version:        0.5
+Version:        1.0.0
 Release:        0%{?dist}
 Summary:       Centralized update service/checker made for Universal Blue
 Vendor:        ublue-os
