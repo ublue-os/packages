@@ -45,8 +45,8 @@ TEST_CASES = {
     },
     "ublue-os/uupd": {
        "path": "staging/uupd/uupd.spec",
-       "match": r"Version:\s+\d+",
-       "replace": r"Version: 0.4",
+       "match": r"Version:\s+\d[^\s]+",
+       "replace": r"Version: 0.5.1",
     }
 }
 
