@@ -3,7 +3,7 @@
 
 Name:           bluefin
 Version:        0.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Bluefin branding
 
 License:        CC-BY-CA
@@ -25,7 +25,9 @@ mkdir -p -m0755 \
     %{buildroot}%{_datadir}/ublue-os \
     %{buildroot}%{_sysconfdir}
 
-mv wallpapers/*.xml %{buildroot}%{_datadir}/gnome-background-properties
+mv wallpapers/gnome-background-properties/*.xml %{buildroot}%{_datadir}/gnome-background-properties
+rm -rf wallpaper/gnome-background-properties
+mv wallpapers/*.xml %{buildroot}%{_datadir}/backgrounds/%{vendor}
 mv wallpapers/* %{buildroot}%{_datadir}/backgrounds/%{vendor}
 mv faces %{buildroot}%{_datadir}/pixmaps
 mv logos/* %{buildroot}%{_datadir}/pixmaps
@@ -37,7 +39,9 @@ mv schemas/glib-2.0 %{buildroot}%{_datadir}
 Summary:        Logos for GNOME
 License:        CC-BY-CA
 Provides: fedora-logos
+Provides: system-logos
 Obsoletes: fedora-logos
+Obsoletes: system-logos
 
 %description logos
 Replacement logos for GNOME
@@ -79,7 +83,7 @@ Wallpapers included on Bluefin by default
 
 %package faces
 Summary:      Bluefin GNOME Faces
-License:        CC-BY-CA
+License:      CC-BY-CA
 
 %description faces
 GNOME profile pictures for Bluefin
