@@ -31,6 +31,7 @@ mv faces %{buildroot}%{_datadir}/pixmaps
 mv logos/* %{buildroot}%{_datadir}/pixmaps
 mv cli-logos %{buildroot}%{_datadir}/ublue-os/bluefin-logos
 mv schemas/dconf %{buildroot}%{_sysconfdir}
+mv schemas/glib-2.0 %{buildroot}%{_datadir}
 
 %package logos
 Summary:        Logos for GNOME
@@ -61,7 +62,7 @@ Contains all of the DConf settings that Bluefin ships by default
 
 %files schemas
 %attr(0755,root,root) %{_sysconfdir}/dconf/db
-
+%attr(0755,root,root) %{_datadir}/glib-2.0
 
 %package backgrounds
 Summary:        Bluefin wallpapers
