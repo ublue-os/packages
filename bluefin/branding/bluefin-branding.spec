@@ -22,13 +22,15 @@ mkdir -p -m0755 \
     %{buildroot}%{_datadir}/backgrounds/%{vendor} \
     %{buildroot}%{_datadir}/gnome-background-properties \
     %{buildroot}%{_datadir}/pixmaps \
-    %{buildroot}%{_datadir}/ublue-os
+    %{buildroot}%{_datadir}/ublue-os \
+    %{buildroot}%{_sysconfdir}
 
 mv wallpapers/*.xml %{buildroot}%{_datadir}/gnome-background-properties
 mv wallpapers/* %{buildroot}%{_datadir}/backgrounds/%{vendor}
 mv faces %{buildroot}%{_datadir}/pixmaps
 mv logos/* %{buildroot}%{_datadir}/pixmaps
 mv cli-logos %{buildroot}%{_datadir}/ublue-os/bluefin-logos
+mv schemas/dconf %{buildroot}%{_sysconfdir}
 
 %package logos
 Summary:        Logos for GNOME
@@ -50,6 +52,16 @@ Logos for CLI applications like Fastfetch
 
 %files cli-logos
 %attr(0755,root,root) %{_datadir}/ublue-os/bluefin-logos/*
+
+%package schemas
+Summary:        GNOME Schemas for Bluefin
+
+%description schemas
+Contains all of the DConf settings that Bluefin ships by default
+
+%files schemas
+%attr(0755,root,root) %{_sysconfdir}/dconf/db
+
 
 %package backgrounds
 Summary:        Bluefin wallpapers
