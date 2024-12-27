@@ -21,7 +21,7 @@ Branding for Bluefin-related projects
 mkdir -p -m0755 \
     %{buildroot}%{_datadir}/backgrounds/%{vendor} \
     %{buildroot}%{_datadir}/gnome-background-properties \
-    %{buildroot}%{_datadir}/pixmaps \
+    %{buildroot}%{_datadir}/pixmaps/faces \
     %{buildroot}%{_datadir}/ublue-os \
     %{buildroot}%{_sysconfdir}
 
@@ -29,7 +29,7 @@ mv wallpapers/gnome-background-properties/*.xml %{buildroot}%{_datadir}/gnome-ba
 rm -rf wallpaper/gnome-background-properties
 mv wallpapers/*.xml %{buildroot}%{_datadir}/backgrounds/%{vendor}
 mv wallpapers/* %{buildroot}%{_datadir}/backgrounds/%{vendor}
-mv faces %{buildroot}%{_datadir}/pixmaps
+mv faces %{buildroot}%{_datadir}/pixmaps/faces/bluefin
 mv logos/* %{buildroot}%{_datadir}/pixmaps
 mv cli-logos %{buildroot}%{_datadir}/ublue-os/bluefin-logos
 mv schemas/dconf %{buildroot}%{_sysconfdir}
@@ -92,7 +92,7 @@ GNOME profile pictures for Bluefin
 rm -rf %{_datadir}/pixmaps/faces/*
 
 %files faces
-%attr(0755,root,root) %{_datadir}/pixmaps/faces/*
+%attr(0755,root,root) %{_datadir}/pixmaps/faces/bluefin/*
 
 %changelog
 %autochangelog
