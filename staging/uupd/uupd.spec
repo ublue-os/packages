@@ -1,7 +1,7 @@
 Name:           uupd
 # renovate: datasource=github-releases depName=ublue-os/uupd
 Version:        1.0.0
-Release:        0%{?dist}
+Release:        1%{?dist}
 Summary:       Centralized update service/checker made for Universal Blue
 Vendor:        ublue-os
 URL:           https://github.com/%{vendor}/%{name}
@@ -10,6 +10,7 @@ License:        Apache-2.0
 
 BuildRequires:  golang
 BuildRequires:  systemd-rpm-macros
+BuildRequires:  git
 Recommends:     bootc
 Recommends:     distrobox
 Recommends:     flatpak
