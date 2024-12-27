@@ -1,12 +1,32 @@
-<?xml version="1.0"?>
-<!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
-<wallpapers>
-  <wallpaper deleted="false">
-    <name>Bluefin 08 - August</name>
-    <filename>/usr/share/backgrounds/bluefin/08-bluefin.xml</filename>
-    <options>zoom</options>
-    <shade_type>solid</shade_type>
-    <pcolor>#464646</pcolor>
-    <scolor>#464646</scolor>
-  </wallpaper>
-</wallpapers>
+<background>
+        <starttime>
+                <year>2018</year>
+                <month>1</month>
+                <day>1</day>
+                <hour>6</hour>
+                <minute>5</minute>
+                <second>0</second>
+        </starttime>
+
+        <static>
+                <file>/usr/share/backgrounds/bluefin/08-bluefin-day.jxl</file>
+                <duration>37200.0</duration>
+        </static>
+
+        <transition type="overlay">
+                <duration>7200.0</duration>
+                <from>/usr/share/backgrounds/bluefin/08-bluefin-day.jxl</from>
+                <to>/usr/share/backgrounds/bluefin/08-bluefin-night.jxl</to>
+        </transition>
+
+        <static>
+                <file>/usr/share/backgrounds/bluefin/08-bluefin-night.jxl</file>
+                <duration>34800.0</duration>
+        </static>
+
+        <transition type="overlay">
+                <duration>7200.0</duration>
+                <from>/usr/share/backgrounds/bluefin/08-bluefin-night.jxl</from>
+                <to>/usr/share/backgrounds/bluefin/08-bluefin-day.jxl</to>
+        </transition>
+</background>

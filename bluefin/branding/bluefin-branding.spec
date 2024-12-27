@@ -36,6 +36,8 @@ mv schemas/glib-2.0 %{buildroot}%{_datadir}
 %package logos
 Summary:        Logos for GNOME
 License:        CC-BY-CA
+Provides: fedora-logos
+Obsoletes: fedora-logos
 
 %description logos
 Replacement logos for GNOME
@@ -81,6 +83,9 @@ License:        CC-BY-CA
 
 %description faces
 GNOME profile pictures for Bluefin
+
+%pre faces
+rm -rf %{_datadir}/pixmaps/faces/*
 
 %files faces
 %attr(0755,root,root) %{_datadir}/pixmaps/faces/*
