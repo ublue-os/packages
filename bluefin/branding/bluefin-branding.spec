@@ -3,7 +3,7 @@
 
 Name:           bluefin
 Version:        0.1.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Bluefin branding
 
 License:        CC-BY-CA
@@ -39,8 +39,10 @@ mv schemas/glib-2.0 %{buildroot}%{_datadir}
 Summary:        Logos for GNOME
 License:        CC-BY-CA
 Provides: fedora-logos
+Provides: centos-logos
 Provides: system-logos
 Obsoletes: fedora-logos
+Obsoletes: centos-logos
 Obsoletes: system-logos
 
 %description logos
