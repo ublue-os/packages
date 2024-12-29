@@ -3,7 +3,7 @@
 
 Name:           bluefin
 Version:        0.1.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Bluefin branding
 
 License:        CC-BY-CA
@@ -32,6 +32,7 @@ mv wallpapers/* %{buildroot}%{_datadir}/backgrounds/%{vendor}
 mv faces %{buildroot}%{_datadir}/pixmaps/faces/bluefin
 mv logos/* %{buildroot}%{_datadir}/pixmaps
 mv cli-logos %{buildroot}%{_datadir}/ublue-os/bluefin-logos
+mv fastfetch/fastfetch.jsonc %{buildroot}%{_datadir}/ublue-os/fastfetch.jsonc
 mv schemas/dconf %{buildroot}%{_sysconfdir}
 mv schemas/glib-2.0 %{buildroot}%{_datadir}
 
@@ -62,6 +63,17 @@ Logos for CLI applications like Fastfetch
 
 %files cli-logos
 %attr(0755,root,root) %{_datadir}/ublue-os/bluefin-logos/*
+
+%package fastfetch
+Summary:        Fastfetch configuration for Bluefin
+License:        CC-BY-CA
+
+%description fastfetch
+Fastfetch configuration for Bluefin
+
+%files fastfetch
+%attr(0755,root,root) %{_datadir}/ublue-os/fastfetch.jsonc
+
 
 %package schemas
 Summary:        GNOME Schemas for Bluefin
