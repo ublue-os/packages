@@ -51,6 +51,7 @@ Replacement logos for GNOME
 %files logos
 %attr(0755,root,root) %{_datadir}/pixmaps/fedora*
 %attr(0755,root,root) %{_datadir}/pixmaps/system-*
+%attr(0755,root,root) %{_datadir}/pixmaps/ublue-*
 
 %package cli-logos
 Summary:        Logos for CLI
