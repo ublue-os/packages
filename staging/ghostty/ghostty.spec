@@ -20,6 +20,7 @@ BuildRequires: pandoc-cli
 BuildRequires: pixman-devel
 BuildRequires: pkg-config
 BuildRequires: zig
+BuildRequires: zig-rpm-macros
 BuildRequires: zlib-ng-devel
 
 Requires: fontconfig
