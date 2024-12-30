@@ -10,6 +10,8 @@ URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source:         {{{ git_dir_pack }}}
 
+BuildRequires:  systemd-rpm-macros
+
 %description
 Universal Blue setup scripts
 
