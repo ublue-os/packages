@@ -16,7 +16,7 @@ get_config() {
 	echo "$OUTPUT"
 }
 
-USER_SETUP_VER="$(get_config '."setup-version"' "4")"
+USER_SETUP_VER="$(get_config '."setup-version"' "10")"
 USER_HOOKS_DIRECTORY="$(get_config '."user-hooks-directory"' "/usr/share/ublue-os/user-setup.hooks.d")"
 
 USER_SETUP_VER_FILE="${XDG_DATA_HOME:-$HOME/.local/share}/ublue/user-setup"
