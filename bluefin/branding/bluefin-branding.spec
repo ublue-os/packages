@@ -3,7 +3,7 @@
 
 Name:           bluefin
 Version:        0.1.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Bluefin branding
 
 License:        CC-BY-CA
@@ -34,6 +34,7 @@ mv logos/* %{buildroot}%{_datadir}/pixmaps
 mv cli-logos %{buildroot}%{_datadir}/ublue-os/bluefin-logos
 mv fastfetch/fastfetch.jsonc %{buildroot}%{_datadir}/ublue-os/fastfetch.jsonc
 mv schemas/dconf %{buildroot}%{_sysconfdir}
+mv schemas/skel %{buildroot}%{_sysconfdir}
 mv schemas/glib-2.0 %{buildroot}%{_datadir}
 
 %package logos
@@ -83,6 +84,7 @@ Contains all of the DConf settings that Bluefin ships by default
 
 %files schemas
 %attr(0755,root,root) %{_sysconfdir}/dconf/db
+%attr(0755,root,root) %{_sysconfdir}/skel/.local/share
 %attr(0755,root,root) %{_datadir}/glib-2.0
 
 %package backgrounds
