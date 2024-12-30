@@ -17,12 +17,14 @@ Universal Blue setup scripts
 {{{ git_dir_setup_macro }}}
 
 %install
-mkdir -p %{buildroot}{%{_libexecdir},%{_unitdir},%{_sysconfdir}/{polkit-1/{rules.d,actions},profile.d}}
+mkdir -p %{buildroot}{%{_bindir},%{_libexecdir},%{_unitdir},%{_sysconfdir}/{polkit-1/{rules.d,actions},profile.d}}
 install -Dm0755 ./src/scripts/* %{buildroot}%{_libexecdir}
+install -Dm0755 ./src/bin/* %{buildroot}%{_bindir}
 install -Dpm0644 ./src/services/* %{buildroot}%{_unitdir}
 install -Dpm0644 ./src/polkit/*.rules %{buildroot}%{_sysconfdir}/polkit-1/rules.d
 install -Dpm0644 ./src/polkit/*.policy %{buildroot}%{_sysconfdir}/polkit-1/actions
 install -Dpm0755 ./src/profile/* %{buildroot}%{_sysconfdir}/profile.d
+cp -rp ./src/skel %{buildroot}%{_sysconfdir}
 
 %post
 %systemd_post ublue-user-setup.service
@@ -33,11 +35,13 @@ install -Dpm0755 ./src/profile/* %{buildroot}%{_sysconfdir}/profile.d
 %systemd_preun ublue-system-setup.service
 
 %files
+%{_bindir}/sb*
 %{_libexecdir}/ublue-*
 %{_libexecdir}/check-*
 %{_sysconfdir}/polkit-1/rules.d/*
 %{_sysconfdir}/polkit-1/actions/*
 %{_sysconfdir}/profile.d/*
+%{_sysconfdir}/skel/.config/autostart/*
 %{_unitdir}/*.service
 
 %changelog
