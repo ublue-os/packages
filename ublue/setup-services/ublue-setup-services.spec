@@ -2,7 +2,7 @@
 
 Name:           ublue-setup-services
 Version:        0.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Universal Blue setup services
 
 License:        Apache-2.0
@@ -19,10 +19,11 @@ Universal Blue setup scripts
 {{{ git_dir_setup_macro }}}
 
 %install
-mkdir -p %{buildroot}{%{_bindir},%{_libexecdir},%{_unitdir},%{_sysconfdir}/{polkit-1/{rules.d,actions},profile.d}}
+mkdir -p %{buildroot}{%{_bindir},%{_libexecdir},%{_unitdir},%{_prefix}/lib/systemd/user,%{_sysconfdir}/{polkit-1/{rules.d,actions},profile.d}}
 install -Dm0755 ./src/scripts/* %{buildroot}%{_libexecdir}
 install -Dm0755 ./src/bin/* %{buildroot}%{_bindir}
 install -Dpm0644 ./src/services/* %{buildroot}%{_unitdir}
+install -Dpm0644 ./src/user-services/* %{buildroot}%{_prefix}/lib/systemd/user/
 install -Dpm0644 ./src/polkit/*.rules %{buildroot}%{_sysconfdir}/polkit-1/rules.d
 install -Dpm0644 ./src/polkit/*.policy %{buildroot}%{_sysconfdir}/polkit-1/actions
 install -Dpm0755 ./src/profile/* %{buildroot}%{_sysconfdir}/profile.d
@@ -45,6 +46,7 @@ cp -rp ./src/skel %{buildroot}%{_sysconfdir}
 %{_sysconfdir}/profile.d/*
 %{_sysconfdir}/skel/.config/autostart/*
 %{_unitdir}/*.service
+%{_prefix}/lib/systemd/user/*.service
 
 %changelog
 %autochangelog
