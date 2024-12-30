@@ -22,10 +22,14 @@ MOTD script for Universal Blue
 install -Dm0755 ./src/ublue-motd %{buildroot}%{_libexecdir}/ublue-motd
 install -dm 0755 %{buildroot}%{_datadir}/ublue-os/motd/themes
 cp -rp ./src/themes/* %{buildroot}%{_datadir}/ublue-os/motd/themes
+install -Dm0755 ./src/vendor.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}.sh
+install -Dm0755 ./src/vendor.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/%{name}.fish
 
 %files
 %{_libexecdir}/ublue-motd
 %{_datadir}/ublue-os/motd/themes/*
+%{_sysconfdir}/profile.d/%{name}.sh
+%{_datadir}/fish/vendor_conf.d/%{name}.fish
 
 %changelog
 %autochangelog
