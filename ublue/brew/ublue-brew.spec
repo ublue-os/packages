@@ -22,6 +22,7 @@ Homebrew integration for Universal Blue systems
 mkdir -p %{buildroot}{%{_unitdir},%{_prefix}/lib/systemd/system-preset,%{_sysconfdir}}
 install -Dpm0755 src/systemd/*.service %{buildroot}%{_unitdir}
 install -Dpm0755 src/systemd/*.preset %{buildroot}%{_prefix}/lib/systemd/system-preset
+install -Dm0755 ./src/vendor.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/%{name}.fish
 cp -rp src/security %{buildroot}%{_sysconfdir}
 cp -rp src/profile.d %{buildroot}%{_sysconfdir}
 cp -rp src/tmpfiles.d %{buildroot}%{_prefix}/lib
@@ -34,6 +35,7 @@ cp -rp src/tmpfiles.d %{buildroot}%{_prefix}/lib
 
 %files
 %{_sysconfdir}/profile.d/brew*
+%{_datadir}/fish/vendor_conf.d/%{name}.fish
 %{_sysconfdir}/security/limits.d/*brew*.conf
 %{_unitdir}/brew-setup.service
 %{_prefix}/lib/systemd/system-preset/01-homebrew.preset
