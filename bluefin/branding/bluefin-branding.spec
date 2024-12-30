@@ -35,7 +35,11 @@ mv cli-logos %{buildroot}%{_datadir}/ublue-os/bluefin-logos
 mv fastfetch/fastfetch.jsonc %{buildroot}%{_datadir}/ublue-os/fastfetch.jsonc
 mv schemas/dconf %{buildroot}%{_sysconfdir}
 mv schemas/skel %{buildroot}%{_sysconfdir}
+mv schemas/profile.d %{buildroot}%{_sysconfdir}
+mv schemas/distrobox %{buildroot}%{_sysconfdir}
 mv schemas/glib-2.0 %{buildroot}%{_datadir}
+mv schemas/applications %{buildroot}%{_datadir}
+mv plymouth %{buildroot}%{_datadir}
 
 %package logos
 Summary:        Logos for GNOME
@@ -75,6 +79,15 @@ Fastfetch configuration for Bluefin
 %files fastfetch
 %attr(0755,root,root) %{_datadir}/ublue-os/fastfetch.jsonc
 
+%package plymouth
+Summary:        Plymouth customization for Bluefin
+License:        CC-BY-CA
+
+%description plymouth
+Plymouth logo customization for Bluefin
+
+%files plymouth
+%attr(0755,root,root) %{_datadir}/plymouth
 
 %package schemas
 Summary:        GNOME Schemas for Bluefin
@@ -84,8 +97,11 @@ Contains all of the DConf settings that Bluefin ships by default
 
 %files schemas
 %attr(0755,root,root) %{_sysconfdir}/dconf/db
-%attr(0755,root,root) %{_sysconfdir}/skel/.local/share
+%attr(0755,root,root) %{_sysconfdir}/profile.d
+%attr(0755,root,root) %{_sysconfdir}/distrobox
+%attr(0755,root,root) %{_sysconfdir}/skel
 %attr(0755,root,root) %{_datadir}/glib-2.0
+%attr(0755,root,root) %{_datadir}/applications
 
 %package backgrounds
 Summary:        Bluefin wallpapers
