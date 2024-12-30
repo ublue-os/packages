@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+set -x
+
+get_config() {
+	SETUP_CONFIG_FILE="${SETUP_CONFIG_FILE:-/etc/ublue-os/setup.json}"
+	QUERY="$1"
+	FALLBACK="$2"
+	shift
+	shift
+	OUTPUT="$(jq -r "$QUERY" "$SETUP_CONFIG_FILE" 2>/dev/null || echo "$FALLBACK")"
+	if [ "$OUTPUT" == "null" ] ; then
+		echo "$FALLBACK"
+		return
+	fi
+	echo "$OUTPUT"
+}
+
+USER_SETUP_VER="$(get_config '."setup-version"' "10")"
+USER_HOOKS_DIRECTORY="$(get_config '."user-hooks-directory"' "/usr/share/ublue-os/user-setup.hooks.d")"
+
+USER_SETUP_VER_FILE="${XDG_DATA_HOME:-$HOME/.local/share}/ublue/user-setup"
+USER_SETUP_VER_RAN="$(cat "$USER_SETUP_VER_FILE")"
+
+mkdir -p "$(dirname "$USER_SETUP_VER_FILE")" || exit 1
+
+dirname "$USER_SETUP_VER_FILE"
+
+UBLUE_CONFIG_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/ublue"
+mkdir -p "$UBLUE_CONFIG_DIR"
+
+# Run script if updated
+if [[ -f "$USER_SETUP_VER_FILE" && "$USER_SETUP_VER" == "$USER_SETUP_VER_RAN" ]]; then
+  echo "Current user setup version has already run. Exiting..."
+  exit 0
+fi
+
+if [ -d "$USER_HOOKS_DIRECTORY" ] ; then
+  bash $USER_HOOKS_DIRECTORY/*
+fi
+
+pkexec bash /usr/libexec/ublue-privileged-setup
+
+# Prevent future executions
+echo "Writing state file"
+echo $USER_SETUP_VER > "$USER_SETUP_VER_FILE"
