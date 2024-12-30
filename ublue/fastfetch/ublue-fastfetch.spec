@@ -2,7 +2,7 @@
 
 Name:           ublue-fastfetch
 Version:        0.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Fastfetch configuration for Universal Blue systems
 
 License:        Apache-2.0

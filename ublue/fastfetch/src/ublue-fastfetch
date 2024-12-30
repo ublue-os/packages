@@ -20,7 +20,7 @@ SHUFFLE_LOGO="$(get_config '."shuffle-logo"' "false")"
 LOGO_DIRECTORY="$(get_config '."logo-directory"' "/usr/share/ublue-os/fastfetch")"
 
 if [ "$SHUFFLE_LOGO" == "true" ] ; then
-  FETCH_LOGO="$(/usr/bin/find "$LOGO_DIRECTORY" | /usr/bin/shuf -n 1)"
+  FETCH_LOGO="$(/usr/bin/find "$LOGO_DIRECTORY" -type f | /usr/bin/shuf -n 1)"
   /usr/bin/fastfetch --logo "$FETCH_LOGO" --color "$(/usr/libexec/ublue-bling-fastfetch)" --config "$FASTFETCH_CONFIG"
 else
   /usr/bin/fastfetch --color "$(/usr/libexec/ublue-bling-fastfetch)" --config "$FASTFETCH_CONFIG"
