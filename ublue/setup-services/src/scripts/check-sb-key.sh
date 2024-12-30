@@ -22,12 +22,17 @@ get_config() {
 WARNING_MSG="This machine has secure boot turned on, but you haven't enrolled Universal Blue's keys. Failing to enroll these before rebooting **may cause your system to fail to boot**. Follow [the documentation](https://docs.projectbluefin.io/introduction#secure-boot) ~for key enrollment information."
 KEY_WARN_FILE="/run/user-motd-sbkey-warn.md"
 KEY_DER_FILE="$(get_config '."der-path"' "/etc/pki/akmods/certs/akmods-ublue.der")"
+IS_THIS_ENABLED="$(get_config '."check-secureboot"' "true")"
 
 mokutil --sb-state | grep -q enabled
 SB_ENABLED=$?
 
 if [ $SB_ENABLED -ne 1 ]; then
     echo "Secure Boot disabled. Skipping..."
+    exit 0
+fi
+
+if [ "$IS_THIS_ENABLED" == "false" ] ; then
     exit 0
 fi
 
