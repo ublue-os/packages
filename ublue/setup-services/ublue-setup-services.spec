@@ -2,7 +2,7 @@
 
 Name:           ublue-setup-services
 Version:        0.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Universal Blue setup services
 
 License:        Apache-2.0
@@ -41,10 +41,10 @@ cp -rp ./src/skel %{buildroot}%{_sysconfdir}
 %{_bindir}/sb*
 %{_libexecdir}/ublue-*
 %{_libexecdir}/check-*
-%{_sysconfdir}/polkit-1/rules.d/*
-%{_sysconfdir}/polkit-1/actions/*
-%{_sysconfdir}/profile.d/*
-%{_sysconfdir}/skel/.config/autostart/*
+%config(noreplace) %{_sysconfdir}/polkit-1/rules.d/*
+%config(noreplace) %{_sysconfdir}/polkit-1/actions/*
+%config(noreplace) %{_sysconfdir}/profile.d/*
+%config(noreplace) %{_sysconfdir}/skel/.config/autostart/*
 %{_unitdir}/*.service
 %{_prefix}/lib/systemd/user/*.service
 
