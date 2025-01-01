@@ -21,7 +21,7 @@ Universal Blue Bling CLI setup scripts
 {{{ git_dir_setup_macro }}}
 
 %install
-install -Dm0755 ./src/%{name} %{buildroot}%{_libexecdir}/ublue-motd
+install -Dm0755 ./src/%{name} %{buildroot}%{_libexecdir}/%{name}
 # Intented to either be symlinked into the correct directories or be used directly
 install -Dm0755 ./src/bling.sh %{buildroot}%{_datadir}/ublue-os/bling/bling.sh
 install -Dm0755 ./src/bling.fish %{buildroot}%{_datadir}/ublue-os/bling/bling.fish
