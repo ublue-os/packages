@@ -2,7 +2,7 @@
 
 Name:           ublue-bling
 Version:        0.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Universal Blue Bling CLI setup scripts
 
 License:        Apache-2.0
@@ -27,7 +27,7 @@ install -Dm0755 ./src/bling.sh %{buildroot}%{_datadir}/ublue-os/bling/bling.sh
 install -Dm0755 ./src/bling.fish %{buildroot}%{_datadir}/ublue-os/bling/bling.fish
 
 %files
-%{_libexecdir}/ublue-motd
+%{_libexecdir}/%{name}
 %{_datadir}/ublue-os/bling/bling.*sh
 
 %changelog
