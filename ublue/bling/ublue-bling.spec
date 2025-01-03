@@ -1,8 +1,8 @@
 %global debug_package %{nil}
 
 Name:           ublue-bling
-Version:        0.1.0
-Release:        2%{?dist}
+Version:        0.1.2
+Release:        1%{?dist}
 Summary:        Universal Blue Bling CLI setup scripts
 
 License:        Apache-2.0
