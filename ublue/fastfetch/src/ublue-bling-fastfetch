@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
-THEME=$(gsettings get org.gnome.desktop.interface accent-color 2>/dev/null || echo "'slate'")
+THEME=$(dconf read /org/gnome/desktop/interface/accent-color 2>/dev/null || printf '%s' "\'$DEFAULT_THEME\'")
+# Dconf will fail if the accent-color has not been changed yet
+if [ "$THEME" == "" ] ; then
+	# Gsettings will not update if the system's schemas have not been configured properly
+	THEME=$(gsettings get org.gnome.desktop.interface accent-color 2>/dev/null || printf '%s' "\'$DEFAULT_THEME\'")
+fi
 THEME=${THEME//\'/}
+THEME=${FASTFETCH_FORCE_THEME:-$THEME}
 
 FASTFETCH_COLOR_SET="38;2;53;132;228"
 case $THEME in
