@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           ublue-brew
-Version:        0.1.0
+Version:        0.1.1
 Release:        1%{?dist}
 Summary:        Homebrew integration for Universal Blue systems
 
@@ -34,7 +34,8 @@ cp -rp src/tmpfiles.d %{buildroot}%{_prefix}/lib
 %systemd_preun brew-setup.service
 
 %files
-%{_sysconfdir}/profile.d/brew*
+%ghost %{_sysconfdir}/profile.d/brew.sh
+%{_sysconfdir}/profile.d/brew-bash-completion.sh
 %{_datadir}/fish/vendor_conf.d/%{name}.fish
 %{_sysconfdir}/security/limits.d/*brew*.conf
 %{_unitdir}/brew-setup.service
