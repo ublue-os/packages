@@ -24,15 +24,19 @@ fi
 
 HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/home/linuxbrew/.linuxbrew}"
 
+# set ATUIN_INIT_FLAGS in your ~/.bashrc before ublue-bling is sourced.
+# Atuin allows these flags: "--disable-up-arrow" and/or "--disable-ctrl-r"
+ATUIN_INIT_FLAGS=${ATUIN_INIT_FLAGS:-""}
+
 if [ "$(basename "$SHELL")" = "bash" ]; then
     [ -f "/etc/profile.d/bash-preexec.sh" ] && . "${HOMEBREW_PREFIX}/etc/profile.d/bash-preexec.sh"
     [ -f "/usr/share/bash-prexec" ] && . "/usr/share/bash-prexec" 
     [ -f "${HOMEBREW_PREFIX}/etc/profile.d/bash-preexec.sh" ] && . "${HOMEBREW_PREFIX}/etc/profile.d/bash-preexec.sh"
     [ "$(command -v starship)" ] && eval "$(starship init bash)"
-    [ "$(command -v atuin)" ] && eval "$(atuin init bash)"
+    [ "$(command -v atuin)" ] && eval "$(atuin init bash ${ATUIN_INIT_FLAGS})"
     [ "$(command -v zoxide)" ] && eval "$(zoxide init bash)"
 elif [ "$(basename "$SHELL")" = "zsh" ]; then
     [ "$(command -v starship)" ] && eval "$(starship init zsh)"
-    [ "$(command -v atuin)" ] && eval "$(atuin init zsh)"
+    [ "$(command -v atuin)" ] && eval "$(atuin init zsh ${ATUIN_INIT_FLAGS})"
     [ "$(command -v zoxide)" ] && eval "$(zoxide init zsh)"
 fi
