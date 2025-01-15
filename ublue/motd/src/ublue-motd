@@ -33,11 +33,8 @@ THEMES_DIRECTORY="$(get_config '."themes-directory"' "/usr/share/ublue-os/motd/t
 # HOOKS_DIRECTORY="$(get_config '."hooks-directory"' "/usr/share/ublue-os/motd/hooks.d")"
 [ ! -f "$TEMPLATE_FILE" ] && die "Failed reading template file"
 
-TIP_FILE="$(find "$TIP_DIRECTORY" -iname "*.md" 2>/dev/null | shuf -n 1)"
-
 if [ "$CHECK_OUTDATED" == "true" ] ; then
-	IMAGE_DATE=$(rpm-ostree status --booted | sed -n 's/.*Timestamp: \(.*\)/\1/p')
-	IMAGE_DATE_SECONDS=$(date -d "$IMAGE_DATE" +%s)
+	IMAGE_DATE_SECONDS=$(rpm-ostree status --booted --json | jq -r '.deployments[].timestamp')
 	CURRENT_SECONDS=$(date +%s)
 	DIFFERENCE=$((CURRENT_SECONDS - IMAGE_DATE_SECONDS))
 	ONE_MONTH=$((30 * 24 * 60 * 60))
@@ -47,7 +44,7 @@ if [ "$CHECK_OUTDATED" == "true" ] ; then
 	fi
 fi
 
-TIP="${TIP:-$(shuf -n 1 "$TIP_FILE")}"
+TIP="${TIP:-"$(/usr/bin/cat "$TIP_DIRECTORY"/*.md 2>/dev/null | shuf -n 1)"}"
 TIP_ESCAPED="󰋼 $(escape "$TIP")"
 
 KEY_WARN_FILE="/run/user-motd-sbkey-warn.md"
