@@ -54,12 +54,11 @@ KEY_WARN_FILE="/run/user-motd-sbkey-warn.md"
 [ -e $KEY_WARN_FILE ] && KEY_WARN="**WARNING**: $(cat $KEY_WARN_FILE)"
 KEY_WARN_ESCAPED=$(escape "$KEY_WARN")
 
-
-THEME=$(dconf read /org/gnome/desktop/interface/accent-color 2>/dev/null || printf '%s' "\'$DEFAULT_THEME\'")
+THEME=$(dconf read /org/gnome/desktop/interface/accent-color 2>/dev/null || echo -e "$DEFAULT_THEME")
 # Dconf will fail if the accent-color has not been changed yet
 if [ "$THEME" == "" ] ; then
 	# Gsettings will not update if the system's schemas have not been configured properly
-	THEME=$(gsettings get org.gnome.desktop.interface accent-color 2>/dev/null || printf '%s' "\'$DEFAULT_THEME\'")
+	THEME=$(gsettings get org.gnome.desktop.interface accent-color 2>/dev/null || echo -e "$DEFAULT_THEME")
 fi
 THEME=${THEME//\'/}
 THEME=${MOTD_FORCE_THEME:-$THEME}
