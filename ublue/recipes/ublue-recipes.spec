@@ -23,9 +23,11 @@ Shared ujust recipes for Universal Blue systems
 %build
 for file in src/recipes/*.just ; do
 	cat <<EOF >> recipes.just
+
 ########################
-### $file
+### $(basename $file)
 ########################
+
 EOF
 	cat $file >> recipes.just
 done
@@ -33,8 +35,9 @@ done
 %install
 install -Dm0644 -t %{buildroot}/%{_datadir}/ublue-os/recipes recipes.just
 
-%check
-just --unstable --fmt --check -f recipes.just
+# Breaks the build on te CentOS default chroot on COPR, we need to enable EPEL
+# %check
+# just --unstable --fmt --check -f recipes.just
 
 %files
 %{_datadir}/ublue-os/recipes/recipes.just
