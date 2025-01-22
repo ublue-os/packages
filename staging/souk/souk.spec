@@ -19,6 +19,7 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  libxmlb-devel
 BuildRequires:  cargo
 BuildRequires:  meson
+BuildRequires:  git
 
 %description
 Independent Flatpak App Store
