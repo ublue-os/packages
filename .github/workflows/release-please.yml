@@ -20,7 +20,7 @@ jobs:
       tag: ${{ steps.release-please.outputs.tag_name }}
       upload_url: ${{ steps.release-please.outputs.upload_url }}
     steps:
-      - uses: google-github-actions/release-please-action@v4
+      - uses:  googleapis/release-please-action@v4
         id: release-please
         with:
           release-type: simple
