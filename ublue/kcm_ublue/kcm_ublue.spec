@@ -4,7 +4,7 @@ Release:        1%{?dist}
 Summary:        KCM for KDE-based Universal Blue images
 
 URL:            https://github.com/ledif/kcm_ublue
-Source:         https://github.com/ledif/kcm_ublue/archive/refs/tags/v0.5.1.zip
+Source:         https://github.com/ledif/kcm_ublue/archive/refs/tags/v0.5.2.zip
 License:        Apache-2.0
 
 BuildRequires:  cmake
