@@ -1,8 +1,8 @@
 %global debug_package %{nil}
 
 Name:           ublue-setup-services
-Version:        0.1.0
-Release:        3%{?dist}
+Version:        0.1.1
+Release:        1%{?dist}
 Summary:        Universal Blue setup services
 
 License:        Apache-2.0
