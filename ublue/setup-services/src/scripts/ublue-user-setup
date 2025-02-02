@@ -16,8 +16,7 @@ get_config() {
 
 USER_HOOKS_DIRECTORY="$(get_config '."user-hooks-directory"' "/usr/share/ublue-os/user-setup.hooks.d")"
 
+# Privileged setup can be called via user services
 if [ -d "$USER_HOOKS_DIRECTORY" ] ; then
   bash $USER_HOOKS_DIRECTORY/*
 fi
-
-pkexec bash /usr/libexec/ublue-privileged-setup
