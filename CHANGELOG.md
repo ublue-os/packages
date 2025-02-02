@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.1.0](https://github.com/ublue-os/packages/compare/v1.0.0...v1.1.0) (2025-02-02)
+
+
+### Features
+
+* add caffeine extension for CentOS stream ([#142](https://github.com/ublue-os/packages/issues/142)) ([a48421d](https://github.com/ublue-os/packages/commit/a48421dd0c9845310af41568657262fef6de694d))
+* add intel-npu-level-zero driver ([#135](https://github.com/ublue-os/packages/issues/135)) ([1d77313](https://github.com/ublue-os/packages/commit/1d77313a5868dfec96ef3bda16a4820e8bb8e69c))
+* add KDE Configuration Module ([#129](https://github.com/ublue-os/packages/issues/129)) ([25675ba](https://github.com/ublue-os/packages/commit/25675ba90746c04c12c9cb2eaf8bccb6bd074d1e))
+* super secret wallpaper ([#136](https://github.com/ublue-os/packages/issues/136)) ([cebd0f1](https://github.com/ublue-os/packages/commit/cebd0f10cc157fb8db4413deb768ab83b0f63bc8))
+
+
+### Bug Fixes
+
+* add keywords to the docs icon ([#139](https://github.com/ublue-os/packages/issues/139)) ([eefa633](https://github.com/ublue-os/packages/commit/eefa6333dcd6316dfa92b74a22af23220c1474bc))
+* make february bluefin-wallpapers work ([#137](https://github.com/ublue-os/packages/issues/137)) ([0f3bd30](https://github.com/ublue-os/packages/commit/0f3bd306973cd07c7222e648fc7fdb519e85660d))
+* typo in bling.sh ([#130](https://github.com/ublue-os/packages/issues/130)) ([2dc1cd3](https://github.com/ublue-os/packages/commit/2dc1cd3cf86abe250dd4e8bc945584a076e1a8a2))
+
 ## 1.0.0 (2025-01-23)
 
 
