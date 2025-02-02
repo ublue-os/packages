@@ -6,4 +6,4 @@ Type=simple
 ExecStart=/usr/libexec/ublue-user-setup
 
 [Install]
-WantedBy=graphical.target
+WantedBy=graphical-session.target
