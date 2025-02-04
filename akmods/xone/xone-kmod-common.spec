@@ -1,7 +1,7 @@
 %global real_name xone
 
 Name:           %{real_name}-kmod-common
-Version:        {{{ git_dir_version }}}
+Version:        1000.{{{ git_dir_version }}}
 Release:        1%{?dist}
 Summary:        Linux kernel driver for Xbox One and Xbox Series X|S accessories common files
 License:        GPLv2
