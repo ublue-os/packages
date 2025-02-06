@@ -3,7 +3,7 @@
 #region Setup
 
 export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
-set -euxo pipefail
+set -exo pipefail
 
 echo "::group::Installing Homebrew"
 trap 'echo "::endgroup::"' EXIT
