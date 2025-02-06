@@ -4,10 +4,6 @@
 
 set -euxo pipefail
 
-echo "::group::Installing Homebrew"
-trap 'echo "::endgroup::"' EXIT
-trap 'echo "::error::Error attempting to install Homebrew"' ERR
-
 #endregion Setup
 
 #region Functions
