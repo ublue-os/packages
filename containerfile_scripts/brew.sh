@@ -48,6 +48,11 @@ mkdir -p "$(realpath /home)"
 # Ensure root symlink target exists
 mkdir -p "$(realpath /root)"
 
+# Ensure git is installed, otherwise install it
+if ! hash git; then
+    dnf5 install -yq --setopt=install_weak_deps=0 git
+fi
+
 # Run Homebrew install script
 (
     set +x
