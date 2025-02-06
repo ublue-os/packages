@@ -45,6 +45,9 @@ fi
 # Ensure the home symlink target exists.
 mkdir -p "$(realpath /home)"
 
+# Ensure root symlink target exists
+mkdir -p "$(realpath /root)"
+
 # Run Homebrew install script
 (
     set +x
