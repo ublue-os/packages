@@ -55,7 +55,7 @@ fi
     mkdir -p /var/home && \
         mkdir -p /var/roothome &&
         curl -Lo "$script_file" https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh &&
-        chmod +x /tmp/brew-install &&
+        chmod +x "$script_file" &&
         $script_file &&
         rm "$script_file"
 } || die "Something went wrong running Homebrew install.sh"
