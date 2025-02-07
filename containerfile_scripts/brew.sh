@@ -49,10 +49,15 @@ if ! hash git; then
 fi
 
 # Run Homebrew install script
-export CI=${CI:-1}
-export NONINTERACTIVE=1
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" ||
-    die "Something went wrong running Homebrew install.sh"
+{
+    export CI=${CI:-1}
+    mkdir -p /var/home && \
+        mkdir -p /var/roothome &&
+        curl -Lo /tmp/brew-install https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh &&
+        chmod +x /tmp/brew-install &&
+        /tmp/brew-install &&
+        rm /tmp/brew-install
+} || die "Something went wrong running Homebrew install.sh"
 sync /var/home/linuxbrew
 FILES_TO_FACTORY+=(/var/home/linuxbrew)
 
