@@ -53,6 +53,7 @@ export CI=${CI:-1}
 export NONINTERACTIVE=1
 /bin/bash <(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh) ||
     die "Something went wrong running Homebrew install.sh"
+sync /var/home/linuxbrew
 FILES_TO_FACTORY+=(/var/home/linuxbrew)
 
 # Write /etc/profile.d/brew.sh
