@@ -51,12 +51,13 @@ fi
 # Run Homebrew install script
 {
     export CI=${CI:-1}
+    script_file=$(mktemp)
     mkdir -p /var/home && \
         mkdir -p /var/roothome &&
-        curl -Lo /tmp/brew-install https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh &&
+        curl -Lo "$script_file" https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh &&
         chmod +x /tmp/brew-install &&
-        /tmp/brew-install &&
-        rm /tmp/brew-install
+        $script_file &&
+        rm $script_file
 } || die "Something went wrong running Homebrew install.sh"
 sync /home/linuxbrew
 
