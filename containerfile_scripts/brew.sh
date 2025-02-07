@@ -57,7 +57,7 @@ fi
         curl -Lo "$script_file" https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh &&
         chmod +x /tmp/brew-install &&
         $script_file &&
-        rm $script_file
+        rm "$script_file"
 } || die "Something went wrong running Homebrew install.sh"
 sync /home/linuxbrew
 
