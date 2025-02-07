@@ -135,6 +135,6 @@ EOF
 
 # Copy files to /usr/share/factory
 mkdir -p /usr/share/factory
-cp --parents -r -- "${FILES_TO_FACTORY[@]}" /usr/share/factory
+cp --parents -ar -- "${FILES_TO_FACTORY[@]}" /usr/share/factory
 
 #endregion Body
