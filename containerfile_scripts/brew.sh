@@ -59,7 +59,6 @@ fi
         $script_file &&
         rm "$script_file"
 } || die "Something went wrong running Homebrew install.sh"
-sync /var/home/linuxbrew
 FILES_TO_FACTORY+=(/var/home/linuxbrew)
 
 # Write /etc/profile.d/brew.sh
@@ -142,6 +141,6 @@ EOF
 
 # Copy files to /usr/share/factory
 mkdir -p /usr/share/factory
-cp --parents -ar -- "${FILES_TO_FACTORY[@]}" /usr/share/factory
+tar -cO "${FILES_TO_FACTORY[@]}" | tar -xC /usr/share/factory
 
 #endregion Body
