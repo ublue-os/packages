@@ -1,10 +1,12 @@
+%global majmin_ver_kcm 0.5.4
+
 Name:           kcm_ublue
-Version:        0.5.2
+Version:        %{majmin_ver_kcm}
 Release:        1%{?dist}
 Summary:        KCM for KDE-based Universal Blue images
 
 URL:            https://github.com/ledif/kcm_ublue
-Source:         https://github.com/ledif/kcm_ublue/archive/refs/tags/v0.5.2.zip
+Source:         https://github.com/ledif/kcm_ublue/archive/refs/tags/v%{majmin_ver_kcm}.zip
 License:        Apache-2.0
 
 BuildRequires:  cmake
@@ -24,6 +26,7 @@ BuildRequires:  qt6-doc-devel
 BuildRequires:  qt6-qtbase-devel
 BuildRequires:  qt6-qtdeclarative-devel
 BuildRequires:  qt6-qttools-devel
+BuildRequires:  gtest-devel
 
 %description
 KDE Configuration Module (KCM) for Aurora.
