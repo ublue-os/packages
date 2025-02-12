@@ -89,18 +89,11 @@ jobs:
       - name: Sign container image
         if: github.event_name != 'pull_request'
         run: |
-          cosign sign -y ${{ steps.registry_case.outputs.lowercase }}/${{ env.IMAGE_NAME }}@${TAGS}
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/${{ env.IMAGE_NAME }}@${TAGS}
         env:
           TAGS: ${{ steps.push.outputs.digest }}
-          COSIGN_EXPERIMENTAL: 1
-
-      - name: Verify the pushed tags
-        if: github.event_name != 'pull_request'
-        run: |
-          cosign verify ${{ steps.registry_case.outputs.lowercase}}/${{ env.IMAGE_NAME }}@${TAGS} --certificate-identity-regexp "https://github.com/${{ github.repository }}" --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
-        env:
-          TAGS: ${{ steps.push.outputs.digest }}
-          COSIGN_EXPERIMENTAL: 1
+          COSIGN_EXPERIMENTAL: false
+          COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
 
       - name: Echo outputs
         run: |
