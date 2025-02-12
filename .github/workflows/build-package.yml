@@ -2,46 +2,71 @@ name: Build package in CI
 
 on:
   pull_request:
-    branches:
-      - main
 
 jobs:
   changed_files:
     runs-on: ubuntu-latest
-    name: Test changed-files
+    name: Get changed files
+    outputs:
+      all_changed_files: ${{ steps.changed-package-files.outputs.all_changed_files }}
+      any_changed: ${{ steps.changed-package-files.outputs.any_changed }}
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Just
-        uses: extractions/setup-just@dd310ad5a97d8e7b41793f8ef055398d51ad4de6 # v2
 
       - name: Get directories with spec files
         id: specdirs
         run: |
-          find . -type f -iname '*.spec' -exec 'dirname' '{}' ';' 2>/dev/null | xargs -I{} echo "{}/**" > ./files.txt
+          FILESLIST=./files.txt
+          # The extra xargs there is so that the changed-files action can find all the files
+          find . -type f -iname '*.spec' -exec 'dirname' '{}' ';' 2>/dev/null | xargs -I{} echo "{}/**" > $FILESLIST
+          echo "fileslist=$FILESLIST" >> $GITHUB_OUTPUT
 
       - name: Get all changed files from package directores
         id: changed-package-files
         uses: tj-actions/changed-files@v45
         with:
-          files_from_source_file: ./files.txt
+          files_from_source_file: ${{ steps.specdirs.outputs.fileslist }}
 
-      - name: List all changed files markdown files
-        if: steps.changed-package-files.outputs.any_changed == 'true'
+  build_packages:
+    runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
+    needs: changed_files
+    name: Test changed-files
+    if: needs.changed_files.outputs.any_changed == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        # FIXME: add suport for aarch64 ublue-builder container
+        platform: ["amd64"]
+        # These are our target environments
+        # FIXME: renovate rule for this would be awesome
+        chroot: ["fedora-41", "epel-10"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        if: matrix.platform == 'arm64'
+        run: |
+          sudo apt update -y
+          sudo apt install -y \
+            podman
+
+      - name: Setup Just
+        uses: extractions/setup-just@dd310ad5a97d8e7b41793f8ef055398d51ad4de6 # v2
+
+      - name: Build all changed packages
         env:
-          ALL_CHANGED_FILES: ${{ steps.changed-package-files.outputs.all_changed_files }}
+          ALL_CHANGED_FILES: ${{ needs.changed_files.outputs.all_changed_files }}
         run: |
           set -x
           just=$(which just)
 
           mkdir -p containers
-
           CONTAINERS_DIR=./containers
           export CONTAINERS_DIR
 
           for file in ${ALL_CHANGED_FILES}; do
             for spec in $(dirname $file)/*.spec ; do
-               $just build $spec
+               $just build $spec -r ${{ matrix.chroot }}-$(arch)
             done
           done
 
