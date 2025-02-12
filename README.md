@@ -1,10 +1,15 @@
 # Universal Blue RPM specs
 
-The COPR hosting our packages can be found [here](https://copr.fedorainfracloud.org/coprs/ublue-os).
+Packages for Universal Blue projects.
 
-|Package|Status|
-|---|---|
-|[devpod](https://devpod.sh/)|![Build Status](https://copr.fedorainfracloud.org/coprs/ublue-os/staging/package/devpod/status_image/last_build.png)|
-|[nautilus-open-any-terminal](https://github.com/Stunkymonkey/nautilus-open-any-terminal)|![Build Status](https://copr.fedorainfracloud.org/coprs/ublue-os/staging/package/nautilus-open-any-terminal/status_image/last_build.png)|
-|[power-profiles-daemon](https://gitlab.freedesktop.org/upower/power-profiles-daemon)|![Build Status](https://copr.fedorainfracloud.org/coprs/ublue-os/staging/package/power-profiles-daemon/status_image/last_build.png)|
-|[prompt](https://gitlab.gnome.org/chergert/prompt)|![Build Status](https://copr.fedorainfracloud.org/coprs/ublue-os/staging/package/prompt/status_image/last_build.png)|
+We use [this COPR](https://copr.fedorainfracloud.org/coprs/ublue-os/staging) as a way to get packages that either arent on Fedora/CentOS and maybe have patches for them.
+
+You can build any package by running our custom builder container, it should fetch the sources and do everything for you.
+It mounts `mock/` on the current directory so that you can get the resulting RPMs/SRPMs and check the resulting chroots 
+
+```bash
+# You can specify whatever chroot you want to use, usually those that are supported on COPR should work
+just build $PATH_TO_SPEC $ARGUMENTS_FOR_MOCK
+```
+
+The COPR hosting our packages can be found [here].

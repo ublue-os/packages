@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+BUILDER_NO_INCLUDE_SRPM=${BUILDER_NO_INCLUDE_SRPM:-0}
+SPEC_FILE=$1
+shift
+
+set -xeuo pipefail
+
+if [ "$SPEC_FILE" == "" ] ; then
+  echo "No spec file selected"
+  exit 1
+fi
+
+OUTDIR=$(mktemp -d)
+
+SPEC_PATH=$(realpath $(dirname $SPEC_FILE))
+
+rpkg --path ${SPEC_PATH} spec --outdir $OUTDIR
+
+spectool -ag ${OUTDIR}/*.spec -C ${OUTDIR}
+
+rpkg --path ${SPEC_PATH} srpm --outdir $OUTDIR
+
+if [ "$BUILDER_NO_INCLUDE_SRPM" != "1" ] ; then
+  mock --isolation=simple $OUTDIR/*.src.rpm $@
+else
+  mock --isolation=simple $@
+fi
