@@ -1,0 +1,7 @@
+FROM registry.fedoraproject.org/fedora:latest
+
+COPY mock-wrapper /usr/bin
+
+RUN dnf install -y mock rpmdevtools rpkg && dnf clean all
+
+ENTRYPOINT ["/usr/bin/mock-wrapper"]
