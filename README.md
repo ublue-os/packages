@@ -20,5 +20,3 @@ just build ./staging/devpod/devpod.spec -r epel-10-$(arch)
 # You can also compile for other architectures by passing --forcearch if you have qemu-user-static on your host system
 just build ./staging/devpod/devpod.spec --forcearch=aarch64
 ```
-
-The COPR hosting our packages can be found [here].
