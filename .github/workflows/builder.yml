@@ -1,4 +1,4 @@
-name: Build Ublue Builder
+name: Build ublue-builder
 on:
   workflow_dispatch: # allow manually triggering builds
   pull_request:
