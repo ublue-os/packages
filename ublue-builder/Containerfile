@@ -2,6 +2,6 @@ FROM registry.fedoraproject.org/fedora:latest
 
 COPY ublue-builder/mock-wrapper /usr/bin
 
-RUN dnf install -y mock rpmdevtools rpkg && dnf clean all
+RUN dnf install -y mock rpmdevtools rpkg copr-cli && dnf clean all
 
 ENTRYPOINT ["/usr/bin/mock-wrapper"]
