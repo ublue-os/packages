@@ -30,7 +30,8 @@ ATUIN_INIT_FLAGS=${ATUIN_INIT_FLAGS:-""}
 
 if [ "$(basename "$SHELL")" = "bash" ]; then
     [ -f "/etc/profile.d/bash-preexec.sh" ] && . "/etc/profile.d/bash-preexec.sh"
-    [ -f "/usr/share/bash-prexec" ] && . "/usr/share/bash-prexec" 
+    [ -f "/usr/share/bash-prexec" ] && . "/usr/share/bash-prexec"
+    [ -f "/usr/share/bash-prexec.sh" ] && . "/usr/share/bash-prexec.sh"
     [ -f "${HOMEBREW_PREFIX}/etc/profile.d/bash-preexec.sh" ] && . "${HOMEBREW_PREFIX}/etc/profile.d/bash-preexec.sh"
     [ "$(command -v starship)" ] && eval "$(starship init bash)"
     [ "$(command -v atuin)" ] && eval "$(atuin init bash ${ATUIN_INIT_FLAGS})"
