@@ -54,8 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # FIXME: add suport for aarch64 ublue-builder container
-        platform: ["amd64"]
+        platform: ["arm64","amd64"]
         # These are our target environments
         # FIXME: renovate rule for this would be awesome
         chroot: ["fedora-40", "fedora-41", "epel-10"]
