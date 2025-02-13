@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           ublue-recipes
-Version:        0.1.0
+Version:        0.1.1
 Release:        1%{?dist}
 Summary:        Shared Ujust recipes
 
