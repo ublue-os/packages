@@ -4,6 +4,8 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - 'ublue-builder/*'
   push:
     branches:
       - main
