@@ -2,8 +2,8 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.1.1
-Release:        2%{?dist}
+Version:        0.1.2
+Release:        1%{?dist}
 Summary:        Bluefin branding
 
 License:        CC-BY-CA
