@@ -3,6 +3,8 @@ on:
   schedule:
     - cron: '50 5,17 * * *'  # 5:50 AM and 5:50 PM UTC every day
   pull_request:
+    paths:
+      - 'wolfi/*'
   merge_group:
   workflow_dispatch:
 
