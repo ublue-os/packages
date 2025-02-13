@@ -39,8 +39,8 @@ jobs:
 
           MATRIX="{\"specs\":[]}"
           for file in ${ALL_CHANGED_FILES}; do
-            find $(dirname $file) -name '*.spec' -print0 | while IFS= read -r -d '' spec; do
-              sh -c "export MATRIX=$(echo $MATRIX | jq -c ".specs += [\"$spec\"]")"
+            for spec in $(dirname $file)/*.spec ; do
+              [ -e "$spec" ] && MATRIX=$(echo $MATRIX | jq -c ".specs += [\"$spec\"]")
             done
           done
           echo "specs=$(echo $MATRIX | jq -c '.specs')" >> $GITHUB_OUTPUT
