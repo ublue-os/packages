@@ -1,6 +1,7 @@
 name: Build packages in CI
 
 on:
+  merge_group:
   pull_request:
 
 jobs:
@@ -57,7 +58,7 @@ jobs:
         platform: ["amd64"]
         # These are our target environments
         # FIXME: renovate rule for this would be awesome
-        chroot: ["fedora-41", "epel-10"]
+        chroot: ["fedora-40", "fedora-41", "epel-10"]
         spec: ${{ fromJson(needs.changed_files.outputs.specs) }}
     steps:
       - uses: actions/checkout@v4
