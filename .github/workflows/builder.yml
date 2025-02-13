@@ -219,6 +219,7 @@ jobs:
         # if: github.event_name != 'pull_request'
         id: load-outputs
         run: |
+          set -x
           DIGESTS_JSON=$(jq -n '{}')
           for digest_file in /tmp/artifacts/*.txt; do
             # Extract the platform from the file name
@@ -243,6 +244,7 @@ jobs:
           DIGESTS_JSON: ${{ steps.load-outputs.outputs.DIGESTS_JSON }}
           LABELS: ${{ steps.metadata.outputs.labels }}
         run: |
+          set -x
           DIGESTS=$(echo "$DIGESTS_JSON" | jq -c '.')
           # turn the comma separated string into a list
           platforms=()
@@ -272,6 +274,7 @@ jobs:
           IMAGE_REGISTRY: ${{ env.IMAGE_REGISTRY }}
           IMAGE_NAME: ${{ env.IMAGE_NAME }}
         run: |
+          set -x
           while IFS= read -r tag; do
             podman manifest push --all=false --digestfile=/tmp/digestfile $MANIFEST $IMAGE_REGISTRY/$IMAGE_NAME:$tag
           done <<< "$TAGS"
