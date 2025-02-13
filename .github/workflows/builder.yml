@@ -15,7 +15,7 @@ on:
     - cron: '0 0 * * TUE'
 
 env:
-  IMAGE_NAME: ublue-builder-test
+  IMAGE_NAME: ublue-builder
   IMAGE_DESC: "Builder image for Universal Blue package building"
   IMAGE_REGISTRY: "ghcr.io/${{ github.repository_owner }}"
   DEFAULT_TAG: "latest"
