@@ -17,11 +17,13 @@ renovate dry-run="lookup" log-level="debug":
 
 build $spec *MOCK_ARGS:
     #!/usr/bin/env bash
+    set -x
     mkdir -p mock
     # Passes your user to the container and adds it to the mock group else rpkg will not be able to recognize local changes
     # Mock also needs to be called unprivileged apparently
+    CONTAINERS_DIR="${CONTAINERS_DIR:-/var/lib/containers}"
     sudo podman run --privileged --rm -it \
-        -v /var/lib/containers:/var/lib/containers:z \
+        -v $CONTAINERS_DIR:/var/lib/containers:z \
         -v ./mock:/var/lib/mock:Z \
         -v .:/tmp/sources:Z \
         -w /tmp/sources \

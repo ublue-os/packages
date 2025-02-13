@@ -1,0 +1,83 @@
+name: Build packages in CI
+
+on:
+  pull_request:
+
+jobs:
+  changed_files:
+    runs-on: ubuntu-latest
+    name: Get changed files
+    outputs:
+      all_changed_files: ${{ steps.changed-package-files.outputs.all_changed_files }}
+      any_changed: ${{ steps.changed-package-files.outputs.any_changed }}
+      specs: ${{ steps.packages.outputs.specs }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get directories with spec files
+        id: specdirs
+        run: |
+          set -x
+          FILESLIST=./files.txt
+          # The extra xargs there is so that the changed-files action can find all the files
+          find . -type f -iname '*.spec' -exec 'dirname' '{}' ';' 2>/dev/null | xargs -I{} echo "{}/**" > $FILESLIST
+          echo "fileslist=$FILESLIST" >> $GITHUB_OUTPUT
+
+      - name: Get all changed files from package directores
+        id: changed-package-files
+        uses: tj-actions/changed-files@v45
+        with:
+          files_from_source_file: ${{ steps.specdirs.outputs.fileslist }}
+
+      - name: Get all packages that need to be rebuilt
+        id: packages
+        if: steps.changed-package-files.outputs.any_changed == 'true'
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-package-files.outputs.all_changed_files }}
+        run: |
+          set -x
+
+          MATRIX="{\"specs\":[]}"
+          for file in ${ALL_CHANGED_FILES}; do
+            for spec in $(dirname $file)/*.spec ; do
+              MATRIX=$(echo $MATRIX | jq ".specs += [\"$spec\"]")
+            done
+          done
+          echo "specs=$(echo $MATRIX | jq -c '.specs')" >> $GITHUB_OUTPUT
+
+  build_packages:
+    runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
+    needs: changed_files
+    name: Build RPM package
+    if: needs.changed_files.outputs.any_changed == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        # FIXME: add suport for aarch64 ublue-builder container
+        platform: ["amd64"]
+        # These are our target environments
+        # FIXME: renovate rule for this would be awesome
+        chroot: ["fedora-41", "epel-10"]
+        spec: ${{ fromJson(needs.changed_files.outputs.specs) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        if: matrix.platform == 'arm64'
+        run: |
+          sudo apt update -y
+          sudo apt install -y \
+            podman
+
+      - name: Setup Just
+        uses: extractions/setup-just@dd310ad5a97d8e7b41793f8ef055398d51ad4de6 # v2
+
+      - name: Build ${{ matrix.spec }}
+        run: |
+          set -x
+          just=$(which just)
+
+          mkdir -p containers
+          CONTAINERS_DIR=./containers
+          export CONTAINERS_DIR
+          $just build ${{matrix.spec}} -r ${{ matrix.chroot }}-$(arch)
