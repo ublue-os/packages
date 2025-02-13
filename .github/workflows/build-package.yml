@@ -1,6 +1,7 @@
 name: Build packages in CI
 
 on:
+  merge_group:
   pull_request:
 
 jobs:
@@ -57,7 +58,7 @@ jobs:
         platform: ["amd64"]
         # These are our target environments
         # FIXME: renovate rule for this would be awesome
-        chroot: ["fedora-41", "epel-10"]
+        chroot: ["fedora-40", "fedora-41", "epel-10"]
         spec: ${{ fromJson(needs.changed_files.outputs.specs) }}
     steps:
       - uses: actions/checkout@v4
@@ -85,12 +86,13 @@ jobs:
           $just build ${{ matrix.spec }} -r ${{ matrix.chroot }}-$(arch)
           echo "mock_dir=$MOCK_DIR" >> "$GITHUB_OUTPUT"
           echo "containers_dir=$CONTAINERS_DIR" >> "$GITHUB_OUTPUT"
+          sudo chown -R $(id -u):$(id -g) $MOCK_DIR
 
       - name: Upload to Job Artifacts
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
         with:
-          name: ${{ matrix.spec }}-rpms
+          name: ${{ matrix.chroot }}-${{ matrix.platform }}-rpms
           if-no-files-found: error
           path: |
-            ${{ steps.build_package.outputs.mock_dir }}/**.rpm
+            ${{ steps.build_package.outputs.mock_dir }}/**/*.rpm
 
