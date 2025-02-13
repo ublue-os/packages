@@ -74,6 +74,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           oci: true
 
+      - name: Login to GHCR
+        # if: github.event_name != 'pull_request'
+        run: echo ${{ secrets.GITHUB_TOKEN }} | podman login -u ${{ github.actor }} --password-stdin ghcr.io
+
       - name: Push to GHCR
         # if: github.event_name != 'pull_request'
         id: push
