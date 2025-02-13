@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           ublue-fastfetch
-Version:        0.1.2
+Version:        0.1.3
 Release:        1%{?dist}
 Summary:        Fastfetch configuration for Universal Blue systems
 
