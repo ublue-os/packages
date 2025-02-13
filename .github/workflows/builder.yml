@@ -84,6 +84,7 @@ jobs:
           PLATFORM: ${{ matrix.platform }}
         run: |
           set -x
+          sudo podman tag localhost/${IMAGE_NAME}:${DEFAULT_TAG} ${{ env.IMAGE_REGISTRY }}/${IMAGE_NAME}:${DEFAULT_TAG}
           sudo podman tag ${{ env.IMAGE_REGISTRY }}/${IMAGE_NAME}:${DEFAULT_TAG} $IMAGE_REGISTRY/$IMAGE_NAME:$DEFAULT_TAG-$PLATFORM
           for i in {1..3}; do
             sudo podman push --digestfile=/tmp/digestfile $IMAGE_REGISTRY/$IMAGE_NAME:$DEFAULT_TAG-$PLATFORM && break || sleep $((5 * i));
