@@ -92,5 +92,5 @@ jobs:
           name: ${{ matrix.spec }}-rpms
           if-no-files-found: error
           path: |
-            ${{ steps.build_package.outputs.mock_dir }}/**.rpm
+            ${{ steps.build_package.outputs.mock_dir }}/**/*.rpm
 
