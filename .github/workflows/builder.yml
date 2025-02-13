@@ -76,7 +76,9 @@ jobs:
 
       - name: Login to GHCR
         # if: github.event_name != 'pull_request'
-        run: echo ${{ secrets.GITHUB_TOKEN }} | podman login -u ${{ github.actor }} --password-stdin ghcr.io
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | podman login -u ${{ github.actor }} --password-stdin ghcr.io
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ghcr.io
 
       - name: Push to GHCR
         # if: github.event_name != 'pull_request'
