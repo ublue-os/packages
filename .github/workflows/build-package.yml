@@ -90,7 +90,7 @@ jobs:
       - name: Upload to Job Artifacts
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
         with:
-          name: result-rpms-artifact
+          name: ${{ matrix.chroot }}-${{ matrix.platform }}-rpms
           if-no-files-found: error
           path: |
             ${{ steps.build_package.outputs.mock_dir }}/**/*.rpm
