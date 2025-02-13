@@ -248,7 +248,8 @@ jobs:
           DIGESTS=$(echo "$DIGESTS_JSON" | jq -c '.')
           # turn the comma separated string into a list
           platforms=()
-          IFS=',' read -r -a platforms <<< "${{ inputs.platforms }}"
+          IFS=',' read -r -a platforms <<< "${{ env.PLATFORMS }}"
+
           for platform in ${platforms[@]}; do
             digest=$(echo $DIGESTS | jq -r ".$platform")
             echo "Adding ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}@$digest for $platform"
