@@ -22,9 +22,10 @@ build $spec *MOCK_ARGS:
     # Passes your user to the container and adds it to the mock group else rpkg will not be able to recognize local changes
     # Mock also needs to be called unprivileged apparently
     CONTAINERS_DIR="${CONTAINERS_DIR:-/var/lib/containers}"
+    MOCK_DIR="${MOCK_DIRECTORY:-./mock}"
     sudo podman run --privileged --rm -it \
-        -v $CONTAINERS_DIR:/var/lib/containers:z \
-        -v ./mock:/var/lib/mock:Z \
+        -v "$CONTAINERS_DIR:/var/lib/containers:z" \
+        -v "$MOCK_DIR:/var/lib/mock:Z" \
         -v .:/tmp/sources:Z \
         -w /tmp/sources \
         --user "$(id -u):$(id -g)" \
