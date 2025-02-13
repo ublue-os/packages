@@ -216,7 +216,7 @@ jobs:
           path: /tmp/artifacts
 
       - name: Load Outputs
-        if: github.event_name != 'pull_request'
+        # if: github.event_name != 'pull_request'
         id: load-outputs
         run: |
           DIGESTS_JSON=$(jq -n '{}')
@@ -230,14 +230,14 @@ jobs:
           echo "DIGESTS_JSON=$(echo $DIGESTS_JSON | jq -c '.')" >> $GITHUB_OUTPUT
 
       - name: Create Manifest
-        if: github.event_name != 'pull_request'
+        # if: github.event_name != 'pull_request'
         id: create-manifest
         run: |
           podman manifest create ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}
           echo "MANIFEST=${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
 
       - name: Populate Manifest
-        if: github.event_name != 'pull_request'
+        # if: github.event_name != 'pull_request'
         env:
           MANIFEST: ${{ steps.create-manifest.outputs.MANIFEST }}
           DIGESTS_JSON: ${{ steps.load-outputs.outputs.DIGESTS_JSON }}
@@ -260,11 +260,11 @@ jobs:
           done <<< "$LABELS"
 
       - name: Login to GHCR
-        if: github.event_name != 'pull_request'
+        # if: github.event_name != 'pull_request'
         run: echo ${{ secrets.GITHUB_TOKEN }} | podman login -u ${{ github.actor }} --password-stdin ghcr.io
 
       - name: Push Manifest
-        if: github.event_name != 'pull_request'
+        # if: github.event_name != 'pull_request'
         id: push_manifest
         env:
           MANIFEST: ${{ steps.create-manifest.outputs.MANIFEST }}
