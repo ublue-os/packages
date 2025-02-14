@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.1.4
+Version:        0.1.5
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -37,6 +37,7 @@ mv schemas/dconf %{buildroot}%{_sysconfdir}
 mv schemas/skel %{buildroot}%{_sysconfdir}
 mv schemas/profile.d %{buildroot}%{_sysconfdir}
 mv schemas/distrobox %{buildroot}%{_sysconfdir}
+mv schemas/geoclue %{buildroot}%{_sysconfdir}
 mv schemas/glib-2.0 %{buildroot}%{_datadir}
 mv schemas/applications %{buildroot}%{_datadir}
 mv plymouth %{buildroot}%{_datadir}
