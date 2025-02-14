@@ -99,6 +99,7 @@ Contains all of the DConf settings that Bluefin ships by default
 %files schemas
 %attr(0755,root,root) %{_sysconfdir}/dconf/db
 %attr(0755,root,root) %{_sysconfdir}/profile.d
+%attr(0755,root,root) %{_sysconfdir}/geoclue
 %attr(0755,root,root) %{_sysconfdir}/distrobox
 %attr(0755,root,root) %{_sysconfdir}/skel
 %attr(0755,root,root) %{_datadir}/glib-2.0
