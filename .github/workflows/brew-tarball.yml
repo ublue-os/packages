@@ -11,13 +11,12 @@ on:
 
 jobs:
   generate_and_push:
-    name: Generate homebrew tarball and push to release
+    name: Generate homebrew tarball and release
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Just
         uses: extractions/setup-just@dd310ad5a97d8e7b41793f8ef055398d51ad4de6 # v2
 
@@ -28,7 +27,7 @@ jobs:
           just=$(which just)
           OUTDIR="./brew-out"
           SHASUM_FILE="./homebrew-CHECKSUM"
-          TARBALL_FILENAME="homebrew.tar.zst"
+          TARBALL_FILENAME="homebrew-$(arch).tar.zst"
           $just generate-homebrew-tarball $OUTDIR
           sha256sum "$OUTDIR/$TARBALL_FILENAME" >> $SHASUM_FILE
           echo "outdir=$(realpath $OUTDIR)" >> "$GITHUB_OUTPUT"
@@ -38,6 +37,7 @@ jobs:
       - name: Upload to Job Artifacts
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
         with:
+          # FIXME: use matrix.platform once homebrew for aarch64 is done
           name: brew-tarball-amd64
           if-no-files-found: error
           path: |
@@ -47,14 +47,14 @@ jobs:
         id: date
         run: |
           set -x
-          # https://linux.die.net/man/1/date
-          echo "date=$(date -u +%Y\-%m\-%d-%H\-%M)" >> $GITHUB_OUTPUT
+          echo "date=$(date -u +%Y\-%m\-%d\T%H\:%M\:%S\Z)" >> $GITHUB_OUTPUT
+          echo "tag_date=$(date -u +%Y\-%m\-%d-%H-%M-%S\Z)" >> $GITHUB_OUTPUT
 
       - name: Create Release
         uses: softprops/action-gh-release@c95fe1489396fe8a9eb87c0abf8aa5b2ef267fda # v2
         with:
           name: Homebrew Tarball (${{ steps.date.outputs.date }})
-          tag_name: "homebrew-${{ steps.date.outputs.date }}"
+          tag_name: "homebrew-${{ steps.date.outputs.tag_date }}"
           body: |
             This is a homebrew tarball generated at ${{ steps.date.outputs.date }} made for the [ublue-brew](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/ublue/brew/ublue-brew.spec) package.
             It exists so that images can have a consistent tarball to base to install 
