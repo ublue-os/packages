@@ -54,7 +54,7 @@ jobs:
         id: date
         run: |
           set -x
-          echo "date=$(date -u +%Y\-%m\-%d\T%H\:%M\:%S)" >> $GITHUB_OUTPUT
+          echo "date=$(date -u +%Y\-%m\-%d\ %H\:%M\:%S)" >> $GITHUB_OUTPUT
           echo "tag_date=$(date -u +%Y\-%m\-%d-%H-%M-%S)" >> $GITHUB_OUTPUT
 
       - name: Create Release
@@ -63,8 +63,8 @@ jobs:
           name: Homebrew Tarball (${{ steps.date.outputs.date }})
           tag_name: "homebrew-${{ steps.date.outputs.tag_date }}"
           body: |
-            This is a homebrew tarball generated at ${{ steps.date.outputs.date }} made for the [ublue-brew](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/ublue/brew/ublue-brew.spec) package.
-            It exists so that images can have a consistent tarball to base to install 
+            This is a homebrew tarball generated for the [ublue-brew](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/ublue/brew/ublue-brew.spec) package.
+            It exists so that images can have a consistent tarball to base to install homebrew
           make_latest: true
           files: |
             ${{ steps.generate_tarball.outputs.tarball_file }}
