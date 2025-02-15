@@ -1,0 +1,38 @@
+name: Generate Homebrew tarball and Release
+
+on:
+  push:
+  merge_group:
+  pull_request:
+    paths:
+      - ./Justfile
+
+jobs:
+  generate_and_push:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: ["arm64", "amd64"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Just
+        uses: extractions/setup-just@dd310ad5a97d8e7b41793f8ef055398d51ad4de6 # v2
+
+      - name: Generate Homebrew tarball
+        id: generate_tarball
+        run: |
+          set -euox pipefail
+          just=$(which just)
+          OUTDIR=./brew-out
+          $just generate-homebrew-tarball $OUTDIR
+          echo "outdir=$(realpath $OUTDIR)" >> "$GITHUB_OUTPUT"
+
+      - name: Upload to Job Artifacts
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
+        with:
+          name: brew-tarball
+          if-no-files-found: error
+          path: |
+            ${{ steps.generate_tarball.outputs.outdir }}/*.tar*
+
