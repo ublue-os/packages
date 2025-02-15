@@ -9,22 +9,13 @@ on:
 
 jobs:
   generate_and_push:
-    runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        platform: ["arm64", "amd64"]
     steps:
       - uses: actions/checkout@v4
       - name: Setup Just
         uses: extractions/setup-just@dd310ad5a97d8e7b41793f8ef055398d51ad4de6 # v2
-
-      - name: Install dependencies
-        if: matrix.platform == 'arm64'
-        run: |
-          sudo apt update -y
-          sudo apt install -y \
-            podman
 
       - name: Generate Homebrew tarball
         id: generate_tarball
@@ -38,7 +29,7 @@ jobs:
       - name: Upload to Job Artifacts
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
         with:
-          name: brew-tarball-${{ matrix.platform }}
+          name: brew-tarball-amd64
           if-no-files-found: error
           path: |
             ${{ steps.generate_tarball.outputs.outdir }}/*.tar*
