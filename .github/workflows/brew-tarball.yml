@@ -1,6 +1,7 @@
 name: Generate Homebrew tarball and Release
 
 on:
+  push:
   schedule:
     - cron: "0 1 * * TUE" # Every Tuesday at 1am UTC
   merge_group:
