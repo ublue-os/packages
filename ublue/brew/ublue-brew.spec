@@ -1,14 +1,17 @@
 %global debug_package %{nil}
+# renovate: datasource=github-releases depName=ublue-os/packages
+%define homebrew_release homebrew-2025-02-15-05-19-00
 
 Name:           ublue-brew
-Version:        0.1.1
+Version:        0.1.2
 Release:        1%{?dist}
 Summary:        Homebrew integration for Universal Blue systems
 
 License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
-Source:         {{{ git_dir_pack }}}
+Source0:        {{{ git_dir_pack }}}
+Source1:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-%{_arch}.tar.zst
 
 BuildRequires:  systemd-rpm-macros
 
@@ -20,9 +23,10 @@ Homebrew integration for Universal Blue systems
 
 %install
 mkdir -p %{buildroot}{%{_unitdir},%{_prefix}/lib/systemd/system-preset,%{_sysconfdir}}
-install -Dpm0755 src/systemd/*.service %{buildroot}%{_unitdir}
-install -Dpm0755 src/systemd/*.preset %{buildroot}%{_prefix}/lib/systemd/system-preset
-install -Dm0755 ./src/vendor.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/%{name}.fish
+install -Dpm0644 %{SOURCE1} %{buildroot}/%{_datadir}/homebrew.tar.zst
+install -Dpm0644 src/systemd/*.service %{buildroot}%{_unitdir}
+install -Dpm0644 src/systemd/*.preset %{buildroot}%{_prefix}/lib/systemd/system-preset
+install -Dm0644 ./src/vendor.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/%{name}.fish
 cp -rp src/security %{buildroot}%{_sysconfdir}
 cp -rp src/profile.d %{buildroot}%{_sysconfdir}
 cp -rp src/tmpfiles.d %{buildroot}%{_prefix}/lib
@@ -35,6 +39,7 @@ cp -rp src/tmpfiles.d %{buildroot}%{_prefix}/lib
 
 %files
 %ghost %{_sysconfdir}/profile.d/brew.sh
+%{_datadir}/homebrew.tar.zst
 %{_sysconfdir}/profile.d/brew-bash-completion.sh
 %{_datadir}/fish/vendor_conf.d/%{name}.fish
 %{_sysconfdir}/security/limits.d/*brew*.conf
