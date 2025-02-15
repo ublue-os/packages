@@ -25,14 +25,21 @@ jobs:
         run: |
           set -euox pipefail
           just=$(which just)
+
           OUTDIR="./brew-out"
-          SHASUM_FILE="./homebrew-CHECKSUM"
+          SHASUM_DIR="./brew-sum"
           TARBALL_FILENAME="homebrew-$(arch).tar.zst"
+
           $just generate-homebrew-tarball ${OUTDIR} ${TARBALL_FILENAME}
-          sha256sum "$OUTDIR/$TARBALL_FILENAME" >> $SHASUM_FILE
+
+          mkdir -p $SHASUM_DIR
+          for spice in 1 256 512 ; do
+            "sha${spice}sum" "$OUTDIR/$TARBALL_FILENAME" | tee "$SHASUM_DIR/homebrew-$(arch).sha${spice}"
+          done
+
           echo "outdir=$(realpath $OUTDIR)" >> "$GITHUB_OUTPUT"
           echo "tarball_file=$(realpath $OUTDIR)/$TARBALL_FILENAME" >> "$GITHUB_OUTPUT"
-          echo "shasum_file=$(realpath $SHASUM_FILE)" >> "$GITHUB_OUTPUT"
+          echo "shasum_dir=$(realpath $SHASUM_DIR)" >> "$GITHUB_OUTPUT"
 
       - name: Upload to Job Artifacts
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
@@ -61,4 +68,4 @@ jobs:
           make_latest: true
           files: |
             ${{ steps.generate_tarball.outputs.tarball_file }}
-            ${{ steps.generate_tarball.outputs.shasum_file }}
+            ${{ steps.generate_tarball.outputs.shasum_dir }}/*
