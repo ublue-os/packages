@@ -28,7 +28,7 @@ jobs:
           OUTDIR="./brew-out"
           SHASUM_FILE="./homebrew-CHECKSUM"
           TARBALL_FILENAME="homebrew-$(arch).tar.zst"
-          $just generate-homebrew-tarball $OUTDIR
+          $just generate-homebrew-tarball ${OUTDIR} ${TARBALL_FILENAME}
           sha256sum "$OUTDIR/$TARBALL_FILENAME" >> $SHASUM_FILE
           echo "outdir=$(realpath $OUTDIR)" >> "$GITHUB_OUTPUT"
           echo "tarball_file=$(realpath $OUTDIR)/$TARBALL_FILENAME" >> "$GITHUB_OUTPUT"
