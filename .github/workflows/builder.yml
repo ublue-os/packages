@@ -69,6 +69,7 @@ jobs:
         with:
           containerfiles: |
             ./${{ env.IMAGE_NAME }}/Containerfile
+          context: ${{ env.IMAGE_NAME }}
           image: ${{ env.IMAGE_NAME }}
           tags: ${{ env.DEFAULT_TAG }}
           labels: ${{ steps.meta.outputs.labels }}
