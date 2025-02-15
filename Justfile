@@ -34,7 +34,7 @@ build $spec *MOCK_ARGS:
         $mock_image \
         $spec {{ MOCK_ARGS }}
 
-generate-homebrew-tarball $OUTDIR="./brew-out":
+generate-homebrew-tarball $OUTDIR="./brew-out" $TARBALL_FILENAME="homebrew.tar.zst":
     #!/usr/bin/env bash
 
     set -x
@@ -52,4 +52,4 @@ generate-homebrew-tarball $OUTDIR="./brew-out":
         touch /.dockerenv
         ln -s /bin/bash /usr/bin/bash
         env --ignore-environment PATH=/usr/bin:/bin:/usr/sbin:/sbin HOME=/home/linuxbrew NONINTERACTIVE=1 /usr/bin/bash /tmp/brew-install
-        tar -cvf /dev/stdout /home/linuxbrew | zstd -v -T0 -10 -f -o /outdir/brew.tar.zst"
+        tar -cvf /dev/stdout /home/linuxbrew | zstd -v -T0 -10 -f -o /outdir/{{ TARBALL_FILENAME }}"
