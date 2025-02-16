@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           ublue-brew
-Version:        0.1.1
+Version:        0.1.2
 Release:        1%{?dist}
 Summary:        Homebrew integration for Universal Blue systems
 
