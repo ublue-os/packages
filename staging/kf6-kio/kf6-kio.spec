@@ -189,6 +189,7 @@ Developer Documentation files for %{name} for use with KDevelop or QtCreator.
 %{_kf6_plugindir}/kio/
 %{_kf6_plugindir}/kded/
 %{_kf6_plugindir}/kiod/
+%{_kf6_plugindir}/kio_dnd/
 %{_kf6_datadir}/kf6/searchproviders/*.desktop
 %{_kf6_datadir}/applications/*.desktop
 %{_datadir}/dbus-1/services/org.kde.*.service
