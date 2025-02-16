@@ -1,3 +1,4 @@
 output/
 mock/
-rpmbuild
+rpmbuild/
+brew-out/
