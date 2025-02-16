@@ -3,7 +3,7 @@
 %global stable_kf6 stable
 
 # renovate: datasource=yum repo=fedora-41-x86_64-updates pkg=kf6-kio
-%global majmin_ver_kf6 6.10
+%global majmin_ver_kf6 6.11
 
 Name:    kf6-%{framework}
 Version: %{majmin_ver_kf6}.0
@@ -189,6 +189,7 @@ Developer Documentation files for %{name} for use with KDevelop or QtCreator.
 %{_kf6_plugindir}/kio/
 %{_kf6_plugindir}/kded/
 %{_kf6_plugindir}/kiod/
+%{_kf6_plugindir}/kio_dnd/
 %{_kf6_datadir}/kf6/searchproviders/*.desktop
 %{_kf6_datadir}/applications/*.desktop
 %{_datadir}/dbus-1/services/org.kde.*.service
