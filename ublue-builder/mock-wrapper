@@ -26,7 +26,8 @@ OUTDIR="$(mktemp -d)"
 SPEC_PATH="$(realpath "$(dirname "$SPEC_FILE")")"
 rpkg --path "${SPEC_PATH}" spec --outdir "$OUTDIR"
 if ! rpmspec -P "${OUTDIR}"/*.spec | grep "ExclusiveArch:" | grep "$(arch)" ; then
-  echo "Arch Skipped" && exit 0
+  echo "Arch Skipped" | tee /tmp/sources/arch_skipped
+  exit 0
 fi
 group_end
 

@@ -2,3 +2,4 @@ output/
 mock/
 rpmbuild/
 brew-out/
+arch_skipped
