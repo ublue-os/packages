@@ -13,7 +13,7 @@ fi
 group_start() {
 	WHAT=$1
 	shift
-  printf "::group:: ===$WHAT===\n"
+  printf "::group:: ===%s===\n" "$WHAT"
   set -x
 }
 group_end() {
@@ -22,10 +22,12 @@ group_end() {
 }
 
 group_start "Generate spec file with rpkg"
-OUTDIR=$(mktemp -d)
-SPEC_PATH=$(realpath $(dirname $SPEC_FILE))
-rpkg --path ${SPEC_PATH} spec --outdir $OUTDIR
-cat $OUTDIR/*.spec
+OUTDIR="$(mktemp -d)"
+SPEC_PATH="$(realpath "$(dirname "$SPEC_FILE")")"
+rpkg --path "${SPEC_PATH}" spec --outdir "$OUTDIR"
+if ! rpmspec -P "${OUTDIR}"/*.spec | grep "ExclusiveArch:" | grep "$(arch)" ; then
+  echo "Arch Skipped" && exit 0
+fi
 group_end
 
 group_start "Lint spec file (non-blocking)"
@@ -35,15 +37,15 @@ set -euo pipefail
 group_end
 
 group_start "Fetch sources and generate srpm"
-spectool -ag ${OUTDIR}/*.spec -C ${OUTDIR}
-rpkg --path ${SPEC_PATH} srpm --outdir $OUTDIR
-ls -lah ${OUTDIR}
+spectool -ag "${OUTDIR}"/*.spec -C "${OUTDIR}"
+rpkg --path "${SPEC_PATH}" srpm --outdir "${OUTDIR}"
+ls -lah "${OUTDIR}"
 group_end
 
 group_start "Build RPM with mock"
 if [ "$BUILDER_NO_INCLUDE_SRPM" != "1" ] ; then
-  mock --isolation=simple $OUTDIR/*.src.rpm $@
+  mock --isolation=simple "$OUTDIR"/*.src.rpm "$@"
 else
-  mock --isolation=simple $@
+  mock --isolation=simple "$@"
 fi
 group_end
