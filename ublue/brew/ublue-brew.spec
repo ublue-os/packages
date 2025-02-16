@@ -4,14 +4,14 @@
 
 Name:           ublue-brew
 Version:        0.1.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Homebrew integration for Universal Blue systems
 
 License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source0:        {{{ git_dir_pack }}}
-Source1:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-%{_arch}.tar.zst
+Source1:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-x86_64.tar.zst
 ExclusiveArch:  x86_64
 
 BuildRequires:  systemd-rpm-macros
