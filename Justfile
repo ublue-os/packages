@@ -46,10 +46,11 @@ generate-homebrew-tarball $OUTDIR="./brew-out" $TARBALL_FILENAME="homebrew.tar.z
         cgr.dev/chainguard/wolfi-base:latest \
         /bin/sh -c "
         set -o xtrace
-        apk add curl git zstd posix-libc-utils uutils
+        apk add curl git zstd posix-libc-utils uutils gnutar grep
         curl --retry 3 -Lo /tmp/brew-install https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
         chmod +x /tmp/brew-install
         touch /.dockerenv
         ln -s /bin/bash /usr/bin/bash
+        ls -s /usr/bin/grep /bin/grep
         env --ignore-environment PATH=/usr/bin:/bin:/usr/sbin:/sbin HOME=/home/linuxbrew NONINTERACTIVE=1 /usr/bin/bash /tmp/brew-install
-        tar -cvf /dev/stdout /home/linuxbrew | zstd -v -T0 -10 -f -o /outdir/{{ TARBALL_FILENAME }}"
+        tar --zstd -cvf /outdir/{{ TARBALL_FILENAME }} /home/linuxbrew/.linuxbrew"
