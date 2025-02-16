@@ -33,3 +33,23 @@ build $spec *MOCK_ARGS:
         --group-entry "mock:x:135:$(id -nu)" \
         $mock_image \
         $spec {{ MOCK_ARGS }}
+
+generate-homebrew-tarball $OUTDIR="./brew-out" $TARBALL_FILENAME="homebrew.tar.zst":
+    #!/usr/bin/env bash
+
+    set -x
+
+    mkdir -p $OUTDIR
+
+    podman run --rm -it \
+        -v "$OUTDIR:/outdir:Z" \
+        cgr.dev/chainguard/wolfi-base:latest \
+        /bin/sh -c "
+        set -o xtrace
+        apk add curl git zstd posix-libc-utils uutils
+        curl --retry 3 -Lo /tmp/brew-install https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+        chmod +x /tmp/brew-install
+        touch /.dockerenv
+        ln -s /bin/bash /usr/bin/bash
+        env --ignore-environment PATH=/usr/bin:/bin:/usr/sbin:/sbin HOME=/home/linuxbrew NONINTERACTIVE=1 /usr/bin/bash /tmp/brew-install
+        tar -cvf /dev/stdout /home/linuxbrew | zstd -v -T0 -10 -f -o /outdir/{{ TARBALL_FILENAME }}"
