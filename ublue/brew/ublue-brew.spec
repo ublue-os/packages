@@ -1,10 +1,10 @@
 %global debug_package %{nil}
 # renovate: datasource=github-releases depName=ublue-os/packages
-%define homebrew_release homebrew-2025-02-15-05-19-00
+%define homebrew_release homebrew-2025-02-16-23-20-49
 
 Name:           ublue-brew
-Version:        0.1.2
-Release:        2%{?dist}
+Version:        0.1.3
+Release:        1%{?dist}
 Summary:        Homebrew integration for Universal Blue systems
 
 License:        Apache-2.0
