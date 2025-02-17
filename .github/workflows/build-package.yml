@@ -95,7 +95,7 @@ jobs:
           echo "skipped_arch=$SKIPPED_ARCH" >> "$GITHUB_OUTPUT"
 
       - name: Upload to Job Artifacts
-        if: steps.build_package.outputs.skipped == 'false'
+        if: steps.build_package.outputs.skipped_arch == 'false'
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
         with:
           name: ${{ matrix.chroot }}-${{ matrix.platform }}-rpms

@@ -12,7 +12,7 @@ URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source0:        {{{ git_dir_pack }}}
 Source1:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-x86_64.tar.zst
-ExclusiveArch:  aarch64
+ExclusiveArch:  x86_64
 
 BuildRequires:  systemd-rpm-macros
 
