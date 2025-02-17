@@ -81,13 +81,21 @@ jobs:
           mkdir -p containers
           MOCK_DIR=./mock
           CONTAINERS_DIR=./containers
+          SOURCES_DIR=.
           export CONTAINERS_DIR
           $just build ${{ matrix.spec }} -r ${{ matrix.chroot }}-$(arch)
+          SKIPPED_ARCH=false
+          if [ -e "$SOURCES_DIR/arch_skipped" ] ; then
+            SKIPPED_ARCH=true
+          fi
+          sudo chown -R $(id -u):$(id -g) $MOCK_DIR
           echo "mock_dir=$MOCK_DIR" >> "$GITHUB_OUTPUT"
           echo "containers_dir=$CONTAINERS_DIR" >> "$GITHUB_OUTPUT"
-          sudo chown -R $(id -u):$(id -g) $MOCK_DIR
+          echo "sources_dir=$SOURCES_DIR" >> "$GITHUB_OUTPUT"
+          echo "skipped_arch=$SKIPPED_ARCH" >> "$GITHUB_OUTPUT"
 
       - name: Upload to Job Artifacts
+        if: steps.build_package.outputs.skipped_arch == 'false'
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
         with:
           name: ${{ matrix.chroot }}-${{ matrix.platform }}-rpms
