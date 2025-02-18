@@ -19,10 +19,14 @@ TARGET_URL="$(get_config '."target-url"' "invalid")"
 JQ_EXPRESSION="$(get_config '."jq-expression"' ".body")"
 THEMES_DIRECTORY="$(get_config '."themes-directory"' "/usr/share/ublue-os/motd/themes")"
 
-THEME=$(dconf read /org/gnome/desktop/interface/accent-color 2>/dev/null || printf '%s' "\'$DEFAULT_THEME\'")
+THEME=$(dconf read /org/gnome/desktop/interface/accent-color 2>/dev/null || echo -e "$DEFAULT_THEME")
+# Dconf will fail if the accent-color has not been changed yet
+if [ "$THEME" == "" ] ; then
+	# Gsettings will not update if the system's schemas have not been configured properly
+	THEME=$(gsettings get org.gnome.desktop.interface accent-color 2>/dev/null || echo -e "$DEFAULT_THEME")
+fi
 THEME=${THEME//\'/}
 THEME=${CHANGELOG_FORCE_THEME:-$THEME}
-
 
 curl -s "$TARGET_URL" | \
 	jq -r "$JQ_EXPRESSION" | \
