@@ -25,6 +25,7 @@ build $spec *MOCK_ARGS:
     MOCK_DIR="${MOCK_DIRECTORY:-./mock}"
     SOURCES_DIR="${SOURCES_DIR:-.}"
     sudo podman run --privileged --rm -it \
+        --pull "newer" \
         -v "$CONTAINERS_DIR:/var/lib/containers:z" \
         -v "$MOCK_DIR:/var/lib/mock:Z" \
         -v "$SOURCES_DIR:/tmp/sources:Z" \
