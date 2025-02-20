@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.1.6
+Version:        0.1.7
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -36,7 +36,6 @@ mv fastfetch/fastfetch.jsonc %{buildroot}%{_datadir}/ublue-os/fastfetch.jsonc
 mv schemas/dconf %{buildroot}%{_sysconfdir}
 mv schemas/skel %{buildroot}%{_sysconfdir}
 mv schemas/profile.d %{buildroot}%{_sysconfdir}
-mv schemas/distrobox %{buildroot}%{_sysconfdir}
 mv schemas/geoclue %{buildroot}%{_sysconfdir}
 mv schemas/glib-2.0 %{buildroot}%{_datadir}
 mv schemas/applications %{buildroot}%{_datadir}
@@ -100,7 +99,6 @@ Contains all of the DConf settings that Bluefin ships by default
 %attr(0755,root,root) %{_sysconfdir}/dconf/db
 %attr(0755,root,root) %{_sysconfdir}/profile.d
 %attr(0755,root,root) %{_sysconfdir}/geoclue
-%attr(0755,root,root) %{_sysconfdir}/distrobox
 %attr(0755,root,root) %{_sysconfdir}/skel
 %attr(0755,root,root) %{_datadir}/glib-2.0
 %attr(0755,root,root) %{_datadir}/applications
