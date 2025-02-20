@@ -25,9 +25,13 @@ group_start "Generate spec file with rpkg"
 OUTDIR="$(mktemp -d)"
 SPEC_PATH="$(realpath "$(dirname "$SPEC_FILE")")"
 rpkg --path "${SPEC_PATH}" spec --outdir "$OUTDIR"
-if ! rpmspec -P "${OUTDIR}"/*.spec | grep "ExclusiveArch:" | grep "$(arch)" ; then
-  echo "Arch Skipped" | tee /tmp/sources/arch_skipped
-  exit 0
+RPMSPEC_FOR_CHECK="$(mktemp)"
+rpmspec -P "${OUTDIR}"/*.spec | tee "${RPMSPEC_FOR_CHECK}"
+if grep "ExclusiveArch:" "${RPMSPEC_FOR_CHECK}" ; then
+  if ! grep "$(arch)" "${RPMSPEC_FOR_CHECK}" ; then
+    echo "Arch Skipped" | tee /tmp/sources/arch_skipped
+    exit 0
+  fi
 fi
 group_end
 
