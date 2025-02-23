@@ -1,7 +1,0 @@
----
-runpath:
-    allowed_paths:
-        - /usr/lib/gnome-software
-        - /usr/lib/rpm-ostree
-        - /usr/lib64/gnome-software
-        - /usr/lib64/rpm-ostree
