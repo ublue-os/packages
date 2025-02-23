@@ -1,3 +1,9 @@
+%define game_devices_release 0.23
+# renovate: datasource=github-releases depName=LizardByte/Sunshine
+%define sunshine_release v2025.122.141614
+# renovate: datasource=github-releases depName=FrameworkComputer/inputmodule-rs
+%define framework_release v0.2.0
+
 Name:           ublue-os-udev-rules
 Vendor:         ublue-os
 Version:        0.9
@@ -12,9 +18,9 @@ Supplements:    systemd-udev
 
 VCS:            {{{ git_dir_vcs }}}
 Source0:        {{{ git_dir_pack }}}
-Source1:        https://codeberg.org/fabiscafe/game-devices-udev/archive/main.tar.gz
-Source2:        https://raw.githubusercontent.com/LizardByte/Sunshine/refs/heads/master/src_assets/linux/misc/60-sunshine.rules
-Source3:        https://raw.githubusercontent.com/FrameworkComputer/inputmodule-rs/main/release/50-framework-inputmodule.rules
+Source1:        https://codeberg.org/fabiscafe/game-devices-udev/archive/%{game_devices_release}.tar.gz
+Source2:        https://raw.githubusercontent.com/LizardByte/Sunshine/refs/tags/%{sunshine_release}/src_assets/linux/misc/60-sunshine.rules
+Source3:        https://raw.githubusercontent.com/FrameworkComputer/inputmodule-rs/refs/tags/%{framework_release}/release/50-framework-inputmodule.rules
 
 %global sub_name %{lua:t=string.gsub(rpm.expand("%{NAME}"), "^ublue%-os%-", ""); print(t)}
 
@@ -40,7 +46,7 @@ install -m0644 %{SOURCE2} %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/60-sunsh
 install -m0644 %{SOURCE3} %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/50-framework-inputmodule.rules
 
 mkdir -p -m0755 %{buildroot}%{_exec_prefix}/lib/udev/rules.d
-cp -a %{buildroot}%{_datadir}/%{VENDOR}/{%{sub_name},game-devices-udev}/*.rules %{buildroot}%{_exec_prefix}/lib/udev/rules.d/
+install -p -m0644 %{buildroot}%{_datadir}/%{VENDOR}/{%{sub_name},game-devices-udev}/*.rules %{buildroot}%{_exec_prefix}/lib/udev/rules.d/
 
 %files
 %{_datadir}/%{VENDOR}/%{sub_name}/*.rules
