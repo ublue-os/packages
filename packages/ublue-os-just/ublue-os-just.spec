@@ -3,7 +3,7 @@ Vendor:         ublue-os
 Version:        0.39
 Release:        1%{?dist}
 Summary:        ublue-os just integration
-License:        MIT
+License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source:         {{{ git_dir_pack }}}

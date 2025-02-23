@@ -11,7 +11,7 @@ Version:        0.9
 Release:        1%{?dist}
 Summary:        Additional udev files for device support
 
-License:        MIT
+License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
 
 BuildArch:      noarch
