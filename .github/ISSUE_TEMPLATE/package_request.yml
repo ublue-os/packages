@@ -1,0 +1,29 @@
+name: Request a Package
+description: Request an RPM package to be included in the COPR
+labels: [package-request]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to fill out this request!
+        
+        Packages in the ublue-os COPR are for ublue usage only
+  - type: textarea
+    id: describe-bug
+    attributes:
+      label: Describe the package
+      description: Include why you feel this should be built in the ublue-os COPR
+      placeholder: Tell us what you need
+      value: "I'd like to request the package `vim` because ..."
+    validations:
+      required: true
+  - type: textarea
+    id: add-info
+    attributes:
+      label: Information on the package
+      description: Additional information that we need
+      placeholder: So that we have a record of why it's being added
+      value: "Paste the results of `dnf info packagename` here" 
+    validations:
+      required: true
