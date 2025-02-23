@@ -24,10 +24,18 @@ Adds files and keys for signing Universal Blue images
 install -Dm0644 -t %{buildroot}%{_exec_prefix}/etc/containers/ src/%{_exec_prefix}/etc/containers/policy.json
 install -Dm0644 -t %{buildroot}%{_sysconfdir}/containers/registries.d/ src/%{_sysconfdir}/containers/registries.d/*.yaml
 install -Dm0644 -t %{buildroot}%{_sysconfdir}/pki/containers/ src/%{_sysconfdir}/pki/containers/*.pub
+install -Dm0644 -t %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/%{_exec_prefix}/etc/containers/ src/%{_exec_prefix}/etc/containers/policy.json
+install -Dm0644 -t %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/%{_sysconfdir}/containers/registries.d/ src/%{_sysconfdir}/containers/registries.d/*.yaml
+install -Dm0644 -t %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/%{_sysconfdir}/pki/containers/ src/%{_sysconfdir}/pki/containers/*.pub
 
 %check
 
 %files
+%{_datadir}/%{VENDOR}/%{sub_name}/%{_exec_prefix}/etc/containers/policy.json
+%{_datadir}/%{VENDOR}/%{sub_name}/%{_sysconfdir}/containers/registries.d/ublue-os.yaml
+%{_datadir}/%{VENDOR}/%{sub_name}/%{_sysconfdir}/containers/registries.d/quay.io-toolbx-images.yaml
+%{_datadir}/%{VENDOR}/%{sub_name}/%{_sysconfdir}/pki/containers/quay.io-toolbx-images.pub
+%{_datadir}/%{VENDOR}/%{sub_name}/%{_sysconfdir}/pki/containers/ublue-os.pub
 %{_exec_prefix}/etc/containers/policy.json
 %{_sysconfdir}/containers/registries.d/ublue-os.yaml
 %{_sysconfdir}/containers/registries.d/quay.io-toolbx-images.yaml
