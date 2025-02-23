@@ -93,12 +93,13 @@ jobs:
           echo "containers_dir=$CONTAINERS_DIR" >> "$GITHUB_OUTPUT"
           echo "sources_dir=$SOURCES_DIR" >> "$GITHUB_OUTPUT"
           echo "skipped_arch=$SKIPPED_ARCH" >> "$GITHUB_OUTPUT"
+          echo "package=$(basename "${{ matrix.spec }}" ".spec")" >> "$GITHUB_OUTPUT"
 
       - name: Upload to Job Artifacts
         if: steps.build_package.outputs.skipped_arch == 'false'
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
         with:
-          name: ${{ matrix.chroot }}-${{ matrix.platform }}-rpms
+          name: ${{ matrix.chroot }}-${{ matrix.platform }}-${{ steps.build_package.outputs.package }}
           if-no-files-found: error
           path: |
             ${{ steps.build_package.outputs.mock_dir }}/**/*.rpm
