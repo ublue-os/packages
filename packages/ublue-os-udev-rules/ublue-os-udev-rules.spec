@@ -1,3 +1,4 @@
+# renovate: datasource=git-tags depName=fabiscafe/game-devices-udev lookupName=https://codeberg.org/fabiscafe/game-devices-udev
 %define game_devices_release 0.23
 # renovate: datasource=github-releases depName=LizardByte/Sunshine
 %define sunshine_release v2025.122.141614
