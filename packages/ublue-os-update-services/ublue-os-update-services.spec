@@ -1,6 +1,6 @@
 Name:           ublue-os-update-services
 Vendor:         ublue-os
-Version:        0.9
+Version:        0.91
 Release:        1%{?dist}
 Summary:        Automatic updates for rpm-ostree and flatpak
 License:        MIT
@@ -55,6 +55,9 @@ install -Dm0644 -t %{buildroot}%{_unitdir}/rpm-ostreed-automatic.service.d/ src/
 %{_unitdir}/rpm-ostreed-automatic.service.d/override.conf
 
 %changelog
+* Sun Feb 23 2025 Tulip Blossom <tulilirockz@outlook.com> - 0.91
+- Explicitly only put rpm-ostreed configuration in different path instead of having a copy of everything on /usr/share/ublue-os
+
 * Wed Aug 7 2024 Kyle Gospodnetich <me@kylegospodneti.ch> - 0.9
 - Use etc over usr etc folder
 
