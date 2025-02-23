@@ -1,6 +1,6 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
-Version:        0.39
+Version:        0.40
 Release:        1%{?dist}
 Summary:        ublue-os just integration
 License:        MIT
