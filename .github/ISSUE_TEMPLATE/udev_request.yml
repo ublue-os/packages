@@ -1,0 +1,27 @@
+name: Request a udev rule
+description: Request udev rules to help with hardware enablement
+labels: [package-request]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to fill out this request!
+  - type: textarea
+    id: describe-bug
+    attributes:
+      label: Describe the package
+      description: Include why you feel this should be built in the ublue-os COPR
+      placeholder: Tell us what you need
+      value: "I'd like to request the package `vim` because ..."
+    validations:
+      required: true
+  - type: textarea
+    id: add-info
+    attributes:
+      label: Information on the package
+      description: Link to the upstream udev rule you'd like to see included
+      placeholder: So that we have a record of why it's being added
+      value: "Link to the rules, and any other information that can help use ship it." 
+    validations:
+      required: true
