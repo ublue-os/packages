@@ -26,10 +26,10 @@ Adds ublue-os just integration for easier setup
 install -d -m0755 %{buildroot}%{_sysconfdir}/profile.d
 install -Dpm0755 ./src/etc-profile.d/* %{buildroot}%{_sysconfdir}/profile.d/
 
-install -d -m0755 {buildroot}%{_datadir}/%{VENDOR}/%{sub_name}
+install -d -m0755 %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}
 install -Dpm0644 ./src/recipes/*  %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/
 
-install -d -m0755 {buildroot}%{_datadir}/%{VENDOR}/motd/tips
+install -d -m0755 %{buildroot}%{_datadir}/%{VENDOR}/motd/tips
 install -Dpm0644 ./src/ublue-tips/* %{buildroot}%{_datadir}/%{VENDOR}/motd/tips/
 
 # Create justfile which contains all .just files included in this package
@@ -44,29 +44,30 @@ install -Dpm0755 ./src/ujust %{buildroot}%{_bindir}/ujust
 install -Dpm0755 ./src/ugum %{buildroot}%{_bindir}/ugum
 
 # Add bash library for use in just
+install -d -m0755 %{buildroot}/%{_exec_prefix}/lib/ujust/
 install -Dpm0644 ./src/lib-ujust/* %{buildroot}/%{_exec_prefix}/lib/ujust/
 
 # Add default manifest files for distrobox
-install -d -m0755 {buildroot}/%{_sysconfdir}/distrobox
+install -d -m0755 %{buildroot}/%{_sysconfdir}/distrobox
 install -Dpm0644 ./src/etc-distrobox/* %{buildroot}/%{_sysconfdir}/distrobox/
 
 # Add default manifest file for toolbox
-install -d -m0755 {buildroot}/%{_sysconfdir}/toolbox
+install -d -m0755 %{buildroot}/%{_sysconfdir}/toolbox
 install -Dpm0644 ./src/etc-toolbox/* %{buildroot}/%{_sysconfdir}/toolbox/
 
 %files
-%dir %attr(0755,root,root) %{_datadir}/%{VENDOR}/%{sub_name}
-%attr(0755,root,root) %{_sysconfdir}/profile.d/user-motd.sh
-%attr(0755,root,root) %{_sysconfdir}/profile.d/brew.sh
-%attr(0644,root,root) %{_datadir}/%{VENDOR}/%{sub_name}/*.just
-%attr(0644,root,root) %{_datadir}/%{VENDOR}/justfile
-%attr(0644,root,root) %{_datadir}/%{VENDOR}/motd/tips/*.md
-%attr(0755,root,root) %{_bindir}/ujust
-%attr(0755,root,root) %{_bindir}/ugum
-%attr(0644,root,root) %{_exec_prefix}/lib/ujust/ujust.sh
-%attr(0644,root,root) %{_exec_prefix}/lib/ujust/lib*.sh
-%attr(0644,root,root) %{_sysconfdir}/distrobox/*.ini
-%attr(0644,root,root) %{_sysconfdir}/toolbox/*.ini
+%{_datadir}/%{VENDOR}/%{sub_name}
+%{_sysconfdir}/profile.d/user-motd.sh
+%{_sysconfdir}/profile.d/brew.sh
+%{_datadir}/%{VENDOR}/%{sub_name}/*.just
+%{_datadir}/%{VENDOR}/justfile
+%{_datadir}/%{VENDOR}/motd/tips/*.md
+%{_bindir}/ujust
+%{_bindir}/ugum
+%{_exec_prefix}/lib/ujust/ujust.sh
+%{_exec_prefix}/lib/ujust/lib*.sh
+%{_sysconfdir}/distrobox/*.ini
+%{_sysconfdir}/toolbox/*.ini
 
 %post
 # Generate ujust bash completion
