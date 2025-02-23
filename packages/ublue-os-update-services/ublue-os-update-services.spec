@@ -34,8 +34,8 @@ install -Dm0644 -t %{buildroot}%{_unitdir}/ src/%{_unitdir}/flatpak-system-updat
 install -Dm0644 -t %{buildroot}%{_userpresetdir}/ src/%{_userpresetdir}/10-flatpak-user-update.preset
 install -Dm0644 -t %{buildroot}%{_userunitdir}/ src/%{_userunitdir}/flatpak-user-update.service
 install -Dm0644 -t %{buildroot}%{_userunitdir}/ src/%{_userunitdir}/flatpak-user-update.timer
-install -Dm0644 -t %{buildroot}%{_unitdir}/rpm-ostreed-automatic.timer.d src/%{_unitdir}/rpm-ostreed-automatic.timer.d/override.conf
-install -Dm0644 -t %{buildroot}%{_unitdir}/rpm-ostreed-automatic.service.d src/%{_unitdir}/rpm-ostreed-automatic.service.d/override.conf
+install -Dm0644 -t %{buildroot}%{_unitdir}/rpm-ostreed-automatic.timer.d/ src/%{_unitdir}/rpm-ostreed-automatic.timer.d/override.conf
+install -Dm0644 -t %{buildroot}%{_unitdir}/rpm-ostreed-automatic.service.d/ src/%{_unitdir}/rpm-ostreed-automatic.service.d/override.conf
 
 %post
 %systemd_post flatpak-system-update.timer
