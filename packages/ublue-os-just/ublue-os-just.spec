@@ -23,8 +23,13 @@ Adds ublue-os just integration for easier setup
 {{{ git_dir_setup_macro }}}
 
 %install
+install -d -m0755 %{buildroot}%{_sysconfdir}/profile.d
 install -Dpm0755 ./src/etc-profile.d/* %{buildroot}%{_sysconfdir}/profile.d/
+
+install -d -m0755 {buildroot}%{_datadir}/%{VENDOR}/%{sub_name}
 install -Dpm0644 ./src/recipes/*  %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/
+
+install -d -m0755 {buildroot}%{_datadir}/%{VENDOR}/motd/tips
 install -Dpm0644 ./src/ublue-tips/* %{buildroot}%{_datadir}/%{VENDOR}/motd/tips/
 
 # Create justfile which contains all .just files included in this package
@@ -42,9 +47,11 @@ install -Dpm0755 ./src/ugum %{buildroot}%{_bindir}/ugum
 install -Dpm0644 ./src/lib-ujust/* %{buildroot}/%{_exec_prefix}/lib/ujust/
 
 # Add default manifest files for distrobox
+install -d -m0755 {buildroot}/%{_sysconfdir}/distrobox
 install -Dpm0644 ./src/etc-distrobox/* %{buildroot}/%{_sysconfdir}/distrobox/
 
 # Add default manifest file for toolbox
+install -d -m0755 {buildroot}/%{_sysconfdir}/toolbox
 install -Dpm0644 ./src/etc-toolbox/* %{buildroot}/%{_sysconfdir}/toolbox/
 
 %files
