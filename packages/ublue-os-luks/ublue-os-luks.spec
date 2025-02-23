@@ -1,6 +1,6 @@
 Name:           ublue-os-luks
 Vendor:         ublue-os
-Version:        0.4
+Version:        0.3
 Release:        1%{?dist}
 Summary:        ublue-os scripts for simplified LUKS usage
 License:        MIT
@@ -31,9 +31,6 @@ install -Dm644 -t %{buildroot}%{_exec_prefix}/lib/dracut/dracut.conf.d src/90-ub
 %{_exec_prefix}/lib/dracut/dracut.conf.d/90-ublue-luks.conf
 
 %changelog
-* Sun Feb 23 2025 Tulip Blossom <tulilirockz@outlook.com> - 0.4
-- Satisfy rpmlint and use rpkg macros for sources
-
 * Thu Jul 04 2024 m2Giles <69128853+m2Giles@users.noreply.github.com> - 0.3
 - Rewrite enable script to fail out if disk is not found
 - LUKs disk is determined from kernel commandline instead of /etc/crypttab
