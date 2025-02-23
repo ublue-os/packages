@@ -3,7 +3,7 @@ Vendor:         ublue-os
 Version:        0.4
 Release:        1%{?dist}
 Summary:        Signing files and keys for Universal Blue
-License:        MIT
+License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source:         {{{ git_dir_pack }}}
