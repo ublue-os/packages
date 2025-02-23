@@ -1,5 +1,4 @@
 Name:           ublue-os-update-services
-Packager:       ublue-os
 Vendor:         ublue-os
 Version:        0.9
 Release:        1%{?dist}
@@ -22,9 +21,6 @@ Adds systemd units and configuration files for enabling automatic updates in rpm
 {{{ git_dir_setup_macro }}}
 
 %build
-install -dm0755 \
-	%{buildroot}%{_datadir}/%{VENDOR} \
-	%{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}
 
 %install
 install -Dm0644 -t %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/%{_sysconfdir}/ src/%{_sysconfdir}/rpm-ostreed.conf
@@ -36,6 +32,8 @@ install -Dm0644 -t %{buildroot}%{_userunitdir}/ src/%{_userunitdir}/flatpak-user
 install -Dm0644 -t %{buildroot}%{_userunitdir}/ src/%{_userunitdir}/flatpak-user-update.timer
 install -Dm0644 -t %{buildroot}%{_unitdir}/rpm-ostreed-automatic.timer.d/ src/%{_unitdir}/rpm-ostreed-automatic.timer.d/override.conf
 install -Dm0644 -t %{buildroot}%{_unitdir}/rpm-ostreed-automatic.service.d/ src/%{_unitdir}/rpm-ostreed-automatic.service.d/override.conf
+
+%check
 
 %post
 %systemd_post flatpak-system-update.timer
