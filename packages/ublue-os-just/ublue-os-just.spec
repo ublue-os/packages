@@ -5,37 +5,14 @@ Version:        0.39
 Release:        1%{?dist}
 Summary:        ublue-os just integration
 License:        MIT
-URL:            https://github.com/ublue-os/config
+URL:            https://github.com/ublue-os/packages
+VCS:            {{{ git_dir_vcs }}}
+Source:         {{{ git_dir_pack }}}
 
 BuildArch:      noarch
 Requires:       just
 Requires:       ublue-os-luks
 Requires:       powerstat
-
-Source1:        00-default.just
-Source2:        10-update.just
-Source3:        20-clean.just
-Source4:        30-distrobox.just
-Source5:        40-nvidia.just
-Source6:        50-akmods.just
-Source7:        60-custom.just
-Source8:        15-luks.just
-Source9:        ujust
-Source10:       ugum
-Source11:       header.just
-Source12:       ujust.sh
-Source13:       libcolors.sh
-Source14:       libformatting.sh
-Source15:       libfunctions.sh
-Source16:       libdistrobox.sh
-Source17:       apps.ini
-Source18:       distrobox.ini
-Source19:       user-motd.sh
-Source20:       libtoolbox.sh
-Source21:       toolbox.ini
-Source22:       31-toolbox.just
-Source23:       brew.sh
-Source24:       15-ublue-config.md
 
 %global sub_name %{lua:t=string.gsub(rpm.expand("%{NAME}"), "^ublue%-os%-", ""); print(t)}
 
@@ -43,47 +20,32 @@ Source24:       15-ublue-config.md
 Adds ublue-os just integration for easier setup
 
 %prep
-%setup -q -c -T
+{{{ git_dir_setup_macro }}}
 
-%build
-
-mkdir -p -m0755  %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}
-install -Dm755 %{SOURCE19}  %{buildroot}%{_sysconfdir}/profile.d/user-motd.sh
-install -Dm755 %{SOURCE23}  %{buildroot}%{_sysconfdir}/profile.d/brew.sh
-cp %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} %{SOURCE6} %{SOURCE7} %{SOURCE8} %{SOURCE22} %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}
-
-mkdir -p -m0755  %{buildroot}%{_datadir}/%{VENDOR}/motd/tips
-cp %{SOURCE24} %{buildroot}%{_datadir}/%{VENDOR}/motd/tips
+%install
+install -Dpm0755 ./src/etc-profile.d/* %{buildroot}%{_sysconfdir}/profile.d/
+install -Dpm0644 ./src/recipes/*  %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/
+install -Dpm0644 ./src/ublue-tips/* %{buildroot}%{_datadir}/%{VENDOR}/motd/tips/
 
 # Create justfile which contains all .just files included in this package
 # Apply header first due to default not working in included justfiles
-cp %{SOURCE11} "%{buildroot}%{_datadir}/%{VENDOR}/justfile"
+install -Dpm0644 ./src/header.just "%{buildroot}%{_datadir}/%{VENDOR}/justfile"
 for justfile in %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/*.just; do
 	echo "import \"%{_datadir}/%{VENDOR}/%{sub_name}/$(basename ${justfile})\"" >> "%{buildroot}%{_datadir}/%{VENDOR}/justfile"
 done
 
 # Add global "ujust" script to run just with --unstable
-mkdir -p -m0755  %{buildroot}%{_bindir}
-install -Dm755 %{SOURCE9} %{buildroot}%{_bindir}/ujust
-install -Dm755 %{SOURCE10} %{buildroot}%{_bindir}/ugum
+install -Dpm0755 ./src/ujust %{buildroot}%{_bindir}/ujust
+install -Dpm0755 ./src/ugum %{buildroot}%{_bindir}/ugum
 
 # Add bash library for use in just
-mkdir -p -m0755 %{buildroot}/%{_exec_prefix}/lib/ujust/
-install -Dm644 %{SOURCE12} %{buildroot}/%{_exec_prefix}/lib/ujust
-install -Dm644 %{SOURCE13} %{buildroot}/%{_exec_prefix}/lib/ujust
-install -Dm644 %{SOURCE14} %{buildroot}/%{_exec_prefix}/lib/ujust
-install -Dm644 %{SOURCE15} %{buildroot}/%{_exec_prefix}/lib/ujust
-install -Dm644 %{SOURCE16} %{buildroot}/%{_exec_prefix}/lib/ujust
-install -Dm644 %{SOURCE20} %{buildroot}/%{_exec_prefix}/lib/ujust
+install -Dpm0644 ./src/lib-ujust/* %{buildroot}/%{_exec_prefix}/lib/ujust/
 
 # Add default manifest files for distrobox
-mkdir -p -m0755 %{buildroot}/%{_sysconfdir}/distrobox
-install -Dm644 %{SOURCE17} %{buildroot}/%{_sysconfdir}/distrobox
-install -Dm644 %{SOURCE18} %{buildroot}/%{_sysconfdir}/distrobox
+install -Dpm0644 ./src/etc-distrobox/* %{buildroot}/%{_sysconfdir}/distrobox/
 
 # Add default manifest file for toolbox
-mkdir -p -m0755 %{buildroot}/%{_sysconfdir}/toolbox
-install -Dm644 %{SOURCE21} %{buildroot}/%{_sysconfdir}/toolbox
+install -Dpm0644 ./src/etc-toolbox/* %{buildroot}/%{_sysconfdir}/toolbox/
 
 %files
 %dir %attr(0755,root,root) %{_datadir}/%{VENDOR}/%{sub_name}
