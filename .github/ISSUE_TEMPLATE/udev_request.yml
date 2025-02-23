@@ -13,7 +13,7 @@ body:
       label: Describe the package
       description: Include why you feel this should be built in the ublue-os COPR
       placeholder: Tell us what you need
-      value: "I'd like to request the package `vim` because ..."
+      value: "I'd like to request this udev rule because ..."
     validations:
       required: true
   - type: textarea
