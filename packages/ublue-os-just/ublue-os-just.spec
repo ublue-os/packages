@@ -56,7 +56,6 @@ install -d -m0755 %{buildroot}/%{_sysconfdir}/toolbox
 install -Dpm0644 ./src/etc-toolbox/* %{buildroot}/%{_sysconfdir}/toolbox/
 
 %files
-%{_datadir}/%{VENDOR}/%{sub_name}
 %{_sysconfdir}/profile.d/user-motd.sh
 %{_sysconfdir}/profile.d/brew.sh
 %{_datadir}/%{VENDOR}/%{sub_name}/*.just
