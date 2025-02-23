@@ -1,5 +1,4 @@
 Name:           ublue-os-just
-Packager:       ublue-os
 Vendor:         ublue-os
 Version:        0.39
 Release:        1%{?dist}
@@ -22,6 +21,8 @@ Adds ublue-os just integration for easier setup
 %prep
 {{{ git_dir_setup_macro }}}
 
+%build
+
 %install
 install -d -m0755 %{buildroot}%{_sysconfdir}/profile.d
 install -Dpm0755 ./src/etc-profile.d/* %{buildroot}%{_sysconfdir}/profile.d/
@@ -36,7 +37,7 @@ install -Dpm0644 ./src/ublue-tips/* %{buildroot}%{_datadir}/%{VENDOR}/motd/tips/
 # Apply header first due to default not working in included justfiles
 install -Dpm0644 ./src/header.just "%{buildroot}%{_datadir}/%{VENDOR}/justfile"
 for justfile in %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/*.just; do
-	echo "import \"%{_datadir}/%{VENDOR}/%{sub_name}/$(basename ${justfile})\"" >> "%{buildroot}%{_datadir}/%{VENDOR}/justfile"
+    echo "import \"%{_datadir}/%{VENDOR}/%{sub_name}/$(basename ${justfile})\"" >> "%{buildroot}%{_datadir}/%{VENDOR}/justfile"
 done
 
 # Add global "ujust" script to run just with --unstable

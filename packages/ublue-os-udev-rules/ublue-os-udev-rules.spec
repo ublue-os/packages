@@ -1,18 +1,20 @@
 Name:           ublue-os-udev-rules
-Packager:       ublue-os
 Vendor:         ublue-os
 Version:        0.9
 Release:        1%{?dist}
 Summary:        Additional udev files for device support
 
 License:        MIT
-URL:            https://github.com/ublue-os/config
+URL:            https://github.com/ublue-os/packages
 
 BuildArch:      noarch
 Supplements:    systemd-udev
 
-Source0:        ublue-os-udev-rules.tar.gz
-Source1:        game-devices-udev.tar.gz
+VCS:            {{{ git_dir_vcs }}}
+Source0:        {{{ git_dir_pack }}}
+Source1:        https://codeberg.org/fabiscafe/game-devices-udev/archive/main.tar.gz
+Source2:        https://raw.githubusercontent.com/LizardByte/Sunshine/refs/heads/master/src_assets/linux/misc/60-sunshine.rules
+Source3:        https://raw.githubusercontent.com/FrameworkComputer/inputmodule-rs/main/release/50-framework-inputmodule.rules
 
 %global sub_name %{lua:t=string.gsub(rpm.expand("%{NAME}"), "^ublue%-os%-", ""); print(t)}
 
@@ -20,28 +22,34 @@ Source1:        game-devices-udev.tar.gz
 Adds various udev rules for improving device support
 
 %prep
-%setup -q -c -T
+{{{ git_dir_setup_macro }}}
+
+%build
 
 %install
 mkdir -p -m0755 %{buildroot}%{_datadir}/%{VENDOR}/{%{sub_name},game-devices-udev}
 
-tar xf %{SOURCE0} -C %{buildroot}%{_datadir}/%{VENDOR} --strip-components=1
+# add repo local udev rules
+install -pm0644 ./src/udev-rules.d/* %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}
+
+# add contents of remote-sourced game-devices-udev rules archive
 tar xzf %{SOURCE1} -C %{buildroot}%{_datadir}/%{VENDOR}/game-devices-udev --strip-components=1
 
-mkdir -p -m0755 %{buildroot}%{_exec_prefix}/lib/udev/rules.d
+# add other remote-sourced rules
+install -m0644 %{SOURCE2} %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/60-sunshine-ublue.rules
+install -m0644 %{SOURCE3} %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/50-framework-inputmodule.rules
 
-cp %{buildroot}%{_datadir}/%{VENDOR}/{%{sub_name}/etc/udev/rules.d,game-devices-udev}/*.rules %{buildroot}%{_exec_prefix}/lib/udev/rules.d
+mkdir -p -m0755 %{buildroot}%{_exec_prefix}/lib/udev/rules.d
+cp -a %{buildroot}%{_datadir}/%{VENDOR}/{%{sub_name},game-devices-udev}/*.rules %{buildroot}%{_exec_prefix}/lib/udev/rules.d/
 
 %files
-%dir %attr(0755,root,root) %{_datadir}/%{VENDOR}/%{sub_name}
-%dir %attr(0755,root,root) %{_datadir}/%{VENDOR}/game-devices-udev
-%attr(0644,root,root) %{_datadir}/%{VENDOR}/%{sub_name}/etc/udev/rules.d/*.rules
-%attr(0644,root,root) %{_datadir}/%{VENDOR}/game-devices-udev/*.rules
-%attr(0644,root,root) %{_datadir}/%{VENDOR}/game-devices-udev/README.md
-%attr(0644,root,root) %{_datadir}/%{VENDOR}/game-devices-udev/LICENSE
-%attr(0644,root,root) %{_datadir}/%{VENDOR}/game-devices-udev/game-controller-udev.svg
-%attr(0644,root,root) %{_datadir}/%{VENDOR}/game-devices-udev/8BitDo.md
-%attr(0644,root,root) %{_exec_prefix}/lib/udev/rules.d/*.rules
+%{_datadir}/%{VENDOR}/%{sub_name}/*.rules
+%{_datadir}/%{VENDOR}/game-devices-udev/*.rules
+%{_datadir}/%{VENDOR}/game-devices-udev/README.md
+%{_datadir}/%{VENDOR}/game-devices-udev/LICENSE
+%{_datadir}/%{VENDOR}/game-devices-udev/game-controller-udev.svg
+%{_datadir}/%{VENDOR}/game-devices-udev/8BitDo.md
+%{_exec_prefix}/lib/udev/rules.d/*.rules
 
 
 %changelog
