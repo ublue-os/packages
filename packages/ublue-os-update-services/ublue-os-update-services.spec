@@ -5,7 +5,7 @@ Version:        0.9
 Release:        1%{?dist}
 Summary:        Automatic updates for rpm-ostree and flatpak
 License:        MIT
-URL:            https://github.com/ublue-os/config
+URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source:         {{{ git_dir_pack }}}
 
