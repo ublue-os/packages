@@ -2,7 +2,7 @@
 
 Name:           ublue-motd
 Version:        0.2.4
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        MOTD scripts for Universal Blue images
 
 License:        Apache-2.0
