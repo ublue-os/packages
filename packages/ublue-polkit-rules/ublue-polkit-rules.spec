@@ -1,5 +1,5 @@
 Name:           ublue-polkit-rules
-Version:        0.1.0
+Version:        0.1.1
 Release:        1%{?dist}
 Summary:        Polkit rules for Universal Blue projects
 
@@ -19,12 +19,14 @@ Polkit Rules for Universal Blue
 %build
 
 %install
-install -Dm0644 -t %{buildroot}%{_sysconfdir}/polkit-1/rules.d/ src/*.rules
+install -Dm0644 -t %{buildroot}%{_sysconfdir}/polkit-1/rules.d/ src/%{_sysconfdir}/polkit-1/rules.d/*.rules
+install -Dm0644 -t %{buildroot}%{_sysconfdir}/sudoers.d/ src/%{_sysconfdir}/sudoers.d/*
 
 %check
 
 %files
 %{_sysconfdir}/polkit-1/rules.d/*.rules
+%{_sysconfdir}/sudoers.d/001-bootc
 
 %changelog
 %autochangelog
