@@ -15,7 +15,14 @@ get_config() {
 }
 
 PRIVILEGED_HOOKS_DIRECTORY="$(get_config '."privileged-hooks-directory"' "/usr/share/ublue-os/privileged-setup.hooks.d")"
+HOOKS_VERBOSE="${HOOKS_VERBOSE:-$(get_config '."verbose"' "false")}"
+
+if [ "${HOOKS_VERBOSE}" == "true" ] ; then
+	set -x
+fi
 
 if [ -d "${PRIVILEGED_HOOKS_DIRECTORY}" ] ; then
-	bash ${PRIVILEGED_HOOKS_DIRECTORY}/*
+	for script in $PRIVILEGED_HOOKS_DIRECTORY/* ; do
+		bash $script
+	done
 fi

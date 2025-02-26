@@ -15,6 +15,11 @@ get_config() {
 }
 
 USER_HOOKS_DIRECTORY="$(get_config '."user-hooks-directory"' "/usr/share/ublue-os/user-setup.hooks.d")"
+HOOKS_VERBOSE="${HOOKS_VERBOSE:-$(get_config '."verbose"' "false")}"
+
+if [ "${HOOKS_VERBOSE}" == "true" ] ; then
+	set -x
+fi
 
 # Privileged setup can be called via user services
 if [ -d "$USER_HOOKS_DIRECTORY" ] ; then

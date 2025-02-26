@@ -15,7 +15,15 @@ get_config() {
 }
 
 SYSTEM_HOOKS_DIRECTORY="$(get_config '."system-hooks-directory"' "/usr/share/ublue-os/system-setup.hooks.d")"
+HOOKS_VERBOSE="${HOOKS_VERBOSE:-$(get_config '."verbose"' "false")}"
 
-if [ -d "$SYSTEM_HOOKS_DIRECTORY" ] ; then
-	bash $SYSTEM_HOOKS_DIRECTORY/*
+if [ "${HOOKS_VERBOSE}" == "true" ] ; then
+	set -x
 fi
+
+if [ -d "${SYSTEM_HOOKS_DIRECTORY}" ] ; then
+	for script in $SYSTEM_HOOKS_DIRECTORY/* ; do
+		bash $script
+	done
+fi
+
