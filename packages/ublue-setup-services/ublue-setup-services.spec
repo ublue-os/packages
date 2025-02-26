@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           ublue-setup-services
-Version:        0.1.4
+Version:        0.1.5
 Release:        1%{?dist}
 Summary:        Universal Blue setup services
 
@@ -19,15 +19,15 @@ Universal Blue setup scripts
 {{{ git_dir_setup_macro }}}
 
 %install
-mkdir -p %{buildroot}{%{_bindir},%{_libexecdir},%{_unitdir},%{_prefix}/lib/systemd/user,%{_sysconfdir}/{polkit-1/{rules.d,actions},profile.d}}
-install -Dm0755 ./src/scripts/* %{buildroot}%{_libexecdir}
-install -Dm0755 ./src/bin/* %{buildroot}%{_bindir}
-install -Dpm0644 ./src/services/* %{buildroot}%{_unitdir}
-install -Dpm0644 ./src/user-services/* %{buildroot}%{_prefix}/lib/systemd/user/
-install -Dpm0644 ./src/polkit/*.rules %{buildroot}%{_sysconfdir}/polkit-1/rules.d
-install -Dpm0644 ./src/polkit/*.policy %{buildroot}%{_sysconfdir}/polkit-1/actions
-install -Dpm0755 ./src/profile/* %{buildroot}%{_sysconfdir}/profile.d
-cp -rp ./src/skel %{buildroot}%{_sysconfdir}
+install -Dm0755 -t %{buildroot}%{_libexecdir}/ ./src/scripts/*
+install -Dm0755 -t %{buildroot}%{_bindir}/ ./src/bin/*
+install -Dm0644 -t %{buildroot}%{_unitdir}/ ./src/services/*.service
+install -Dm0644 -t %{buildroot}%{_prefix}/lib/systemd/user/ ./src/user-services/*.service
+install -Dm0644 -t %{buildroot}%{_sysconfdir}/polkit-1/rules.d/ ./src/polkit/*.rules 
+install -Dm0644 -t %{buildroot}%{_sysconfdir}/polkit-1/actions/ ./src/polkit/*.policy
+install -Dm0755 -t %{buildroot}%{_sysconfdir}/profile.d/ ./src/profile/*.sh
+install -Dm0644 -t %{buildroot}%{_exec_prefix}/lib/ublue/setup-services/ ./src/lib/libsetup.sh
+install -Dm0644 -t %{buildroot}%{_sysconfdir}/skel/.config/autostart/ src/skel/.config/autostart/*.desktop
 
 %post
 %systemd_post ublue-user-setup.service
@@ -39,12 +39,13 @@ cp -rp ./src/skel %{buildroot}%{_sysconfdir}
 
 %files
 %{_bindir}/sb*
+%{_exec_prefix}/lib/ublue/setup-services/lib*.sh
 %{_libexecdir}/ublue-*
 %{_libexecdir}/check-*
-%config(noreplace) %{_sysconfdir}/polkit-1/rules.d/*
-%config(noreplace) %{_sysconfdir}/polkit-1/actions/*
-%config(noreplace) %{_sysconfdir}/profile.d/*
-%config(noreplace) %{_sysconfdir}/skel/.config/autostart/*
+%{_sysconfdir}/polkit-1/rules.d/*
+%{_sysconfdir}/polkit-1/actions/*
+%{_sysconfdir}/profile.d/*
+%{_sysconfdir}/skel/.config/autostart/*.desktop
 %{_unitdir}/*.service
 %{_prefix}/lib/systemd/user/*.service
 
