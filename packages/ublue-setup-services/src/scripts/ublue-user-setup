@@ -18,5 +18,7 @@ USER_HOOKS_DIRECTORY="$(get_config '."user-hooks-directory"' "/usr/share/ublue-o
 
 # Privileged setup can be called via user services
 if [ -d "$USER_HOOKS_DIRECTORY" ] ; then
-  bash $USER_HOOKS_DIRECTORY/*
+	for script in $USER_HOOKS_DIRECTORY/* ; do
+		bash $script
+	done
 fi
