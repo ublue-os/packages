@@ -1,6 +1,6 @@
 Name:           ublue-os-signing
 Vendor:         ublue-os
-Version:        0.4
+Version:        0.5
 Release:        1%{?dist}
 Summary:        Signing files and keys for Universal Blue
 License:        Apache-2.0
@@ -36,13 +36,18 @@ install -Dm0644 -t %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/%{_sysconfdir}/
 %{_datadir}/%{VENDOR}/%{sub_name}/%{_sysconfdir}/containers/registries.d/quay.io-toolbx-images.yaml
 %{_datadir}/%{VENDOR}/%{sub_name}/%{_sysconfdir}/pki/containers/quay.io-toolbx-images.pub
 %{_datadir}/%{VENDOR}/%{sub_name}/%{_sysconfdir}/pki/containers/ublue-os.pub
+%{_datadir}/%{VENDOR}/%{sub_name}/%{_sysconfdir}/pki/containers/ublue-os-backup.pub
 %{_exec_prefix}/etc/containers/policy.json
 %{_sysconfdir}/containers/registries.d/ublue-os.yaml
 %{_sysconfdir}/containers/registries.d/quay.io-toolbx-images.yaml
 %{_sysconfdir}/pki/containers/quay.io-toolbx-images.pub
 %{_sysconfdir}/pki/containers/ublue-os.pub
+%{_sysconfdir}/pki/containers/ublue-os-backup.pub
 
 %changelog
+* Sun Feb 23 2025 Robert Sturla <robertsturla@outlook.com> - 0.5
+- Created backup container signing keys
+
 * Thu Aug 08 2024 Kyle Gospodnetich <me@kylegospodneti.ch> - 0.4
 - Moved policy.json back to /usr/etc/ temporarily
 
