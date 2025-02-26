@@ -80,6 +80,10 @@ just --completions zsh | sed -E 's/([\(_" ])just/\1ujust/g' > %{_datadir}/zsh/si
 chmod 644 %{_datadir}/zsh/site-functions/_ujust
 
 %changelog
+* Wed Feb 26 2025 Robert Sturla <robertsturla@outlook.com> - 0.41
+- Make 60-custom.just an optional import
+- Remove default 60-custom.just from the package
+
 * Mon Feb 17 2025 Tulip Blossom <tulilirockz@outlook.com> - 0.39
 - Remove ublue-os-just.sh from /etc/profile.d
 
