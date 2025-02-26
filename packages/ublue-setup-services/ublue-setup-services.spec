@@ -26,7 +26,7 @@ install -Dm0644 -t %{buildroot}%{_prefix}/lib/systemd/user/ ./src/user-services/
 install -Dm0644 -t %{buildroot}%{_sysconfdir}/polkit-1/rules.d/ ./src/polkit/*.rules 
 install -Dm0644 -t %{buildroot}%{_sysconfdir}/polkit-1/actions/ ./src/polkit/*.policy
 install -Dm0755 -t %{buildroot}%{_sysconfdir}/profile.d/ ./src/profile/*.sh
-install -Dm0644 -t %{buildroot}%{_libdir}/ublue/setup-services/ ./src/lib/libsetup.sh
+install -Dm0644 -t %{buildroot}%{_exec_prefix}/lib/ublue/setup-services/ ./src/lib/libsetup.sh
 install -Dm0644 -t %{buildroot}%{_sysconfdir}/skel/.config/autostart/ src/skel/.config/autostart/*.desktop
 
 %post
@@ -39,7 +39,7 @@ install -Dm0644 -t %{buildroot}%{_sysconfdir}/skel/.config/autostart/ src/skel/.
 
 %files
 %{_bindir}/sb*
-%{_libdir}/ublue/setup-services/lib*.sh
+%{_exec_prefix}/lib/ublue/setup-services/lib*.sh
 %{_libexecdir}/ublue-*
 %{_libexecdir}/check-*
 %{_sysconfdir}/polkit-1/rules.d/*
