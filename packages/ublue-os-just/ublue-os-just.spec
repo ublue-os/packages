@@ -1,6 +1,6 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
-Version:        0.40
+Version:        0.41
 Release:        1%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
@@ -39,6 +39,7 @@ install -Dpm0644 ./src/header.just "%{buildroot}%{_datadir}/%{VENDOR}/justfile"
 for justfile in %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/*.just; do
     echo "import \"%{_datadir}/%{VENDOR}/%{sub_name}/$(basename ${justfile})\"" >> "%{buildroot}%{_datadir}/%{VENDOR}/justfile"
 done
+echo "import? \"%{_datadir}/%{VENDOR}/%{sub_name}/60-custom.just\"" >> "%{buildroot}%{_datadir}/%{VENDOR}/justfile"
 
 # Add global "ujust" script to run just with --unstable
 install -Dpm0755 ./src/ujust %{buildroot}%{_bindir}/ujust
@@ -79,6 +80,10 @@ just --completions zsh | sed -E 's/([\(_" ])just/\1ujust/g' > %{_datadir}/zsh/si
 chmod 644 %{_datadir}/zsh/site-functions/_ujust
 
 %changelog
+* Wed Feb 26 2025 Robert Sturla <robertsturla@outlook.com> - 0.41
+- Make 60-custom.just an optional import
+- Remove default 60-custom.just from the package
+
 * Mon Feb 17 2025 Tulip Blossom <tulilirockz@outlook.com> - 0.39
 - Remove ublue-os-just.sh from /etc/profile.d
 
