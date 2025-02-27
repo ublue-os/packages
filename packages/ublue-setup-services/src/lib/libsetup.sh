@@ -1,12 +1,6 @@
 #!/usr/bin/env bash
 
 SETUP_CHECKER_FILE="${SETUP_CHECKER_FILE:-$HOME/.local/share/ublue/setup_versioning.json}"
-# This lock is necessary so that multiple services must not modify the same file at the same time
-SETUP_CHECKER_LOCK="${SETUP_CHECKER_LOCK:-"${SETUP_CHECKER_FILE}.lck"}"
-
-function delete-version-lock() {
-  rm -r "${SETUP_CHECKER_LOCK}"
-}
 
 # Meant to be used at the start of any setup service script. Will version your script accordingly on $SETUP_CHECKER_FILE
 # :target_versioning_name: Whatever you want to name your versioning tag. Please keep it always the same
@@ -28,12 +22,6 @@ function version-script() {
     echo "{}" > "${SETUP_CHECKER_FILE}"
   fi
 
-  while [ -e "${SETUP_CHECKER_LOCK}" ] ; do
-    echo "WARN: Sleeping because checker lock exists"
-    sleep 5
-  done
-  touch "${SETUP_CHECKER_LOCK}"
-  trap delete-version-lock EXIT
   if [ "$(jq -r -c ".version.${TYPE_OF_SERVICE}.\"${TARGET_VERSIONING_NAME}\"" "${SETUP_CHECKER_FILE}")" == "${VERSION}" ] ; then
     echo "Exiting as current version (${VERSION}) for ${TYPE_OF_SERVICE}-${TARGET_VERSIONING_NAME} is the same as latest version recorded on ${SETUP_CHECKER_FILE}"
     return 1
