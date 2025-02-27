@@ -15,7 +15,7 @@
       <allow_inactive>yes</allow_inactive>
       <allow_active>yes</allow_active>
     </defaults>
-    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/ublue-privileged-user-setup</annotate>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/ublue-privileged-setup</annotate>
   </action>
 
 </policyconfig>
