@@ -1,4 +1,6 @@
 export mock_image := env("MOCK_IMAGE", "ghcr.io/ublue-os/ublue-builder:latest")
+export extensions_dir := env("SYSTEMD_EXTENSIONS_DIR", "/var/lib/extensions")
+export overlay_dir := env("OVERLAY_DIR", "overlays")
 
 # Run renovate locally to test modules
 renovate dry-run="lookup" log-level="debug":
@@ -56,3 +58,78 @@ generate-homebrew-tarball $OUTDIR="./brew-out" $TARBALL_FILENAME="homebrew.tar.z
         ls -s /usr/bin/grep /bin/grep
         env --ignore-environment PATH=/usr/bin:/bin:/usr/sbin:/sbin HOME=/home/linuxbrew NONINTERACTIVE=1 /usr/bin/bash /tmp/brew-install
         tar --zstd -cvf /outdir/{{ TARBALL_FILENAME }} /home/linuxbrew/.linuxbrew"
+
+alias add-overlay := overlay
+
+overlay $TARGET_RPM $REFRESH="0" $CLEAN_ROOTFS="1":
+    #!/usr/bin/env bash
+    set -xeuo pipefail
+
+    if [ ! -s "${TARGET_RPM}" ] ; then
+        echo "Target RPM is not a valid file"
+        exit 1
+    fi
+
+    mkdir -p "{{ overlay_dir }}"
+    BASENAME_RPM="$(basename "$TARGET_RPM")"
+    NAME_TRIMMED="${BASENAME_RPM%.*}"
+
+    if [ -s "{{ overlay_dir }}/${NAME_TRIMMED}.raw" ] && [ "$REFRESH" == "0" ] ; then
+        sudo mkdir -p {{ extensions_dir }}
+        sudo cp -f "{{ overlay_dir }}/${NAME_TRIMMED}.raw" "{{ extensions_dir }}/${NAME_TRIMMED}.raw"
+        sudo systemd-sysext refresh
+        exit 0
+    fi 
+
+    ROOTFS_DIRECTORY="$(mktemp -d --tmpdir="{{ overlay_dir }}")"
+    echo "➡️ Setting up extension config file"
+    sudo install -d -m0755 "$ROOTFS_DIRECTORY/usr/lib/extension-release.d"
+    {
+    echo "ID=\"_any\""
+    # Post process architecture to match systemd architecture list
+    arch="$(echo $(arch) | sed 's/_/-/g')"
+    echo "ARCHITECTURE=\"${arch}\""
+    } | sudo tee "${ROOTFS_DIRECTORY}/usr/lib/extension-release.d/extension-release.${NAME_TRIMMED}" > /dev/null
+
+    rpm2cpio "$TARGET_RPM" | sudo cpio -idmv -D "${ROOTFS_DIRECTORY}" &> /dev/null
+
+    if [ -d "${ROOTFS_DIRECTORY}/etc" ] ; then
+        echo "➡️ Moving /etc to /usr/etc"
+        sudo mv --no-clobber --no-copy "${ROOTFS_DIRECTORY}/etc" "${ROOTFS_DIRECTORY}/usr/etc"
+    fi
+
+    for dir in "var" "run"; do
+        if [ -d "${ROOTFS_DIRECTORY}"/"${dir}" ] ; then
+            echo "➡️ Removing ${dir} from rootfs"
+            sudo rm -r "${ROOTFS}/${dir}"
+        fi
+    done
+
+    filecontexts="/etc/selinux/targeted/contexts/files/file_contexts"
+    echo "🏷️ Resetting SELinux labels"
+    sudo setfiles -r "${ROOTFS_DIRECTORY}" "${filecontexts}" "${ROOTFS_DIRECTORY}"
+    sudo chcon --user=system_u --recursive "${ROOTFS_DIRECTORY}"
+
+    # Then create erofs
+    mkfs.erofs "{{ overlay_dir }}/${NAME_TRIMMED}.raw" "${ROOTFS_DIRECTORY}"
+    [ "$CLEAN_ROOTFS" == "1" ] && sudo rm -rf "${ROOTFS_DIRECTORY}"
+    sudo mkdir -p {{ extensions_dir }}
+    sudo cp -f "{{ overlay_dir }}/${NAME_TRIMMED}.raw" "{{ extensions_dir }}/${NAME_TRIMMED}.raw"
+    sudo systemd-sysext refresh
+
+remove-overlay $TARGET_RPM:
+    #!/usr/bin/env bash
+
+    set -euo pipefail
+
+    BASENAME_RPM="$(basename "$TARGET_RPM")"
+    NAME_TRIMMED="${BASENAME_RPM%.*}"
+    sudo rm -f "{{ extensions_dir }}/${NAME_TRIMMED}.raw"
+    sudo systemd-sysext refresh
+
+clean:
+    #!/usr/bin/env bash
+    for line in $(cat .gitignore | xargs) ; do
+        sudo rm -ri $line
+    done
+    exit 0
