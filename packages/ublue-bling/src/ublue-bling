@@ -36,7 +36,7 @@ function ctrl_c() {
 # Brew Bundle Install
 function brew-bundle() {
     echo 'Installing bling from Homebrew 🍻🍻🍻'
-    brew bundle --file "$BLING_BREW_BUNDLE_PATH" --no-lock
+    brew bundle --file "$BLING_BREW_BUNDLE_PATH"
 }
 
 # Check if bling is already sourced
