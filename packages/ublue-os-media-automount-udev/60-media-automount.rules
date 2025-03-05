@@ -4,7 +4,7 @@ ATTRS{removable}!="0",                          GOTO="media_automount_end"
 SUBSYSTEM!="block",                             GOTO="media_automount_end"
 
 # Exit if is in fstab...
-PROGRAM=="/usr/local/libexec/is_in_fstab.sh /dev/%k", RESULT=="yes", GOTO="media_automount_end"
+PROGRAM=="/usr/libexec/is_in_fstab.sh /dev/%k", RESULT=="yes", GOTO="media_automount_end"
 
 # ... or if is not a supported filesystem
 ENV{ID_FS_TYPE}!="btrfs|ext4", GOTO="media_automount_end"
