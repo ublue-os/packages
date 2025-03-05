@@ -1,3 +1,8 @@
+# Mount internal disks partition devices automatically
+#
+# @vendor ublue-os
+# @author Zeglius <33781398+Zeglius@users.noreply.github.com>
+
 KERNEL!="sd[a-z][0-9]|nvme[0-9]n[0-9]p[0-9]",   GOTO="media_automount_end"
 ENV{DEVTYPE}!="partition",                      GOTO="media_automount_end"
 ATTRS{removable}!="0",                          GOTO="media_automount_end"
