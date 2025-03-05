@@ -1,8 +1,8 @@
 %global debug_package %{nil}
 
 Name:           ublue-bling
-Version:        0.1.4
-Release:        2%{?dist}
+Version:        0.1.5
+Release:        1%{?dist}
 Summary:        Universal Blue Bling CLI setup scripts
 
 License:        Apache-2.0
@@ -10,9 +10,9 @@ URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source:         {{{ git_dir_pack }}}
 
-# Requires: ublue-os-just but we cant add it here because it is sourced from ublue-os/config now.
-# It would be interesting to move it here but we need some discussion
 Requires:       gum
+# FIXME: make ublue-builder be able to handle stuff like this
+# Requires:       ublue-os-just
 
 %description
 Universal Blue Bling CLI setup scripts
