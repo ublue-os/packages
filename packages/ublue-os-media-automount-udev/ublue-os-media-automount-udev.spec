@@ -1,7 +1,7 @@
 Name:           ublue-os-media-automount-udev
 Vendor:         ublue-os
 Version:        0.1
-Release:        %{autorelease}
+Release:        1%{?dist}
 Summary:        udev rules to mount non-removable disk partitions
 
 License:        Apache-2.0
