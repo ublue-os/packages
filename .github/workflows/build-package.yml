@@ -3,6 +3,7 @@ name: Build packages in CI
 on:
   merge_group:
   pull_request:
+    types: [labeled]
 
 jobs:
   changed_files:
