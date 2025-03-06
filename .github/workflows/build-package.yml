@@ -46,7 +46,7 @@ jobs:
           ALL_SPECS=()
           for file in ${ALL_CHANGED_FILES}; do
             for spec in $(dirname $file)/*.spec ; do
-              ALL_SPECS+=( "$(realpath "${spec}")" )
+              ALL_SPECS+=( "$(realpath "--relative-to=${GITHUB_WORKSPACE}" "${spec}")" )
             done
           done
 
