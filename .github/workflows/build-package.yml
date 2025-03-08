@@ -3,10 +3,12 @@ name: Build packages in CI
 on:
   merge_group:
   pull_request:
+    types: [labeled]
 
 jobs:
   changed_files:
     runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'safe-to-run')
     name: Get changed files
     outputs:
       all_changed_files: ${{ steps.changed-package-files.outputs.all_changed_files }}
@@ -14,6 +16,9 @@ jobs:
       specs: ${{ steps.packages.outputs.specs }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Get directories with spec files
         id: specdirs
@@ -38,11 +43,19 @@ jobs:
         run: |
           set -x
 
-          MATRIX="{\"specs\":[]}"
+          ALL_SPECS=()
           for file in ${ALL_CHANGED_FILES}; do
             for spec in $(dirname $file)/*.spec ; do
-              [ -e "$spec" ] && MATRIX=$(echo $MATRIX | jq -c ".specs += [\"$spec\"]")
+              ALL_SPECS+=( "$(realpath "--relative-to=${GITHUB_WORKSPACE}" "${spec}")" )
             done
+          done
+
+          # Cleans up duplicate spec entries
+          IFS=" " read -r -a ALL_SPECS <<< "$(echo "${ALL_SPECS[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' ')"
+          
+          MATRIX="{\"specs\":[]}"
+          for spec in $ALL_SPECS ; do
+              [ -e "$spec" ] && MATRIX=$(echo $MATRIX | jq -c ".specs += [\"$spec\"]")
           done
           echo "specs=$(echo $MATRIX | jq -c '.specs')" >> $GITHUB_OUTPUT
 
