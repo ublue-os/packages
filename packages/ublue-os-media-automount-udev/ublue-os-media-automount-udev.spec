@@ -23,7 +23,7 @@ Supplements:    systemd-udev
 
 %install
 install -p -Dm0644 ./60-media-automount.rules %{buildroot}%{_exec_prefix}/lib/udev/rules.d/60-media-automount.rules
-install -p -Dm0644 ./is_in_fstab.sh %{buildroot}%{_libexecdir}/is_in_fstab.sh
+install -p -Dm0755 ./is_in_fstab.sh %{buildroot}%{_libexecdir}/is_in_fstab.sh
 
 %check
 
@@ -32,5 +32,8 @@ install -p -Dm0644 ./is_in_fstab.sh %{buildroot}%{_libexecdir}/is_in_fstab.sh
 %{_libexecdir}/is_in_fstab.sh
 
 %changelog
+* Mon Mar 10 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.2
+- Add missing permissions and use 'exit' instead of 'return' in is_in_fstab.sh
+
 * Wed Mar 05 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.1
 - Initial release
