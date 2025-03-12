@@ -1,6 +1,6 @@
 Name:           ublue-os-media-automount-udev
 Vendor:         ublue-os
-Version:        0.6
+Version:        0.7
 Release:        1%{?dist}
 Summary:        udev rules to mount non-removable disk partitions
 
@@ -24,14 +24,19 @@ Supplements:    systemd-udev
 %install
 install -p -Dm0644 ./99-media-automount.rules %{buildroot}%{_exec_prefix}/lib/udev/rules.d/99-media-automount.rules
 install -p -Dm0755 ./is_in_fstab.sh %{buildroot}%{_libexecdir}/is_in_fstab.sh
+install -p -Dm0644 ./media-automount.conf %{buildroot}%{_tmpfilesdir}/media-automount.conf
 
 %check
 
 %files
 %{_exec_prefix}/lib/udev/rules.d/99-media-automount.rules
 %{_libexecdir}/is_in_fstab.sh
+%{_tmpfilesdir}/media-automount.conf
 
 %changelog
+* Wed Mar 12 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.7
+- Add /run/media/media-automount symlink for compatibility
+
 * Wed Mar 12 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.6
 - Add missing mount options to btrfs partitions
 
