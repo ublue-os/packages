@@ -1,6 +1,6 @@
 Name:           ublue-os-media-automount-udev
 Vendor:         ublue-os
-Version:        0.1
+Version:        0.3
 Release:        1%{?dist}
 Summary:        udev rules to mount non-removable disk partitions
 
@@ -32,6 +32,9 @@ install -p -Dm0755 ./is_in_fstab.sh %{buildroot}%{_libexecdir}/is_in_fstab.sh
 %{_libexecdir}/is_in_fstab.sh
 
 %changelog
+* Wed Mar 12 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.3
+- Dont error out in is_in_fstab.sh
+
 * Mon Mar 10 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.2
 - Add missing permissions and use 'exit' instead of 'return' in is_in_fstab.sh
 
