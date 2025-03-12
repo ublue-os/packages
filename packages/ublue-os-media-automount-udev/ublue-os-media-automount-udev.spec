@@ -1,6 +1,6 @@
 Name:           ublue-os-media-automount-udev
 Vendor:         ublue-os
-Version:        0.3
+Version:        0.4
 Release:        1%{?dist}
 Summary:        udev rules to mount non-removable disk partitions
 
@@ -22,16 +22,19 @@ Supplements:    systemd-udev
 %build
 
 %install
-install -p -Dm0644 ./60-media-automount.rules %{buildroot}%{_exec_prefix}/lib/udev/rules.d/60-media-automount.rules
+install -p -Dm0644 ./99-media-automount.rules %{buildroot}%{_exec_prefix}/lib/udev/rules.d/99-media-automount.rules
 install -p -Dm0755 ./is_in_fstab.sh %{buildroot}%{_libexecdir}/is_in_fstab.sh
 
 %check
 
 %files
-%{_exec_prefix}/lib/udev/rules.d/60-media-automount.rules
+%{_exec_prefix}/lib/udev/rules.d/99-media-automount.rules
 %{_libexecdir}/is_in_fstab.sh
 
 %changelog
+* Wed Mar 12 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.4
+- Load rule the latest and fetch UUID with lsblk
+
 * Wed Mar 12 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.3
 - Dont error out in is_in_fstab.sh
 

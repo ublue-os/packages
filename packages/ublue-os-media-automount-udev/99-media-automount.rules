@@ -15,12 +15,12 @@ PROGRAM=="/usr/libexec/is_in_fstab.sh /dev/%k", RESULT=="yes", GOTO="media_autom
 ENV{ID_FS_TYPE}!="btrfs|ext4", GOTO="media_automount_end"
 
 # Add mounting options
-ENV{SYSTEMD_MOUNT_WHERE}="/run/media/media-automount/%E{ID_FS_UUID}"
 ENV{ID_FS_TYPE}=="btrfs", ENV{SYSTEMD_MOUNT_OPTIONS}="defaults,noatime,lazytime,commit=120,discard=async,compress-force=zstd:1,space_cache=v2,nofail"
 ENV{ID_FS_TYPE}=="ext4", ENV{SYSTEMD_MOUNT_OPTIONS}="defaults,noatime,errors=remount-ro,nofail,rw,users,exec"
 
 # Mount the device
-ACTION=="add", RUN+="/usr/bin/systemd-mount --no-block -A --discover /dev/%k"
+ACTION=="add", \
+RUN+="/usr/bin/systemd-mount --no-block --collect --discover /dev/%k"
 
 # End of rule
 LABEL="media_automount_end"
