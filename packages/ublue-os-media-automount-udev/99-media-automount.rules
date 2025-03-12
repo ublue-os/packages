@@ -11,8 +11,11 @@ SUBSYSTEM!="block",                             GOTO="media_automount_end"
 # Exit if is in fstab...
 PROGRAM=="/usr/libexec/is_in_fstab.sh /dev/%k", RESULT=="yes", GOTO="media_automount_end"
 
-# ... or if is not a supported filesystem
+# ... or if is not a supported filesystem...
 ENV{ID_FS_TYPE}!="btrfs|ext4", GOTO="media_automount_end"
+
+# ... or if does not have a label
+ENV{ID_FS_LABEL}!="?*", GOTO="media_automount_end"
 
 # Add mounting options
 ENV{ID_FS_TYPE}=="btrfs", ENV{SYSTEMD_MOUNT_OPTIONS}="defaults,noatime,lazytime,commit=120,discard=async,compress-force=zstd:1,space_cache=v2,nofail"
