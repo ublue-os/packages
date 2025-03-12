@@ -18,7 +18,7 @@ ENV{ID_FS_TYPE}!="btrfs|ext4", GOTO="media_automount_end"
 ENV{ID_FS_LABEL}!="?*", GOTO="media_automount_end"
 
 # Add mounting options
-ENV{ID_FS_TYPE}=="btrfs", ENV{SYSTEMD_MOUNT_OPTIONS}="defaults,noatime,lazytime,commit=120,discard=async,compress-force=zstd:1,space_cache=v2,nofail"
+ENV{ID_FS_TYPE}=="btrfs", ENV{SYSTEMD_MOUNT_OPTIONS}="defaults,noatime,lazytime,commit=120,discard=async,compress-force=zstd:1,space_cache=v2,nofail,rw,users,exec"
 ENV{ID_FS_TYPE}=="ext4", ENV{SYSTEMD_MOUNT_OPTIONS}="defaults,noatime,errors=remount-ro,nofail,rw,users,exec"
 
 # Mount the device
