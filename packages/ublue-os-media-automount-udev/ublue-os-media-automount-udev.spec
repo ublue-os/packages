@@ -12,6 +12,7 @@ Source0:        {{{ git_dir_pack }}}
 
 BuildArch:      noarch
 Supplements:    systemd-udev
+BuildRequires:  systemd-rpm-macros
 
 %description
 %{summary}
@@ -22,14 +23,14 @@ Supplements:    systemd-udev
 %build
 
 %install
-install -p -Dm0644 ./99-media-automount.rules %{buildroot}%{_exec_prefix}/lib/udev/rules.d/99-media-automount.rules
+install -p -Dm0644 ./99-media-automount.rules %{buildroot}%{_udevrulesdir}/99-media-automount.rules
 install -p -Dm0755 ./is_in_fstab.sh %{buildroot}%{_libexecdir}/is_in_fstab.sh
 install -p -Dm0644 ./media-automount.conf %{buildroot}%{_tmpfilesdir}/media-automount.conf
 
 %check
 
 %files
-%{_exec_prefix}/lib/udev/rules.d/99-media-automount.rules
+%{_udevrulesdir}/99-media-automount.rules
 %{_libexecdir}/is_in_fstab.sh
 %{_tmpfilesdir}/media-automount.conf
 
