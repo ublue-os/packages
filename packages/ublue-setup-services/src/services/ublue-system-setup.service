@@ -4,8 +4,7 @@ After=rpm-ostreed.service
 Before=systemd-user-sessions.service
 
 [Service]
-Type=oneshot
-RemainAfterExit=yes
+Type=simple
 ExecStart=/usr/libexec/ublue-system-setup
 
 [Install]

@@ -3,7 +3,7 @@ Vendor:         ublue-os
 Version:        0.91
 Release:        1%{?dist}
 Summary:        Automatic updates for rpm-ostree and flatpak
-License:        MIT
+License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source:         {{{ git_dir_pack }}}

@@ -3,7 +3,7 @@ Vendor:         ublue-os
 Version:        0.3
 Release:        1%{?dist}
 Summary:        ublue-os scripts for simplified LUKS usage
-License:        MIT
+License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source:         {{{ git_dir_pack }}}
