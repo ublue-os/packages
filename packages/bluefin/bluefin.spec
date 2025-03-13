@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.1.8
+Version:        0.1.9
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -22,7 +22,7 @@ mkdir -p -m0755 \
     %{buildroot}%{_datadir}/backgrounds/%{vendor} \
     %{buildroot}%{_datadir}/gnome-background-properties \
     %{buildroot}%{_datadir}/pixmaps/faces \
-    %{buildroot}%{_datadir}/ublue-os \
+    %{buildroot}%{_datadir}/ublue-os/homebrew \
     %{buildroot}%{_sysconfdir}
 
 mv wallpapers/gnome-background-properties/*.xml %{buildroot}%{_datadir}/gnome-background-properties
@@ -39,6 +39,7 @@ mv schemas/profile.d %{buildroot}%{_sysconfdir}
 mv schemas/distrobox %{buildroot}%{_sysconfdir}
 mv schemas/geoclue %{buildroot}%{_sysconfdir}
 mv schemas/glib-2.0 %{buildroot}%{_datadir}
+mv schemas/homebrew/* %{buildroot}%{_datadir}/ublue-os/homebrew
 mv schemas/applications %{buildroot}%{_datadir}
 mv plymouth %{buildroot}%{_datadir}
 
@@ -104,6 +105,8 @@ Contains all of the DConf settings that Bluefin ships by default
 %attr(0755,root,root) %{_sysconfdir}/skel
 %attr(0755,root,root) %{_datadir}/glib-2.0
 %attr(0755,root,root) %{_datadir}/applications
+%attr(0755,root,root) %{_datadir}/ublue-os/homebrew/kubernetes.Brewfile
+%attr(0755,root,root) %{_datadir}/ublue-os/homebrew/bluefin-cli.Brewfile
 
 %package backgrounds
 Summary:        Bluefin wallpapers
