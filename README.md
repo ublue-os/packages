@@ -36,9 +36,9 @@ been added in a week or so) and then it should be automatically rebuilt over tim
 
 ### Existing package
 
-Make sure your contribution passes linting and the guidelines required by [the New Package section](#new-package), and
-bump the package according to if the package has sources on this repo, bump the `Version:` field, if it has external
-sources, bump the spec `Release:` field (you can/should do it via `rpmdev-bumpspec` ideally).
+Make sure your contribution passes linting and the guidelines required by [the New Package section](#new-package). Bump the package accordingly: 
+- If the package has sources on this repo, bump the `Version:` field;
+- If it has external sources, bump the spec `Release:` field (you can/should do it via `rpmdev-bumpspec` ideally).
 
 ### For maintainers/approvers
 
