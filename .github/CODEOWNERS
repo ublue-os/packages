@@ -5,3 +5,5 @@ packages/ublue-os-* @bsherman
 packages/ublue-os-* @p5
 packages/ublue-* @zeglius
 packages/bluefin/ @castrojo
+bazzite/ @zeglius
+bazzite/ @kylegospo
