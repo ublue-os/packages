@@ -22,27 +22,25 @@ just build ./staging/devpod/devpod.spec -r epel-10-$(arch)
 just build ./staging/devpod/devpod.spec --forcearch=aarch64
 ```
 
-### Contributing
+## Contributing
 
-#### New package
+### New package
 
 When adding a new package certain guidelines should be followed, usually try to stick to the [Fedora Packaging Guidelines](https://docs.fedoraproject.org/en-US/packaging-guidelines/)
 for all packages (with case-by-case exceptions). `rpmlint` should always pass ([rpkg](https://docs.pagure.org/rpkg-util/v3/quick_start.html)-based packages are an exception),
 they should always be buildable offline once all sources are fetched (so that they can be built on GitHub actions/[mock](https://rpm-software-management.github.io/mock/)),
-and always make sure that [Renovate](<>) can automatically update your package.
+and always make sure that [Renovate](https://github.com/renovatebot/renovate) can automatically update your package, we have [macros on this repo](./.github/renovate.json5).
 
 Once merged, your new package will need to be manually added to its corresponding COPR ([file in an issue](https://github.com/ublue-os/packages/issues) if it hasn't
 been added in a week or so) and then it should be automatically rebuilt over time.
 
-Each package also should ideally contain its main maintainer on their specs and you should ping them on issues regarding their specific packages (e.g.: [ublue-brew maintainer](FIXMEINVALID))
-
-#### Existing package
+### Existing package
 
 Make sure your contribution passes linting and the guidelines required by [the New Package section](#new-package), and
 bump the package according to if the package has sources on this repo, bump the `Version:` field, if it has external
 sources, bump the spec `Release:` field (you can/should do it via `rpmdev-bumpspec` ideally).
 
-#### For maintainers/approvers
+### For maintainers/approvers
 
 Make sure all the PRs are safe, as in they dont have [RCE](https://www.cloudflare.com/learning/security/what-is-remote-code-execution/)
 exploits or any abuse of GitHub actions (or similar). When you are sure of that, put the `safe-to-run` tag on the target
@@ -52,6 +50,6 @@ implemented yet so you might want to review the commits on your local machine an
 You can create a testing distrobox by running `distrobox create --name testingbox --image ghcr.io/ublue-os/ublue-builder`
 or by running `just build` from the locally cloned fork, it should be exactly the same environment as the GitHub actions use for building.
 
-### Metrics
+## Metrics
 
 ![Alt](https://repobeats.axiom.co/api/embed/8bde34be4a2fcd7f506672742563f330d0b6b240.svg "Repobeats analytics image")
