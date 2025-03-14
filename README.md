@@ -42,7 +42,7 @@ sources, bump the spec `Release:` field (you can/should do it via `rpmdev-bumpsp
 
 ### For maintainers/approvers
 
-Make sure all the PRs are safe, as in they dont have [RCE](https://www.cloudflare.com/learning/security/what-is-remote-code-execution/)
+Make sure all the PRs are safe, as in they don't have [RCE](https://www.cloudflare.com/learning/security/what-is-remote-code-execution/)
 exploits or any abuse of GitHub actions (or similar). When you are sure of that, put the `safe-to-run` tag on the target
 pull request and let it run. Sometimes some packages will require the runner to have an online connection and that isn't
 implemented yet so you might want to review the commits on your local machine and make sure they build correctly with a network connection.
