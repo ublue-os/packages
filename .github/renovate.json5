@@ -1,9 +1,13 @@
 {
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:best-practices"
+  ],
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [".*\\.spec"],
+      "fileMatch": [
+        ".*\\.spec"
+      ],
       "matchStrings": [
         "#\\s?renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?( extractVersion=(?<extractVersion>.*?))?\\s*Version:\\s*(?<currentValue>.*)\\s"
       ],
@@ -11,7 +15,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [".*\\.spec"],
+      "fileMatch": [
+        ".*\\.spec"
+      ],
       "matchStrings": [
         "# renovate: datasource=yum repo=(?<registryUrl>[^\\s]+) pkg=(?<depName>[^\\s]+)\\s*%global [^\\s]+ (?<currentValue>[^\\s]+)"
       ],
@@ -22,7 +28,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [".*\\.spec"],
+      "fileMatch": [
+        ".*\\.spec"
+      ],
       "matchStrings": [
         "# renovate: datasource=yum repo=(?<registryUrl>[^\\s]+) pkg=(?<depName>[^\\s]+)\\s*[^\\s]+\\s+(?<currentValue>[^\\s]+)"
       ],
@@ -34,7 +42,9 @@
   ],
   "packageRules": [
     {
-      "matchPackageNames": ["rpm-ostree"],
+      "matchPackageNames": [
+        "rpm-ostree"
+      ],
       "extractVersion": "^(?<version>\\d+\\.\\d+)",
     }
   ]
