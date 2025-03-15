@@ -32,7 +32,10 @@
             "ghcr.io/ublue-os": [
                 {
                     "type": "sigstoreSigned",
-                    "keyPath": "/etc/pki/containers/ublue-os.pub",
+                    "keyPaths": [
+                        "/etc/pki/containers/ublue-os.pub",
+                        "/etc/pki/containers/ublue-os-backup.pub"
+                    ],
                     "signedIdentity": {
                         "type": "matchRepository"
                     }
