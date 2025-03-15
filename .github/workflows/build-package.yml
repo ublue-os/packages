@@ -31,7 +31,7 @@ jobs:
 
       - name: Get all changed files from package directores
         id: changed-package-files
-        uses: step-security/changed-files@428eaa2385c7376d5f98aa3e69e7ff9cafd3af89 # v45
+        uses: step-security/changed-files@3dbe17c78367e7d60f00d78ae6781a35be47b4a1 # v45
         with:
           files_from_source_file: ${{ steps.specdirs.outputs.fileslist }}
 
