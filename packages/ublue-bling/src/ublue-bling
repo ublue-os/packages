@@ -55,7 +55,7 @@ function pixi-install-global() {
     exit 1
   fi
 
-    pixi install global $packages
+    pixi global install $packages
 }
 
 # Check if bling is already sourced
