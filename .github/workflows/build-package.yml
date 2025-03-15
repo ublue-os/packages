@@ -6,64 +6,35 @@ on:
     types: [labeled]
 
 jobs:
-  changed_files:
+  spec_files:
     runs-on: ubuntu-latest
+    # Remove or adjust the condition if you want the job to run on every PR
     if: contains(github.event.pull_request.labels.*.name, 'safe-to-run')
-    name: Get changed files
+    name: Get all spec files
     outputs:
-      all_changed_files: ${{ steps.changed-package-files.outputs.all_changed_files }}
-      any_changed: ${{ steps.changed-package-files.outputs.any_changed }}
-      specs: ${{ steps.packages.outputs.specs }}
+      specs: ${{ steps.specs.outputs.specs }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
-      - name: Get directories with spec files
-        id: specdirs
+      - name: Get all spec files
+        id: specs
         run: |
-          set -x
-          FILESLIST=./files.txt
-          # The extra xargs there is so that the changed-files action can find all the files
-          find . -type f -iname '*.spec' -exec 'dirname' '{}' ';' 2>/dev/null | xargs -I{} echo "{}/**" > $FILESLIST
-          echo "fileslist=$FILESLIST" >> $GITHUB_OUTPUT
-
-      - name: Get all changed files from package directores
-        id: changed-package-files
-        uses: tj-actions/changed-files@v45
-        with:
-          files_from_source_file: ${{ steps.specdirs.outputs.fileslist }}
-
-      - name: Get all packages that need to be rebuilt
-        id: packages
-        if: steps.changed-package-files.outputs.any_changed == 'true'
-        env:
-          ALL_CHANGED_FILES: ${{ steps.changed-package-files.outputs.all_changed_files }}
-        run: |
-          set -x
-
-          ALL_SPECS=()
-          for file in ${ALL_CHANGED_FILES}; do
-            for spec in $(dirname $file)/*.spec ; do
-              ALL_SPECS+=( "$(realpath "--relative-to=${GITHUB_WORKSPACE}" "${spec}")" )
-            done
-          done
-
-          # Cleans up duplicate spec entries
-          IFS=" " read -r -a ALL_SPECS <<< "$(echo "${ALL_SPECS[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' ')"
-          
-          MATRIX="{\"specs\":[]}"
-          for spec in $ALL_SPECS ; do
-              [ -e "$spec" ] && MATRIX=$(echo $MATRIX | jq -c ".specs += [\"$spec\"]")
-          done
-          echo "specs=$(echo $MATRIX | jq -c '.specs')" >> $GITHUB_OUTPUT
+          set -e
+          # Find all files ending in .spec, sort them, and convert paths relative to the workspace
+          SPEC_FILES=$(find . -type f -iname '*.spec' | sort | while read -r spec; do
+            realpath --relative-to="$GITHUB_WORKSPACE" "$spec"
+          done)
+          # Convert the list of spec files to a JSON array using jq
+          SPEC_JSON=$(echo "$SPEC_FILES" | jq -R -s -c 'split("\n")[:-1]')
+          echo "specs=$SPEC_JSON" >> $GITHUB_OUTPUT
 
   build_packages:
     runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
-    needs: changed_files
+    needs: spec_files
     name: Build RPM package
-    if: needs.changed_files.outputs.any_changed == 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -71,7 +42,7 @@ jobs:
         # These are our target environments
         # FIXME: renovate rule for this would be awesome
         chroot: ["fedora-40", "fedora-41", "epel-10"]
-        spec: ${{ fromJson(needs.changed_files.outputs.specs) }}
+        spec: ${{ fromJson(needs.spec_files.outputs.specs) }}
     steps:
       - uses: actions/checkout@v4
 
