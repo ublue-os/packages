@@ -29,6 +29,8 @@ jobs:
           done)
           # Convert the list of spec files to a JSON array using jq
           SPEC_JSON=$(echo "$SPEC_FILES" | jq -R -s -c 'split("\n")[:-1]')
+          echo "Created JSON array of spec files:"
+          echo "$SPEC_JSON"
           echo "specs=$SPEC_JSON" >> $GITHUB_OUTPUT
 
   build_packages:
