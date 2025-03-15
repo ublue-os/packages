@@ -104,7 +104,7 @@ function add-bling() {
     
     # Determine architecture and install appropriately
     architecture=$(uname -m)
-    if [[ "$architecture" == "aarch64" || "$architecture" == "arm64" ]]; then
+    if [[ "$architecture" == "aarch64" || "$architecture" == "arm64" || "$(get_config '."use-pixi-bling"' 0)" == "1" ]]; then
         pixi-install-global || Exiting
     else
         brew-bundle || Exiting
@@ -229,7 +229,7 @@ function main() {
 BLING_CLI_NAME="$(get_config '."bling-cli-name"' "bluefin-cli")"
 BLING_CLI_DIRECTORY="$(get_config '."bling-cli-path"' "/usr/share/ublue-os/bling")"
 BLING_BREW_BUNDLE_PATH="$(get_config '."bling-brew-bundle-path"' "/usr/share/ublue-os/homebrew/$BLING_CLI_NAME.Brewfile")"
-BLING_PIXI_PACKAGES_FILE="${BLING_PIXI_PACKAGES_FILE:-/usr/share/ublue-os/homebrew/$BLING_CLI_NAME_pixi_packages}"
+BLING_PIXI_PACKAGES_FILE="$(get_config '."bling-pixi-package-path"' "/usr/share/ublue-os/homebrew/$BLING_CLI_NAME_pixi_packages")"
 
 # Entrypoint
 main ""
