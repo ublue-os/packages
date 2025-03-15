@@ -39,6 +39,25 @@ function brew-bundle() {
     brew bundle --file "$BLING_BREW_BUNDLE_PATH"
 }
 
+# Pixi Install Global
+function pixi-install-global() {
+    echo 'Installing bling with pixi (global install) 🐍🐍🐍'
+
+    if [ ! -f "$BLING_PIXI_PACKAGES_FILE" ]; then
+        echo "Error: Pixi packages file not found at $BLING_PIXI_PACKAGES_FILE"
+        exit 1
+    fi
+
+    packages=$(cat "$BLING_PIXI_PACKAGES_FILE" | grep -v '^#' | grep -v '^$' | tr '\n' ' ')
+    
+    if [ -z "$packages" ]; then
+        echo "Error: No packages found in $BLING_PIXI_PACKAGES_FILE"
+    exit 1
+  fi
+
+    pixi install global $packages
+}
+
 # Check if bling is already sourced
 # 0 for yes
 # 1 for no
@@ -82,7 +101,14 @@ function is-bling-installed() {
 function add-bling() {
     shell="$1"
     shift
-    brew-bundle || Exiting
+    
+    # Determine architecture and install appropriately
+    architecture=$(uname -m)
+    if [[ "$architecture" == "aarch64" || "$architecture" == "arm64" ]]; then
+        pixi-install-global || Exiting
+    else
+        brew-bundle || Exiting
+    fi
 
     echo 'Setting up your Shell 🐚🐚🐚'
     case "${shell}" in
@@ -203,6 +229,7 @@ function main() {
 BLING_CLI_NAME="$(get_config '."bling-cli-name"' "bluefin-cli")"
 BLING_CLI_DIRECTORY="$(get_config '."bling-cli-path"' "/usr/share/ublue-os/bling")"
 BLING_BREW_BUNDLE_PATH="$(get_config '."bling-brew-bundle-path"' "/usr/share/ublue-os/homebrew/$BLING_CLI_NAME.Brewfile")"
+BLING_PIXI_PACKAGES_FILE="${BLING_PIXI_PACKAGES_FILE:-/usr/share/ublue-os/homebrew/$BLING_CLI_NAME_pixi_packages}"
 
 # Entrypoint
 main ""
