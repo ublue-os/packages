@@ -54,7 +54,7 @@ jobs:
       matrix: ${{fromJson(needs.generate_matrix.outputs.matrix)}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Install dependencies
         if: matrix.platform == 'arm64'
@@ -65,7 +65,7 @@ jobs:
 
       - name: Build Image
         id: build_image
-        uses: redhat-actions/buildah-build@v2
+        uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2
         with:
           containerfiles: |
             ./${{ env.IMAGE_NAME }}/Containerfile
@@ -142,7 +142,7 @@ jobs:
       - generate_matrix
       - build_push
     container:
-      image: quay.io/fedora/fedora:41
+      image: quay.io/fedora/fedora:41@sha256:590bc9ff01bd1a539ca672cff44af60e872de105075c8b6a9aed35f5b27e3852
       options: --privileged --security-opt seccomp=unconfined
     permissions:
       contents: read
