@@ -15,7 +15,7 @@ jobs:
       any_changed: ${{ steps.changed-package-files.outputs.any_changed }}
       specs: ${{ steps.packages.outputs.specs }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
@@ -31,7 +31,7 @@ jobs:
 
       - name: Get all changed files from package directores
         id: changed-package-files
-        uses: tj-actions/changed-files@v45
+        uses: step-security/changed-files@3dbe17c78367e7d60f00d78ae6781a35be47b4a1 # v45
         with:
           files_from_source_file: ${{ steps.specdirs.outputs.fileslist }}
 
@@ -73,7 +73,7 @@ jobs:
         chroot: ["fedora-40", "fedora-41", "epel-10"]
         spec: ${{ fromJson(needs.changed_files.outputs.specs) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Install dependencies
         if: matrix.platform == 'arm64'
@@ -83,7 +83,7 @@ jobs:
             podman
 
       - name: Setup Just
-        uses: extractions/setup-just@dd310ad5a97d8e7b41793f8ef055398d51ad4de6 # v2
+        uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
 
       - name: Build ${{ matrix.spec }}
         id: build_package
