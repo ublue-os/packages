@@ -48,7 +48,7 @@ function pixi-install-global() {
         exit 1
     fi
 
-    packages=$(cat "$BLING_PIXI_PACKAGES_FILE" | grep -v '^#' | grep -v '^$' | tr '\n' ' ')
+    packages="$(cat "$BLING_PIXI_PACKAGES_FILE" | grep -v '^#' | grep -v '^$' | tr '\n' ' ')"
     
     if [ -z "$packages" ]; then
         echo "Error: No packages found in $BLING_PIXI_PACKAGES_FILE"
