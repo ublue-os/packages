@@ -104,7 +104,7 @@ function add-bling() {
     
     # Determine architecture and install appropriately
     architecture=$(uname -m)
-    if [[ "$architecture" == "aarch64" || "$architecture" == "arm64" || "$(get_config '."use-pixi-bling"' 0)" == "1" ]]; then
+    if [[ "$(get_config '."use-pixi-bling"' 0)" == "1" ]]; then
         pixi-install-global || Exiting
     else
         brew-bundle || Exiting
