@@ -52,7 +52,7 @@ function pixi-install-global() {
     
     if [ -z "$packages" ]; then
         echo "Error: No packages found in $BLING_PIXI_PACKAGES_FILE"
-    exit 1
+    	exit 1
   fi
 
     pixi global install $packages
