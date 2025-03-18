@@ -38,8 +38,6 @@ jobs:
     targets:
       # See https://packit.dev/docs/configuration#aliases
       - fedora-41
-      - fedora-42
-      - fedora-rawhide
       - epel-10
   # Run rpm builds for a non-ephemeral namespace.
   # Used for triggering builds in our repo when PR
