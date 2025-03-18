@@ -24,18 +24,15 @@ _:
   #    bazzite: &project-bazzite
   #      owner: "@bazzite-org"
   #      project: bazzite
-
-srpm_build_deps: [ rpkg ]
-
+srpm_build_deps: [rpkg]
 actions:
   post-upstream-clone:
     - bash -c "rpkg spec --sources --outdir ."
-
 # TODO (@zeglius Tue Mar 18): replace with references (`*`)
 jobs:
-  # Run a rpm build for that specific PR in an ephemeral namespace.
-  # Used for PR checks and for ephemeral rpm testing.
   - &job-rpm-on-pr
+    # Run a rpm build for that specific PR in an ephemeral namespace.
+    # Used for PR checks and for ephemeral rpm testing.
     job: copr_build
     trigger: pull_request
     targets:
@@ -44,7 +41,6 @@ jobs:
       - fedora-42
       - fedora-rawhide
       - epel-10
-
   # Run rpm builds for a non-ephemeral namespace.
   # Used for triggering builds in our repo when PR
   # merges to main branch.
@@ -52,9 +48,72 @@ jobs:
     trigger: commit
     branch: main
     <<: *project-packages
-
 packages:
   ublue-os-media-automount-udev:
     downstream_package_name: ublue-os-media-automount-udev
-    paths: [ "./packages/ublue-os-media-automount-udev" ]
+    paths: ["./packages/ublue-os-media-automount-udev"]
     specfile_path: "ublue-os-media-automount-udev.spec"
+  ublue-bling:
+    downstream_package_name: ublue-bling
+    paths: ["./packages/ublue-bling"]
+    specfile_path: "ublue-bling.spec"
+  uupd:
+    downstream_package_name: uupd
+    paths: ["./packages/uupd"]
+    specfile_path: "uupd.spec"
+  ublue-motd:
+    downstream_package_name: ublue-motd
+    paths: ["./packages/ublue-motd"]
+    specfile_path: "ublue-motd.spec"
+  bluefin:
+    downstream_package_name: bluefin
+    paths: ["./packages/bluefin"]
+    specfile_path: "bluefin.spec"
+  ublue-recipes:
+    downstream_package_name: ublue-recipes
+    paths: ["./packages/ublue-recipes"]
+    specfile_path: "ublue-recipes.spec"
+  ublue-os-udev-rules:
+    downstream_package_name: ublue-os-udev-rules
+    paths: ["./packages/ublue-os-udev-rules"]
+    specfile_path: "ublue-os-udev-rules.spec"
+  kcm_ublue:
+    downstream_package_name: kcm_ublue
+    paths: ["./packages/kcm_ublue"]
+    specfile_path: "kcm_ublue.spec"
+  ublue-os-luks:
+    downstream_package_name: ublue-os-luks
+    paths: ["./packages/ublue-os-luks"]
+    specfile_path: "ublue-os-luks.spec"
+  ublue-os-signing:
+    downstream_package_name: ublue-os-signing
+    paths: ["./packages/ublue-os-signing"]
+    specfile_path: "ublue-os-signing.spec"
+  ublue-os-update-services:
+    downstream_package_name: ublue-os-update-services
+    paths: ["./packages/ublue-os-update-services"]
+    specfile_path: "ublue-os-update-services.spec"
+  ublue-fastfetch:
+    downstream_package_name: ublue-fastfetch
+    paths: ["./packages/ublue-fastfetch"]
+    specfile_path: "ublue-fastfetch.spec"
+  ublue-setup-services:
+    downstream_package_name: ublue-setup-services
+    paths: ["./packages/ublue-setup-services"]
+    specfile_path: "ublue-setup-services.spec"
+  ublue-rebase-helper:
+    downstream_package_name: ublue-rebase-helper
+    paths: ["./packages/ublue-rebase-helper"]
+    specfile_path: "ublue-rebase-helper.spec"
+  ublue-brew:
+    downstream_package_name: ublue-brew
+    paths: ["./packages/ublue-brew"]
+    specfile_path: "ublue-brew.spec"
+  ublue-os-just:
+    downstream_package_name: ublue-os-just
+    paths: ["./packages/ublue-os-just"]
+    specfile_path: "ublue-os-just.spec"
+  ublue-polkit-rules:
+    downstream_package_name: ublue-polkit-rules
+    paths: ["./packages/ublue-polkit-rules"]
+    specfile_path: "ublue-polkit-rules.spec"
