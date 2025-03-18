@@ -183,7 +183,7 @@ function main() {
             trap ctrl_c SIGINT
             add-bling "${shell}"
             printf "%s%sInstallation Complete%s ... please close and reopen your terminal!" "${green}" "${bold}" "${normal}"
-	        printf "Check out the documentation at: https://docs.projectbluefin.io/bluefin-dx#bluefin-cli\n"
+	    printf "Check out the documentation at: https://docs.projectbluefin.io/bluefin-dx#bluefin-cli\n"
 	    exit 0
         ;;
         "disable")
