@@ -27,7 +27,7 @@ _:
 srpm_build_deps: [rpkg]
 actions:
   get-current-version:
-    - bash -c 'tmp=$(mktemp -u); rpkg spec -p >$tmp && rpmspec -q --queryformat "%{VERSION}\n" $tmp'
+    - bash -c "tmp=$(mktemp -u); rpkg spec -p >$tmp && rpmspec -q --queryformat \"%{VERSION}\n\" $tmp| head -n1"
   post-upstream-clone:
     - bash -c "rpkg spec --sources --outdir ."
 # TODO (@zeglius Tue Mar 18): replace with references (`*`)
