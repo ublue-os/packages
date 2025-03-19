@@ -41,7 +41,6 @@ while read -r _owner _project namespace_dir; do
     cat <<EOF >>"$(mkyaml)"
 packages:
   $pkg:
-    downstream_package_name: $pkg
     paths: [ "$namespace_dir/$pkg" ]
     specfile_path: "$pkg.spec"
 
