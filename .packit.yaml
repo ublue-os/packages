@@ -25,7 +25,7 @@ _:
   #      owner: "@bazzite-org"
   #      project: bazzite
 srpm_build_deps: [rpkg]
-actions: &actions-default
+actions:
   get-current-version:
     - bash -c "tmp=$(mktemp -u); rpkg spec -p >$tmp && rpmspec -q --queryformat \"%{VERSION}\n\" $tmp| head -n1"
   post-upstream-clone:
@@ -50,16 +50,6 @@ jobs:
     trigger: commit
     branch: main
     <<: *project-packages
-_:
-  # Skip rpkg if the spec file doesnt use it.
-  # Usage:
-  # ```yaml
-  # <package>:
-  #   actions: *actions-without-rpkg
-  # ```
-  actions-without-rpkg: &actions-without-rpkg
-    <<: *actions-default
-    post-upstream-clone: []
 packages:
   ublue-os-media-automount-udev:
     paths: ["./packages/ublue-os-media-automount-udev"]
@@ -70,7 +60,6 @@ packages:
   uupd:
     paths: ["./packages/uupd"]
     specfile_path: "uupd.spec"
-    actions: *actions-without-rpkg
   ublue-motd:
     paths: ["./packages/ublue-motd"]
     specfile_path: "ublue-motd.spec"
@@ -86,7 +75,6 @@ packages:
   kcm_ublue:
     paths: ["./packages/kcm_ublue"]
     specfile_path: "kcm_ublue.spec"
-    actions: *actions-without-rpkg
   ublue-os-luks:
     paths: ["./packages/ublue-os-luks"]
     specfile_path: "ublue-os-luks.spec"
