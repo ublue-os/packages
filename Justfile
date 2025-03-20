@@ -127,6 +127,10 @@ remove-overlay $TARGET_RPM:
     sudo rm -f "{{ extensions_dir }}/${NAME_TRIMMED}.raw"
     sudo systemd-sysext refresh
 
+# Include all packages into packit config file by running `add_specs`.
+update-packit:
+    ./add_specs.sh
+
 clean:
     #!/usr/bin/env bash
     for line in $(cat .gitignore | xargs) ; do

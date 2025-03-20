@@ -1,0 +1,104 @@
+# See the documentation for more information:
+# https://packit.dev/docs/configuration/
+
+_:
+  # Used to determine to which namespace the copr gets pushed to
+  # when merging to main branch.
+  # Example:
+  # ```yaml
+  # - job:
+  #     trigger: commit
+  #     branch: main
+  #     owner: "@zeglius"
+  #     project: packages
+  # ```
+  # The above config will push to '@zeglius/packages' namespace
+  # in fedora copr.
+  projects:
+    packages: &project-packages
+      owner: "@ublue-os"
+      project: packages
+  #    staging: &project-staging
+  #      owner: "@ublue-os"
+  #      project: staging
+  #    bazzite: &project-bazzite
+  #      owner: "@bazzite-org"
+  #      project: bazzite
+srpm_build_deps: [rpkg]
+actions:
+  get-current-version:
+    - bash -c "tmp=$(mktemp -u); rpkg spec -p >$tmp && rpmspec -q --queryformat \"%{VERSION}\n\" $tmp| head -n1"
+  post-upstream-clone:
+    - bash -c "rpkg spec --sources --outdir ."
+# TODO (@zeglius Tue Mar 18): replace with references (`*`)
+jobs:
+  - &job-rpm-on-pr
+    # Run a rpm build for that specific PR in an ephemeral namespace.
+    # Used for PR checks and for ephemeral rpm testing.
+    job: copr_build
+    trigger: pull_request
+    targets:
+      # See https://packit.dev/docs/configuration#aliases
+      - fedora-latest-stable # the latest released Fedora version
+      - fedora-latest # the last versioned Fedora (not a Rawhide), regardless if it's released or still under development.
+      - fedora-41 # TODO (@Zeglius Tue Mar 18): Delete this whenever not needed
+      - epel-10
+  # Run rpm builds for a non-ephemeral namespace.
+  # Used for triggering builds in our repo when PR
+  # merges to main branch.
+  - <<: *job-rpm-on-pr
+    trigger: commit
+    branch: main
+    <<: *project-packages
+packages:
+  ublue-os-media-automount-udev:
+    paths: ["./packages/ublue-os-media-automount-udev"]
+    specfile_path: "ublue-os-media-automount-udev.spec"
+  ublue-bling:
+    paths: ["./packages/ublue-bling"]
+    specfile_path: "ublue-bling.spec"
+  uupd:
+    paths: ["./packages/uupd"]
+    specfile_path: "uupd.spec"
+  ublue-motd:
+    paths: ["./packages/ublue-motd"]
+    specfile_path: "ublue-motd.spec"
+  bluefin:
+    paths: ["./packages/bluefin"]
+    specfile_path: "bluefin.spec"
+  ublue-recipes:
+    paths: ["./packages/ublue-recipes"]
+    specfile_path: "ublue-recipes.spec"
+  ublue-os-udev-rules:
+    paths: ["./packages/ublue-os-udev-rules"]
+    specfile_path: "ublue-os-udev-rules.spec"
+  kcm_ublue:
+    paths: ["./packages/kcm_ublue"]
+    specfile_path: "kcm_ublue.spec"
+  ublue-os-luks:
+    paths: ["./packages/ublue-os-luks"]
+    specfile_path: "ublue-os-luks.spec"
+  ublue-os-signing:
+    paths: ["./packages/ublue-os-signing"]
+    specfile_path: "ublue-os-signing.spec"
+  ublue-os-update-services:
+    paths: ["./packages/ublue-os-update-services"]
+    specfile_path: "ublue-os-update-services.spec"
+  ublue-fastfetch:
+    paths: ["./packages/ublue-fastfetch"]
+    specfile_path: "ublue-fastfetch.spec"
+  ublue-setup-services:
+    paths: ["./packages/ublue-setup-services"]
+    specfile_path: "ublue-setup-services.spec"
+  ublue-rebase-helper:
+    paths: ["./packages/ublue-rebase-helper"]
+    specfile_path: "ublue-rebase-helper.spec"
+  ublue-brew:
+    paths: ["./packages/ublue-brew"]
+    specfile_path: "ublue-brew.spec"
+  ublue-os-just:
+    paths: ["./packages/ublue-os-just"]
+    specfile_path: "ublue-os-just.spec"
+  ublue-polkit-rules:
+    paths: ["./packages/ublue-polkit-rules"]
+    specfile_path: "ublue-polkit-rules.spec"
