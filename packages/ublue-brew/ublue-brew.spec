@@ -45,6 +45,10 @@ cp -rp src/tmpfiles.d %{buildroot}%{_prefix}/lib
 %{_datadir}/fish/vendor_conf.d/%{name}.fish
 %{_sysconfdir}/security/limits.d/*brew*.conf
 %{_unitdir}/brew-setup.service
+%{_unitdir}/brew-update.timer
+%{_unitdir}/brew-update.service
+%{_unitdir}/brew-upgrade.timer
+%{_unitdir}/brew-upgrade.service
 %{_prefix}/lib/systemd/system-preset/01-homebrew.preset
 %{_prefix}/lib/tmpfiles.d/*brew.conf
 
