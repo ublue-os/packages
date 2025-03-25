@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.1.9
+Version:        0.2.0
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -17,34 +17,36 @@ Branding for Bluefin-related projects
 %prep
 {{{ git_dir_setup_macro }}}
 
-%install
-mkdir -p -m0755 \
-    %{buildroot}%{_datadir}/backgrounds/%{vendor} \
-    %{buildroot}%{_datadir}/gnome-background-properties \
-    %{buildroot}%{_datadir}/pixmaps/faces \
-    %{buildroot}%{_datadir}/ublue-os/homebrew \
-    %{buildroot}%{_sysconfdir}
+%build
 
-mv wallpapers/gnome-background-properties/*.xml %{buildroot}%{_datadir}/gnome-background-properties
-rm -rf wallpaper/gnome-background-properties
-mv wallpapers/*.xml %{buildroot}%{_datadir}/backgrounds/%{vendor}
-mv wallpapers/* %{buildroot}%{_datadir}/backgrounds/%{vendor}
-mv faces %{buildroot}%{_datadir}/pixmaps/faces/bluefin
-mv logos/* %{buildroot}%{_datadir}/pixmaps
-mv cli-logos %{buildroot}%{_datadir}/ublue-os/bluefin-logos
-mv fastfetch/fastfetch.jsonc %{buildroot}%{_datadir}/ublue-os/fastfetch.jsonc
-mv schemas/dconf %{buildroot}%{_sysconfdir}
-mv schemas/skel %{buildroot}%{_sysconfdir}
-mv schemas/profile.d %{buildroot}%{_sysconfdir}
-mv schemas/distrobox %{buildroot}%{_sysconfdir}
-mv schemas/geoclue %{buildroot}%{_sysconfdir}
-mv schemas/glib-2.0 %{buildroot}%{_datadir}
-mv schemas/homebrew/* %{buildroot}%{_datadir}/ublue-os/homebrew
-mv schemas/applications %{buildroot}%{_datadir}
-mv plymouth %{buildroot}%{_datadir}
+%install
+install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/bluefin-logos/sixels/ cli-logos/sixels/*
+install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/bluefin-logos/symbols/ cli-logos/symbols/*
+install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/bluefin-logos/ cli-logos/logos/*
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/dconf/db/distro.d/ schemas%{_sysconfdir}/dconf/db/distro.d/*-*
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/dconf/db/distro.d/locks/ schemas%{_sysconfdir}/dconf/db/distro.d/locks/*
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/*
+install -Dpm0644 -t %{buildroot}%{_datadir}/gnome-background-properties/ wallpapers/gnome-background-properties/*.xml
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/ wallpapers/images/*.jxl
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/ wallpapers/images/*.xml
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/faces/bluefin/ faces/*
+install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
+install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/skel/.config/toolbox/ schemas%{_sysconfdir}/skel/.config/toolbox/*
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/profile.d/ schemas%{_sysconfdir}/profile.d/*.sh
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/skel/.local/share/flatpak/overrides/ schemas%{_sysconfdir}/skel/.local/share/flatpak/overrides/*
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/skel/.local/share/org.gnome.Ptyxis/palettes/ schemas%{_sysconfdir}/skel/.local/share/org.gnome.Ptyxis/palettes/*
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/skel/.var/app/io.github.dvlv.boxbuddyrs/config/glib-2.0/settings/ schemas%{_sysconfdir}/skel/.var/app/io.github.dvlv.boxbuddyrs/config/glib-2.0/settings/keyfile
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/geoclue/conf.d/ schemas%{_sysconfdir}/geoclue/conf.d/99-beacondb.conf
+install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/homebrew/ schemas%{_datadir}/ublue-os/homebrew/*.Brewfile
+install -Dpm0644 -t %{buildroot}%{_datadir}/glib-2.0/schemas/ schemas%{_datadir}/glib-2.0/schemas/zz0-bluefin-modifications.gschema.override
+install -Dpm0644 -t %{buildroot}%{_datadir}/applications/ schemas%{_datadir}/applications/*.desktop
+
+%check
 
 %package logos
 Summary:        Logos for GNOME
+Version:        0.2.0
 License:        CC-BY-CA
 Provides: fedora-logos
 Provides: centos-logos
@@ -56,10 +58,12 @@ Obsoletes: system-logos
 %description logos
 Replacement logos for GNOME
 
+
 %files logos
-%attr(0755,root,root) %{_datadir}/pixmaps/fedora*
-%attr(0755,root,root) %{_datadir}/pixmaps/system-*
-%attr(0755,root,root) %{_datadir}/pixmaps/ublue-*
+%{_datadir}/pixmaps/fedora*
+%{_datadir}/pixmaps/system-*
+%{_datadir}/pixmaps/ublue-*
+
 
 %package cli-logos
 Summary:        Logos for CLI
@@ -69,27 +73,32 @@ License:        CC-BY-CA
 Logos for CLI applications like Fastfetch
 
 %files cli-logos
-%attr(0755,root,root) %{_datadir}/ublue-os/bluefin-logos/*
+%{_datadir}/ublue-os/bluefin-logos/*
+
 
 %package fastfetch
 Summary:        Fastfetch configuration for Bluefin
+Version:        0.2.0
 License:        CC-BY-CA
 
 %description fastfetch
 Fastfetch configuration for Bluefin
 
 %files fastfetch
-%attr(0755,root,root) %{_datadir}/ublue-os/fastfetch.jsonc
+%{_datadir}/ublue-os/fastfetch.jsonc
+
 
 %package plymouth
 Summary:        Plymouth customization for Bluefin
+Version:        0.2.0
 License:        CC-BY-CA
 
 %description plymouth
 Plymouth logo customization for Bluefin
 
 %files plymouth
-%attr(0755,root,root) %{_datadir}/plymouth
+%{_datadir}/plymouth
+
 
 %package schemas
 Summary:        GNOME Schemas for Bluefin
@@ -98,39 +107,40 @@ Summary:        GNOME Schemas for Bluefin
 Contains all of the DConf settings that Bluefin ships by default
 
 %files schemas
-%attr(0755,root,root) %{_sysconfdir}/dconf/db
-%attr(0755,root,root) %{_sysconfdir}/profile.d
-%attr(0755,root,root) %{_sysconfdir}/geoclue
-%attr(0755,root,root) %{_sysconfdir}/distrobox
-%attr(0755,root,root) %{_sysconfdir}/skel
-%attr(0755,root,root) %{_datadir}/glib-2.0
-%attr(0755,root,root) %{_datadir}/applications
-%attr(0755,root,root) %{_datadir}/ublue-os/homebrew/kubernetes.Brewfile
-%attr(0755,root,root) %{_datadir}/ublue-os/homebrew/bluefin-cli.Brewfile
+%{_sysconfdir}/dconf/db
+%{_sysconfdir}/profile.d
+%{_sysconfdir}/geoclue
+%{_sysconfdir}/skel
+%{_datadir}/glib-2.0
+%{_datadir}/applications
+%{_datadir}/ublue-os/homebrew/kubernetes.Brewfile
+%{_datadir}/ublue-os/homebrew/bluefin-cli.Brewfile
+
 
 %package backgrounds
 Summary:        Bluefin wallpapers
+Version:        0.2.0
 License:        CC-BY-CA
 
 %description backgrounds
 Wallpapers included on Bluefin by default
 
 %files backgrounds
-%attr(0755,root,root) %{_datadir}/backgrounds/%{vendor}/*
-%attr(0755,root,root) %{_datadir}/gnome-background-properties/*.xml
+%{_datadir}/backgrounds/%{vendor}/*
+%{_datadir}/gnome-background-properties/*.xml
+
 
 %package faces
 Summary:      Bluefin GNOME Faces
+Version:      0.2.0
 License:      CC-BY-CA
 
 %description faces
 GNOME profile pictures for Bluefin
 
-%pre faces
-rm -rf %{_datadir}/pixmaps/faces/*
-
 %files faces
-%attr(0755,root,root) %{_datadir}/pixmaps/faces/bluefin/*
+%{_datadir}/pixmaps/faces/bluefin/*
+
 
 %changelog
 %autochangelog
