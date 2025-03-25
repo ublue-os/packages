@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.1.9
+Version:        0.2.0
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -37,6 +37,7 @@ mv schemas/dconf %{buildroot}%{_sysconfdir}
 mv schemas/skel %{buildroot}%{_sysconfdir}
 mv schemas/profile.d %{buildroot}%{_sysconfdir}
 mv schemas/distrobox %{buildroot}%{_sysconfdir}
+mv schemas/gnome-initial-setup %{buildroot}%{_sysconfdir}
 mv schemas/geoclue %{buildroot}%{_sysconfdir}
 mv schemas/glib-2.0 %{buildroot}%{_datadir}
 mv schemas/homebrew/* %{buildroot}%{_datadir}/ublue-os/homebrew
@@ -103,6 +104,7 @@ Contains all of the DConf settings that Bluefin ships by default
 %attr(0755,root,root) %{_sysconfdir}/geoclue
 %attr(0755,root,root) %{_sysconfdir}/distrobox
 %attr(0755,root,root) %{_sysconfdir}/skel
+%attr(0755,root,root) %{_sysconfdir}/gnome-initial-setup
 %attr(0755,root,root) %{_datadir}/glib-2.0
 %attr(0755,root,root) %{_datadir}/applications
 %attr(0755,root,root) %{_datadir}/ublue-os/homebrew/kubernetes.Brewfile
