@@ -184,7 +184,7 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description plugin-uefi-capsule-data
 This provides the pregenerated BMP artwork for the UX capsule, which allows the
-"Installing firmware updateâ€¦" localized text to be shown during a UEFI firmware
+"Installing firmware update..." localized text to be shown during a UEFI firmware
 update operation. This subpackage is probably not required on embedded hardware
 or server machines.
 %endif
