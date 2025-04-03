@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.2.0
+Version:        0.2.1
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -66,6 +66,7 @@ Replacement logos for GNOME
 
 
 %package cli-logos
+Version:        0.2.0
 Summary:        Logos for CLI
 License:        CC-BY-CA
 
@@ -101,6 +102,7 @@ Plymouth logo customization for Bluefin
 
 
 %package schemas
+Version:        0.2.1
 Summary:        GNOME Schemas for Bluefin
 
 %description schemas
@@ -113,8 +115,7 @@ Contains all of the DConf settings that Bluefin ships by default
 %{_sysconfdir}/skel
 %{_datadir}/glib-2.0
 %{_datadir}/applications
-%{_datadir}/ublue-os/homebrew/kubernetes.Brewfile
-%{_datadir}/ublue-os/homebrew/bluefin-cli.Brewfile
+%{_datadir}/ublue-os/homebrew/*.Brewfile
 
 
 %package backgrounds
