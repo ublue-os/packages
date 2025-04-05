@@ -22,6 +22,7 @@ Branding for Aurora-related projects
 %install
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/aurora-logos/symbols/ cli-logos/symbols/*
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
+install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
 
 %check
 
@@ -47,6 +48,19 @@ Fastfetch configuration for Aurora
 
 %files fastfetch
 %{_datadir}/ublue-os/fastfetch.jsonc
+
+
+%package plymouth
+Summary:        Plymouth customization for Aurora
+Version:        0.2.0
+License:        CC-BY-CA
+
+%description plymouth
+Plymouth logo customization for Aurora
+
+%files plymouth
+%{_datadir}/plymouth
+
 
 %changelog
 %autochangelog
