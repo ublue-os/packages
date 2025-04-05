@@ -4,7 +4,7 @@
 
 Name:           ublue-brew
 Version:        0.1.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Homebrew integration for Universal Blue systems
 
 License:        Apache-2.0
@@ -26,6 +26,7 @@ Homebrew integration for Universal Blue systems
 mkdir -p %{buildroot}{%{_unitdir},%{_prefix}/lib/systemd/system-preset,%{_sysconfdir}}
 install -Dpm0644 %{SOURCE1} %{buildroot}/%{_datadir}/homebrew.tar.zst
 install -Dpm0644 src/systemd/*.service %{buildroot}%{_unitdir}
+install -Dpm0644 src/systemd/*.timer %{buildroot}%{_unitdir}
 install -Dpm0644 src/systemd/*.preset %{buildroot}%{_prefix}/lib/systemd/system-preset
 install -Dm0644 ./src/vendor.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/%{name}.fish
 cp -rp src/security %{buildroot}%{_sysconfdir}
