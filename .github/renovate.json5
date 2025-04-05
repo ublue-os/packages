@@ -1,5 +1,5 @@
 {
-  "extends": ["config:recommended"],
+  "extends": ["config:best-practices"],
   "customManagers": [
     {
       "customType": "regex",

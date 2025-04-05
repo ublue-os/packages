@@ -1,0 +1,20 @@
+# All Files
+* @tulilirockz @p5 @m2Giles
+
+# AKMODS
+akmods/ @bsherman
+
+# UCore
+ucore/ @bsherman
+
+# Ublue-OS Packages
+packages/ublue-os-* @bsherman
+
+# Ublue Packages
+packages/ublue-* @zeglius
+
+# Bluefin Packages
+packages/bluefin/ @castrojo
+
+# Bazzite Packages
+bazzite/ @zeglius @kylegospo
