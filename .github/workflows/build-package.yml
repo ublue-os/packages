@@ -53,12 +53,14 @@ jobs:
               [ -e "$spec" ] && MATRIX=$(jq -c ".specs += [\"$spec\"]" <<< $MATRIX)
           done
 
-          if [ "$(jq -r -c '.specs' <<< $MATRIX)" == "[]" ]; then
+          FINAL_ARRAY="$(jq -c '.specs' <<< $MATRIX)"
+
+          if [[ "${FINAL_ARRAY}" == "[]" || "${FINAL_ARRAY}" == "[\"\"]" ]]; then
               echo "Spec file was not bumped, failed because we dont know which package to build"
               exit 1
           fi
 
-          echo "specs=$(jq -c '.specs' <<< $MATRIX)" >> $GITHUB_OUTPUT
+          echo "specs=${FINAL_ARRAY}" >> $GITHUB_OUTPUT
 
   build_packages:
     runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
