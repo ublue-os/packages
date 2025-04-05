@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.1
+Version:        0.1.0
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -29,7 +29,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/th
 
 %package logos
 Summary:        Logos for KDE
-Version:        0.1.1
+Version:        0.1.0
 License:        CC-BY-CA
 Provides: fedora-logos
 Provides: centos-logos
@@ -43,7 +43,6 @@ Conflicts: bluefin-logos
 %description logos
 Replacement logos for KDE
 
-
 %files logos
 %{_datadir}/pixmaps/fedora*
 %{_datadir}/pixmaps/system-*
@@ -51,7 +50,7 @@ Replacement logos for KDE
 
 
 %package cli-logos
-Version:        0.1.1
+Version:        0.1.0
 Summary:        Logos for CLI
 License:        CC-BY-CA
 
@@ -64,7 +63,7 @@ Logos for CLI applications like Fastfetch
 
 %package fastfetch
 Summary:        Fastfetch configuration for Aurora
-Version:        0.1.1
+Version:        0.1.0
 License:        CC-BY-CA
 
 %description fastfetch
@@ -76,7 +75,7 @@ Fastfetch configuration for Aurora
 
 %package plymouth
 Summary:        Plymouth customization for Aurora
-Version:        0.1.1
+Version:        0.1.0
 License:        CC-BY-CA
 
 %description plymouth
