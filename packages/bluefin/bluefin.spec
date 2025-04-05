@@ -52,6 +52,7 @@ Provides: fedora-logos
 Provides: centos-logos
 Provides: system-logos
 Obsoletes: fedora-logos
+Obsoletes: aurora-logos
 Obsoletes: centos-logos
 Obsoletes: system-logos
 Conflicts: aurora-logos

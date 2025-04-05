@@ -35,6 +35,7 @@ Provides: fedora-logos
 Provides: centos-logos
 Provides: system-logos
 Obsoletes: fedora-logos
+Obsoletes: bluefin-logos
 Obsoletes: centos-logos
 Obsoletes: system-logos
 Conflicts: bluefin-logos
