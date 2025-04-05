@@ -14,9 +14,6 @@ jobs:
       specs: ${{ steps.packages.outputs.specs }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Get directories with spec files
         id: specdirs
