@@ -53,7 +53,7 @@ jobs:
               [ -e "$spec" ] && MATRIX=$(jq -c ".specs += [\"$spec\"]" <<< $MATRIX)
           done
 
-          if [ "$(jq -c '.specs' <<< $MATRIX)" == "" ]; then
+          if [ "$(jq -r -c '.specs' <<< $MATRIX)" == "[]" ]; then
               echo "Spec file was not bumped, failed because we dont know which package to build"
               exit 1
           fi
