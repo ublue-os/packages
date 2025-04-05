@@ -3,12 +3,10 @@ name: Build packages in CI
 on:
   merge_group:
   pull_request:
-    types: [labeled]
 
 jobs:
   changed_files:
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'safe-to-run')
     name: Get changed files
     outputs:
       all_changed_files: ${{ steps.changed-package-files.outputs.all_changed_files }}
