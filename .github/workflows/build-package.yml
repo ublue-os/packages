@@ -53,9 +53,15 @@ jobs:
           
           MATRIX="{\"specs\":[]}"
           for spec in $ALL_SPECS ; do
-              [ -e "$spec" ] && MATRIX=$(echo $MATRIX | jq -c ".specs += [\"$spec\"]")
+              [ -e "$spec" ] && MATRIX=$(jq -c ".specs += [\"$spec\"]" <<< $MATRIX)
           done
-          echo "specs=$(echo $MATRIX | jq -c '.specs')" >> $GITHUB_OUTPUT
+
+          if [ "$(jq -c '.specs' <<< $MATRIX)" == "" ]; then
+              echo "Spec file was not bumped, failed because we dont know which package to build"
+              exit 1
+          fi
+
+          echo "specs=$(jq -c '.specs' <<< $MATRIX)" >> $GITHUB_OUTPUT
 
   build_packages:
     runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
@@ -68,7 +74,7 @@ jobs:
         platform: ["arm64","amd64"]
         # These are our target environments
         # FIXME: renovate rule for this would be awesome
-        chroot: ["fedora-40", "fedora-41", "epel-10"]
+        chroot: ["fedora-41", "fedora-42", "epel-10"]
         spec: ${{ fromJson(needs.changed_files.outputs.specs) }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -94,7 +100,10 @@ jobs:
           CONTAINERS_DIR=./containers
           SOURCES_DIR=.
           export CONTAINERS_DIR
-          $just build ${{ matrix.spec }} -r ${{ matrix.chroot }}-$(arch)
+          if ! $just build ${{ matrix.spec }} -r ${{ matrix.chroot }}-$(arch) ; then
+            echo "Retrying with a network connection"
+            $just build ${{ matrix.spec }} -r ${{ matrix.chroot }}-$(arch) --enable-network
+          fi
           SKIPPED_ARCH=false
           if [ -e "$SOURCES_DIR/arch_skipped" ] ; then
             SKIPPED_ARCH=true
