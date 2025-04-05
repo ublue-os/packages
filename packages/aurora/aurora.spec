@@ -21,13 +21,35 @@ Branding for Aurora-related projects
 
 %install
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/aurora-logos/symbols/ cli-logos/symbols/*
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/*
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
 
 %check
 
+%package logos
+Summary:        Logos for KDE
+Version:        0.1.0
+License:        CC-BY-CA
+Provides: fedora-logos
+Provides: centos-logos
+Provides: system-logos
+Obsoletes: fedora-logos
+Obsoletes: centos-logos
+Obsoletes: system-logos
+
+%description logos
+Replacement logos for KDE
+
+
+%files logos
+%{_datadir}/pixmaps/fedora*
+%{_datadir}/pixmaps/system-*
+%{_datadir}/pixmaps/ublue-*
+
+
 %package cli-logos
-Version:        0.2.0
+Version:        0.1.0
 Summary:        Logos for CLI
 License:        CC-BY-CA
 
