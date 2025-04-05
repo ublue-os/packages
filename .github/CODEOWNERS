@@ -4,6 +4,9 @@
 # AKMODS
 akmods/ @bsherman
 
+# Aurora
+packages/aurora @inffy @Nihaiden @ledif @RealVishy @renner0e
+
 # UCore
 ucore/ @bsherman
 
