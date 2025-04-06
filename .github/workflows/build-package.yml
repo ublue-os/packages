@@ -61,17 +61,17 @@ jobs:
             while : ; do
               pwd
               find . -maxdepth 1 -type f -iname "*.spec" -print0 | while IFS= read -r -d '' line ; do
-                ALL_SPECS+=("$(realpath --relative-to="${GITHUB_WORKSPACE}" "${REPLY}")")
+                ALL_SPECS+=("$(realpath --relative-to="${GITHUB_WORKSPACE}" "${line}")")
               done
-              cd ..
               [[ " ${DEPTH_2_DIRS[*]} " =~ [[:space:]]$(realpath --relative-to="${GITHUB_WORKSPACE}" ${PWD})[[:space:]] ]] && break
+              cd ..
             done
             cd "${GITHUB_WORKSPACE}"
           done
 
           # This is kind of a hack so that we get only unique specs
           IFS=" " read -r -a ALL_SPECS <<< "$(tr ' ' '\n' <<< "${ALL_SPECS[@]}" | sort -u | tr '\n' ' ')"
-          
+
           MATRIX="{\"specs\":[]}"
           for spec in $ALL_SPECS ; do
               [ -e "$spec" ] && MATRIX=$(jq -c ".specs += [\"$spec\"]" <<< $MATRIX)
