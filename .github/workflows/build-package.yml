@@ -19,7 +19,7 @@ jobs:
         id: specdirs
         run: |
           set -x
-          FILESLIST=./files.txt
+          FILESLIST="$(realpath ./files.txt)"
           # The extra xargs there is so that the changed-files action can find all the files
           find . -type f -iname '*.spec' -exec 'dirname' '{}' ';' 2>/dev/null | xargs -I{} echo "{}/**" > $FILESLIST
           echo "fileslist=$FILESLIST" >> $GITHUB_OUTPUT
@@ -38,29 +38,45 @@ jobs:
         run: |
           set -x
 
+          # This is a mess and must be removed at some point, but the general idea is that when you have arbitrary files like:
+          # ALL_CHANGED_FILES="packages/chungus/bungus.spec ucore/sanoid.spec staging/gnome-shell/39/gnome-shell.spec"
+          # If its a spec dont do anything, just add it to ALL_SPECS
+          # If its not a spec try to find an adjencent spec: get its dirname, check if there are any specs, go back 1 directory (...) until you get to 1 folder deep into GITHUB_WORKDIR
+
+          DEPTH_2_DIRS=()
+          # These arent exactly just depth 2 dirs, it includes everything up to 2
+          while IFS=  read -r -d $'\0'; do
+            DEPTH_2_DIRS+=("$(realpath "--relative-to=${GITHUB_WORKSPACE}" "$REPLY")")
+          done < <(find "$GITHUB_WORKSPACE" -maxdepth 2 -type d -print0)
+
           ALL_SPECS=()
-          for file in ${ALL_CHANGED_FILES}; do
-            for spec in $(dirname $file)/*.spec ; do
-              ALL_SPECS+=( "$(realpath "--relative-to=${GITHUB_WORKSPACE}" "${spec}")" )
+          for file in ${ALL_CHANGED_FILES} ; do
+            if [ "${FILENAME##*.}" == "spec" ] ; then
+              ALL_SPECS+=("$(realpath --relative-to="${GITHUB_WORKSPACE}" "${FILENAME}")")
+              continue
+            fi
+            # We need this else PRs editing random files wont get the specs building due to not bumping them directly
+            # This way we still get the checks although we kinda need the bumped spec on the COPR (will be enforced after build)
+            cd "$(dirname "${file}")"
+            while [[ ! " ${DEPTH_2_DIRS[*]} " =~ [[:space:]]$(realpath --relative-to="${GITHUB_WORKSPACE}" ${PWD})[[:space:]] ]]; do
+              pwd
+              find . -maxdepth 1 -type f -iname "*.spec" -print0 | while IFS= read -r -d '' line ; do
+                ALL_SPECS+=("$(realpath --relative-to="${GITHUB_WORKSPACE}" "${REPLY}")")
+              done
+              cd ..
             done
+            cd "${GITHUB_WORKSPACE}"
           done
 
-          # Cleans up duplicate spec entries
-          IFS=" " read -r -a ALL_SPECS <<< "$(echo "${ALL_SPECS[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' ')"
+          # This is kind of a hack so that we get only unique specs
+          IFS=" " read -r -a ALL_SPECS <<< "$(tr ' ' '\n' <<< "${ALL_SPECS[@]}" | sort -u | tr '\n' ' ')"
           
           MATRIX="{\"specs\":[]}"
           for spec in $ALL_SPECS ; do
               [ -e "$spec" ] && MATRIX=$(jq -c ".specs += [\"$spec\"]" <<< $MATRIX)
           done
 
-          FINAL_ARRAY="$(jq -c '.specs' <<< $MATRIX)"
-
-          if [[ "${FINAL_ARRAY}" == "[]" || "${FINAL_ARRAY}" == "[\"\"]" ]]; then
-              echo "Spec file was not bumped, failed because we dont know which package to build"
-              exit 1
-          fi
-
-          echo "specs=${FINAL_ARRAY}" >> $GITHUB_OUTPUT
+          echo "specs=${MATRIX}" >> $GITHUB_OUTPUT
 
   build_packages:
     runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
