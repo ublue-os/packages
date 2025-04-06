@@ -19,7 +19,7 @@ jobs:
         id: specdirs
         run: |
           set -x
-          FILESLIST="$(realpath ./files.txt)"
+          FILESLIST="./files.txt"
           # The extra xargs there is so that the changed-files action can find all the files
           find . -type f -iname '*.spec' -exec 'dirname' '{}' ';' 2>/dev/null | xargs -I{} echo "{}/**" > $FILESLIST
           echo "fileslist=$FILESLIST" >> $GITHUB_OUTPUT
