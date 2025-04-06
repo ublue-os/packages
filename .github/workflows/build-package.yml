@@ -43,11 +43,10 @@ jobs:
           # If its a spec dont do anything, just add it to ALL_SPECS
           # If its not a spec try to find an adjencent spec: get its dirname, check if there are any specs, go back 1 directory (...) until you get to 1 folder deep into GITHUB_WORKDIR
 
-          DEPTH_2_DIRS=()
-          # These arent exactly just depth 2 dirs, it includes everything up to 2
-          while IFS=  read -r -d $'\0'; do
-            DEPTH_2_DIRS+=("$(realpath "--relative-to=${GITHUB_WORKSPACE}" "$REPLY")")
-          done < <(find "$GITHUB_WORKSPACE" -maxdepth 2 -type d -print0)
+          SPEC_DIRS=()
+          while IFS= read -r -d $'\0'; do
+            SPEC_DIRS+=("$(realpath "--relative-to=${GITHUB_WORKSPACE}" "$(dirname "${REPLY}")")")
+          done < <(find . -type f -iname '*.spec' -print0)
 
           ALL_SPECS=()
           for file in ${ALL_CHANGED_FILES} ; do
@@ -63,7 +62,7 @@ jobs:
               while IFS=  read -r -d $'\0'; do
                 ALL_SPECS+=("$(realpath --relative-to="${GITHUB_WORKSPACE}" "${REPLY}")")
               done < <(find . -maxdepth 1 -type f -iname "*.spec" -print0)
-              [[ " ${DEPTH_2_DIRS[*]} " =~ [[:space:]]$(realpath --relative-to="${GITHUB_WORKSPACE}" ${PWD})[[:space:]] ]] && break
+              [[ " ${SPEC_DIRS[*]} " =~ [[:space:]]$(realpath --relative-to="${GITHUB_WORKSPACE}" ${PWD})[[:space:]] ]] && break
               cd ..
             done
             cd "${GITHUB_WORKSPACE}"
@@ -74,7 +73,7 @@ jobs:
 
           MATRIX="{\"specs\":[]}"
           for spec in "${ALL_SPECS[@]}" ; do
-              [ -e "$spec" ] && MATRIX=$(jq -c ".specs += [\"$spec\"]" <<< $MATRIX)
+            [ -e "$spec" ] && MATRIX=$(jq -c ".specs += [\"$spec\"]" <<< $MATRIX)
           done
 
           echo "specs=$(jq -r -c '.specs' <<< "${MATRIX}")" >> $GITHUB_OUTPUT
