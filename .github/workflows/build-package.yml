@@ -60,11 +60,9 @@ jobs:
             cd "$(dirname "${file}")"
             while : ; do
               pwd
-              find . -maxdepth 1 -type f -iname "*.spec" -print0 | while IFS= read -r -d '' line ; do
-                echo "$(realpath --relative-to="${GITHUB_WORKSPACE}" "${line}")"
-                ALL_SPECS+=("$(realpath --relative-to="${GITHUB_WORKSPACE}" "${line}")")
-                echo "${ALL_SPECS[@]}"
-              done
+              while IFS=  read -r -d $'\0'; do
+                ALL_SPECS+=("$(realpath --relative-to="${GITHUB_WORKSPACE}" "${REPLY}")")
+              done < <(find . -maxdepth 1 -type f -iname "*.spec" -print0)
               [[ " ${DEPTH_2_DIRS[*]} " =~ [[:space:]]$(realpath --relative-to="${GITHUB_WORKSPACE}" ${PWD})[[:space:]] ]] && break
               cd ..
             done
