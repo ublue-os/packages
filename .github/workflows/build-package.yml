@@ -69,8 +69,6 @@ jobs:
             cd "${GITHUB_WORKSPACE}"
           done
 
-          echo ${ALL_SPECS[*]}
-
           # This is kind of a hack so that we get only unique specs
           IFS=" " read -r -a ALL_SPECS <<< "$(tr ' ' '\n' <<< "${ALL_SPECS[@]}" | sort -u | tr '\n' ' ')"
 
