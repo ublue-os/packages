@@ -64,7 +64,7 @@ jobs:
                 ALL_SPECS+=("$(realpath --relative-to="${GITHUB_WORKSPACE}" "${REPLY}")")
               done
               cd ..
-              [[ " ${DEPTH_2_DIRS[*]} " =~ [[:space:]]$(realpath --relative-to="${GITHUB_WORKSPACE}" ${PWD})[[:space:]] ]] || break
+              [[ " ${DEPTH_2_DIRS[*]} " =~ [[:space:]]$(realpath --relative-to="${GITHUB_WORKSPACE}" ${PWD})[[:space:]] ]] && break
             done
             cd "${GITHUB_WORKSPACE}"
           done
@@ -77,7 +77,7 @@ jobs:
               [ -e "$spec" ] && MATRIX=$(jq -c ".specs += [\"$spec\"]" <<< $MATRIX)
           done
 
-          echo "specs=${MATRIX}" >> $GITHUB_OUTPUT
+          echo "specs=$(jq -r -c '.specs' <<< "${MATRIX}")" >> $GITHUB_OUTPUT
 
   build_packages:
     runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
