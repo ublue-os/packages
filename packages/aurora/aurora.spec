@@ -24,6 +24,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/aurora-logos/symbols/ cli-l
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/*
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/homebrew/ schemas%{_datadir}/ublue-os/homebrew/*.Brewfile
 
 %check
 
@@ -83,6 +84,15 @@ Plymouth logo customization for Aurora
 %files plymouth
 %{_datadir}/plymouth
 
+%package schemas
+Version:        0.1.0
+Summary:        KDE Schemas for Bluefin
+
+%description schemas
+Default schemas for Aurora
+
+%files schemas
+%{_datadir}/ublue-os/homebrew/*.Brewfile
 
 %changelog
 %autochangelog
