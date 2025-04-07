@@ -5,7 +5,7 @@
 akmods/ @bsherman
 
 # Aurora
-packages/aurora @inffy @NiHaiden @ledif @RealVishy @renner0e
+packages/aurora @inffy @ledif @RealVishy @renner0e
 
 # UCore
 ucore/ @bsherman
