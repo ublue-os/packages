@@ -131,6 +131,11 @@ remove-overlay $TARGET_RPM:
 update-packit:
     ./add_specs.sh
 
+# Launch a shell session in a container with packit and the repo bind-mounted
+packit-shell:
+    #!/usr/bin/env bash
+    podman run -ti --rm -v $PWD:/src:z -w /src quay.io/packit/packit bash
+
 clean:
     #!/usr/bin/env bash
     for line in $(cat .gitignore | xargs) ; do
