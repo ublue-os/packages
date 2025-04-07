@@ -79,7 +79,7 @@ overlay $TARGET_RPM $REFRESH="0" $CLEAN_ROOTFS="1":
         sudo cp -f "{{ overlay_dir }}/${NAME_TRIMMED}.raw" "{{ extensions_dir }}/${NAME_TRIMMED}.raw"
         sudo systemd-sysext refresh
         exit 0
-    fi 
+    fi
 
     ROOTFS_DIRECTORY="$(mktemp -d --tmpdir="{{ overlay_dir }}")"
     echo "➡️ Setting up extension config file"
@@ -142,3 +142,6 @@ clean:
         sudo rm -ri $line
     done
     exit 0
+
+# Recipes meant to be inside a packit build environment
+mod packit 'packit.just'
