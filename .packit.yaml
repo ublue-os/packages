@@ -64,6 +64,7 @@ packages:
   uupd:
     paths: ["./packages/uupd"]
     specfile_path: "uupd.spec"
+    enable_net: true # See https://packit.dev/docs/configuration/upstream/copr_build#optional-parameters
   ublue-motd:
     paths: ["./packages/ublue-motd"]
     specfile_path: "ublue-motd.spec"
