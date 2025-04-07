@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.2.1
+Version:        0.2.2
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -52,8 +52,10 @@ Provides: fedora-logos
 Provides: centos-logos
 Provides: system-logos
 Obsoletes: fedora-logos
+Obsoletes: aurora-logos
 Obsoletes: centos-logos
 Obsoletes: system-logos
+Conflicts: aurora-logos
 
 %description logos
 Replacement logos for GNOME
