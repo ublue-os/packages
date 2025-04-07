@@ -10,35 +10,35 @@ src=".packit.yaml"
 __usage="$0: Script to include any namespace to $src"
 
 case "$*" in
-  help|--help|-h)
+help | --help | -h)
     echo "$__usage"
     exit
-  ;;
+    ;;
 esac
 
 # Check we have the required deps
 hash yq sed
 
 mkyaml() {
-  mkdir -p .tmp
-  mktemp .tmp/packit.XXXXXXX.yaml
+    mkdir -p .tmp
+    mktemp .tmp/packit.XXXXXXX.yaml
 }
 
 trap 'rm -r .tmp' EXIT
 
 #for namespace in "${namespaces[@]}"; do
 while read -r _owner _project namespace_dir; do
-  echo >&2 "=== Processing namespace_dir: $namespace_dir ==="
+    echo >&2 "=== Processing namespace_dir: $namespace_dir ==="
 
-  for pkg in "$namespace_dir"/*/; do
-    pkg=$(basename "$pkg")
-    if [[ ! -f ./$namespace_dir/$pkg/$pkg.spec ]]; then
-      printf >&2 'No matching spec file with %s.\nPossible values:\n' "$pkg"
-      printf >&2 '  - %s\n' ./"$namespace_dir"/"$pkg"/*.spec
-      continue
-    fi
+    for pkg in "$namespace_dir"/*/; do
+        pkg=$(basename "$pkg")
+        if [[ ! -f ./$namespace_dir/$pkg/$pkg.spec ]]; then
+            printf >&2 'No matching spec file with %s.\nPossible values:\n' "$pkg"
+            printf >&2 '  - %s\n' ./"$namespace_dir"/"$pkg"/*.spec
+            continue
+        fi
 
-    cat <<EOF >>"$(mkyaml)"
+        cat <<EOF >>"$(mkyaml)"
 packages:
   $pkg:
     paths: [ "$namespace_dir/$pkg" ]
@@ -46,7 +46,7 @@ packages:
 
 EOF
 
-  done
+    done
 
 done <<<"$namespaces"
 
