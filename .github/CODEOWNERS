@@ -5,7 +5,8 @@
 akmods/ @bsherman
 
 # Aurora
-packages/aurora @inffy @ledif @RealVishy @renner0e
+# They dont have permissions on this repo yet
+# packages/aurora @inffy @ledif @RealVishy @NiHaiden @renner0e
 
 # UCore
 ucore/ @bsherman
