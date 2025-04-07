@@ -86,7 +86,7 @@ Plymouth logo customization for Aurora
 
 %package schemas
 Version:        0.1.0
-Summary:        KDE Schemas for Bluefin
+Summary:        KDE Schemas for Aurora
 
 %description schemas
 Default schemas for Aurora
