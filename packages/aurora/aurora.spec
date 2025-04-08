@@ -35,6 +35,9 @@ Provides: fedora-logos
 Provides: centos-logos
 Provides: system-logos
 Conflicts: bluefin-logos
+Conflicts: fedora-logos
+Conflicts: centos-logos
+Conflicts: system-logos
 
 %description logos
 Replacement logos for KDE

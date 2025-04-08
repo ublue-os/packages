@@ -52,6 +52,9 @@ Provides: fedora-logos
 Provides: centos-logos
 Provides: system-logos
 Conflicts: aurora-logos
+Conflicts: centos-logos
+Conflicts: system-logos
+Conflicts: fedora-logos
 
 %description logos
 Replacement logos for GNOME
