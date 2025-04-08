@@ -119,6 +119,7 @@ jobs:
   # Used for PR checks and for ephemeral rpm testing.
   - job: copr_build
     trigger: pull_request
+    enable_net: true
     targets:
       # See https://packit.dev/docs/configuration#aliases
       - fedora-41 # TODO (@Zeglius Tue Mar 18): Delete this whenever not needed
