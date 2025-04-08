@@ -150,3 +150,8 @@ packages:
   uupd:
     <<: *pkg-uupd
     enable_net: true # See https://packit.dev/docs/configuration/upstream/copr_build#optional-parameters
+  scx-scheds:
+    <<: *pkg-scx-scheds
+    target:
+      - fedora-latest
+      - fedora-latest-stable
