@@ -111,10 +111,10 @@ jobs:
     trigger: pull_request
     targets:
       # See https://packit.dev/docs/configuration#aliases
-      - fedora-latest-stable # the latest released Fedora version
-      - fedora-latest # the last versioned Fedora (not a Rawhide), regardless if it's released or still under development.
       - fedora-41 # TODO (@Zeglius Tue Mar 18): Delete this whenever not needed
-      - epel-10
+      # - fedora-latest-stable # the latest released Fedora version
+      # - fedora-latest # the last versioned Fedora (not a Rawhide), regardless if it's released or still under development.
+      # - epel-10
   # Run rpm builds for a non-ephemeral namespace.
   # Used for triggering builds in our repo when PR
   # merges to main branch.
