@@ -12,6 +12,8 @@ actions:
     # Download sources
     - just packit _fetch_sources
 
+_:
+
 jobs:
   # Run a rpm build for that specific PR in an ephemeral namespace.
   # Used for PR checks and for ephemeral rpm testing.
