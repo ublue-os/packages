@@ -34,7 +34,6 @@ actions:
     # Download sources
     - just packit _fetch_sources
 
-# TODO (@zeglius Tue Mar 18): replace with references (`*`)
 jobs:
   - &job-rpm-on-pr
     # Run a rpm build for that specific PR in an ephemeral namespace.
