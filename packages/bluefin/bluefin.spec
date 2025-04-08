@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.2.2
+Version:        0.2.3
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -46,7 +46,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/applications/ schemas%{_datadir}/app
 
 %package logos
 Summary:        Logos for GNOME
-Version:        0.2.0
+Version:        0.2.1
 License:        CC-BY-CA
 Provides: fedora-logos
 Provides: centos-logos
