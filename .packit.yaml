@@ -1,30 +1,8 @@
 # See the documentation for more information:
 # https://packit.dev/docs/configuration/
 
-_:
-  # Used to determine to which namespace the copr gets pushed to
-  # when merging to main branch.
-  # Example:
-  # ```yaml
-  # - job:
-  #     trigger: commit
-  #     branch: main
-  #     owner: "@zeglius"
-  #     project: packages
-  # ```
-  # The above config will push to '@zeglius/packages' namespace
-  # in fedora copr.
-  projects:
-    packages: &project-packages
-      owner: "@ublue-os"
-      project: packages
-  #    staging: &project-staging
-  #      owner: "@ublue-os"
-  #      project: staging
-  #    bazzite: &project-bazzite
-  #      owner: "@bazzite-org"
-  #      project: bazzite
 srpm_build_deps: [rpkg, wget, just]
+
 actions:
   get-current-version:
     - bash -c "tmp=$(mktemp -u); rpkg spec -p >$tmp && rpmspec -q --queryformat \"%{VERSION}\n\" $tmp| head -n1"
@@ -35,10 +13,9 @@ actions:
     - just packit _fetch_sources
 
 jobs:
-  - &job-rpm-on-pr
-    # Run a rpm build for that specific PR in an ephemeral namespace.
-    # Used for PR checks and for ephemeral rpm testing.
-    job: copr_build
+  # Run a rpm build for that specific PR in an ephemeral namespace.
+  # Used for PR checks and for ephemeral rpm testing.
+  - job: copr_build
     trigger: pull_request
     targets:
       # See https://packit.dev/docs/configuration#aliases
@@ -49,10 +26,12 @@ jobs:
   # Run rpm builds for a non-ephemeral namespace.
   # Used for triggering builds in our repo when PR
   # merges to main branch.
-  - <<: *job-rpm-on-pr
+  - job: copr_build
     trigger: commit
     branch: main
-    <<: *project-packages
+    owner: "@ublue-os"
+    project: packages
+
 packages:
   ublue-os-media-automount-udev:
     paths: ["./packages/ublue-os-media-automount-udev"]
