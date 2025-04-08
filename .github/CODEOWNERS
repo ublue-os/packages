@@ -1,9 +1,24 @@
-* @tulilirockz
+# All Files
+* @tulilirockz @p5 @m2Giles
+
+# AKMODS
 akmods/ @bsherman
+
+# Aurora
+# They dont have permissions on this repo yet
+# packages/aurora @inffy @ledif @RealVishy @NiHaiden @renner0e
+
+# UCore
 ucore/ @bsherman
+
+# Ublue-OS Packages
 packages/ublue-os-* @bsherman
-packages/ublue-os-* @p5
+
+# Ublue Packages
 packages/ublue-* @zeglius
+
+# Bluefin Packages
 packages/bluefin/ @castrojo
-bazzite/ @zeglius
-bazzite/ @kylegospo
+
+# Bazzite Packages
+bazzite/ @zeglius @kylegospo

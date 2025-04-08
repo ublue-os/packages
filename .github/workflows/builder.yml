@@ -126,7 +126,7 @@ jobs:
 
       - name: Upload Output Artifacts
         if: github.event_name != 'pull_request'
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ${{ env.IMAGE_NAME }}-${{ matrix.platform }}
           retention-days: 1
@@ -142,7 +142,7 @@ jobs:
       - generate_matrix
       - build_push
     container:
-      image: quay.io/fedora/fedora:41@sha256:590bc9ff01bd1a539ca672cff44af60e872de105075c8b6a9aed35f5b27e3852
+      image: quay.io/fedora/fedora:41@sha256:1d9dd61c8775a28efe7bfbb42b3a0585da1a576afdb244ae26f98c00a502adae
       options: --privileged --security-opt seccomp=unconfined
     permissions:
       contents: read
@@ -210,7 +210,7 @@ jobs:
 
       - name: Fetch Build Outputs
         if: github.event_name != 'pull_request'
-        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4
+        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4
         with:
           pattern: ${{ env.IMAGE_NAME }}-*
           merge-multiple: true
