@@ -56,7 +56,7 @@ jobs:
     owner: "@$_owner"
     project: $_project
     packages:
-      - <<: *packages-$_project
+      <<: *packages-$_project
 
 packages:
     <<: [*packages-$_project] # $gen_prompt
