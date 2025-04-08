@@ -7,7 +7,7 @@
 
 Name:           ublue-os-udev-rules
 Vendor:         ublue-os
-Version:        0.9
+Version:        0.91
 Release:        1%{?dist}
 Summary:        Additional udev files for device support
 
@@ -60,6 +60,9 @@ install -p -m0644 %{buildroot}%{_datadir}/%{VENDOR}/{%{sub_name},game-devices-ud
 
 
 %changelog
+* Tue Apr 8 2025 Tulip Blossom <tulilirockz@proton.me> - 0.91
+- Update VIA udev rules with upstream instructions (input group)
+
 * Tue Jun 25 2024 Fifty Dinar <srbaizoki4@tuta.io> - 0.10
 - Add Apple SuperDrive udev rule
 
