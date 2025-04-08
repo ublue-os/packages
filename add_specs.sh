@@ -4,8 +4,7 @@ shopt -s extglob
 
 # owner    project    namespace_dir
 namespaces="\
-            ublue-os    packages    ./packages
-            ublue-os    staging     ./staging"
+            ublue-os    packages    ./packages"
 
 src=".packit.yaml"
 __usage="$0: Script to include any namespace to $src"
