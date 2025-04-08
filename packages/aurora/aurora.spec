@@ -24,6 +24,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/aurora-logos/symbols/ cli-l
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/*
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/geoclue/conf.d/ schemas%{_sysconfdir}/geoclue/conf.d/99-beacondb.conf
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/homebrew/ schemas%{_datadir}/ublue-os/homebrew/*.Brewfile
 
 %check
@@ -92,6 +93,7 @@ Summary:        KDE Schemas for Aurora
 Default schemas for Aurora
 
 %files schemas
+%{_sysconfdir}/geoclue
 %{_datadir}/ublue-os/homebrew/*.Brewfile
 
 %changelog
