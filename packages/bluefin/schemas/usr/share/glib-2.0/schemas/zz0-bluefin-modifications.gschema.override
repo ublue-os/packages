@@ -68,6 +68,7 @@ sort-directories-first=true
 sort-directories-first=true
 
 [org.gnome.mutter]
+center-new-windows=true
 check-alive-timeout=uint32 20000
 
 [org.gnome.software]
