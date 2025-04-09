@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.2.2
+Version:        0.2.3
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -104,7 +104,7 @@ Plymouth logo customization for Bluefin
 
 
 %package schemas
-Version:        0.2.1
+Version:        0.2.2
 Summary:        GNOME Schemas for Bluefin
 
 %description schemas
