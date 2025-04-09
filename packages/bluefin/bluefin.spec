@@ -103,7 +103,7 @@ Plymouth logo customization for Bluefin
 
 
 %package schemas
-Version:        0.2.1
+Version:        0.2.2
 Summary:        GNOME Schemas for Bluefin
 
 %description schemas
