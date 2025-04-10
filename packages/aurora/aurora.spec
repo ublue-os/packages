@@ -85,6 +85,7 @@ Plymouth logo customization for Aurora
 %files plymouth
 %{_datadir}/plymouth
 
+
 %package schemas
 Version:        0.1.0
 Summary:        KDE Schemas for Aurora
@@ -95,6 +96,16 @@ Default schemas for Aurora
 %files schemas
 %{_sysconfdir}/geoclue
 %{_datadir}/ublue-os/homebrew/*.Brewfile
+
+
+%package backgrounds
+Version:        0.1.0
+Summary:        Aurora wallpapers
+License:        CC-BY-SA
+
+%description backgrounds
+Wallpapers included on Aurora by default
+
 
 %changelog
 %autochangelog
