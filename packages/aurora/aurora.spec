@@ -3,7 +3,7 @@
 
 Name:           aurora
 Version:        0.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Aurora branding
 
 License:        CC-BY-CA
