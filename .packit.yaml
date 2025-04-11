@@ -122,7 +122,7 @@ jobs:
     enable_net: true
     targets:
       # See https://packit.dev/docs/configuration#aliases
-      - fedora-41 # TODO (@Zeglius Tue Mar 18): Delete this whenever not needed
+      - fedora-41
       - fedora-latest-stable # the latest released Fedora version
       - fedora-latest # the last versioned Fedora (not a Rawhide), regardless if it's released or still under development.
       - epel-10
@@ -133,6 +133,8 @@ jobs:
     trigger: commit
     branch: main
     owner: "@ublue-os"
+    # TODO (@Zeglius Fri Apr 11 2025): Switch off of testing when we are sure that
+    # packages get published on PR merge.
     project: packages-test_packit
     packages:
       <<: *packages-packages
