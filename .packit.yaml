@@ -120,6 +120,12 @@ jobs:
   - job: copr_build
     trigger: pull_request
     enable_net: true
+
+    # TODO(@Zeglius Fri Apr 11 2025): REMOVE THIS. Its a dummy setting to request
+    # COPR permissions
+    owner: "@ublue-os"
+    project: packages-test_packit
+
     targets:
       # See https://packit.dev/docs/configuration#aliases
       - fedora-41
