@@ -20,12 +20,16 @@ Branding for Aurora-related projects
 %build
 
 %install
+mkdir -p %{buildroot}%{_datadir}/wallpapers
+mkdir -p %{buildroot}%{_datadir}/backgrounds/%{vendor}
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/aurora-logos/symbols/ cli-logos/symbols/*
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/*
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/geoclue/conf.d/ schemas%{_sysconfdir}/geoclue/conf.d/99-beacondb.conf
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/homebrew/ schemas%{_datadir}/ublue-os/homebrew/*.Brewfile
+cp -rp wallpapers/images/* %{buildroot}%{_datadir}/backgrounds/%{vendor}
+ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/* %{buildroot}%{_datadir}/wallpapers/
 
 %check
 
@@ -105,6 +109,21 @@ License:        CC-BY-SA
 
 %description backgrounds
 Wallpapers included on Aurora by default
+
+%files backgrounds
+%{_datadir}/{backgrounds,wallpapers}/%{vendor}
+# KDE wants those wallpapers on /usr/share/wallpapers so badly :(
+# subdirectories no worky
+# this is how plasma-workspace-wallpapers does it
+%files backgrounds
+%{_datadir}/backgrounds/%{vendor}/
+%{_datadir}/wallpapers/aurora-wallpaper-1
+%{_datadir}/wallpapers/greg-rakozy-aurora
+%{_datadir}/wallpapers/jonatan-pie-aurora
+%{_datadir}/wallpapers/xe_clouds
+%{_datadir}/wallpapers/xe_foothills
+%{_datadir}/wallpapers/xe_space_needle
+%{_datadir}/wallpapers/xe_sunset
 
 
 %changelog
