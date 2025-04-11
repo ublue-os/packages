@@ -118,7 +118,7 @@ jobs:
   # Run a rpm build for that specific PR in an ephemeral namespace.
   # Used for PR checks and for ephemeral rpm testing.
   - job: copr_build
-    trigger: pull_request
+    trigger: ignore # pull_request
     enable_net: true
     targets:
       # See https://packit.dev/docs/configuration#aliases
@@ -130,7 +130,7 @@ jobs:
   # Used for triggering builds in our repo when PR
   # merges to main branch.
   - job: copr_build
-    trigger: commit
+    trigger: ignore # commit
     branch: main
     owner: "@ublue-os"
     # TODO (@Zeglius Fri Apr 11 2025): Switch off of testing when we are sure that
