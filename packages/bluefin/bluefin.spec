@@ -3,7 +3,7 @@
 
 Name:           bluefin
 Version:        0.2.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Bluefin branding
 
 License:        CC-BY-CA
