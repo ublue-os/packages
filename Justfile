@@ -79,7 +79,7 @@ overlay $TARGET_RPM $REFRESH="0" $CLEAN_ROOTFS="1":
         sudo cp -f "{{ overlay_dir }}/${NAME_TRIMMED}.raw" "{{ extensions_dir }}/${NAME_TRIMMED}.raw"
         sudo systemd-sysext refresh
         exit 0
-    fi
+    fi 
 
     ROOTFS_DIRECTORY="$(mktemp -d --tmpdir="{{ overlay_dir }}")"
     echo "➡️ Setting up extension config file"
@@ -127,21 +127,9 @@ remove-overlay $TARGET_RPM:
     sudo rm -f "{{ extensions_dir }}/${NAME_TRIMMED}.raw"
     sudo systemd-sysext refresh
 
-# Include all packages into packit config file by running `add_specs`.
-update-packit:
-    ./add_specs.sh
-
-# Launch a shell session in a container with packit and the repo bind-mounted
-packit-shell:
-    #!/usr/bin/env bash
-    podman run -ti --rm -v $PWD:/src:z -w /src quay.io/packit/packit bash
-
 clean:
     #!/usr/bin/env bash
     for line in $(cat .gitignore | xargs) ; do
         sudo rm -ri $line
     done
     exit 0
-
-# Recipes meant to be inside a packit build environment
-mod packit 'packit.just'
