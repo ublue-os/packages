@@ -31,8 +31,7 @@ jobs:
         run: |
           set -xo pipefail
           cmdline=""
-          pkgs=($CHANGED_PKGS)
-          for p in "${pkgs[@]}"; do
+          for p in $CHANGED_PKGS; do
             cmdline="$cmdline --package $p"
           done
           if [[ -n $cmdline ]]; then
