@@ -2,8 +2,7 @@ name: Trigger packit PR builds
 
 on:
   pull_request:
-    types: [synchronize, opened]
-    paths-ignore: [.github]
+    types: [synchronize, opened, labeled]
     branches: [main]
 
 jobs:
