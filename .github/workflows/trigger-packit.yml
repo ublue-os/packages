@@ -2,12 +2,14 @@ name: Trigger packit PR builds
 
 on:
   pull_request:
-    types: [synchronize]
+    types: [synchronize, opened]
     paths-ignore: [.github]
 
 jobs:
   changed_files:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
@@ -19,14 +21,19 @@ jobs:
 
       - name: Trigger build
         if: steps.changed_pkgs.outputs.changed_pkgs != ''
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          CHANGED_PKGS: ${{ steps.changed_pkgs.outputs.changed_pkgs }}
         run: |
           set -xo pipefail
           cmdline=""
-          pkgs=(${{ steps.changed_pkgs.outputs.changed_pkgs }})
+          pkgs=($CHANGED_PKGS)
           for p in "${pkgs[@]}"; do
             cmdline="$cmdline --package $p"
           done
           if [[ -n $cmdline ]]; then
             cmdline="/packit build $cmdline"
-            gh pr comment --body "$cmdline"
+            gh pr comment --repo "$GH_REPO" "$PR_NUMBER" --body "$cmdline"
           fi
