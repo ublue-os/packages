@@ -2,12 +2,10 @@ name: Trigger packit PR builds
 
 on:
   pull_request:
-    types: [synchronize, opened, labeled]
     branches: [main]
 
 jobs:
   changed_files:
-    if: github.event.label.name == 'packit-run'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
