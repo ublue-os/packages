@@ -18,7 +18,7 @@ jobs:
       - name: Get all changed packages
         id: changed_pkgs
         run: |
-          set -x
+          set -xo pipefail
           echo "changed_pkgs=$(just packit _list_changed_packages || :)" >>$GITHUB_OUTPUT
 
       - name: Trigger build
