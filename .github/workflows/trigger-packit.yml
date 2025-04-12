@@ -4,9 +4,11 @@ on:
   pull_request:
     types: [synchronize, opened]
     paths-ignore: [.github]
+    branches: [main]
 
 jobs:
   changed_files:
+    if: github.event.label.name == 'packit-run'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
