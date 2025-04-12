@@ -33,6 +33,7 @@ _fetch_sources package_dir='.':
 # List packages which content has been changed
 _list_changed_packages:
     #!/usr/bin/env bash
+    set -xo pipefail
     changed_pkgs=()
     while read -r pkg_name paths; do
         ! git diff --exit-code --name-only main $paths >/dev/null &&
