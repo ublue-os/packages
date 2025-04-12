@@ -1,0 +1,32 @@
+name: Trigger packit PR builds
+
+on:
+  pull_request:
+    types: [synchronize]
+    paths-ignore: [.github]
+
+jobs:
+  changed_files:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Get all changed packages
+        id: changed_pkgs
+        run: |
+          set -x
+          echo "changed_pkgs=$(just packit _list_changed_packages || :)" >>$GITHUB_OUTPUT
+
+      - name: Trigger build
+        if: steps.changed_pkgs.outputs.changed_pkgs != ''
+        run: |
+          set -xo pipefail
+          cmdline=""
+          pkgs=(${{ steps.changed_pkgs.outputs.changed_pkgs }})
+          for p in "${pkgs[@]}"; do
+            cmdline="$cmdline --package $p"
+          done
+          if [[ -n $cmdline ]]; then
+            cmdline="/packit build $cmdline"
+            gh pr comment --body "$cmdline"
+          fi
