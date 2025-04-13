@@ -34,6 +34,12 @@
   ],
   "packageRules": [
     {
+      "enabled": false,
+      "matchUpdateTypes": ["digest", "pinDigest", "pin"],
+      "matchDepTypes": ["container"],
+      "matchFileNames": [".github/workflows/**.yaml", ".github/workflows/**.yml"],
+    },
+    {
       "matchPackageNames": ["rpm-ostree"],
       "extractVersion": "^(?<version>\\d+\\.\\d+)",
     }
