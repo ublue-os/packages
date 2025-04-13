@@ -54,3 +54,9 @@ else
   mock --isolation=simple "$@"
 fi
 group_end
+
+while IFS= read -r -d $'\0' log_file; do
+  group_start "Build logs: ${log_file}"
+  cat $log_file
+  group_end
+done < <(find /var/lib/mock -type f -iname '*.log' -print0)
