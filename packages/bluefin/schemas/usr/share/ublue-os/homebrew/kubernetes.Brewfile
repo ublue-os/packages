@@ -1,6 +1,7 @@
+tap "buildpacks/tap/pack"
 brew "cdk8s"
 brew "dagger"
 brew "kubectl"
 brew "k9s"
 brew "kubectx"
-tap "buildpacks/tap/pack"
+brew "pack"
