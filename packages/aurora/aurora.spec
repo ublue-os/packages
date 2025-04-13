@@ -6,7 +6,7 @@ Version:        0.1.2
 Release:        1%{?dist}
 Summary:        Aurora branding
 
-License:        CC-BY-CA
+License:        CC-BY-SA
 URL:            https://github.com/ublue-os/packages
 VCS:           {{{ git_dir_vcs }}}
 Source:        {{{ git_dir_pack }}}
@@ -36,7 +36,7 @@ ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/* %{buildroot}%{_datadir}/w
 %package logos
 Summary:        Logos for KDE
 Version:        0.1.1
-License:        CC-BY-CA
+License:        CC-BY-SA
 Provides: fedora-logos
 Provides: centos-logos
 Provides: system-logos
@@ -57,7 +57,7 @@ Replacement logos for KDE
 %package cli-logos
 Version:        0.1.0
 Summary:        Logos for CLI
-License:        CC-BY-CA
+License:        CC-BY-SA
 
 %description cli-logos
 Logos for CLI applications like Fastfetch
@@ -69,7 +69,7 @@ Logos for CLI applications like Fastfetch
 %package fastfetch
 Summary:        Fastfetch configuration for Aurora
 Version:        0.1.0
-License:        CC-BY-CA
+License:        CC-BY-SA
 
 %description fastfetch
 Fastfetch configuration for Aurora
@@ -81,7 +81,7 @@ Fastfetch configuration for Aurora
 %package plymouth
 Summary:        Plymouth customization for Aurora
 Version:        0.1.0
-License:        CC-BY-CA
+License:        CC-BY-SA
 
 %description plymouth
 Plymouth logo customization for Aurora
