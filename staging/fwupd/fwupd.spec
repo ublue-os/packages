@@ -1,3 +1,15 @@
+# NOTE: The diff between this spec and the upstream spec at
+#       https://src.fedoraproject.org/rpms/fwupd is:
+#    --- fwupd.spec	2025-04-12 23:04:28.281040805 -0500
+#    +++ fwupd.spec.upstream	2025-04-12 23:03:53.973275938 -0500
+#       -Dman=true \
+#       -Dsystemd_unit_user="" \
+#       -Dbluez=enabled \
+#  -    -Dsupported_build=enabled
+#  +    -Dsupported_build=enabled \
+#  +    -Defi_os_dir="fedora"
+#  +
+#   %meson_build
 %global glib2_version 2.45.8
 %global libxmlb_version 0.1.3
 %global libusb_version 1.0.9
