@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "https://xeiaso.net",
+                "Name": "Xe Iaso"
+            }
+        ],
+        "Id": "XESpaceNeedle",
+        "License": "Unsplash",
+        "Name": "Space Needle"
+    }
+}
