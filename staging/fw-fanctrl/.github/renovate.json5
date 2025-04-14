@@ -1,0 +1,41 @@
+{
+  "extends": ["config:recommended"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [".*\\.spec"],
+      "matchStrings": [
+        "#\\s?renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?( extractVersion=(?<extractVersion>.*?))?\\s*Version:\\s*(?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [".*\\.spec"],
+      "matchStrings": [
+        "# renovate: datasource=yum repo=(?<registryUrl>[^\\s]+) pkg=(?<depName>[^\\s]+)\\s*%global [^\\s]+ (?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "npm",
+      "extractVersionTemplate": "^(?<version>\\d\\.\\d)",
+      "versioningTemplate": "loose",
+      "registryUrlTemplate": "https://yum2npm.io/repos/{{replace '/' '/modules/' registryUrl}}/packages"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [".*\\.spec"],
+      "matchStrings": [
+        "# renovate: datasource=yum repo=(?<registryUrl>[^\\s]+) pkg=(?<depName>[^\\s]+)\\s*[^\\s]+\\s+(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "npm",
+      "extractVersionTemplate": "^(?<version>\\d\\.\\d+\\.\\d+)",
+      "versioningTemplate": "loose",
+      "registryUrlTemplate": "https://yum2npm.io/repos/{{replace '/' '/modules/' registryUrl}}/packages"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["rpm-ostree"],
+      "extractVersion": "^(?<version>\\d+\\.\\d+)",
+    }
+  ]
+}

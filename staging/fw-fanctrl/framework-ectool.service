@@ -1,0 +1,10 @@
+[Unit]
+Description=Run commands to interact with Framework laptop firmware
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/libexec/framework-ectool
+
+[Install]
+WantedBy=multi-user.target
