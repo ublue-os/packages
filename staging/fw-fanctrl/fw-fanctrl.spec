@@ -2,23 +2,28 @@
 %global debug_package %{nil}
 
 %global reponame    fw-fanctrl
-%global commit      e2a2eb92ead5b87222504e9819515f09300ccc39
+%global commit      80ecc5d273b46f715d924c49234b6867fe3daf33
 %global commit_date 20250302
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global gitrel      .%{commit_date}.git%{shortcommit}
 
 Name:           fw-fanctrl
 Version:        0.0.0
-Release:        9%{gitrel}%{?dist}
+Release:        10%{gitrel}%{?dist}
 Summary:        Framework FanControl Software
 
 License:        BSD-3-Clause
 URL:            https://github.com/TamtamHero/%{name}
-Source0:        https://github.com/TamtamHero/%{name}/archive/%{commit}/%{reponame}-%{shortcommit}.tar.gz
+Source0:        https://github.com/TamtamHero/%{name}/archive/%{commit}.tar.gz
 
 BuildRequires:  systemd-rpm-macros
+BuildRequires:  python3-devel
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
 Requires:       python3
 Requires:       fw-ectool
+
+Patch0:         no-build.patch
 
 %description
 Framework Fan control script
@@ -27,20 +32,18 @@ Framework Fan control script
 %autosetup -n %{name}-%{commit}
 
 %build
-chmod +x fanctrl.py
-chmod +x services/system-sleep/%{name}-suspend
-sed -i "s/%PREFIX_DIRECTORY%/\/usr/g" services/%{name}.service
-sed -i "s/%PREFIX_DIRECTORY%/\/usr/g" services/system-sleep/%{name}-suspend
-sed -i "s/%NO_BATTERY_SENSOR_OPTION%//g" services/%{name}.service
-sed -i "s/%SYSCONF_DIRECTORY%/\/etc/g" services/%{name}.service
+%pyproject_wheel
 
 %install
-install -Dm755 fanctrl.py %{buildroot}%{_bindir}/fanctrl.py
-install -Dm755 fanctrl.py %{buildroot}%{_bindir}/fw-fanctrl
-install -Dm644 services/system-sleep/%{name}-suspend %{buildroot}%{_libdir}/systemd/system-sleep/%{name}-suspend
-install -Dm755 services/%{name}.service %{buildroot}%{_unitdir}/%{name}.service
-install -Dm755 config.json %{buildroot}%{_sysconfdir}/%{name}/config.json
-
+./install.sh --no-sudo \
+    --no-ectool \
+    --no-pip-install \
+    --no-pip-build \
+    --no-post-install \
+    --no-override-python-installation-path \
+    -p %{buildroot}/usr \
+    --sysconf-dir %{buildroot}/etc
+%pyproject_install
 
 %post
 %systemd_post %{name}.service
@@ -53,11 +56,12 @@ install -Dm755 config.json %{buildroot}%{_sysconfdir}/%{name}/config.json
 
 %files
 %license LICENSE
+%{_bindir}/%{name}
+%{python3_sitelib}/fw_fanctrl*
 %{_unitdir}/%{name}.service
-%{_sysconfdir}/%{name}/config.json
-%{_libdir}/systemd/system-sleep/%{name}-suspend
-%attr(0755,root,root) %{_bindir}/fanctrl.py
-%attr(0755,root,root) %{_bindir}/fw-fanctrl
+%config(noreplace) %{_sysconfdir}/%{name}/config.json
+%{_sysconfdir}/%{name}/config.schema.json
+%{_prefix}/lib/systemd/system-sleep/%{name}-suspend
 
 %changelog
 %autochangelog
