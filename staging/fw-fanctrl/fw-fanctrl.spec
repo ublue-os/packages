@@ -18,12 +18,13 @@ Source0:        https://github.com/TamtamHero/%{name}/archive/%{commit}.tar.gz
 
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  python3-devel
+BuildRequires:  python3-pip
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 Requires:       python3
 Requires:       fw-ectool
 
-Patch0:         no-build.patch
+Patch0:         138-no-build.patch
 
 %description
 Framework Fan control script

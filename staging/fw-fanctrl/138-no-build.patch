@@ -1,3 +1,17 @@
+From cc1ae4f9d3fc7afb9bd40783d8b97d82910d43a0 Mon Sep 17 00:00:00 2001
+From: Tulip Blossom <tulilirockz@proton.me>
+Date: Mon, 14 Apr 2025 16:46:46 -0300
+Subject: [PATCH 1/2] feat(install): add specific options for RPM
+ buildroot-like environments
+
+I wanted to use the install script so I didnt need to handle the config files and systemd units, but I ran into a few issues because the install script kept replacing the DEST_DIR with a location in `%{buildroot}` on the RPM build, this should add a few options to make this more seamless for weird aah enviroments like this.
+
+- `no-pip-build`: You'd build the wheel previously on a package
+- `no-override-python-installation-location`: This breaks RPM builds cuz it finds %{BUILDROOT} on the script and it craps itself
+---
+ install.sh | 51 ++++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 44 insertions(+), 7 deletions(-)
+
 diff --git a/install.sh b/install.sh
 index 5b166c2..946e2a4 100755
 --- a/install.sh
@@ -111,3 +125,25 @@ index 5b166c2..946e2a4 100755
          done
      done
 
+From 9927f91f4a3943f5e881f494b93399fd503bf172 Mon Sep 17 00:00:00 2001
+From: Tulip Blossom <tulilirockz@proton.me>
+Date: Mon, 14 Apr 2025 17:04:04 -0300
+Subject: [PATCH 2/2] fix: make python optional for install phases on packages
+
+---
+ install.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/install.sh b/install.sh
+index 946e2a4..bf061ed 100755
+--- a/install.sh
++++ b/install.sh
+@@ -84,7 +84,7 @@ while true; do
+   shift
+ done
+ 
+-if ! python -h 1>/dev/null 2>&1; then
++if ! python -h 1>/dev/null 2>&1 && [ "$NO_PIP_BUILD" = false ] ; then
+     echo "Missing package 'python'!"
+     exit 1
+ fi
