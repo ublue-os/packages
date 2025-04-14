@@ -1,9 +1,21 @@
+# NOTE: The diff between this spec and the upstream spec at
+#       https://src.fedoraproject.org/rpms/fwupd is:
+#    --- fwupd.spec	2025-04-12 23:04:28.281040805 -0500
+#    +++ fwupd.spec.upstream	2025-04-12 23:03:53.973275938 -0500
+#       -Dman=true \
+#       -Dsystemd_unit_user="" \
+#       -Dbluez=enabled \
+#  -    -Dsupported_build=enabled
+#  +    -Dsupported_build=enabled \
+#  +    -Defi_os_dir="fedora"
+#  +
+#   %meson_build
 %global glib2_version 2.45.8
 %global libxmlb_version 0.1.3
-%global libgusb_version 0.3.5
+%global libusb_version 1.0.9
 %global libcurl_version 7.62.0
 %global libjcat_version 0.1.0
-%global systemd_version 231
+%global systemd_version 249
 %global json_glib_version 1.1.1
 
 # although we ship a few tiny python files these are utilities that 99.99%
@@ -20,11 +32,6 @@
 # fwupd.efi is only available on these arches
 %ifarch x86_64 aarch64 riscv64
 %global have_uefi 1
-%endif
-
-# gpio.h is only available on these arches
-%ifarch x86_64 aarch64
-%global have_gpio 1
 %endif
 
 # flashrom is only available on these arches
@@ -52,8 +59,8 @@
 
 Summary:   Firmware update daemon
 Name:      fwupd
-# renovate: datasource=yum repo=fedora-41-x86_64 pkg=fwupd
-Version:   1.9.26
+# renovate: datasource=yum repo=fedora-42-x86_64 pkg=fwupd
+Version:   2.0.7
 Release:   100.ublue
 License:   LGPL-2.1-or-later
 URL:       https://github.com/fwupd/fwupd
@@ -62,8 +69,7 @@ Source0:   %{url}/archive/refs/tags/%{version}.zip
 BuildRequires: gettext
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: libxmlb-devel >= %{libxmlb_version}
-BuildRequires: libgudev1-devel
-BuildRequires: libgusb-devel >= %{libgusb_version}
+BuildRequires: libusb1-devel >= %{libusb_version}
 BuildRequires: libcurl-devel >= %{libcurl_version}
 BuildRequires: libjcat-devel >= %{libjcat_version}
 BuildRequires: polkit-devel >= 0.103
@@ -75,6 +81,7 @@ BuildRequires: systemd >= %{systemd_version}
 BuildRequires: systemd-devel
 BuildRequires: libarchive-devel
 BuildRequires: libcbor-devel
+BuildRequires: libblkid-devel
 %if 0%{?have_passim}
 BuildRequires: passim-devel
 %endif
@@ -118,7 +125,7 @@ Requires(postun): systemd
 
 Requires: glib2%{?_isa} >= %{glib2_version}
 Requires: libxmlb%{?_isa} >= %{libxmlb_version}
-Requires: libgusb%{?_isa} >= %{libgusb_version}
+Requires: libusb1%{?_isa} >= %{libusb_version}
 Requires: shared-mime-info
 
 Obsoletes: dbxtool < 9
@@ -189,7 +196,7 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description plugin-uefi-capsule-data
 This provides the pregenerated BMP artwork for the UX capsule, which allows the
-"Installing firmware update…" localized text to be shown during a UEFI firmware
+"Installing firmware update..." localized text to be shown during a UEFI firmware
 update operation. This subpackage is probably not required on embedded hardware
 or server machines.
 %endif
@@ -200,6 +207,7 @@ or server machines.
 %build
 
 %meson \
+    -Dumockdev_tests=disabled \
     -Ddocs=enabled \
 %if 0%{?enable_tests}
     -Dtests=true \
@@ -211,25 +219,10 @@ or server machines.
 %else
     -Dplugin_flashrom=disabled \
 %endif
-%if 0%{?have_msr}
-    -Dplugin_msr=enabled \
-%else
-    -Dplugin_msr=disabled \
-%endif
-%if 0%{?have_gpio}
-    -Dplugin_gpio=enabled \
-%else
-    -Dplugin_gpio=disabled \
-%endif
 %if 0%{?have_uefi}
-    -Dplugin_uefi_capsule=enabled \
-    -Dplugin_uefi_pk=enabled \
-    -Dplugin_tpm=enabled \
-    -Defi_binary=false \
+    -Dplugin_uefi_capsule_splash=true \
 %else
-    -Dplugin_uefi_capsule=disabled \
-    -Dplugin_uefi_pk=disabled \
-    -Dplugin_tpm=disabled \
+    -Dplugin_uefi_capsule_splash=false \
 %endif
 %if 0%{?have_modem_manager}
     -Dplugin_modem_manager=enabled \
@@ -244,8 +237,6 @@ or server machines.
     -Dman=true \
     -Dsystemd_unit_user="" \
     -Dbluez=enabled \
-    -Dplugin_powerd=disabled \
-    -Dlaunchd=disabled \
     -Dsupported_build=enabled \
     -Defi_os_dir="fedora"
 
@@ -295,7 +286,6 @@ systemctl --no-reload preset fwupd-refresh.timer &>/dev/null || :
 %ifarch x86_64
 %{_libexecdir}/fwupd/fwupd-detect-cet
 %endif
-%{_libexecdir}/fwupd/fwupdoffline
 %{_bindir}/dbxtool
 %{_bindir}/fwupdmgr
 %{_bindir}/fwupdtool
@@ -332,27 +322,22 @@ systemctl --no-reload preset fwupd-refresh.timer &>/dev/null || :
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 %{_datadir}/metainfo/org.freedesktop.fwupd.metainfo.xml
-%{_datadir}/icons/hicolor/scalable/apps/org.freedesktop.fwupd.svg
+%{_datadir}/icons/hicolor/*/apps/org.freedesktop.fwupd.*
 %{_datadir}/fwupd/firmware_packager.py
 %{_datadir}/fwupd/simple_client.py
 %{_datadir}/fwupd/add_capsule_header.py
 %{_datadir}/fwupd/install_dell_bios_exe.py
-%{_unitdir}/fwupd-offline-update.service
 %{_unitdir}/fwupd.service
 %{_unitdir}/fwupd-refresh.service
 %{_unitdir}/fwupd-refresh.timer
-%{_unitdir}/system-update.target.wants/
 %dir %{_localstatedir}/lib/fwupd
 %dir %{_localstatedir}/cache/fwupd
 %dir %{_datadir}/fwupd/quirks.d
 %{_datadir}/fwupd/quirks.d/builtin.quirk.gz
 %{_datadir}/doc/fwupd/*.html
-%if 0%{?have_uefi}
 %config(noreplace)%{_sysconfdir}/grub.d/35_fwupd
-%endif
-%{_libdir}/libfwupd.so.2*
+%{_libdir}/libfwupd.so.3*
 %{_libdir}/girepository-1.0/Fwupd-2.0.typelib
-/usr/lib/udev/rules.d/*.rules
 /usr/lib/systemd/system-shutdown/fwupd.shutdown
 %dir %{_libdir}/fwupd-%{version}
 %{_libdir}/fwupd-%{version}/libfwupd*.so
@@ -378,33 +363,15 @@ systemctl --no-reload preset fwupd-refresh.timer &>/dev/null || :
 %{_datadir}/doc/libfwupdplugin
 %{_datadir}/doc/libfwupd
 %{_datadir}/vala/vapi
-%{_includedir}/fwupd-1
+%{_includedir}/fwupd-3
 %{_libdir}/libfwupd*.so
 %{_libdir}/pkgconfig/fwupd.pc
 
 %files tests
 %if 0%{?enable_tests}
 %{_datadir}/fwupd/host-emulate.d/*.json.gz
-%dir %{_datadir}/installed-tests/fwupd
-%{_datadir}/installed-tests/fwupd/tests/*
-%{_datadir}/installed-tests/fwupd/fwupd-tests.xml
-%{_datadir}/installed-tests/fwupd/*.test
-%{_datadir}/installed-tests/fwupd/*.cab
-%{_datadir}/installed-tests/fwupd/fakedevice124.jcat
-%{_datadir}/installed-tests/fwupd/fakedevice124.bin
-%{_datadir}/installed-tests/fwupd/fakedevice124.metainfo.xml
-%{_datadir}/installed-tests/fwupd/*.sh
-%{_datadir}/installed-tests/fwupd/*.zip
-%if 0%{?have_uefi}
-%{_datadir}/installed-tests/fwupd/efi
-%endif
-%{_datadir}/installed-tests/fwupd/chassis_type
-%{_datadir}/installed-tests/fwupd/sys_vendor
-# libgusb >= 0.4.5
-%if 0%{?fedora} >= 37 || 0%{?rhel} >= 10
-%{_datadir}/fwupd/device-tests/*.json
-%endif
-%{_libexecdir}/installed-tests/fwupd/*
+%{_datadir}/installed-tests/fwupd
+%{_libexecdir}/installed-tests/fwupd
 %{_datadir}/fwupd/remotes.d/fwupd-tests.conf
 %endif
 
