@@ -9,7 +9,6 @@
 #  +    -Dsupported_build=enabled \
 #  +    -Defi_os_dir="fedora"
 #  +
-#   %meson_build
 %global glib2_version 2.45.8
 %global libxmlb_version 0.1.3
 %global libusb_version 1.0.9
