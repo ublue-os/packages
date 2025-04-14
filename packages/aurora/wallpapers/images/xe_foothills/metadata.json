@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "https://xeiaso.net",
+                "Name": "Xe Iaso"
+            }
+        ],
+        "Id": "XEFoothills",
+        "License": "Unsplash",
+        "Name": "LA Foothills"
+    }
+}
