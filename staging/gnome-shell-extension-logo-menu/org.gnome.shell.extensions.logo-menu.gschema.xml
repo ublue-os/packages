@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+
+  <schema path="/org/gnome/shell/extensions/Logo-menu/" id="org.gnome.shell.extensions.logo-menu">
+
+    <key type="i" name="menu-button-icon-image">
+      <default>0</default>
+      <summary>Menu Button Icon Image</summary>
+      <description>Change the Menu Button Icon Image.</description>
+    </key>
+
+    <key type="i" name="menu-button-icon-size">
+      <default>25</default>
+      <summary>Menu Button Icon Size</summary>
+      <description>Change the Menu Button Icon Size.</description>
+    </key>
+
+    <key type="i" name="menu-button-icon-click-type">
+      <default>2</default>
+      <summary>Menu Button click type to open Activity</summary>
+      <description>Change the Menu Button click type to open Activity.</description>
+    </key>
+
+    <key type="s" name="menu-button-extensions-app">
+      <default>"org.gnome.Extensions.desktop"</default>
+      <summary>Preffered Extensions app</summary>
+      <description>Change to preffered Extensions app.</description>
+    </key>
+
+    <key type="s" name="menu-button-software-center">
+      <default>"gnome-software"</default>
+      <summary>Menu Button Software Center</summary>
+      <description>Change the Menu Button Software Center.</description>
+    </key>
+
+    <key type="s" name="menu-button-terminal">
+      <default>"gnome-terminal"</default>
+      <summary>Menu Button Terminal</summary>
+      <description>Change the Menu Button Terminal.</description>
+    </key>
+
+    <key type="b" name="show-power-options">
+      <default>false</default>
+      <summary>Toggle power options visibility</summary>
+      <description>Toggle power options visibility.</description>
+    </key>
+
+     <key type="b" name="use-custom-icon">
+      <default>false</default>
+      <summary>Use Custom Icon</summary>
+      <description>Whether to use a custom icon or not.</description>
+    </key>
+
+    <key type="s" name="custom-icon-path">
+      <default>"''"</default>
+      <summary>Custom Icon Path</summary>
+      <description>Path to the custom icon image file.</description>
+    </key>
+
+    <key type="b" name="hide-forcequit">
+      <default>false</default>
+      <summary>Toggle Force Quit option visibility</summary>
+      <description>Toggle Force Quit option visibility.</description>
+    </key>
+
+    <key type="b" name="show-lockscreen">
+      <default>false</default>
+      <summary>Toggle Lock screen option visibility</summary>
+      <description>Toggle Force Quit option visibility.</description>
+    </key>
+
+    <key type="b" name="hide-softwarecentre">
+      <default>false</default>
+      <summary>Toggle Software Centre option visibility</summary>
+      <description>Toggle Software Centre option visibility.</description>
+    </key>
+
+    <key type="b" name="show-activities-button">
+      <default>true</default>
+      <summary>Toggle visibility of the top panel activities button</summary>
+      <description>Toggle visibility of the top panel activities button.</description>
+    </key>
+    
+    <key type="b" name="hide-icon-shadow">
+      <default>false</default>
+      <summary>Toggle visibility of the top panel icon's shadow </summary>
+      <description>Toggle visibility of the top panel icon's shadow.</description>
+    </key>
+
+
+    <key type="b" name="symbolic-icon">
+      <default>true</default>
+      <summary>Toggle if user chose symbolic or coloured distro logo</summary>
+      <description>Toggle if user chose symbolic or coloured distro logo.</description>
+    </key>
+
+    <key type="b" name="show-boxbuddy">
+      <default>false</default>
+      <summary>Toggle BoxBuddy option visibility</summary>
+      <description>Toggle BoxBuddy option visibility.</description>
+    </key>
+
+    <key type="s" name="menu-button-system-monitor">
+      <default>"gnome-system-monitor"</default>
+      <summary>Menu System Monitor</summary>
+      <description>Change the Menu System Monitor.</description>
+    </key>
+  </schema>
+
+</schemalist>
