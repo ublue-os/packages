@@ -16,6 +16,7 @@ URL:         https://github.com/icedman/search-light
 Source0:     %{url}/archive/%{commit}.tar.gz
 BuildArch:   noarch
 
+BuildRequires:  pkgconfig(glib-2.0)
 Requires:    gnome-shell >= 3.12
 Requires:    glib2
 
