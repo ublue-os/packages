@@ -2,8 +2,8 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.2.3
-Release:        2%{?dist}
+Version:        0.2.4
+Release:        1%{?dist}
 Summary:        Bluefin branding
 
 License:        CC-BY-CA
@@ -127,6 +127,7 @@ License:        CC-BY-CA
 
 %description backgrounds
 Wallpapers included on Bluefin by default
+
 
 %files backgrounds
 %{_datadir}/backgrounds/%{vendor}/*
