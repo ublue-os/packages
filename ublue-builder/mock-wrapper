@@ -47,6 +47,7 @@ rpkg --path "${SPEC_PATH}" srpm --outdir "${OUTDIR}"
 ls -lah "${OUTDIR}"
 group_end
 
+set +euo pipefail
 group_start "Build RPM with mock"
 if [ "$BUILDER_NO_INCLUDE_SRPM" != "1" ] ; then
   mock --isolation=simple "$OUTDIR"/*.src.rpm "$@"
