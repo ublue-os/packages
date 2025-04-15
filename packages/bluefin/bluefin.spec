@@ -120,6 +120,7 @@ Contains all of the DConf settings that Bluefin ships by default
 %{_datadir}/applications
 %{_datadir}/ublue-os/homebrew/*.Brewfile
 
+
 %package backgrounds
 Summary:        Bluefin wallpapers
 Version:        0.2.0
@@ -127,7 +128,6 @@ License:        CC-BY-CA
 
 %description backgrounds
 Wallpapers included on Bluefin by default
-
 
 %files backgrounds
 %{_datadir}/backgrounds/%{vendor}/*
