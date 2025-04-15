@@ -2,8 +2,8 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.2.3
-Release:        2%{?dist}
+Version:        0.2.4
+Release:        1%{?dist}
 Summary:        Bluefin branding
 
 License:        CC-BY-CA
@@ -41,6 +41,7 @@ install -Dpm0644 -t %{buildroot}%{_sysconfdir}/geoclue/conf.d/ schemas%{_sysconf
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/homebrew/ schemas%{_datadir}/ublue-os/homebrew/*.Brewfile
 install -Dpm0644 -t %{buildroot}%{_datadir}/glib-2.0/schemas/ schemas%{_datadir}/glib-2.0/schemas/zz0-bluefin-modifications.gschema.override
 install -Dpm0644 -t %{buildroot}%{_datadir}/applications/ schemas%{_datadir}/applications/*.desktop
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/gnome-initial-setup/ schemas%{_sysconfdir}/gnome-initial-setup/vendor.conf
 
 %check
 
@@ -112,6 +113,7 @@ Contains all of the DConf settings that Bluefin ships by default
 %files schemas
 %{_sysconfdir}/dconf/db
 %{_sysconfdir}/profile.d
+%{_sysconfdir}/gnome-initial-setup
 %{_sysconfdir}/geoclue
 %{_sysconfdir}/skel
 %{_datadir}/glib-2.0
