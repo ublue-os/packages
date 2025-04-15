@@ -1,0 +1,14 @@
+diff --git a/constants.js b/constants.js
+index 1f908a9..25c952a 100644
+--- a/constants.js
++++ b/constants.js
+@@ -30,6 +30,8 @@ export const SymbolicDistroIcons = [
+     {PATH: '/Resources/nobara-logo-symbolic.svg'},
+     {PATH: '/Resources/steam-deck-logo-symbolic.svg'},
+     {PATH: '/Resources/ublue-logo-symbolic.svg'},
++    {PATH: '/Resources/framework-logo-symbolic.svg'},
++    {PATH: '/Resources/ampere-logo-symbolic.svg'},
+ ];
+ 
+ export const ColouredDistroIcons = [
+
