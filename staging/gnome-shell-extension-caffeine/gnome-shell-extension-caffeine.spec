@@ -3,7 +3,7 @@
 
 Name:		gnome-shell-extension-caffeine
 # renovate: datasource=github-releases depName=eonpatapon/gnome-shell-extension-caffeine versioning=semver-major
-Version:	55
+Version:	56
 Release:	%autorelease
 Summary:	Disable the screen saver and auto suspend in gnome shell
 
