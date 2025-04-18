@@ -25,7 +25,7 @@ Adds systemd units and configuration files for workarounds with -dx images
 %install
 install -Dm0644 -t %{buildroot}%{_presetdir}/ src/%{_presetdir}/54-ublue-os-dx-services.preset
 install -Dm0644 -t %{buildroot}%{_unitdir}/ src/%{_unitdir}/libvirt-workaround.service
-install -Dm0644 -t %{buildroot}%{_prefix}/lib/tmpfiles.d src/%{_prefix}/lib/tmpfiles/libvirt-workaround.conf
+install -Dm0644 -t %{buildroot}%{_prefix}/lib/tmpfiles.d src/%{_prefix}/lib/tmpfiles.d/libvirt-workaround.conf
 
 %check
 
