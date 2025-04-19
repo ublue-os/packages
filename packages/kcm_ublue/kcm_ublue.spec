@@ -12,21 +12,21 @@ License:        Apache-2.0
 BuildRequires:  cmake
 BuildRequires:  gcc-g++
 BuildRequires:  extra-cmake-modules
-BuildRequires:  kf6-kauth-devel
-BuildRequires:  kf6-kcmutils-devel
-BuildRequires:  kf6-kcodecs-devel
-BuildRequires:  kf6-kcolorscheme-devel
-BuildRequires:  kf6-kconfig-devel
-BuildRequires:  kf6-kconfigwidgets-devel
-BuildRequires:  kf6-kcoreaddons-devel
-BuildRequires:  kf6-ki18n-devel
-BuildRequires:  kf6-kservice-devel
-BuildRequires:  kf6-kwidgetsaddons-devel
-BuildRequires:  qt6-doc-devel
-BuildRequires:  qt6-qtbase-devel
-BuildRequires:  qt6-qtdeclarative-devel
-BuildRequires:  qt6-qttools-devel
-BuildRequires:  gtest-devel
+
+BuildRequires:  cmake(GTest)
+BuildRequires:  cmake(KF6Auth)
+BuildRequires:  cmake(KF6Codecs)
+BuildRequires:  cmake(KF6ColorScheme)
+BuildRequires:  cmake(KF6Config)
+BuildRequires:  cmake(KF6ConfigWidgets)
+BuildRequires:  cmake(KF6CoreAddons)
+BuildRequires:  cmake(KF6I18n)
+BuildRequires:  cmake(KF6KCMUtils)
+BuildRequires:  cmake(KF6Service)
+BuildRequires:  cmake(KF6WidgetsAddons)
+BuildRequires:  cmake(Qt6Core)
+BuildRequires:  cmake(Qt6Qml)
+BuildRequires:  cmake(Qt6Tools)
 
 %description
 KDE Configuration Module (KCM) for Aurora.
@@ -35,18 +35,16 @@ KDE Configuration Module (KCM) for Aurora.
 %autosetup -n %{name}-%{version}
 
 %build
-mkdir build
-cmake -B build
-cmake --build build
+%cmake
+%cmake_build
 
 %install
-install -Dm0755 ./build/bin/plasma/kcms/systemsettings/kcm_ublue.so %{buildroot}%{_libdir}/qt6/plugins/plasma/kcms/systemsettings/kcm_ublue.so
-install -Dm0755 ./system/usr/share/applications/kcm_ublue.desktop %{buildroot}%{_datadir}/applications/kcm_ublue.desktop
-install -Dm0755 ./system/usr/share/polkit-1/actions/org.ublue.rebase.policy %{buildroot}%{_datadir}/polkit-1/actions/org.ublue.rebase.policy
-install -Dm0755 ./system/usr/share/polkit-1/rules.d/21-ublue-rebase.rules %{buildroot}%{_datadir}/polkit-1/rules.d/21-ublue-rebase.rules
-install -Dm0755 ./system/usr/share/polkit-1/rules.d/22-ublue-rebase-systemd.rules %{buildroot}%{_datadir}/polkit-1/rules.d/22-ublue-rebase-systemd.rules
-install -Dm0755 ./system/usr/lib/systemd/system/ublue-rebase@.service %{buildroot}%{_prefix}/lib/systemd/system/ublue-rebase@.service
-install -Dm0755 ./system/usr/libexec/ublue-rebase %{buildroot}%{_libexecdir}/ublue-rebase
+%cmake_install
+install -Dm0755 system/usr/share/polkit-1/actions/org.ublue.rebase.policy %{buildroot}%{_datadir}/polkit-1/actions/org.ublue.rebase.policy
+install -Dm0755 system/usr/share/polkit-1/rules.d/21-ublue-rebase.rules %{buildroot}%{_datadir}/polkit-1/rules.d/21-ublue-rebase.rules
+install -Dm0755 system/usr/share/polkit-1/rules.d/22-ublue-rebase-systemd.rules %{buildroot}%{_datadir}/polkit-1/rules.d/22-ublue-rebase-systemd.rules
+install -Dm0755 system/usr/lib/systemd/system/ublue-rebase@.service %{buildroot}%{_prefix}/lib/systemd/system/ublue-rebase@.service
+install -Dm0755 system/usr/libexec/ublue-rebase %{buildroot}%{_libexecdir}/ublue-rebase
 
 %files
 %{_libdir}/qt6/plugins/plasma/kcms/systemsettings/kcm_ublue.so
