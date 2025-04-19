@@ -8,11 +8,6 @@ from pathlib import Path
 import json
 
 TEST_CASES = {
-    "loft-sh/devpod": {
-       "path": "staging/devpod/devpod.spec",
-       "match": r"Version:        v0.\d+\.\d+",
-       "replace": r"Version:        v0.6.0",
-    },
     "topgrade-rs/topgrade": {
        "path": "staging/topgrade/topgrade.spec",
        "match": r"Version:        \d+\.\d+\.\d+",
