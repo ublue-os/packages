@@ -1,4 +1,4 @@
-Name:           ublue-os-dx-services
+Name:           ublue-os-libvirt-workarounds
 Vendor:         ublue-os
 Version:        1.0
 Release:        1%{?dist}
@@ -23,7 +23,7 @@ Adds systemd units and configuration files for workarounds with -dx images
 %build
 
 %install
-install -Dm0644 -t %{buildroot}%{_presetdir}/ src/%{_presetdir}/54-ublue-os-dx-services.preset
+install -Dm0644 -t %{buildroot}%{_presetdir}/ src/%{_presetdir}/54-ublue-os-libvirt-workarounds.preset
 install -Dm0644 -t %{buildroot}%{_unitdir}/ src/%{_unitdir}/libvirt-workaround.service
 install -Dm0644 -t %{buildroot}%{_prefix}/lib/tmpfiles.d src/%{_prefix}/lib/tmpfiles.d/libvirt-workaround.conf
 
@@ -36,7 +36,7 @@ install -Dm0644 -t %{buildroot}%{_prefix}/lib/tmpfiles.d src/%{_prefix}/lib/tmpf
 %systemd_preun libvirt-workaround.service
 
 %files
-%{_presetdir}/54-ublue-os-dx-services.preset
+%{_presetdir}/54-ublue-os-libvirt-workarounds.preset
 %{_unitdir}/libvirt-workaround.service
 %{_prefix}/lib/tmpfiles.d/libvirt-workaround.conf
 
