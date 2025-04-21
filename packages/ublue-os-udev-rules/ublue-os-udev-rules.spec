@@ -4,12 +4,10 @@
 %define sunshine_release v2025.122.141614
 # renovate: datasource=github-releases depName=FrameworkComputer/inputmodule-rs
 %define framework_release v0.2.0
-# renovate: datasource=github-releases depName=bb-qq/r8152
-%define rtl8152_release 2.19.2-2
 
 Name:           ublue-os-udev-rules
 Vendor:         ublue-os
-Version:        0.11
+Version:        0.9
 Release:        1%{?dist}
 Summary:        Additional udev files for device support
 
@@ -24,7 +22,6 @@ Source0:        {{{ git_dir_pack }}}
 Source1:        https://codeberg.org/fabiscafe/game-devices-udev/archive/%{game_devices_release}.tar.gz
 Source2:        https://raw.githubusercontent.com/LizardByte/Sunshine/refs/tags/%{sunshine_release}/src_assets/linux/misc/60-sunshine.rules
 Source3:        https://raw.githubusercontent.com/FrameworkComputer/inputmodule-rs/refs/tags/%{framework_release}/release/50-framework-inputmodule.rules
-Source4:        https://raw.githubusercontent.com/bb-qq/r8152/refs/tags/%{rtl8152_release}/50-usb-realtek-net.rules
 
 %global sub_name %{lua:t=string.gsub(rpm.expand("%{NAME}"), "^ublue%-os%-", ""); print(t)}
 
@@ -48,7 +45,6 @@ tar xzf %{SOURCE1} -C %{buildroot}%{_datadir}/%{VENDOR}/game-devices-udev --stri
 # add other remote-sourced rules
 install -m0644 %{SOURCE2} %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/60-sunshine-ublue.rules
 install -m0644 %{SOURCE3} %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/50-framework-inputmodule.rules
-install -m0644 %{SOURCE4} %{buildroot}%{_datadir}/%{VENDOR}/%{sub_name}/50-usb-realtek-net.rules
 
 mkdir -p -m0755 %{buildroot}%{_exec_prefix}/lib/udev/rules.d
 install -p -m0644 %{buildroot}%{_datadir}/%{VENDOR}/{%{sub_name},game-devices-udev}/*.rules %{buildroot}%{_exec_prefix}/lib/udev/rules.d/
@@ -64,9 +60,6 @@ install -p -m0644 %{buildroot}%{_datadir}/%{VENDOR}/{%{sub_name},game-devices-ud
 
 
 %changelog
-* Sun Apr 20 2025 Jason Berry <jason@skyblaster.ca> - 0.11
-- Update usb-realtek-net rules
-
 * Tue Jun 25 2024 Fifty Dinar <srbaizoki4@tuta.io> - 0.10
 - Add Apple SuperDrive udev rule
 
