@@ -3,4 +3,4 @@ brew "dagger"
 brew "kubectl"
 brew "k9s"
 brew "kubectx"
-brew "pack"
+brew tap buildpacks/tap
