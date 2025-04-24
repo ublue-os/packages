@@ -28,37 +28,12 @@ logs-this-boot:
 logs-last-boot:
     sudo journalctl --no-hostname -b -1
 
-# Regenerate GRUB config, useful in dual-boot scenarios where a second operating system isn't listed
-regenerate-grub:
-    #!/usr/bin/bash
-    if [ -d /sys/firmware/efi ]; then
-      sudo grub2-mkconfig -o /etc/grub2-efi.cfg
-    else
-      sudo grub2-mkconfig -o /etc/grub2.cfg
-    fi
-
 # Enroll Nvidia driver & KMOD signing key for secure boot - Enter password "universalblue" if prompted
 enroll-secure-boot-key:
     sudo mokutil --timeout -1
     echo 'The next line will prompt for a MOK password. Then, input "universalblue"'
     sudo mokutil --import /etc/pki/akmods/certs/akmods-ublue.der
     echo 'At next reboot, the mokutil UEFI menu UI will be displayed (*QWERTY* keyboard input and navigation).\nThen, select "Enroll MOK", and input "universalblue" as the password'
-
-# Install or uninstall distrobox-git
-setup-distrobox-git:
-    #!/usr/bin/bash
-    echo 'Which version of Distrobox do you want to use?'
-    OPTION=$(ugum choose "Latest distrobox-git snapshot" "uBlue provided version")
-    if [ "$OPTION" == "Latest distrobox-git snapshot" ]; then
-      echo 'Installing latest git snapshot of Distrobox...'
-      curl -s https://raw.githubusercontent.com/89luca89/distrobox/main/install | sh -s -- --next --prefix ~/.local
-    elif [ "$OPTION" == "uBlue provided version" ]; then
-      echo 'Uninstalling latest git snapshot of Distrobox...'
-      curl -s https://raw.githubusercontent.com/89luca89/distrobox/main/uninstall | sh -s -- --prefix ~/.local
-    else
-      echo 'Cancelling...'
-      exit 0
-    fi
 
 # Toggle display of the user-motd in terminal
 toggle-user-motd:
