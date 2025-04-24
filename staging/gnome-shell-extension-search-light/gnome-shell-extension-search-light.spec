@@ -7,7 +7,7 @@
 
 Name:        gnome-shell-extension-search-light
 Version:     0.0.0
-Release:     1%{gitrel}%{?dist}
+Release:     2%{gitrel}%{?dist}
 Summary:     Take the apps search out of overview
 
 Group:       User Interface/Desktops
@@ -15,6 +15,9 @@ License:     GPLv3
 URL:         https://github.com/icedman/search-light
 Source0:     %{url}/archive/%{commit}.tar.gz
 BuildArch:   noarch
+
+# Patch Upstream https://github.com/icedman/search-light/pull/116
+Patch0:      7193320dde849a06c3cee04f42450efb3c192874.patch
 
 BuildRequires:  pkgconfig(glib-2.0)
 Requires:    gnome-shell >= 3.12
@@ -26,7 +29,12 @@ BuildRequires: make
 This is a Gnome Shell extension that takes the apps search widget out of Overview. Like the macOS spotlight, or Alfred.
 
 %prep
-%autosetup -n search-light-%{commit}
+%autosetup -n search-light-%{commit} -N
+
+%if 0%{?fedora} >= 42 || 0%{?rhel} >= 11
+%patch -P 0 -p1
+%endif
+
 
 %build
 make build
