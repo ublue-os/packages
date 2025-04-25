@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.6
+Version:        0.1.7
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -65,7 +65,7 @@ ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_sunset/ %{buildroot}%{_d
 
 %package logos
 Summary:        Logos for KDE
-Version:        0.1.2
+Version:        0.1.3
 License:        CC-BY-SA
 Provides: fedora-logos
 Provides: centos-logos
@@ -85,7 +85,7 @@ Replacement logos for KDE
 
 
 %package cli-logos
-Version:        0.1.0
+Version:        0.1.3
 Summary:        Logos for CLI
 License:        CC-BY-SA
 
@@ -98,7 +98,7 @@ Logos for CLI applications like Fastfetch
 
 %package fastfetch
 Summary:        Fastfetch configuration for Aurora
-Version:        0.1.0
+Version:        0.1.3
 License:        CC-BY-SA
 
 %description fastfetch
@@ -110,7 +110,7 @@ Fastfetch configuration for Aurora
 
 %package plymouth
 Summary:        Plymouth customization for Aurora
-Version:        0.1.1
+Version:        0.1.3
 License:        CC-BY-SA
 
 %description plymouth
@@ -121,7 +121,7 @@ Plymouth logo customization for Aurora
 
 
 %package schemas
-Version:        0.1.1
+Version:        0.1.3
 Summary:        KDE Schemas for Aurora
 
 %description schemas
@@ -133,7 +133,7 @@ Default schemas for Aurora
 
 
 %package backgrounds
-Version:        0.1.1
+Version:        0.1.3
 Summary:        Aurora wallpapers
 License:        CC-BY-SA
 
