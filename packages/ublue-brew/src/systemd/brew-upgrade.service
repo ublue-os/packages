@@ -13,5 +13,7 @@ Environment=HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
 Environment=HOMEBREW_REPOSITORY=/home/linuxbrew/.linuxbrew/Homebrew
 ExecStart=/usr/bin/bash -c "/home/linuxbrew/.linuxbrew/bin/brew upgrade"
 # Prevent Brew from overriding important system binaries like:
-# systemctl, loginctl, dbus-*
-ExecStartPost=-/home/linuxbrew/.linuxbrew/bin/brew unlink systemd dbus
+# systemctl, loginctl, dbus-*, python*
+ExecStartPost=-/home/linuxbrew/.linuxbrew/bin/brew unlink systemd
+ExecStartPost=-/home/linuxbrew/.linuxbrew/bin/brew unlink dbus
+ExecStartPost=-/home/linuxbrew/.linuxbrew/bin/brew unlink python
