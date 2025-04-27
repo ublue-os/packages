@@ -3,7 +3,7 @@
 
 Name:           aurora
 Version:        0.1.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Aurora branding
 
 License:        CC-BY-SA
@@ -121,7 +121,7 @@ Plymouth logo customization for Aurora
 
 
 %package schemas
-Version:        0.1.3
+Version:        0.1.4
 Summary:        KDE Schemas for Aurora
 
 %description schemas
