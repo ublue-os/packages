@@ -48,7 +48,7 @@ Framework Fan control script
     --sysconf-dir %{buildroot}/etc
 %pyproject_install
 
-install -D -m 0644 %{SOURCE1} %{buildroot}/etc/udev/rules.d/99-fw-fanctrl.rules
+install -D -m 0644 %{SOURCE1} %{buildroot}%{_udevrulesdir}/99-fw-fanctrl.rules
 
 %post
 %systemd_post %{name}.service
