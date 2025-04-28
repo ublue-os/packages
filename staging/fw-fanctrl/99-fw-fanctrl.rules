@@ -1,0 +1,2 @@
+# Match the Framework Laptop chassis vendor and trigger the systemd service
+SUBSYSTEM=="dmi", ENV{ID_VENDOR}=="Framework", TAG+="systemd", ENV{SYSTEMD_WANTS}="fw-fanctrl.service"
