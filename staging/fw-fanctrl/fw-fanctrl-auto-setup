@@ -1,0 +1,11 @@
+#!/bin/bash
+set -euo pipefail
+
+VEN_ID="$(cat /sys/devices/virtual/dmi/id/chassis_vendor || echo "")"
+
+if [[ ":Framework:" =~ :$VEN_ID: ]]; then
+  echo "Framework Laptop detected. Enabling fw-fanctrl.service."
+  systemctl enable --now fw-fanctrl.service
+else
+  echo "Not a Framework device"
+fi

@@ -26,6 +26,9 @@ Requires:       fw-ectool
 
 Patch0:         138-no-build.patch
 
+Source1:        fw-fanctrl-auto-setup
+Source2:        fw-fanctrl-auto-setup.service
+
 %description
 Framework Fan control script
 
@@ -46,14 +49,20 @@ Framework Fan control script
     --sysconf-dir %{buildroot}/etc
 %pyproject_install
 
+install -D -m 0755 %{SOURCE1} %{buildroot}/usr/libexec/fw-fanctrl-auto-setup
+install -D -m 0644 %{SOURCE2} %{buildroot}/usr/lib/systemd/system/fw-fanctrl-auto-setup.service
+
 %post
 %systemd_post %{name}.service
+%systemd_post fw-fanctrl-auto-setup.service
 
 %preun
 %systemd_preun %{name}.service
+%systemd_preun fw-fanctrl-auto-setup.service
 
 %postun
 %systemd_postun %{name}.service
+%systemd_postun fw-fanctrl-auto-setup.service
 
 %files
 %license LICENSE
@@ -63,6 +72,8 @@ Framework Fan control script
 %config(noreplace) %{_sysconfdir}/%{name}/config.json
 %{_sysconfdir}/%{name}/config.schema.json
 %{_prefix}/lib/systemd/system-sleep/%{name}-suspend
+%{_libexecdir}/fw-fanctrl-auto-setup
+%{_unitdir}/fw-fanctrl-auto-setup.service
 
 %changelog
 %autochangelog

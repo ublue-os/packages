@@ -1,0 +1,12 @@
+[Unit]
+Description=Auto-enable fw-fanctrl.service if running on Framework laptop
+After=systemd-remount-fs.service
+ConditionPathExists=/sys/devices/virtual/dmi/id/chassis_vendor
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/fw-fanctrl-auto-setup
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
