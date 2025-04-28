@@ -2,6 +2,7 @@
 Description=Auto-enable fw-fanctrl.service if running on Framework laptop
 After=systemd-remount-fs.service
 ConditionPathExists=/sys/devices/virtual/dmi/id/chassis_vendor
+ConditionPathExists=!/var/lib/ublue-os/fw-fanctrl
 
 [Service]
 Type=oneshot
