@@ -26,6 +26,8 @@ Requires:       fw-ectool
 
 Patch0:         138-no-build.patch
 
+Source1:        99-fw-fanctrl.rules
+
 %description
 Framework Fan control script
 
@@ -46,14 +48,19 @@ Framework Fan control script
     --sysconf-dir %{buildroot}/etc
 %pyproject_install
 
+install -D -m 0644 %{SOURCE1} %{buildroot}%{_udevrulesdir}/99-fw-fanctrl.rules
+
 %post
 %systemd_post %{name}.service
+%udev_rules_update
 
 %preun
 %systemd_preun %{name}.service
+%udev_rules_update
 
 %postun
 %systemd_postun %{name}.service
+%udev_rules_update
 
 %files
 %license LICENSE
@@ -63,6 +70,7 @@ Framework Fan control script
 %config(noreplace) %{_sysconfdir}/%{name}/config.json
 %{_sysconfdir}/%{name}/config.schema.json
 %{_prefix}/lib/systemd/system-sleep/%{name}-suspend
+%{_udevrulesdir}/99-fw-fanctrl.rules
 
 %changelog
 %autochangelog
