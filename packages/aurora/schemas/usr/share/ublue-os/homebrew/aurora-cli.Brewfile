@@ -1,6 +1,7 @@
 brew "atuin"
 brew "bat"
 brew "bash-preexec"
+brew "chezmoi"
 brew "direnv"
 brew "dysk"
 brew "eza"
