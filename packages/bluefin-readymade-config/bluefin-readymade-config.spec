@@ -12,7 +12,7 @@ VCS:            {{{ git_dir_vcs }}}
 Source0:        {{{ git_dir_pack }}}
 Source1:        https://github.com/FyraLabs/readymade/archive/refs/tags/v0.12.2.tar.gz
 
-BuildArch: noarch
+BuildRequires: glib2-devel
 
 %description
 Branding for Bluefin's Readymade config
@@ -20,7 +20,7 @@ Branding for Bluefin's Readymade config
 %prep
 {{{ git_dir_setup_macro }}}
 mkdir -p readymade
-tar xzvf ./%{SOURCE1}
+tar xzvf %{SOURCE1}
 
 %build
 install -Dpm0644 src/bento/middle-left.jxl ./readymade-0.12.2/data/viewports-light.webp
