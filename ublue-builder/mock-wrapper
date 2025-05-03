@@ -49,15 +49,21 @@ group_end
 
 set +euo pipefail
 group_start "Build RPM with mock"
+MOCK_EXIT=0
 if [ "$BUILDER_NO_INCLUDE_SRPM" != "1" ] ; then
   mock --isolation=simple "$OUTDIR"/*.src.rpm "$@"
+  MOCK_EXIT=$?
 else
   mock --isolation=simple "$@"
+  MOCK_EXIT=$?
 fi
 group_end
+set -euo pipefail
 
 while IFS= read -r -d $'\0' log_file; do
   group_start "Build logs: ${log_file}"
   cat $log_file
   group_end
 done < <(find /var/lib/mock/*/result -type f -iname '*.log' -print0)
+
+exit $MOCK_EXIT
