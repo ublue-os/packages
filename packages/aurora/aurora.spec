@@ -2,14 +2,16 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.8
+Version:        0.1.9
 Release:        1%{?dist}
 Summary:        Aurora branding
 
 License:        CC-BY-SA
 URL:            https://github.com/ublue-os/packages
-VCS:           {{{ git_dir_vcs }}}
-Source:        {{{ git_dir_pack }}}
+VCS:            {{{ git_dir_vcs }}}
+Source:         {{{ git_dir_pack }}}
+
+BuildArch:      noarch
 
 %description
 Branding for Aurora-related projects

@@ -12,7 +12,8 @@ VCS:            {{{ git_dir_vcs }}}
 Source0:        {{{ git_dir_pack }}}
 Source1:        https://github.com/FyraLabs/readymade/archive/refs/tags/v0.12.2.tar.gz
 
-BuildRequires: glib2-devel
+BuildRequires:  glib2-devel
+BuildArch:      noarch
 
 %description
 Branding for Bluefin's Readymade config

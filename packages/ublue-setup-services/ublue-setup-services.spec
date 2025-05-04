@@ -11,6 +11,7 @@ VCS:            {{{ git_dir_vcs }}}
 Source:         {{{ git_dir_pack }}}
 
 BuildRequires:  systemd-rpm-macros
+BuildArch:      noarch
 
 %description
 Universal Blue setup scripts
