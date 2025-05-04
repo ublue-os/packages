@@ -15,6 +15,8 @@ jobs:
     timeout-minutes: 30
     permissions:
       contents: write
+    outputs:
+      tag_date: ${{ steps.date.output.tag_date }}
     steps:
       - name: Get current date
         # if: github.event_name != 'pull_request'
@@ -81,23 +83,15 @@ jobs:
             ${{ steps.generate_tarball.outputs.tarball_file }}
             ${{ steps.generate_tarball.outputs.shasum_dir }}/*
 
-      - name: Get current date
-        # if: github.event_name != 'pull_request'
-        id: date
-        run: |
-          set -x
-          echo "date=$(date -u +%Y\-%m\-%d\ %H\:%M\:%S)" >> $GITHUB_OUTPUT
-          echo "tag_date=$(date -u +%Y\-%m\-%d-%H-%M-%S)" >> $GITHUB_OUTPUT
-
       - name: Upload Release Artifact
         # if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          TAG_DATE: ${{ steps.date.outputs.tag_date }}
+          TAG_DATE: ${{ needs.create_release.outputs.tag_date }}
           TARBALL_FILE: ${{ steps.generate_tarball.outputs.tarball_file }}
           SHASUM_DIR: ${{ steps.generate_tarball.outputs.shasum_dir }}
         run: |
-          gh release upload \
+          gh release upload --clobber \
             "homebrew-${TAG_DATE}" \
             "${TARBALL_FILE}" \
             "${SHASUM_DIR}"/*
