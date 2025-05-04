@@ -23,13 +23,13 @@ Homebrew integration for Universal Blue systems
 
 %install
 install -Dpm0644 %{SOURCE1} %{buildroot}/%{_datadir}/homebrew.tar.zst
-install -Dpm0644 -t %{buildroot}%{_unitdir}/ src/systemd/*.service 
-install -Dpm0644 -t %{buildroot}%{_unitdir}/ src/systemd/*.timer 
-install -Dpm0644 -t %{buildroot}%{_prefix}/lib/systemd/system-preset/ src/systemd/*.preset 
-install -Dpm0644 ./src/vendor.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/%{name}.fish
+install -Dpm0644 -t %{buildroot}%{_unitdir}/ ./src%{_unitdir}/*.service 
+install -Dpm0644 -t %{buildroot}%{_unitdir}/ ./src%{_unitdir}/*.timer 
+install -Dpm0644 -t %{buildroot}%{_prefix}/lib/systemd/system-preset/ ./src%{_prefix}/lib/systemd/system-preset/*.preset 
+install -Dpm0644 -t %{buildroot}%{_datadir}/fish/vendor_conf.d/ ./src%{_datadir}/fish/vendor_conf.d/%{name}.fish 
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/security/limits.d/ ./src%{_sysconfdir}/security/limits.d/*.conf
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/profile.d/ ./src%{_sysconfdir}/profile.d/*.sh
-install -Dpm0644 %{buildroot}%{_prefix}/lib ./src%{_prefix}/tmpfiles.d/*.conf 
+install -Dpm0644 -t %{buildroot}%{_prefix}/lib/tmpfiles.d/ ./src%{_prefix}/lib/tmpfiles.d/*.conf 
 
 %post
 %systemd_post brew-setup.service
