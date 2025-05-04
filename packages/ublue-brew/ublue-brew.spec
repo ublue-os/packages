@@ -1,10 +1,10 @@
 %global debug_package %{nil}
 # renovate: datasource=github-releases depName=ublue-os/packages
-%define homebrew_release homebrew-2025-02-16-23-20-49
+%define homebrew_release homebrew-2025-05-04-04-03-02
 
 Name:           ublue-brew
-Version:        0.1.3
-Release:        2%{?dist}
+Version:        0.1.4
+Release:        1%{?dist}
 Summary:        Homebrew integration for Universal Blue systems
 
 License:        Apache-2.0
@@ -12,7 +12,6 @@ URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source0:        {{{ git_dir_pack }}}
 Source1:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-x86_64.tar.zst
-ExclusiveArch:  x86_64
 
 BuildRequires:  systemd-rpm-macros
 
