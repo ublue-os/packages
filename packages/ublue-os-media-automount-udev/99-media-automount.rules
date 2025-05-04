@@ -4,18 +4,21 @@
 # @author Zeglius <33781398+Zeglius@users.noreply.github.com>
 
 KERNEL!="sd[a-z][0-9]|nvme[0-9]n[0-9]p[0-9]",   GOTO="media_automount_end"
-ENV{DEVTYPE}!="partition",                      GOTO="media_automount_end"
+ENV{ID_FS_USAGE}!="filesystem",                 GOTO="media_automount_end"
 ATTRS{removable}!="0",                          GOTO="media_automount_end"
-SUBSYSTEM!="block",                             GOTO="media_automount_end"
 
 # Exit if is in fstab...
 PROGRAM=="/usr/libexec/is_in_fstab.sh /dev/%k", RESULT=="yes", GOTO="media_automount_end"
 
 # ... or if is not a supported filesystem...
-ENV{ID_FS_TYPE}!="btrfs|ext4", GOTO="media_automount_end"
+ENV{ID_FS_TYPE}!="btrfs|ext4",  GOTO="media_automount_end"
+ENV{ID_FS_TYPE}!="?*",          GOTO="media_automount_end"
 
-# ... or if does not have a label
+# ... or if does not have a label...
 ENV{ID_FS_LABEL}!="?*", GOTO="media_automount_end"
+
+# ... or if is a windows partition.
+ENV{PART_NAME}=="Basic data partition", GOTO="media_automount_end"
 
 # Add mounting options
 ENV{ID_FS_TYPE}=="btrfs", ENV{SYSTEMD_MOUNT_OPTIONS}="defaults,noatime,lazytime,commit=120,discard=async,compress-force=zstd:1,space_cache=v2,nofail,rw,users,exec"
