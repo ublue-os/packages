@@ -19,7 +19,7 @@ jobs:
       tag_date: ${{ steps.date.outputs.tag_date }}
     steps:
       - name: Get current date
-        # if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request'
         id: date
         run: |
           set -x
@@ -27,7 +27,7 @@ jobs:
           echo "tag_date=$(date -u +%Y\-%m\-%d-%H-%M-%S)" >> $GITHUB_OUTPUT
 
       - name: Create Release
-        # if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request'
         uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631 # v2
         with:
           name: Homebrew Tarball (${{ steps.date.outputs.date }})
@@ -84,7 +84,7 @@ jobs:
             ${{ steps.generate_tarball.outputs.shasum_dir }}/*
 
       - name: Upload Release Artifact
-        # if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ github.token }}
           TAG_DATE: ${{ needs.create_release.outputs.tag_date }}
