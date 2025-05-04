@@ -1,0 +1,39 @@
+name: Trigger packit PR builds
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  changed_files:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Setup Just
+        uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
+
+      - name: Get all changed packages
+        id: changed_pkgs
+        run: |
+          set -xo pipefail
+          echo "changed_pkgs=$(just packit _list_changed_packages || :)" >>$GITHUB_OUTPUT
+
+      - name: Trigger build
+        if: steps.changed_pkgs.outputs.changed_pkgs != ''
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          CHANGED_PKGS: ${{ steps.changed_pkgs.outputs.changed_pkgs }}
+        run: |
+          set -xo pipefail
+          cmdline=""
+          for p in $CHANGED_PKGS; do
+            cmdline="$cmdline --package $p"
+          done
+          if [[ -n $cmdline ]]; then
+            cmdline="/packit build $cmdline"
+            gh pr comment --repo "$GH_REPO" "$PR_NUMBER" --body "$cmdline"
+          fi
