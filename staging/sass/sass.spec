@@ -28,9 +28,9 @@ development workflows.
 # first install `buf`
 curl -sSL "https://github.com/bufbuild/buf/releases/download/v1.21.0/buf-$(uname -s)-$(uname -m)" -o buf
 chmod +x buf
-cp buf /bin/ # this is stupid but maybe it works and I can finally die "piecefully"
+cp buf ./bin/ # this is stupid but maybe it works and I can finally die "piecefully"
 
-dart run grinder protobuf
+PATH=.:$PATH dart run grinder protobuf
 dart compile exe ./bin/sass.dart -o sass
 
 %install
