@@ -1,12 +1,13 @@
 %global uuid logomenu@aryan_k
 
+# renovate: datasource=github-releases depName=Aryan20/Logomenu
 %global commit bbbc77836d1bb853f4bbaf683674c3bbae19cf66
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global gitrel      .git%{shortcommit}
 
 Name:          gnome-shell-extension-logo-menu
 Version:       0.0.0
-Release:       2%{gitrel}%{?dist}
+Release:       3%{gitrel}%{?dist}
 Summary:       Quick access menu for the GNOME panel
 
 Group:         User Interface/Desktops
