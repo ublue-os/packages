@@ -16,7 +16,7 @@ jobs:
     permissions:
       contents: write
     outputs:
-      tag_date: ${{ steps.date.output.tag_date }}
+      tag_date: ${{ steps.date.outputs.tag_date }}
     steps:
       - name: Get current date
         # if: github.event_name != 'pull_request'
