@@ -13,7 +13,8 @@ URL: https://dart.dev/
 %define arch arm64
 %endif
 
-Source0: https://storage.googleapis.com/dart-archive/channels/stable/release/%{version}/sdk/dartsdk-linux-%{arch}-release.zip
+Source0: https://storage.googleapis.com/dart-archive/channels/stable/release/%{version}/sdk/dartsdk-linux-x64-release.zip
+Source1: https://storage.googleapis.com/dart-archive/channels/stable/release/%{version}/sdk/dartsdk-linux-arm64-release.zip
 BuildRequires: fdupes
 
 %description
@@ -21,7 +22,12 @@ Dart is a client-optimized language for fast apps on any platform.
 This package contains the SDK used to develop and compile Dart applications.
 
 %prep
-%autosetup -n dart-sdk
+# This is nasty and terrible but I havent found any way to build the dart-sdk from source given a stable release archive
+if [ "$(arch)" == "x86_64" ]; then
+	unzip %{SOURCE0}
+else
+	unzip %{SOURCE1}
+fi
 
 %build
 
@@ -30,10 +36,10 @@ This package contains the SDK used to develop and compile Dart applications.
 install -vd %{buildroot}%{_bindir}
 install -vd %{buildroot}%{_libdir}/dart
 
-cp -rv ./* %{buildroot}%{_libdir}/dart
+cp -rv ./dart* %{buildroot}%{_libdir}/dart
 
-ln -sf %{_libdir}/dart/bin/dart %{buildroot}%{_bindir}/dart
-ln -sf %{_libdir}/dart/bin/dartaotruntime %{buildroot}%{_bindir}/dartaotruntime
+ln -sf %{_libdir}/dart-sdk/bin/dart %{buildroot}%{_bindir}/dart
+ln -sf %{_libdir}/dart-sdk/bin/dartaotruntime %{buildroot}%{_bindir}/dartaotruntime
 
 %fdupes %buildroot%_libdir/dart/bin/
 
@@ -42,8 +48,6 @@ ln -sf %{_libdir}/dart/bin/dartaotruntime %{buildroot}%{_bindir}/dartaotruntime
 %{_bindir}/dart
 %{_bindir}/dartaotruntime
 
-%license LICENSE
-%doc README
 
 %changelog
 * Thu Nov 17 2022 windowsboy111 <windowsboy111@fyralabs.com> - 2.18.4-1
