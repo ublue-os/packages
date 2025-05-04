@@ -11,10 +11,6 @@ URL: https://dart.dev/
 %define arch x64
 %elifarch aarch64
 %define arch arm64
-%elifarch i386
-%define arch ia32
-%elifarch armv7l
-%define arch arm
 %endif
 
 Source0: https://storage.googleapis.com/dart-archive/channels/stable/release/%{version}/sdk/dartsdk-linux-%{arch}-release.zip
