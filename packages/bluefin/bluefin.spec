@@ -2,14 +2,16 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.2.8
+Version:        0.2.9
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
 License:        CC-BY-CA
 URL:            https://github.com/ublue-os/packages
-VCS:           {{{ git_dir_vcs }}}
-Source:        {{{ git_dir_pack }}}
+VCS:            {{{ git_dir_vcs }}}
+Source:         {{{ git_dir_pack }}}
+
+BuildArch:      noarch
 
 %description
 Branding for Bluefin-related projects

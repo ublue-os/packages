@@ -11,7 +11,7 @@ Source:         {{{ git_dir_pack }}}
 BuildArch:      noarch
 Requires:       just
 Requires:       ublue-os-luks
-Recommends:       powerstat
+Recommends:     powerstat
 
 %global sub_name %{lua:t=string.gsub(rpm.expand("%{NAME}"), "^ublue%-os%-", ""); print(t)}
 

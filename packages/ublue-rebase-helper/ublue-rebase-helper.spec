@@ -1,5 +1,3 @@
-%global debug_package %{nil}
-
 Name:           ublue-rebase-helper
 Version:        0.1.0
 Release:        1%{?dist}
@@ -9,6 +7,8 @@ License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source0:        {{{ git_dir_pack }}}
+
+BuildArch:      noarch
 
 %description
 Rebase helper script and develoepr edition script for Universal Blue images

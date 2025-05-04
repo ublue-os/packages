@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           ublue-bling
-Version:        0.1.5
+Version:        0.1.6
 Release:        1%{?dist}
 Summary:        Universal Blue Bling CLI setup scripts
 
@@ -11,6 +11,7 @@ VCS:            {{{ git_dir_vcs }}}
 Source:         {{{ git_dir_pack }}}
 
 Requires:       gum
+BuildArch:      noarch
 # FIXME: make ublue-builder be able to handle stuff like this
 # Requires:       ublue-os-just
 
