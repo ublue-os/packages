@@ -1,4 +1,4 @@
-name: Generate Homebrew tarball and Release
+name: Generate Homebrew Tarball and Release
 
 on:
   workflow_dispatch:
@@ -8,18 +8,13 @@ on:
   schedule:
     - cron: "0 1 * * TUE" # Every Tuesday at 1am UTC
 
-permissions:
-  contents: write
-  checks: write
-  actions: read
-  packages: write
-  pull-requests: write
-
 jobs:
-  generate_release:
-    name: Generate homebrew tarball and release
+  create_release:
+    name: Create Release
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: write
     steps:
       - name: Get current date
         if: github.event_name != 'pull_request'
@@ -41,10 +36,12 @@ jobs:
           make_latest: true
 
   push_tarballs:
-    name: Generate homebrew tarball and release
+    name: Generate Homebrew Tarball and Push to Release
     runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
     needs: generate_release
     timeout-minutes: 30
+    permissions:
+      contents: write
     strategy:
       matrix:
         platform: [arm64, amd64]
@@ -82,6 +79,7 @@ jobs:
           if-no-files-found: error
           path: |
             ${{ steps.generate_tarball.outputs.tarball_file }}
+            ${{ steps.generate_tarball.outputs.shasum_dir }}/*
 
       - name: Get current date
         if: github.event_name != 'pull_request'
@@ -92,10 +90,14 @@ jobs:
           echo "tag_date=$(date -u +%Y\-%m\-%d-%H-%M-%S)" >> $GITHUB_OUTPUT
 
       - name: Upload Release Artifact
+        if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          TAG_DATE: ${{ steps.date.outputs.tag_date }}
+          TARBALL_FILE: ${{ steps.generate_tarball.outputs.tarball_file }}
+          SHASUM_DIR: ${{ steps.generate_tarball.outputs.shasum_dir }}
         run: |
           gh release upload \
-            "homebrew-${{ steps.date.outputs.tag_date }}" \
-            ${{ steps.generate_tarball.outputs.tarball_file }} \
-            ${{ steps.generate_tarball.outputs.shasum_dir }}/*
+            "homebrew-${TAG_DATE}" \
+            "${TARBALL_FILE}" \
+            "${SHASUM_DIR}"/*
