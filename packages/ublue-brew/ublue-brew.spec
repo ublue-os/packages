@@ -11,7 +11,7 @@ License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source0:        {{{ git_dir_pack }}}
-Source1:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-x86_64.tar.zst
+Source1:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-%{_arch}.tar.zst
 
 BuildRequires:  systemd-rpm-macros
 
@@ -22,15 +22,14 @@ Homebrew integration for Universal Blue systems
 {{{ git_dir_setup_macro }}}
 
 %install
-mkdir -p %{buildroot}{%{_unitdir},%{_prefix}/lib/systemd/system-preset,%{_sysconfdir}}
 install -Dpm0644 %{SOURCE1} %{buildroot}/%{_datadir}/homebrew.tar.zst
-install -Dpm0644 src/systemd/*.service %{buildroot}%{_unitdir}
-install -Dpm0644 src/systemd/*.timer %{buildroot}%{_unitdir}
-install -Dpm0644 src/systemd/*.preset %{buildroot}%{_prefix}/lib/systemd/system-preset
-install -Dm0644 ./src/vendor.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/%{name}.fish
-cp -rp src/security %{buildroot}%{_sysconfdir}
-cp -rp src/profile.d %{buildroot}%{_sysconfdir}
-cp -rp src/tmpfiles.d %{buildroot}%{_prefix}/lib
+install -Dpm0644 -t %{buildroot}%{_unitdir}/ src/systemd/*.service 
+install -Dpm0644 -t %{buildroot}%{_unitdir}/ src/systemd/*.timer 
+install -Dpm0644 -t %{buildroot}%{_prefix}/lib/systemd/system-preset/ src/systemd/*.preset 
+install -Dpm0644 ./src/vendor.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/%{name}.fish
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/security/limits.d/ ./src%{_sysconfdir}/security/limits.d/*.conf
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/profile.d/ ./src%{_sysconfdir}/profile.d/*.sh
+install -Dpm0644 %{buildroot}%{_prefix}/lib ./src%{_prefix}/tmpfiles.d/*.conf 
 
 %post
 %systemd_post brew-setup.service
