@@ -2,7 +2,7 @@
 
 Name: dart
 Version: 3.7.3
-Release: 1%?dist
+Release: 2%?dist
 Summary: The Dart Language
 License: BSD-3-Clause
 URL: https://dart.dev/
@@ -34,9 +34,8 @@ fi
 %install
 # install the folders inside
 install -vd %{buildroot}%{_bindir}
-install -vd %{buildroot}%{_libdir}/dart
 
-cp -rv ./dart* %{buildroot}%{_libdir}/dart
+cp -rv ./dart* %{buildroot}%{_libdir}/
 
 ln -sf %{_libdir}/dart-sdk/bin/dart %{buildroot}%{_bindir}/dart
 ln -sf %{_libdir}/dart-sdk/bin/dartaotruntime %{buildroot}%{_bindir}/dartaotruntime
@@ -44,7 +43,7 @@ ln -sf %{_libdir}/dart-sdk/bin/dartaotruntime %{buildroot}%{_bindir}/dartaotrunt
 %fdupes %buildroot%_libdir/dart/bin/
 
 %files
-%{_libdir}/dart/
+%{_libdir}/dart-sdk/
 %{_bindir}/dart
 %{_bindir}/dartaotruntime
 
