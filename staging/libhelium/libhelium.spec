@@ -49,7 +49,9 @@ for writing applications with libhelium.
 %install
 # Install licenses
 mkdir -p licenses
+set +euo pipefail
 %meson_install
+set -euo pipefail
 
 rm -rf %{buildroot}%{_bindir}/blueprint-compiler
 rm -rf %{buildroot}%{_datadir}/themes/*
