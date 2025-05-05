@@ -6,7 +6,7 @@
 
 Name:          gnome-shell-extension-logo-menu
 Version:       0.0.0
-Release:       2%{gitrel}%{?dist}
+Release:       3%{gitrel}%{?dist}
 Summary:       Quick access menu for the GNOME panel
 
 Group:         User Interface/Desktops
