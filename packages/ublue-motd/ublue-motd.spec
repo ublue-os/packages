@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           ublue-motd
-Version:        0.2.4
+Version:        0.2.5
 Release:        1%{?dist}
 Summary:        MOTD scripts for Universal Blue images
 
@@ -14,6 +14,8 @@ Requires:       glow
 Requires:       jq
 Requires:       curl
 
+BuildArch:      noarch
+
 %description
 MOTD and changelogs script for Universal Blue
 
@@ -21,10 +23,9 @@ MOTD and changelogs script for Universal Blue
 {{{ git_dir_setup_macro }}}
 
 %install
-install -dm0755 %{buildroot}%{_datadir}/ublue-os/motd/themes
-cp -rp ./src/themes/* %{buildroot}%{_datadir}/ublue-os/motd/themes
-install -Dm0755 ./src/%{name} %{buildroot}%{_libexecdir}/%{name}
-install -Dm0755 ./src/ublue-changelog %{buildroot}%{_libexecdir}/ublue-changelog
+install -Dm0644 -t %{buildroot}%{_datadir}/ublue-os/motd/themes/ ./src/themes/*.json
+install -Dm0755 -t %{buildroot}%{_libexecdir}/ ./src/%{name}
+install -Dm0755 -t %{buildroot}%{_libexecdir}/ ./src/ublue-changelog
 install -Dm0755 ./src/vendor.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}.sh
 install -Dm0755 ./src/vendor.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/%{name}.fish
 

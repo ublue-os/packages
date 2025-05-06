@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           ublue-fastfetch
-Version:        0.1.3
+Version:        0.1.4
 Release:        1%{?dist}
 Summary:        Fastfetch configuration for Universal Blue systems
 
@@ -11,6 +11,7 @@ VCS:            {{{ git_dir_vcs }}}
 Source:         {{{ git_dir_pack }}}
 
 Requires:       fastfetch
+BuildArch:      noarch
 
 %description
 Fastfetch configuration for Universal Blue systems
@@ -19,8 +20,8 @@ Fastfetch configuration for Universal Blue systems
 {{{ git_dir_setup_macro }}}
 
 %install
-install -Dm0755 ./src/%{name} %{buildroot}%{_libexecdir}/%{name}
-install -Dm0755 ./src/ublue-bling-fastfetch %{buildroot}%{_libexecdir}/ublue-bling-fastfetch
+install -Dm0755 -t %{buildroot}%{_libexecdir}/ ./src/%{name}
+install -Dm0755 -t %{buildroot}%{_libexecdir}/ ./src/ublue-bling-fastfetch
 install -Dm0755 ./src/vendor.sh %{buildroot}%{_sysconfdir}/profile.d/%{name}.sh
 install -Dm0755 ./src/vendor.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/%{name}.fish
 

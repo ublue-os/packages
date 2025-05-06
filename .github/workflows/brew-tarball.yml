@@ -1,15 +1,52 @@
-name: Generate Homebrew tarball and Release
+name: Generate Homebrew Tarball and Release
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/brew-tarball.yml'
   schedule:
     - cron: "0 1 * * TUE" # Every Tuesday at 1am UTC
 
 jobs:
-  generate_and_push:
-    name: Generate homebrew tarball and release
+  create_release:
+    name: Create Release
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    outputs:
+      tag_date: ${{ steps.date.outputs.tag_date }}
+    steps:
+      - name: Get current date
+        if: github.event_name != 'pull_request'
+        id: date
+        run: |
+          set -x
+          echo "date=$(date -u +%Y\-%m\-%d\ %H\:%M\:%S)" >> $GITHUB_OUTPUT
+          echo "tag_date=$(date -u +%Y\-%m\-%d-%H-%M-%S)" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        if: github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631 # v2
+        with:
+          name: Homebrew Tarball (${{ steps.date.outputs.date }})
+          tag_name: "homebrew-${{ steps.date.outputs.tag_date }}"
+          body: |
+            This is a homebrew tarball generated for the [ublue-brew](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/ublue/brew/ublue-brew.spec) package.
+            It exists so that images can have a consistent tarball to base to install homebrew
+          make_latest: true
+
+  push_tarballs:
+    name: Generate Homebrew Tarball and Push to Release
+    runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
+    needs: create_release
+    timeout-minutes: 30
+    permissions:
+      contents: write
     strategy:
+      matrix:
+        platform: [arm64, amd64]
       fail-fast: false
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -40,30 +77,21 @@ jobs:
       - name: Upload to Job Artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          # FIXME: use matrix.platform once homebrew for aarch64 is done
-          name: brew-tarball-amd64
+          name: brew-tarball-${{ matrix.platform }}
           if-no-files-found: error
           path: |
             ${{ steps.generate_tarball.outputs.tarball_file }}
-
-      - name: Get current date
-        if: github.event_name != 'pull_request'
-        id: date
-        run: |
-          set -x
-          echo "date=$(date -u +%Y\-%m\-%d\ %H\:%M\:%S)" >> $GITHUB_OUTPUT
-          echo "tag_date=$(date -u +%Y\-%m\-%d-%H-%M-%S)" >> $GITHUB_OUTPUT
-
-      - name: Create Release
-        if: github.event_name != 'pull_request'
-        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631 # v2
-        with:
-          name: Homebrew Tarball (${{ steps.date.outputs.date }})
-          tag_name: "homebrew-${{ steps.date.outputs.tag_date }}"
-          body: |
-            This is a homebrew tarball generated for the [ublue-brew](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/ublue/brew/ublue-brew.spec) package.
-            It exists so that images can have a consistent tarball to base to install homebrew
-          make_latest: true
-          files: |
-            ${{ steps.generate_tarball.outputs.tarball_file }}
             ${{ steps.generate_tarball.outputs.shasum_dir }}/*
+
+      - name: Upload Release Artifact
+        if: github.event_name != 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          TAG_DATE: ${{ needs.create_release.outputs.tag_date }}
+          TARBALL_FILE: ${{ steps.generate_tarball.outputs.tarball_file }}
+          SHASUM_DIR: ${{ steps.generate_tarball.outputs.shasum_dir }}
+        run: |
+          gh release upload --clobber \
+            "homebrew-${TAG_DATE}" \
+            "${TARBALL_FILE}" \
+            "${SHASUM_DIR}"/*
