@@ -1,6 +1,6 @@
 Name:           ublue-os-media-automount-udev
 Vendor:         ublue-os
-Version:        0.8
+Version:        0.9
 Release:        1%{?dist}
 Summary:        udev rules to mount non-removable disk partitions
 
@@ -35,6 +35,9 @@ install -p -Dm0644 ./media-automount.conf %{buildroot}%{_tmpfilesdir}/media-auto
 %{_tmpfilesdir}/media-automount.conf
 
 %changelog
+* Tue May 06 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.9
+- fix: Typo in udev attr
+
 * Sat May 03 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.8
 - Simpler exclusion and handle windows partitions
 
