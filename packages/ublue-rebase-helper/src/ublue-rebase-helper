@@ -24,19 +24,120 @@ IMAGE_NAME=$(jq -r '."image-name"' < "$IMAGE_INFO")
 IMAGE_VENDOR=$(jq -r '."image-vendor"' < "$IMAGE_INFO")
 IMAGE_REGISTRY="ghcr.io/${IMAGE_VENDOR}"
 
-function list_tags(){
-	local branch="${branch:-$1}"
-	shift
-	local regex='.Tags[]'
-	regex="$regex"\ ' | select(test("^PLACEHOLDER|^PLACEHOLDER-(?:\\d+\\IMAGE_DATE_SEPARATOR\\d+|\\d+)"))'
-	regex=${regex//PLACEHOLDER/$branch}
-	regex=${regex//IMAGE_DATE_SEPARATOR/$IMAGE_DATE_SEPARATOR}
-	echo -e >&2 "Listing images, this can take a bit of time..."
-	skopeo list-tags "docker://${IMAGE_REGISTRY}/${IMAGE_NAME}" | jq -r "$regex"
+# Ensure needed tools are available (skopeo, jq, awk, date)
+
+function list_tags() {
+    # Use the first argument as branch, fallback to environment variable $branch
+    local branch="${1:-$branch}"
+    # Define the separator, default to "-" if not set externally or empty
+    local IMAGE_DATE_SEPARATOR="${IMAGE_DATE_SEPARATOR:--}"
+    # Ensure IMAGE_REGISTRY and IMAGE_NAME are set
+    local IMAGE_REGISTRY="${IMAGE_REGISTRY:-ghcr.io/ublue-os}" # Example based on previous output
+    local IMAGE_NAME="${IMAGE_NAME:-bluefin-dx}"       # Example based on previous output
+
+    # Check if branch is provided
+    if [[ -z "$branch" ]]; then
+        echo "Error: Branch name is required as argument 1 or via \$branch variable." >&2
+        return 1
+    fi
+
+    # --- Part 1: Initial jq filter setup ---
+    # This filter should pass through tags that might have the date format,
+    # as well as other desired tags (like the base branch name).
+    # Let's use a jq regex that passes the base branch OR anything starting with BRANCH<separator>
+    # Escape the branch and separator for jq's regex engine to handle special characters safely.
+    local escaped_branch=$(printf '%s\n' "$branch" | sed 's:[][\\/.^$*]:\\&:g')
+    local escaped_separator=$(printf '%s\n' "$IMAGE_DATE_SEPARATOR" | sed 's:[][\\/.^$*]:\\&:g')
+
+    # Regex: Match exact branch OR branch followed by the separator.
+    local initial_jq_regex='.Tags[] | select(test("^'"$escaped_branch"'($|'"$escaped_separator"'.*)"))'
+
+    # --- Part 2: Date calculation for the second filter ---
+    local cutoff_date_str
+    if date --version >/dev/null 2>&1; then # GNU date
+        cutoff_date_str=$(date -d '14 days ago' '+%Y%m%d')
+    elif date -v-14d '+%Y%m%d' >/dev/null 2>&1; then # BSD date
+        cutoff_date_str=$(date -v-14d '+%Y%m%d')
+    else
+        echo "Error: Cannot determine date command syntax." >&2 ; return 1
+    fi
+    if [[ -z "$cutoff_date_str" ]]; then
+         echo "Error: Could not calculate cutoff date." >&2 ; return 1
+    fi
+
+    echo -e >&2 "Listing images for registry: '${IMAGE_REGISTRY}', image: '${IMAGE_NAME}'"
+    echo -e >&2 "Initial filter for branch: '${branch}' pattern (using separator: '${IMAGE_DATE_SEPARATOR}')."
+    echo -e >&2 "Filtering output for dates matching '${branch}${IMAGE_DATE_SEPARATOR}YYYYMMDD' from ${cutoff_date_str} onwards."
+    echo -e >&2 "This can take a bit of time..."
+
+    # --- Part 3: Execution - Pipe skopeo | jq | awk ---
+    skopeo list-tags "docker://${IMAGE_REGISTRY}/${IMAGE_NAME}" | \
+      jq -r "$initial_jq_regex" | \
+      awk -v branch="$branch" \
+          -v separator="$IMAGE_DATE_SEPARATOR" \
+          -v cutoff="$cutoff_date_str" '
+      BEGIN {
+          # Escape branch and separator for safety within awk dynamic regex
+          # gsub(/[\\.^$*+?()[{|]/, "\\\\&", branch); # More complex awk escaping if needed
+          # gsub(/[\\.^$*+?()[{|]/, "\\\\&", separator);
+          # For common cases like `-`, escaping might not be strictly needed in awk, but good practice
+
+          # Construct the specific date pattern using branch and separator variables
+          date_pattern = "^" branch separator "([0-9]{8})$";
+      }
+      {
+          # $0 holds the current tag line from jq output
+          if (match($0, date_pattern, parts)) {
+              # It matches the BRANCH<separator>YYYYMMDD pattern.
+              tag_date = parts[1];
+              if (tag_date >= cutoff) {
+                  print $0; # Date is recent enough, print the tag.
+              }
+              # Otherwise, do nothing (filter out old date tags).
+          } else {
+              # It does NOT match the specific date pattern. Keep it.
+              # (It already passed the initial jq filter).
+              # print $0;
+          }
+      }'
+
+    # --- Part 4: Check exit status ---
+    local pipe_status=(${PIPESTATUS[@]})
+    local skopeo_status=${pipe_status[0]}
+    local jq_status=${pipe_status[1]}
+    local awk_status=${pipe_status[2]}
+
+    if [[ $skopeo_status -ne 0 ]]; then
+        echo "Warning: skopeo command failed with status $skopeo_status." >&2
+    fi
+    if [[ $jq_status -ne 0 ]]; then
+        echo "Warning: Initial jq filter failed with status $jq_status." >&2
+    fi
+     if [[ $awk_status -ne 0 ]]; then
+        echo "Error: awk date filter failed with status $awk_status." >&2
+        return $awk_status # Return awk's error code
+    fi
+    # Decide on overall success based on statuses if needed
+    if [[ $skopeo_status -ne 0 || $jq_status -ne 0 ]]; then
+      # Return a non-zero status if earlier steps failed, even if awk succeeded
+      return 1
+    fi
+    return 0 # Success
 }
 
-IMAGE_DATE_SEPARATOR="$(get_config '."image-date-separator"' ".")"
+# --- Example Usage ---
+# export IMAGE_REGISTRY="ghcr.io/ublue-os"
+# export IMAGE_NAME="bluefin-dx"
+# export IMAGE_DATE_SEPARATOR="-" # Explicitly set, or rely on default in function
+# list_tags "lts"
 
+# Example with a different separator (if tags were like lts_20250506)
+# export IMAGE_DATE_SEPARATOR="_"
+# list_tags "lts"
+# ---------------------
+
+
+IMAGE_DATE_SEPARATOR="$(get_config '."image-date-separator"' ".")"
 # Generates AVAILABLE_TAGS array from JSON array
 AVAILABLE_TAGS="$(get_config '."available-tags"[]' "null")"
 AVAILABLE_TAGS=${AVAILABLE_TAGS//\"/""}
@@ -46,15 +147,27 @@ if [ "${AVAILABLE_TAGS[*]}" == "null" ] ; then
 	exit 1
 fi
 
-echo "Which stream would you like to rebase to?"
-CHOSEN_TAG="$(Choose date "${AVAILABLE_TAGS[@]}" cancel)"
+# If AVAILABLE_TAGS contains "lts", only show "lts" as the available tag
+if [[ " ${AVAILABLE_TAGS[*]} " =~ " lts " ]]; then
+	AVAILABLE_TAGS=("lts")
+fi
 
-if [ "${CHOSEN_TAG}" == "date" ] ; then
-  echo "Which stream do you want to rebase to a specific date to?"
+echo "Which stream would you like to rebase to?"
+CHOSEN_TAG="$(Choose pin-to-date "${AVAILABLE_TAGS[@]}" cancel)"
+
+if [ "${CHOSEN_TAG}" == "pin-to-date" ] ; then
+  if [[ " ${AVAILABLE_TAGS[*]} " =~ " lts " ]]; then
+	# If "lts" is in the list, show it as the only option
+	CHOSEN_TAG="lts"
+  else
+	# Otherwise, show all available tags
+	echo "Which stream do you want to rebase to a specific date to?"
 	CHOSEN_TAG="$(Choose all current "${AVAILABLE_TAGS[@]}" cancel)"
 	if [[ ! " ${AVAILABLE_TAGS[*]} all current " =~ [[:space:]]${CHOSEN_TAG}[[:space:]] ]]; then
 		exit 0
 	fi
+  fi
+
 	case "$CHOSEN_TAG" in
 		"all")
 			CHOSEN_TAG=""

@@ -31,31 +31,91 @@ source /usr/lib/ujust/ujust.sh
 
 CURRENT_IMAGE=$(rpm-ostree status -b --json | jq -r '.deployments[0]."container-image-reference"')
 
+if /bin/grep -q "\:lts" <<< $CURRENT_IMAGE ; then
+    if /bin/grep -q "\-dx" <<< $CURRENT_IMAGE ; then
+        CURRENT_LTS_DX_STATE="enabled"
+    if /bin/grep -q "\-gdx" <<< $CURRENT_IMAGE ; then
+        CURRENT_LTS_GDX_STATE="enabled"
+    fi
+    else
+        CURRENT_LTS_DX_STATE="disabled"
+        CURRENT_LTS_GDX_STATE="disabled"
+    fi
+
+fi
+
+
 if /bin/grep -q "\-dx" <<< $CURRENT_IMAGE ; then
     CURRENT_STATE="enabled"
 else
     CURRENT_STATE="disabled"
 fi
-echo "Developer mode is currently ${CURRENT_STATE}"
-echo "Enable or Disable developer mode"
-OPTION=$(Choose Enable Disable)
-if [[ "${OPTION,,}" =~ ^enable ]]; then
-    if [ "$CURRENT_STATE" = "enabled" ] ; then
-        echo "You are already on a developer image"
-        exit 0
-    fi
-    echo "Rebasing to a developer image"
-    NEW_IMAGE=$(sed "s/$IMAGE_BASE_NAME/$IMAGE_BASE_NAME-dx/" <<< $CURRENT_IMAGE)
-    rpm-ostree rebase $NEW_IMAGE && echo -e "\nUse \`ujust dx-group\` to add your user to the correct groups and complete the installation"
-fi
 
-if [[ "${OPTION,,}" =~ ^disable ]]; then
-    if [ "$CURRENT_STATE" != "enabled" ]; then
-        echo "You are not currently on a developer image"
-        exit 0
+manage_developer_mode() {
+    echo "Developer mode is currently ${CURRENT_STATE}"
+    echo "Enable or Disable developer mode"
+    OPTION=$(Choose Enable Disable)
+    if [[ "${OPTION,,}" =~ ^enable ]]; then
+        if [ "$CURRENT_STATE" = "enabled" ] ; then
+            echo "You are already on a developer image"
+            exit 0
+        fi
+        echo "Rebasing to a developer image"
+        NEW_IMAGE=$(sed "s/$IMAGE_BASE_NAME/$IMAGE_BASE_NAME-dx/" <<< $CURRENT_IMAGE)
+        rpm-ostree rebase $NEW_IMAGE && echo -e "\nUse \`ujust dx-group\` to add your user to the correct groups and complete the installation"
     fi
-    echo "Rebasing to a non developer image"
-    # Remove -dx suffix from image, specifies ":" to mark the end of the image name
-    NEW_IMAGE=$(sed "s/\-dx//" <<< $CURRENT_IMAGE)
-    rpm-ostree rebase $NEW_IMAGE
+
+    if [[ "${OPTION,,}" =~ ^disable ]]; then
+        if [ "$CURRENT_STATE" != "enabled" ]; then
+            echo "You are not currently on a developer image"
+            exit 0
+        fi
+        echo "Rebasing to a non developer image"
+        # Remove -dx suffix from image, specifies ":" to mark the end of the image name
+        NEW_IMAGE=$(sed "s/\-dx//" <<< $CURRENT_IMAGE)
+        rpm-ostree rebase $NEW_IMAGE
+    fi
+}
+
+manage_lts_mode() {
+    if [ "$CURRENT_LTS_DX_STATE" = "enabled" ] ; then
+        echo "Developer mode is currently enabled"
+    elseif [ "$CURRENT_LTS_GDX_STATE" = "enabled" ] ; then
+        echo "GDX mode is currently enabled"
+    fi
+    echo "Enable or Disable Developer or GDX mode"
+    OPTION=$(Choose Developer GDX Disable)
+    if [[ "${OPTION,,}" =~ ^Developer ]]; then
+        if [ "$CURRENT_LTS_DX_STATE" = "enabled" ] ; then
+            echo "You are already on a developer image"
+            exit 0
+        fi
+        echo "Rebasing to a developer image"
+        NEW_IMAGE=$(sed "s/$IMAGE_BASE_NAME/$IMAGE_BASE_NAME-dx/" <<< $CURRENT_IMAGE)
+        rpm-ostree rebase $NEW_IMAGE && echo -e "\nUse \`ujust dx-group\` to add your user to the correct groups and complete the installation"
+    fi
+    if [[ "${OPTION,,}" =~ ^GDX ]]; then
+        if [ "$CURRENT_LTS_GDX_STATE" = "enabled" ] ; then
+            echo "You are already on a GDX image"
+            exit 0
+        fi
+        echo "Rebasing to a GDX image"
+        NEW_IMAGE=$(sed "s/$IMAGE_BASE_NAME/$IMAGE_BASE_NAME-gdx/" <<< $CURRENT_IMAGE)
+        rpm-ostree rebase $NEW_IMAGE && echo -e "\nUse \`ujust dx-group\` to add your user to the correct groups and complete the installation"
+    fi
+    if [[ "${OPTION,,}" =~ ^Disable ]]; then
+        if [ "$CURRENT_STATE" != "enabled" ]; then
+            echo "You are not currently on a developer image"
+            exit 0
+        fi
+        echo "Rebasing to a non developer image"
+        # Remove -dx suffix from image, specifies ":" to mark the end of the image name
+        NEW_IMAGE=$(sed "s/\-dx//" <<< $CURRENT_IMAGE)
+        rpm-ostree rebase $NEW_IMAGE
+    fi
+}
+if /bin/grep -q "\:lts" <<< $CURRENT_IMAGE ; then
+    manage_lts_mode
+else
+    manage_developer_mode
 fi
