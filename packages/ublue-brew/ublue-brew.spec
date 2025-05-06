@@ -11,7 +11,8 @@ License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source0:        {{{ git_dir_pack }}}
-Source1:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-%{_arch}.tar.zst
+Source1:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-x86_64.tar.zst
+Source2:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-aarch64.tar.zst
 
 BuildRequires:  systemd-rpm-macros
 
@@ -22,6 +23,12 @@ Homebrew integration for Universal Blue systems
 {{{ git_dir_setup_macro }}}
 
 %install
+# This is nasty and terrible but I havent found any way to build the dart-sdk from source given a stable release archive
+if [ "$(arch)" == "x86_64" ]; then
+	unzip %{SOURCE1}
+else
+	unzip %{SOURCE2}
+fi
 install -Dpm0644 %{SOURCE1} %{buildroot}/%{_datadir}/homebrew.tar.zst
 install -Dpm0644 -t %{buildroot}%{_unitdir}/ ./src%{_unitdir}/*.service 
 install -Dpm0644 -t %{buildroot}%{_unitdir}/ ./src%{_unitdir}/*.timer 
