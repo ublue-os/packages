@@ -11,7 +11,8 @@ License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source0:        {{{ git_dir_pack }}}
-Source1:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-%{_arch}.tar.zst
+Source1:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-x86_64.tar.zst
+Source2:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-aarch64.tar.zst
 
 BuildRequires:  systemd-rpm-macros
 
@@ -22,7 +23,15 @@ Homebrew integration for Universal Blue systems
 {{{ git_dir_setup_macro }}}
 
 %install
-install -Dpm0644 %{SOURCE1} %{buildroot}/%{_datadir}/homebrew.tar.zst
+# I have no idea how to do sources that can differ from the buildroot's architecture
+# FIXME: This is nasty and terrible.
+SOURCE_FILE=""
+if [ "$(arch)" == "x86_64" ]; then
+	SOURCE_FILE=%{SOURCE1}
+else
+	SOURCE_FILE=%{SOURCE2}
+fi
+install -Dpm0644 "${SOURCE_FILE}" %{buildroot}/%{_datadir}/homebrew.tar.zst
 install -Dpm0644 -t %{buildroot}%{_unitdir}/ ./src%{_unitdir}/*.service 
 install -Dpm0644 -t %{buildroot}%{_unitdir}/ ./src%{_unitdir}/*.timer 
 install -Dpm0644 -t %{buildroot}%{_prefix}/lib/systemd/system-preset/ ./src%{_prefix}/lib/systemd/system-preset/*.preset 
