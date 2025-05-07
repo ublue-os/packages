@@ -42,6 +42,11 @@
     {
       "matchPackageNames": ["rpm-ostree"],
       "extractVersion": "^(?<version>\\d+\\.\\d+)",
+    },
+    {
+      "automerge": true,
+      "matchUpdateTypes": ["digest"],
+      "matchDepNames": ["registry.fedoraproject.org/fedora"],
     }
   ]
 }
