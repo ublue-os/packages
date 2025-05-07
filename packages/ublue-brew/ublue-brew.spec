@@ -23,13 +23,15 @@ Homebrew integration for Universal Blue systems
 {{{ git_dir_setup_macro }}}
 
 %install
-# This is nasty and terrible but I havent found any way to build the dart-sdk from source given a stable release archive
+# I have no idea how to do sources that can differ from the buildroot's architecture
+# FIXME: This is nasty and terrible.
+SOURCE_FILE=""
 if [ "$(arch)" == "x86_64" ]; then
-	unzip %{SOURCE1}
+	SOURCE_FILE=%{SOURCE1}
 else
-	unzip %{SOURCE2}
+	SOURCE_FILE=%{SOURCE2}
 fi
-install -Dpm0644 %{SOURCE1} %{buildroot}/%{_datadir}/homebrew.tar.zst
+install -Dpm0644 "${SOURCE_FILE}" %{buildroot}/%{_datadir}/homebrew.tar.zst
 install -Dpm0644 -t %{buildroot}%{_unitdir}/ ./src%{_unitdir}/*.service 
 install -Dpm0644 -t %{buildroot}%{_unitdir}/ ./src%{_unitdir}/*.timer 
 install -Dpm0644 -t %{buildroot}%{_prefix}/lib/systemd/system-preset/ ./src%{_prefix}/lib/systemd/system-preset/*.preset 
