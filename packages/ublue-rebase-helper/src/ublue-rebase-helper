@@ -2,6 +2,73 @@
 
 # Ublue Rebase Helper 2.0
 
+# --- Gum Style Functions ---
+_gum_style_title() {
+    gum style \
+        --border "normal" \
+        --bold \
+        --foreground "111" \
+        --border-foreground "111" \
+        --padding "0.5 0.5" \
+        --margin "1 1" \
+        <<< "$@"
+}
+
+_gum_style_prompt() {
+    gum style \
+        --foreground "228" \
+        --bold \
+        <<< "$@"
+}
+
+_gum_style_info() {
+    gum style \
+        --foreground "240" \
+        <<< "$@"
+}
+
+_gum_style_error() {
+    gum style \
+        --foreground "196" \
+        --bold \
+        --border "normal" \
+        --border-foreground "196" \
+        --padding "0 1" \
+        --margin "0 1" \
+        <<< "$@"
+}
+
+_gum_style_warning() {
+    gum style \
+        --foreground "208" \
+        --bold \
+        --border "normal" \
+        --border-foreground "208" \
+        --padding "0 1" \
+        --margin "0 1" \
+        <<< "$@"
+}
+
+_gum_style_choice() {
+    gum style \
+        --foreground "117" \
+        <<< "$@"
+}
+
+_gum_style_accent() {
+    gum style \
+        --foreground "212" \
+        <<< "$@"
+}
+
+_gum_style_label() {
+     gum style \
+        --foreground "248" \
+        <<< "$@"
+}
+
+# --- End Gum Style Functions ---
+
 get_config() {
 	REBASE_HELPER_CONFIG_FILE="${REBASE_HELPER_CONFIG_FILE:-/etc/ublue-os/rebase_helper.json}"
 	QUERY="$1"
@@ -26,36 +93,47 @@ IMAGE_REGISTRY="ghcr.io/${IMAGE_VENDOR}"
 IMAGE_DATE_SEPARATOR="$(get_config '."image-date-separator"' ".")"
 CURRENT_IMAGE=$(rpm-ostree status -b --json | jq -r '.deployments[0]."container-image-reference"')
 CURRENT_TAG="$(echo "$CURRENT_IMAGE" | sed "s/.*://")"
+TAG_FETCH_LIMIT=7
+TAG_PROCESS_LIMIT=300
+HIGHER_TAG_FETCH_LIMIT=100
+HIGHER_TAG_PROCESS_LIMIT=10000
 
-echo "$IMAGE_NAME"
-echo "$IMAGE_VENDOR"
-echo "$IMAGE_REGISTRY"
 
 function list_gh_date_tags() {
-    local branch="${1:-$branch}"
+    local tag="${1:-$CHOSE_TAG}"
     local image_vendor="${2:-$IMAGE_VENDOR}"
     local image_name="${3:-$IMAGE_NAME}"
-    local image_date_separator="${4:-IMAGE_DATE_SEPARATOR}"
-    local limit="${5:-7}"
-    local list_limit="${6:-100}"
+    local image_date_separator="${4:-$IMAGE_DATE_SEPARATOR}"
+    local limit="${5:-$TAG_FETCH_LIMIT}"
+    local list_limit="${6:-$TAG_PROCESS_LIMIT}"
 
 
     # Check if required arguments are provided
-    if [[ -z "$branch" ]]; then
-        echo "Error: Branch prefix (for filtering dated tags) is required as argument 1 or via \$branch variable." >&2
+    if [[ -z "$tag" ]]; then
+        _gum_style_error "Error: Branch prefix (for filtering dated tags) is required as argument 1 or via \$CHOSEN_TAG variable." >&2
         return 1
     fi
     if [[ -z "$image_vendor" ]]; then
-        echo "Error: Image owner (user/org) is required as argument 2 or via \$IMAGE_VENDOR variable." >&2
+        _gum_style_error "Error: Image owner (user/org) is required as argument 2 or via \$IMAGE_VENDOR variable." >&2
         return 1
     fi
     if [[ -z "$image_name" ]]; then
-        echo "Error: Image name is required as argument 3 or via \$IMAGE_NAME variable." >&2
+        _gum_style_error "Error: Image name is required as argument 3 or via \$IMAGE_NAME variable." >&2
+        return 1
+    fi
+    if [[ -z "$image_date_separator" ]]; then
+        _gum_style_error "Error: Image date separator is required as argument 4 or via \$IMAGE_DATE_SEPARATOR variable." >&2
+        return 1
+    fi
+    if [[ -z "$limit" ]]; then
+        _gum_style_error "Error: Limit for the number of tags to return is required as argument 5 or via \$TAG_FETCH_LIMIT." >&2
+        return 1
+    fi
+    if [[ -z "$list_limit" ]]; then
+        _gum_style_error "Error: Limit for the number of tags to fetch is required as argument 6 or via \$TAG_PROCESS_LIMIT." >&2
         return 1
     fi
 
-    echo -e >&2 "Attempting to list tags for public image ghcr.io/${image_vendor}/${image_name}"
-    echo -e >&2 "This can take a bit of time..."
 
     # Step 1: Get ghcr.io token anonymously for the public repository
     local repo_scope="repository:${image_vendor}/${image_name}:pull"
@@ -66,53 +144,93 @@ function list_gh_date_tags() {
     bearer_token=$(echo "$token_response" | jq -r '.token')
 
     if [ -z "$bearer_token" ] || [ "$bearer_token" == "null" ]; then
-        echo "Error: Failed to obtain ghcr.io bearer token (even anonymously)." >&2
-        echo "Please ensure the image 'ghcr.io/${image_vendor}/${image_name}' is public and the name is correct." >&2
-        echo "Response from token service: $token_response" >&2
+        _gum_style_error "Error: Failed to obtain ghcr.io bearer token (even anonymously)." >&2
+        _gum_style_error "Please ensure the image 'ghcr.io/${image_vendor}/${image_name}' is public and the name is correct." >&2
+        _gum_style_info "Response from token service: $token_response" >&2
         return 1
     fi
 
     # Step 2: List tags using the obtained bearer token
     local tag_list_json
-    tag_list_json=$(curl -s -H "Authorization: Bearer ${bearer_token}" "https://ghcr.io/v2/${image_vendor}/${image_name}/tags/list?n=${list_limit}")
+    if command -v gum &> /dev/null; then
+      tag_list_json=$(gum spin --title "Fetching tags from ghcr.io" --show-output -- curl -s -H "Authorization: Bearer ${bearer_token}" "https://ghcr.io/v2/${image_vendor}/${image_name}/tags/list?n=${list_limit}")
+      if [[ -z "$tag_list_json" ]]; then
+        _gum_style_error "Error: No output received while fetching tags using gum." >&2
+        return 1
+      fi
+    else
+      tag_list_json=$(curl -s -H "Authorization: Bearer ${bearer_token}" "https://ghcr.io/v2/${image_vendor}/${image_name}/tags/list?n=${list_limit}")
+      if [[ -z "$tag_list_json" ]]; then
+        _gum_style_error "Error: No output received while fetching tags using curl." >&2
+        return 1
+      fi
+    fi
 
     # Check if the tags key exists and is an array
     if ! echo "$tag_list_json" | jq -e '.tags? | (type=="array")' > /dev/null; then
-        echo "Error: Failed to list tags or unexpected JSON structure from tags/list endpoint." >&2
-        echo "Is 'ghcr.io/${image_vendor}/${image_name}' a valid container image path?" >&2
-        echo "Response: $tag_list_json" >&2
+        _gum_style_error "Error: Failed to list tags or unexpected JSON structure from tags/list endpoint." >&2
+        _gum_style_info "Is 'ghcr.io/${image_vendor}/${image_name}' a valid container image path?" >&2
+        _gum_style_info "Response: $tag_list_json" >&2
         return 1
     fi
 
     # Step 3: Filter, sort, and limit the tags
     # Escape the branch and separator for jq's regex engine.
-    local escaped_branch=$(printf '%s\n' "$branch" | sed 's:[][\\/.^$*]:\\&:g')
+    local escaped_branch=$(printf '%s\n' "$tag" | sed 's:[][\\/.^$*]:\\&:g')
     local escaped_separator=$(printf '%s\n' "$IMAGE_DATE_SEPARATOR" | sed 's:[][\\/.^$*]:\\&:g')
 
-    # Regex: Match ONLY branch<separator>8digits exactly.
+
     echo "$tag_list_json" | \
       jq -r '.tags[]? | select(type=="string") | select(test("^'"$escaped_branch$escaped_separator"'\\d{8}$"))' | \
       sort -r | \
-      head -n "$limit"
+      head -n "$limit" | \
+      sed 's/\"//g' | \
+      sed 's/,//g'
 
     # Step 4: Check exit status of the pipeline
     local pipe_status=(${PIPESTATUS[@]})
     # Index 0 is curl (already checked somewhat by jq parsing)
     # Index 1 is first jq, Index 2 is sort, Index 3 is head
     if [[ ${pipe_status[1]} -ne 0 || ${pipe_status[2]} -ne 0 || ${pipe_status[3]} -ne 0 ]]; then
-         echo "Error: Tag processing pipeline failed. Statuses: [JQ: ${pipe_status[1]}, Sort: ${pipe_status[2]}, Head: ${pipe_status[3]}]" >&2
+         _gum_style_error "Error: Tag processing pipeline failed. Statuses: [JQ: ${pipe_status[1]}, Sort: ${pipe_status[2]}, Head: ${pipe_status[3]}]" >&2
          return 1
     fi
-
+    
     return 0 # Success
 }
+
+set_rebase_target_and_confirm() {
+    local chosen_tag="$1"
+    rebase_target="$IMAGE_REGISTRY/$IMAGE_NAME:$chosen_tag"
+    _gum_style_info "Rebase target is ${rebase_target}"
+    if [[ $(Confirm "Do you really wish to rebase?") -ne "0" ]]; then
+        exit 1
+    fi
+    rpm-ostree rebase "ostree-image-signed:docker://${rebase_target}"
+    exit 0
+}
+
+# Main 
+
+title_line="$(_gum_style_title "Ublue Rebase Helper")" # Style the main title text
+
+vendor_line="$(_gum_style_label "Image Vendor:") $(_gum_style_accent "$IMAGE_VENDOR")" # Style label + accented value
+name_line="$(_gum_style_label "Image Name:") $(_gum_style_accent "$IMAGE_NAME")"       # Style label + accented value
+tag_line="$(_gum_style_label "Current Tag:") $(_gum_style_accent "$CURRENT_TAG")"     # Style label + accented value
+
+
+gum join --vertical \
+    "$title_line" \
+    "$vendor_line" \
+    "$name_line" \
+    "$tag_line"
 
 # Generates AVAILABLE_TAGS array from JSON array
 AVAILABLE_TAGS="$(get_config '."available-tags"[]' "null")"
 AVAILABLE_TAGS=${AVAILABLE_TAGS//\"/""}
 mapfile -t AVAILABLE_TAGS < <(echo "$AVAILABLE_TAGS")
 if [ "${AVAILABLE_TAGS[*]}" == "null" ] ; then
-	echo "Failure listing available tags"
+	_gum_style_error "Failure listing available tags"
 	exit 1
 fi
 
@@ -134,44 +252,27 @@ if [[ " ${AVAILABLE_TAGS[*]} " =~ [[:space:]]${CURRENT_TAG}[[:space:]] ]]; then
   AVAILABLE_TAGS=("${AVAILABLE_TAGS_TEMP[@]}")
 fi
 
-echo "Which stream would you like to rebase to?"
-echo "Available tags: ${AVAILABLE_TAGS[*]}"
+_gum_style_prompt "Which stream would you like to rebase to?"
 # if AVAILABLE_TAGS is empty don't show the menu
 if [ ${#AVAILABLE_TAGS[@]} -eq 0 ]; then
   CHOSEN_TAG="$(Choose "Pin to a date" cancel)"
 else
-  CHOSEN_TAG="$(Choose "Pin to a date" "${AVAILABLE_TAGS[@]}" cancel)"
+  CHOSEN_TAG="$(Choose "${AVAILABLE_TAGS[@]}" "Pin to a date" cancel)"
+if [[ "$CHOSEN_TAG" != "Pin to a date" && "$CHOSEN_TAG" != "cancel" ]]; then
+  set_rebase_target_and_confirm "$CHOSEN_TAG"
+  fi
 fi
 
 if [ "${CHOSEN_TAG}" == "Pin to a date" ] ; then
-  if [[ " ${AVAILABLE_TAGS[*]} " =~ " lts " ]]; then
-	# If "lts" is in the list, show it as the only option
-	CHOSEN_TAG="lts"
+  #if CURRENT_TAG contains a date, remove it
+  if [[ "$CURRENT_TAG" =~ ${IMAGE_DATE_SEPARATOR} ]]; then
+    CHOSEN_TAG="${CURRENT_TAG}"
   else
-	# Otherwise, show all available tags
-	echo "Which stream do you want to rebase to a specific date to?"
-	CHOSEN_TAG="$(Choose all current "${AVAILABLE_TAGS[@]}" cancel)"
-	if [[ ! " ${AVAILABLE_TAGS[*]} all current " =~ [[:space:]]${CHOSEN_TAG}[[:space:]] ]]; then
-		exit 0
-	fi
+    CHOSEN_TAG="${CURRENT_TAG%%${IMAGE_DATE_SEPARATOR}*}"
   fi
-
-	case "$CHOSEN_TAG" in
-		"all")
-			CHOSEN_TAG=""
-			;;
-
-		"current")
-			CHOSEN_TAG="$CURRENT_TAG"
-			;;
-
-		"cancel")
-			exit 0
-			;;
-	esac
-
-  mapfile -t valid_tags < <(list_tags "$CHOSEN_TAG" "$IMAGE_VENDOR" "$IMAGE_NAME" "$IMAGE_DATE_SEPARATOR" 7 300 | sed 's/\"//g' | sed 's/,//g')
-  gum style --foreground 212 --bold --underline "Warning: This will pin you to a specific version, do not forget to rebase back to $(IFS=,; echo "${AVAILABLE_TAGS[*]}") to resume receiving updates."
+  output=$(list_gh_date_tags "$CHOSEN_TAG" "$IMAGE_VENDOR" "$IMAGE_NAME" "$IMAGE_DATE_SEPARATOR" "$TAG_FETCH_LIMIT" "$TAG_PROCESS_LIMIT")
+  mapfile -t valid_tags <<< "$output"
+  _gum_style_warning "Warning: This will pin you to a specific version, do not forget to rebase back to your previous tag to resume receiving updates."
   CHOSEN_TAG=$(Choose cancel "${valid_tags[@]}" "Show More")
 elif [[ ! " ${AVAILABLE_TAGS[*]} " =~ [[:space:]]${CHOSEN_TAG}[[:space:]] ]]; then
 	# No valid things were found
@@ -183,21 +284,20 @@ if [[ "$CHOSEN_TAG" == "cancel" || "$CHOSEN_TAG" == "" ]] ; then
 fi
 
 if [[ "$CHOSEN_TAG" == "Show More" ]] ; then
-  mapfile -t valid_tags < <(list_tags "$CHOSEN_TAG" "$IMAGE_VENDOR" "$IMAGE_NAME" "$IMAGE_DATE_SEPARATOR" 30 3000 | sed 's/\"//g' | sed 's/,//g')
-  CHOSEN_TAG="$(Choose cancel "${AVAILABLE_TAGS[@]}" "Show Less")"
+  #if CURRENT_TAG contains a date, remove it
+  if [[ "$CURRENT_TAG" =~ ${IMAGE_DATE_SEPARATOR} ]]; then
+    CHOSEN_TAG="${CURRENT_TAG}"
+  else
+    CHOSEN_TAG="${CURRENT_TAG%%${IMAGE_DATE_SEPARATOR}*}"
+  fi
+  output=$(list_gh_date_tags "$CHOSEN_TAG" "$IMAGE_VENDOR" "$IMAGE_NAME" "$IMAGE_DATE_SEPARATOR" "$HIGHER_TAG_FETCH_LIMIT" "$HIGHER_TAG_PROCESS_LIMIT")
+  mapfile -t valid_tags <<< "$output"
+  CHOSEN_TAG="$(Choose cancel "${valid_tags[@]}")"
   if [[ "$CHOSEN_TAG" == "cancel" || "$CHOSEN_TAG" == "" ]] ; then
     exit 0
   fi
 fi
 
-if [ "$rebase_target" == "" ] ; then
-	rebase_target="$IMAGE_REGISTRY/$IMAGE_NAME:$CHOSEN_TAG"
-fi
-
-echo "Rebase target is ${rebase_target}"
-if [[ $(Confirm "Do you really wish to rebase?") -ne "0" ]]; then
-    exit 1
-fi
-
-rpm-ostree rebase "ostree-image-signed:docker://${rebase_target}"
+set_rebase_target_and_confirm "$CHOSEN_TAG"
 exit 0
+# End of script
