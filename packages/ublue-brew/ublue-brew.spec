@@ -1,18 +1,17 @@
 %global debug_package %{nil}
 # renovate: datasource=github-releases depName=ublue-os/packages
-%define homebrew_release homebrew-2025-02-16-23-20-49
+%define homebrew_release homebrew-2025-05-04-04-03-02
 
 Name:           ublue-brew
-Version:        0.1.3
-Release:        2%{?dist}
+Version:        0.1.4
+Release:        1%{?dist}
 Summary:        Homebrew integration for Universal Blue systems
 
 License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source0:        {{{ git_dir_pack }}}
-Source1:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-x86_64.tar.zst
-ExclusiveArch:  x86_64
+Source1:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-%{_arch}.tar.zst
 
 BuildRequires:  systemd-rpm-macros
 
@@ -23,15 +22,14 @@ Homebrew integration for Universal Blue systems
 {{{ git_dir_setup_macro }}}
 
 %install
-mkdir -p %{buildroot}{%{_unitdir},%{_prefix}/lib/systemd/system-preset,%{_sysconfdir}}
 install -Dpm0644 %{SOURCE1} %{buildroot}/%{_datadir}/homebrew.tar.zst
-install -Dpm0644 src/systemd/*.service %{buildroot}%{_unitdir}
-install -Dpm0644 src/systemd/*.timer %{buildroot}%{_unitdir}
-install -Dpm0644 src/systemd/*.preset %{buildroot}%{_prefix}/lib/systemd/system-preset
-install -Dm0644 ./src/vendor.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/%{name}.fish
-cp -rp src/security %{buildroot}%{_sysconfdir}
-cp -rp src/profile.d %{buildroot}%{_sysconfdir}
-cp -rp src/tmpfiles.d %{buildroot}%{_prefix}/lib
+install -Dpm0644 -t %{buildroot}%{_unitdir}/ ./src%{_unitdir}/*.service 
+install -Dpm0644 -t %{buildroot}%{_unitdir}/ ./src%{_unitdir}/*.timer 
+install -Dpm0644 -t %{buildroot}%{_prefix}/lib/systemd/system-preset/ ./src%{_prefix}/lib/systemd/system-preset/*.preset 
+install -Dpm0644 -t %{buildroot}%{_datadir}/fish/vendor_conf.d/ ./src%{_datadir}/fish/vendor_conf.d/%{name}.fish 
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/security/limits.d/ ./src%{_sysconfdir}/security/limits.d/*.conf
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/profile.d/ ./src%{_sysconfdir}/profile.d/*.sh
+install -Dpm0644 -t %{buildroot}%{_prefix}/lib/tmpfiles.d/ ./src%{_prefix}/lib/tmpfiles.d/*.conf 
 
 %post
 %systemd_post brew-setup.service
