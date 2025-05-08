@@ -1,6 +1,6 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
-Version:        0.42
+Version:        0.43
 Release:        1%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
@@ -80,6 +80,9 @@ just --completions zsh | sed -E 's/([\(_" ])just/\1ujust/g' > %{_datadir}/zsh/si
 chmod 644 %{_datadir}/zsh/site-functions/_ujust
 
 %changelog
+* Tue May 06 2025 renner0e <Renner03@protonmail.com> - 0.43
+- Change arch-distrobox tag to arch-toolbox
+
 * Wed Feb 26 2025 Robert Sturla <robertsturla@outlook.com> - 0.41
 - Make 60-custom.just an optional import
 - Remove default 60-custom.just from the package
