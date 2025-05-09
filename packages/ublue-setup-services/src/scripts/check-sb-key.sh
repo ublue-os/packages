@@ -19,7 +19,7 @@ get_config() {
     echo "$OUTPUT"
 }
 
-WARNING_MSG="This machine has secure boot turned on, but you haven't enrolled Universal Blue's keys. Failing to enroll these before rebooting **may cause your system to fail to boot**. Follow [the documentation](https://docs.projectbluefin.io/introduction#secure-boot) ~for key enrollment information."
+WARNING_MSG="This machine has secure boot turned on, but you haven't enrolled Universal Blue's keys. Failing to enroll these before rebooting **may cause your system to fail to boot**. Follow [the documentation](https://docs.projectbluefin.io/installation#secure-boot) ~for key enrollment information."
 KEY_WARN_FILE="/run/user-motd-sbkey-warn.md"
 KEY_DER_FILE="$(get_config '."der-path"' "/etc/pki/akmods/certs/akmods-ublue.der")"
 IS_THIS_ENABLED="$(get_config '."check-secureboot"' "true")"
