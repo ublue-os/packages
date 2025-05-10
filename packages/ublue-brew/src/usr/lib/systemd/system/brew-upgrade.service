@@ -17,3 +17,4 @@ ExecStart=/usr/bin/bash -c "/home/linuxbrew/.linuxbrew/bin/brew upgrade"
 ExecStartPost=-/home/linuxbrew/.linuxbrew/bin/brew unlink systemd
 ExecStartPost=-/home/linuxbrew/.linuxbrew/bin/brew unlink dbus
 ExecStartPost=-/home/linuxbrew/.linuxbrew/bin/brew unlink python
+ExecStartPost=-/home/linuxbrew/.linuxbrew/bin/brew unlink gsettings
