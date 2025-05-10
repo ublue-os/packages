@@ -35,7 +35,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/faces/bluefin/ faces/*
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/skel/.config/toolbox/ schemas%{_sysconfdir}/skel/.config/toolbox/*
-install -Dpm0644 -t %{buildroot}%{_sysconfdir}/xdg schemas%{_sysconfdir}/xdg
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/xdg schemas%{_sysconfdir}/xdg/*
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/profile.d/ schemas%{_sysconfdir}/profile.d/*.sh
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/skel/.local/share/flatpak/overrides/ schemas%{_sysconfdir}/skel/.local/share/flatpak/overrides/*
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/skel/.local/share/org.gnome.Ptyxis/palettes/ schemas%{_sysconfdir}/skel/.local/share/org.gnome.Ptyxis/palettes/*
