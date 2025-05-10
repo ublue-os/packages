@@ -26,7 +26,7 @@ ENV{ID_FS_TYPE}=="ext4", ENV{SYSTEMD_MOUNT_OPTIONS}="defaults,noatime,errors=rem
 
 # Mount the device
 ACTION=="add", \
-RUN+="/usr/bin/systemd-mount --no-block --collect --discover /dev/%k"
+RUN+="/usr/bin/systemd-run --no-block --collect /usr/lib/udev/ublue-os_udev_mount /dev/%k"
 
 # End of rule
 LABEL="media_automount_end"
