@@ -106,6 +106,9 @@ jobs:
 
       - name: Build ${{ matrix.spec }}
         id: build_package
+        env:
+          CHROOT: ${{ matrix.chroot }}
+          SPEC_FILE: ${{ matrix.spec }}
         run: |
           set -x
           just=$(which just)
@@ -115,9 +118,12 @@ jobs:
           CONTAINERS_DIR=./containers
           SOURCES_DIR=.
           export CONTAINERS_DIR
-          if ! $just build ${{ matrix.spec }} -r ${{ matrix.chroot }}-$(arch) ; then
+          # FIXME: this is a quick and dirty workaround, please make this pretty
+          COPR_NAMESPACE="$(basename $(dirname $(dirname $SPEC_FILE)))/$(basename $(dirname $SPEC_FILE))"
+          MOCK_COPRS="https://download.copr.fedorainfracloud.org/results/${COPR_NAMESPACE}/${CHROOT}-$(arch)"
+          if ! $just build ${SPEC_FILE} -r ${CHROOT}-$(arch) ; then
             echo "Retrying with a network connection"
-            $just build ${{ matrix.spec }} -r ${{ matrix.chroot }}-$(arch) --enable-network
+            $just build ${SPEC_FILE} -r ${CHROOT}-$(arch) --enable-network
           fi
           SKIPPED_ARCH=false
           if [ -e "$SOURCES_DIR/arch_skipped" ] ; then
