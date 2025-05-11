@@ -83,7 +83,6 @@ Replacement logos for KDE
 %files logos
 %{_datadir}/pixmaps/fedora*
 %{_datadir}/pixmaps/system-*
-%{_datadir}/pixmaps/ublue-*
 
 
 %package cli-logos
