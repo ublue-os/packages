@@ -62,7 +62,7 @@ install -Dpm0644 -t %{buildroot}%{_sysconfdir}/gnome-initial-setup/ schemas%{_sy
 %package logos
 Summary:        Logos for GNOME
 Version:        0.2.2
-License:        CC-BY-CA
+License:        CC-BY-SA
 Provides: fedora-logos
 Provides: centos-logos
 Provides: system-logos
@@ -91,7 +91,7 @@ Replacement logos for GNOME
 %package cli-logos
 Version:        0.2.1
 Summary:        Logos for CLI
-License:        CC-BY-CA
+License:        CC-BY-SA
 
 %description cli-logos
 Logos for CLI applications like Fastfetch
@@ -103,7 +103,7 @@ Logos for CLI applications like Fastfetch
 %package fastfetch
 Summary:        Fastfetch configuration for Bluefin
 Version:        0.2.2
-License:        CC-BY-CA
+License:        CC-BY-SA
 
 %description fastfetch
 Fastfetch configuration for Bluefin
@@ -115,7 +115,7 @@ Fastfetch configuration for Bluefin
 %package plymouth
 Summary:        Plymouth customization for Bluefin
 Version:        0.2.1
-License:        CC-BY-CA
+License:        CC-BY-SA
 
 %description plymouth
 Plymouth logo customization for Bluefin
@@ -146,7 +146,7 @@ Contains all of the DConf settings that Bluefin ships by default
 %package backgrounds
 Summary:        Bluefin wallpapers
 Version:        0.2.2
-License:        CC-BY-CA
+License:        CC-BY-SA
 
 %description backgrounds
 Wallpapers included on Bluefin by default
@@ -159,7 +159,7 @@ Wallpapers included on Bluefin by default
 %package faces
 Summary:      Bluefin GNOME Faces
 Version:      0.2.1
-License:      CC-BY-CA
+License:      CC-BY-SA
 
 %description faces
 GNOME profile pictures for Bluefin
