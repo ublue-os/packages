@@ -1,5 +1,6 @@
 Summary:        tauOS Icon Theme
 Name:           hydrogen-icon-theme
+# renovate: datasource=github-releases depName=tau-OS/hydrogen
 Version:        1.0.16
 Release:        2%?dist
 License:        GPL-3.0

@@ -1,6 +1,7 @@
 %define debug_package %{nil}
 
 Name: dart
+# renovate: datasource=dart-version
 Version: 3.7.3
 Release: 2%?dist
 Summary: The Dart Language

@@ -1,10 +1,10 @@
+# renovate: datasource=git-refs depName=https://github.com/fyralabs/readymade
 %global commit b8adbe782eeb67a456714fd1ee66340e6b9bf04a
-%global commit_date 20250430
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:           readymade-nightly
-Version:        %commit_date.%shortcommit
-Release:        2%?dist
+Version:        %shortcommit
+Release:        1%?dist
 Summary:        Install ready-made distribution images!
 License:        GPL-3.0-or-later
 URL:            https://github.com/FyraLabs/readymade

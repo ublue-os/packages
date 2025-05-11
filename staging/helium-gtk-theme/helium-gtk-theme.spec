@@ -1,3 +1,4 @@
+# renovate: datasource=github-releases depName=tau-OS/tau-helium
 %global ver 1.8.24
 
 Summary:        tauOS GTK/GNOME Shell Themes

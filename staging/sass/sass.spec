@@ -4,6 +4,7 @@
 %define _build_id_links none
 
 Name: sass
+# renovate: datasource=github-releases depName=sass/dart-sass
 Version: 1.87.0
 Release: 1%?dist
 Summary: The reference implementation of Sass, written in Dart
