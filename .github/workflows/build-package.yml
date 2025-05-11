@@ -119,7 +119,8 @@ jobs:
           SOURCES_DIR=.
           export CONTAINERS_DIR
           # FIXME: this is a quick and dirty workaround, please make this pretty
-          COPR_NAMESPACE="$(basename $(dirname $(dirname $SPEC_FILE)))/$(basename $(dirname $SPEC_FILE))"
+          UBLUE_OS_ORG="ublue-os"
+          COPR_NAMESPACE="${UBLUE_OS_ORG}/$(basename $(dirname $(dirname $SPEC_FILE)))"
           export MOCK_COPRS="https://download.copr.fedorainfracloud.org/results/${COPR_NAMESPACE}/${CHROOT}-$(arch)"
           if ! $just build ${SPEC_FILE} -r ${CHROOT}-$(arch) ; then
             echo "Retrying with a network connection"
