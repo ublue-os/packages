@@ -67,7 +67,6 @@ Replacement logos for GNOME
 %files logos
 %{_datadir}/pixmaps/fedora*
 %{_datadir}/pixmaps/system-*
-%{_datadir}/pixmaps/ublue-*
 
 
 %package cli-logos
