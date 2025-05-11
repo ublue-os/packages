@@ -65,7 +65,7 @@ if [ "$BUILDER_NO_INCLUDE_SRPM" != "1" ] ; then
   mock \
     --isolation=simple \
     "$OUTDIR"/*.src.rpm \
-    "${COPRS[@]}"
+    "${COPRS[@]}" \
     "$@"
   MOCK_EXIT=$?
 else
