@@ -34,6 +34,7 @@ build $spec *MOCK_ARGS:
         -w /tmp/sources \
         --user "$(id -u):$(id -g)" \
         -e PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin,HOME=/tmp \
+        -e MOCK_COPRS=$MOCK_COPRS \
         --group-entry "mock:x:135:$(id -nu)" \
         $mock_image \
         $spec {{ MOCK_ARGS }}
