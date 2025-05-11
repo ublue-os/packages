@@ -120,7 +120,7 @@ jobs:
           export CONTAINERS_DIR
           # FIXME: this is a quick and dirty workaround, please make this pretty
           COPR_NAMESPACE="$(basename $(dirname $(dirname $SPEC_FILE)))/$(basename $(dirname $SPEC_FILE))"
-          MOCK_COPRS="https://download.copr.fedorainfracloud.org/results/${COPR_NAMESPACE}/${CHROOT}-$(arch)"
+          export MOCK_COPRS="https://download.copr.fedorainfracloud.org/results/${COPR_NAMESPACE}/${CHROOT}-$(arch)"
           if ! $just build ${SPEC_FILE} -r ${CHROOT}-$(arch) ; then
             echo "Retrying with a network connection"
             $just build ${SPEC_FILE} -r ${CHROOT}-$(arch) --enable-network
