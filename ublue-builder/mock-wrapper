@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# MOCK_COPRS exists as a comma-separated list of repos that will be enabled on mock
 BUILDER_NO_INCLUDE_SRPM=${BUILDER_NO_INCLUDE_SRPM:-0}
 SPEC_FILE=$1
 shift
@@ -50,11 +51,28 @@ group_end
 set +euo pipefail
 group_start "Build RPM with mock"
 MOCK_EXIT=0
+
+COPRS_RAW=()
+IFS=',' read -r -a COPRS_RAW <<< "${MOCK_COPRS}"
+COPRS=()
+
+for COPR in "${COPRS_RAW[@]}" ; do
+  COPRS+=("-a")
+  COPRS+=("${COPR}")
+done
+
 if [ "$BUILDER_NO_INCLUDE_SRPM" != "1" ] ; then
-  mock --isolation=simple "$OUTDIR"/*.src.rpm "$@"
+  mock \
+    --isolation=simple \
+    "$OUTDIR"/*.src.rpm \
+    "${COPRS[@]}"
+    "$@"
   MOCK_EXIT=$?
 else
-  mock --isolation=simple "$@"
+  mock \
+    --isolation=simple \
+    "${COPRS}" \
+    "$@"
   MOCK_EXIT=$?
 fi
 group_end

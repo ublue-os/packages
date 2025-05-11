@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.3.0
+Version:        0.3.1
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -35,7 +35,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/faces/bluefin/ faces/*
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/skel/.config/toolbox/ schemas%{_sysconfdir}/skel/.config/toolbox/*
-install -Dpm0644 -t %{buildroot}%{_sysconfdir}/skel/.config/ schemas%{_sysconfdir}/skel/.config/mimeapps.list
+install -Dpm0644 -t %{buildroot}%{_sysconfdir}/xdg schemas%{_sysconfdir}/xdg/*
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/profile.d/ schemas%{_sysconfdir}/profile.d/*.sh
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/skel/.local/share/flatpak/overrides/ schemas%{_sysconfdir}/skel/.local/share/flatpak/overrides/*
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/skel/.local/share/org.gnome.Ptyxis/palettes/ schemas%{_sysconfdir}/skel/.local/share/org.gnome.Ptyxis/palettes/*
@@ -119,6 +119,7 @@ Contains all of the DConf settings that Bluefin ships by default
 %{_sysconfdir}/gnome-initial-setup
 %{_sysconfdir}/geoclue
 %{_sysconfdir}/skel
+%{_sysconfdir}/xdg
 %{_datadir}/glib-2.0
 %{_datadir}/applications
 %{_datadir}/ublue-os/homebrew/*.Brewfile
