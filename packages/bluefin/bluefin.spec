@@ -27,7 +27,18 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/bluefin-logos/symbols/ cli-
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/bluefin-logos/ cli-logos/logos/*
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/dconf/db/distro.d/ schemas%{_sysconfdir}/dconf/db/distro.d/*-*
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/dconf/db/distro.d/locks/ schemas%{_sysconfdir}/dconf/db/distro.d/locks/*
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/*
+
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_logo_med.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_white_logo.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_whitelogo.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_whitelogo_med.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-gdm-logo.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-icon.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-small.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-sprite.{png,svg}
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/system-logo-white.png
+
 install -Dpm0644 -t %{buildroot}%{_datadir}/gnome-background-properties/ wallpapers/gnome-background-properties/*.xml
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/ wallpapers/images/*.jxl
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/ wallpapers/images/*.xml
@@ -65,8 +76,16 @@ Replacement logos for GNOME
 
 
 %files logos
-%{_datadir}/pixmaps/fedora*
-%{_datadir}/pixmaps/system-*
+%{_datadir}/pixmaps/fedora_logo_med.png
+%{_datadir}/pixmaps/fedora_white_logo.svg
+%{_datadir}/pixmaps/fedora_whitelogo.svg
+%{_datadir}/pixmaps/fedora_whitelogo_med.png
+%{_datadir}/pixmaps/fedora-gdm-logo.png
+%{_datadir}/pixmaps/fedora-logo.png
+%{_datadir}/pixmaps/fedora-logo-icon.png
+%{_datadir}/pixmaps/fedora-logo-small.png
+%{_datadir}/pixmaps/fedora-logo-sprite.{png,svg}
+%{_datadir}/pixmaps/system-logo-white.png
 
 
 %package cli-logos

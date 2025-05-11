@@ -33,6 +33,7 @@ Version:        0.0.0
 License:        CC-BY-SA
 %description logos
 
+
 %files logos
 %{_datadir}/pixmaps/ublue-discourse.svg
 %{_datadir}/pixmaps/ublue-docs.svg
