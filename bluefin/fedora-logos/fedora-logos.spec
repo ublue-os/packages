@@ -3,7 +3,7 @@
 
 Name:           fedora-logos
 Version:        100.0.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Bluefin branding
 
 License:        CC-BY-CA
@@ -28,7 +28,7 @@ Branding for Bluefin's anaconda
 
 %install
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ src/logos/*
-install -Dpm0644 -t %{buildroot}%{_datadir}/anaconda/pixmaps/ src/anaconda/*
+install -Dpm0644 -t %{buildroot}%{_datadir}/anaconda/pixmaps/silverblue/ src/anaconda/*
 
 %check
 
