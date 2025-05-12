@@ -1,11 +1,16 @@
 #!/bin/bash
-set -eo pipefail
 
 PATH="/usr/bin:/sbin:$PATH"
 
-dev="$(findfs "$1")"
+_respond() {
+    local -i v=${1:?}
+    echo "UBLUEOS_PART_IS_IN_FSTAB=$v"
+    exit 0
+}
+
+dev="$(findfs "${1:?}")"
 while read -r _what _; do
     [[ $_what =~ ^#.* ]] && continue
-    [[ $(findfs $"$_what") == "$dev" ]] && { echo "yes"; exit 0; }
+    [[ $(findfs $"$_what") == "$dev" ]] && _respond 1
 done </etc/fstab
-echo "no" && exit 0
+_respond 0

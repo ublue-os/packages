@@ -1,6 +1,6 @@
 Name:           ublue-os-media-automount-udev
 Vendor:         ublue-os
-Version:        0.10
+Version:        0.11
 Release:        1%{?dist}
 Summary:        udev rules to mount non-removable disk partitions
 
@@ -24,7 +24,6 @@ BuildRequires:  systemd-rpm-macros
 
 %install
 install -p -Dm0644 ./99-media-automount.rules %{buildroot}%{_udevrulesdir}/99-media-automount.rules
-install -p -Dm0755 ./ublue-os_udev_mount %{buildroot}/usr/lib/udev/ublue-os_udev_mount
 install -p -Dm0755 ./is_in_fstab.sh %{buildroot}%{_libexecdir}/is_in_fstab.sh
 install -p -Dm0644 ./media-automount.conf %{buildroot}%{_tmpfilesdir}/media-automount.conf
 
@@ -32,11 +31,13 @@ install -p -Dm0644 ./media-automount.conf %{buildroot}%{_tmpfilesdir}/media-auto
 
 %files
 %{_udevrulesdir}/99-media-automount.rules
-/usr/lib/udev/ublue-os_udev_mount
 %{_libexecdir}/is_in_fstab.sh
 %{_tmpfilesdir}/media-automount.conf
 
 %changelog
+* Mon May 12 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.11
+- fix: Preload database
+
 * Sat May 10 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.10
 - fix: Better prevention of ntfs mounting
 
