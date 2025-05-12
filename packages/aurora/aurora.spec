@@ -137,6 +137,7 @@ Plymouth logo customization for Aurora
 %package schemas
 Version:        0.1.5
 Summary:        KDE Schemas for Aurora
+License:        Apache-2.0
 
 %description schemas
 Default schemas for Aurora
