@@ -1,4 +1,4 @@
-tap "buildpacks/tap/pack"
+tap "buildpacks/tap"
 brew "cdk8s"
 brew "dagger"
 brew "grype"
