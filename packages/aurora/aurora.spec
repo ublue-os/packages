@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.9
+Version:        0.1.10
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -75,7 +75,7 @@ ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_sunset/ %{buildroot}%{_d
 
 %package logos
 Summary:        Logos for KDE
-Version:        0.1.3
+Version:        0.1.4
 License:        CC-BY-SA
 Provides: fedora-logos
 Provides: centos-logos
