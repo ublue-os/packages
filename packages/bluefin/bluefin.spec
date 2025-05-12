@@ -127,6 +127,7 @@ Plymouth logo customization for Bluefin
 %package schemas
 Version:        0.2.4
 Summary:        GNOME Schemas for Bluefin
+License:        Apache-2.0
 
 %description schemas
 Contains all of the DConf settings that Bluefin ships by default
