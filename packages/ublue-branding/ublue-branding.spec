@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 %global vendor ublue
 Name:           ublue-branding
-Version:        0.0.0
+Version:        0.1.0
 Release:        1%{?dist}
 Summary:        Universal Blue branding
 
@@ -29,7 +29,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps logos/ublue-update.svg
 
 %package logos
 Summary:        Logos for Universal Blue
-Version:        0.0.0
+Version:        0.1.0
 License:        CC-BY-SA
 %description logos
 
