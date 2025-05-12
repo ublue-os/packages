@@ -24,7 +24,6 @@ BuildRequires:  systemd-rpm-macros
 
 %install
 install -p -Dm0644 ./99-media-automount.rules %{buildroot}%{_udevrulesdir}/99-media-automount.rules
-install -p -Dm0755 ./ublue-os_udev_mount %{buildroot}/usr/lib/udev/ublue-os_udev_mount
 install -p -Dm0755 ./is_in_fstab.sh %{buildroot}%{_libexecdir}/is_in_fstab.sh
 install -p -Dm0644 ./media-automount.conf %{buildroot}%{_tmpfilesdir}/media-automount.conf
 
@@ -32,7 +31,6 @@ install -p -Dm0644 ./media-automount.conf %{buildroot}%{_tmpfilesdir}/media-auto
 
 %files
 %{_udevrulesdir}/99-media-automount.rules
-/usr/lib/udev/ublue-os_udev_mount
 %{_libexecdir}/is_in_fstab.sh
 %{_tmpfilesdir}/media-automount.conf
 

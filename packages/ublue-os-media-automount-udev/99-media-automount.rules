@@ -32,7 +32,7 @@ ENV{ID_FS_TYPE}=="btrfs",   ENV{SYSTEMD_MOUNT_OPTIONS}="defaults,noatime,lazytim
 ENV{ID_FS_TYPE}=="ext4",    ENV{SYSTEMD_MOUNT_OPTIONS}="defaults,noatime,errors=remount-ro,nofail,rw,users,exec"
 
 # Mount the device
-RUN+="/usr/bin/systemd-run --no-block --collect /usr/lib/udev/ublue-os_udev_mount /dev/%k"
+RUN+="/usr/bin/systemd-mount --no-block --collect --discover /dev/%k"
 
 # End of rule
 LABEL="media_automount_end"
