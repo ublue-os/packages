@@ -7,7 +7,7 @@
  */
 
 .logo-sidebar {
-    background-image: ("/usr/share/anaconda/pixmaps/silverblue/sidebar-bg.png");
+    background-image: url("/usr/share/anaconda/pixmaps/silverblue/sidebar-bg.png");
     background-color: @bluefin;
     background-repeat: no-repeat;
 }
