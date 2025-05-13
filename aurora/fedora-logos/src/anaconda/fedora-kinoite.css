@@ -7,14 +7,14 @@
  */
 
 .logo-sidebar {
-    background-image: url("/usr/share/anaconda/pixmaps/kinoite/sidebar-bg.png");
+    background-image: url("/usr/share/anaconda/pixmaps/silverblue/sidebar-bg.png");
     background-color: @aurora;
     background-repeat: no-repeat;
 }
 
 /* Add a logo to the sidebar */
 .logo {
-    background-image: url("/usr/share/anaconda/pixmaps/kinoite/sidebar-logo.png");
+    background-image: url("/usr/share/anaconda/pixmaps/silverblue/sidebar-logo.png");
     background-position: 50% 20px;
     background-repeat: no-repeat;
     background-color: transparent;
@@ -28,7 +28,7 @@
 
 AnacondaSpokeWindow #nav-box {
     background-color: @aurora;
-    background-image: url("/usr/share/anaconda/pixmaps/kinoite/topbar-bg.png");
+    background-image: url("/usr/share/anaconda/pixmaps/silverblue/topbar-bg.png");
     background-repeat: no-repeat;
     color: white;
 }
