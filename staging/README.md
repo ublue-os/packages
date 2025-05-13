@@ -19,3 +19,7 @@ We've had to add quite a few packages to make it so we could compile Readymade h
 - `libhelium`
 - `readymade`
 - `taidan`
+
+### Switcheroo
+
+We added this here to get support for Discrete GPU support via [Sentry's patch](https://copr.fedorainfracloud.org/coprs/sentry/switcheroo-control_discrete/). Should track fedora's package.
