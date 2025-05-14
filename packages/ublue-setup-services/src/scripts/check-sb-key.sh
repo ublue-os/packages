@@ -27,7 +27,7 @@ IS_THIS_ENABLED="$(get_config '."check-secureboot"' "true")"
 mokutil --sb-state | grep -q enabled
 SB_ENABLED=$?
 
-if [ $SB_ENABLED -ne 1 ]; then
+if [ $SB_ENABLED -ne 0 ]; then
     echo "Secure Boot disabled. Skipping..."
     exit 0
 fi
