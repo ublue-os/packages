@@ -21,11 +21,8 @@ ENV{UBLUEOS_PART_IS_IN_FSTAB}=="1", GOTO="media_automount_end"
 # ... or if is not a supported filesystem...
 ENV{ID_FS_TYPE}!="btrfs|ext4",  GOTO="media_automount_end"
 
-# ... or if does not have a label...
+# ... or if does not have a label
 ENV{ID_FS_LABEL}=="", ENV{ID_PART_ENTRY_NAME}=="", GOTO="media_automount_end"
-
-# ... or if is a windows partition.
-ENV{PARTNAME}=="Basic data partition", GOTO="media_automount_end"
 
 # Add mounting options
 ENV{ID_FS_TYPE}=="btrfs",   ENV{SYSTEMD_MOUNT_OPTIONS}="defaults,noatime,lazytime,commit=120,discard=async,compress-force=zstd:1,space_cache=v2,nofail,rw,users,exec"
