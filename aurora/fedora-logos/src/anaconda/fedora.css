@@ -1,20 +1,20 @@
-@define-color bluefin #3b8737;
+@define-color aurora #6f3c82;
 
-/* logo and sidebar classes for Bluefin */
+/* logo and sidebar classes for Aurora */
 /* The sidebar consists of three parts: a background, a logo, and a product logo,
  * rendered in that order. The product logo is empty by default and is intended
  * to be overridden by a stylesheet in product.img.
  */
 
 .logo-sidebar {
-    background-image: url("/usr/share/anaconda/pixmaps/silverblue/sidebar-bg.png");
-    background-color: @bluefin;
+    background-image: url("/usr/share/anaconda/pixmaps/sidebar-bg.png");
+    background-color: @aurora;
     background-repeat: no-repeat;
 }
 
 /* Add a logo to the sidebar */
 .logo {
-    background-image: url("/usr/share/anaconda/pixmaps/silverblue/sidebar-logo.png");
+    background-image: url("/usr/share/anaconda/pixmaps/sidebar-logo.png");
     background-position: 50% 20px;
     background-repeat: no-repeat;
     background-color: transparent;
@@ -27,8 +27,8 @@
 }
 
 AnacondaSpokeWindow #nav-box {
-    background-color: @bluefin;
-    background-image: url("/usr/share/anaconda/pixmaps/silverblue/topbar-bg.png");
+    background-color: @aurora;
+    background-image: url("/usr/share/anaconda/pixmaps/topbar-bg.png");
     background-repeat: no-repeat;
     color: white;
 }

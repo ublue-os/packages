@@ -3,7 +3,7 @@
 
 Name:           fedora-logos
 Version:        100.0.0
-Release:        1%{?dist}
+Release:        5%{?dist}
 Summary:        Aurora branding
 
 License:        CC-BY-CA
