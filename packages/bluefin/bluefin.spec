@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.3.2
+Version:        0.3.1
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -27,18 +27,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/bluefin-logos/symbols/ cli-
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/bluefin-logos/ cli-logos/logos/*
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/dconf/db/distro.d/ schemas%{_sysconfdir}/dconf/db/distro.d/*-*
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/dconf/db/distro.d/locks/ schemas%{_sysconfdir}/dconf/db/distro.d/locks/*
-
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_logo_med.png
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_white_logo.svg
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_whitelogo.svg
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_whitelogo_med.png
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-gdm-logo.png
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo.png
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-icon.png
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-small.png
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-sprite.{png,svg}
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/system-logo-white.png
-
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/*
 install -Dpm0644 -t %{buildroot}%{_datadir}/gnome-background-properties/ wallpapers/gnome-background-properties/*.xml
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/ wallpapers/images/*.jxl
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/ wallpapers/images/*.xml
@@ -61,8 +50,8 @@ install -Dpm0644 -t %{buildroot}%{_sysconfdir}/gnome-initial-setup/ schemas%{_sy
 
 %package logos
 Summary:        Logos for GNOME
-Version:        0.2.3
-License:        CC-BY-SA
+Version:        0.2.2
+License:        CC-BY-CA
 Provides: fedora-logos
 Provides: centos-logos
 Provides: system-logos
@@ -76,22 +65,15 @@ Replacement logos for GNOME
 
 
 %files logos
-%{_datadir}/pixmaps/fedora_logo_med.png
-%{_datadir}/pixmaps/fedora_white_logo.svg
-%{_datadir}/pixmaps/fedora_whitelogo.svg
-%{_datadir}/pixmaps/fedora_whitelogo_med.png
-%{_datadir}/pixmaps/fedora-gdm-logo.png
-%{_datadir}/pixmaps/fedora-logo.png
-%{_datadir}/pixmaps/fedora-logo-icon.png
-%{_datadir}/pixmaps/fedora-logo-small.png
-%{_datadir}/pixmaps/fedora-logo-sprite.{png,svg}
-%{_datadir}/pixmaps/system-logo-white.png
+%{_datadir}/pixmaps/fedora*
+%{_datadir}/pixmaps/system-*
+%{_datadir}/pixmaps/ublue-*
 
 
 %package cli-logos
-Version:        0.2.2
+Version:        0.2.1
 Summary:        Logos for CLI
-License:        CC-BY-SA
+License:        CC-BY-CA
 
 %description cli-logos
 Logos for CLI applications like Fastfetch
@@ -102,8 +84,8 @@ Logos for CLI applications like Fastfetch
 
 %package fastfetch
 Summary:        Fastfetch configuration for Bluefin
-Version:        0.2.3
-License:        CC-BY-SA
+Version:        0.2.2
+License:        CC-BY-CA
 
 %description fastfetch
 Fastfetch configuration for Bluefin
@@ -114,8 +96,8 @@ Fastfetch configuration for Bluefin
 
 %package plymouth
 Summary:        Plymouth customization for Bluefin
-Version:        0.2.2
-License:        CC-BY-SA
+Version:        0.2.1
+License:        CC-BY-CA
 
 %description plymouth
 Plymouth logo customization for Bluefin
@@ -125,9 +107,8 @@ Plymouth logo customization for Bluefin
 
 
 %package schemas
-Version:        0.2.4
+Version:        0.2.3
 Summary:        GNOME Schemas for Bluefin
-License:        Apache-2.0
 
 %description schemas
 Contains all of the DConf settings that Bluefin ships by default
@@ -146,8 +127,8 @@ Contains all of the DConf settings that Bluefin ships by default
 
 %package backgrounds
 Summary:        Bluefin wallpapers
-Version:        0.2.3
-License:        CC-BY-SA
+Version:        0.2.2
+License:        CC-BY-CA
 
 %description backgrounds
 Wallpapers included on Bluefin by default
@@ -159,8 +140,8 @@ Wallpapers included on Bluefin by default
 
 %package faces
 Summary:      Bluefin GNOME Faces
-Version:      0.2.2
-License:      CC-BY-SA
+Version:      0.2.1
+License:      CC-BY-CA
 
 %description faces
 GNOME profile pictures for Bluefin
