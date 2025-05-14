@@ -3,7 +3,7 @@
 
 Name:           fedora-logos
 Version:        100.0.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Bluefin branding
 
 License:        CC-BY-CA
