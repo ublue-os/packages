@@ -10,7 +10,10 @@ In order to actually know what to remove in the future, please write why each pa
 
 ### Readymade / Taidan
 
+Needed for new Titanoboa Bluefin and Aurora installers.
+
 We've had to add quite a few packages to make it so we could compile Readymade here
+
 - `dart`
 - `sass`
 - `xcursorgen` (needs an [EPEL request](https://docs.fedoraproject.org/en-US/epel/epel-package-request/))
@@ -19,3 +22,10 @@ We've had to add quite a few packages to make it so we could compile Readymade h
 - `libhelium`
 - `readymade`
 - `taidan`
+
+### Bazaar
+
+New GNOME-software alternative, being used for Bluefin{,-LTS}
+
+- `bazaar`
+- `glycin-libs` on EPEL10 specifically we dont have it on EPEL
