@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.1](https://github.com/ublue-os/packages/compare/v1.1.0...v1.1.1) (2025-05-17)
+
+
+### Bug Fixes
+
+* : bump ublue-setup-services.spec ([#491](https://github.com/ublue-os/packages/issues/491)) ([92ff8c4](https://github.com/ublue-os/packages/commit/92ff8c45ef1f4f7f8ddad9476010e3b879a0883f))
+* css file fixes  for anaconda  branding ([#473](https://github.com/ublue-os/packages/issues/473)) ([2a772da](https://github.com/ublue-os/packages/commit/2a772dad3bdd8bf260ea5174f53837b2e1f43ba4))
+* **ublue-setup-services:** fix secure boot sb-state check ([#461](https://github.com/ublue-os/packages/issues/461)) ([07a3346](https://github.com/ublue-os/packages/commit/07a33463ef5791675ffb60759d35e004972152bb))
+
+
+### Reverts
+
+* "feat(ublue-branding): add ublue-branding-logos package" ([#477](https://github.com/ublue-os/packages/issues/477)) ([de68365](https://github.com/ublue-os/packages/commit/de68365c2eee5b6419487bb19fe8a8fbb0d3f298))
+
 ## [1.1.0](https://github.com/ublue-os/packages/compare/v1.0.0...v1.1.0) (2025-05-14)
 
 
