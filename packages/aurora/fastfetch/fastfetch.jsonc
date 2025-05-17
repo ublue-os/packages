@@ -71,7 +71,8 @@
     },
     {
       "type": "disk",
-      "key": ""
+      "key": "",
+      "showReadOnly": true
     },
     {
       "type": "display",
