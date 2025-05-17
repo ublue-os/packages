@@ -1,0 +1,10 @@
+[Unit]
+Description=Mount partitons automaticaly
+After=local-fs.target
+
+[Service]
+ExecStart=/usr/libexec/ublue-os-media-automount.py
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
