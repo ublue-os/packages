@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           ublue-setup-services
-Version:        0.1.7
+Version:        0.1.8
 Release:        1%{?dist}
 Summary:        Universal Blue setup services
 
