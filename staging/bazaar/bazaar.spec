@@ -18,6 +18,7 @@ BuildRequires:  libxmlb-devel
 BuildRequires:  flatpak-devel
 BuildRequires:  glycin-devel
 BuildRequires:  glycin-gtk4-devel
+BuildRequires:  libdex-devel
 BuildRequires:  desktop-file-utils
 Requires:       glycin-libs
 Requires:       libadwaita
