@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.10
+Version:        0.1.9
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -23,15 +23,7 @@ Branding for Aurora-related projects
 
 %install
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/aurora-logos/symbols/ cli-logos/symbols/*
-
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_logo_med.png
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_whitelogo.svg
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo.{png,svg}
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-small.png
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-sprite.{png,svg}
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/system-logo.png
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/system-logo-white.png
-
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/*
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/geoclue/conf.d/ schemas%{_sysconfdir}/geoclue/conf.d/99-beacondb.conf
@@ -75,7 +67,7 @@ ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_sunset/ %{buildroot}%{_d
 
 %package logos
 Summary:        Logos for KDE
-Version:        0.1.4
+Version:        0.1.3
 License:        CC-BY-SA
 Provides: fedora-logos
 Provides: centos-logos
@@ -89,13 +81,9 @@ Conflicts: system-logos
 Replacement logos for KDE
 
 %files logos
-%{_datadir}/pixmaps/fedora_logo_med.png
-%{_datadir}/pixmaps/fedora_whitelogo.svg
-%{_datadir}/pixmaps/fedora-logo.{png,svg}
-%{_datadir}/pixmaps/fedora-logo-small.png
-%{_datadir}/pixmaps/fedora-logo-sprite.{png,svg}
-%{_datadir}/pixmaps/system-logo.png
-%{_datadir}/pixmaps/system-logo-white.png
+%{_datadir}/pixmaps/fedora*
+%{_datadir}/pixmaps/system-*
+%{_datadir}/pixmaps/ublue-*
 
 
 %package cli-logos
@@ -137,7 +125,6 @@ Plymouth logo customization for Aurora
 %package schemas
 Version:        0.1.5
 Summary:        KDE Schemas for Aurora
-License:        Apache-2.0
 
 %description schemas
 Default schemas for Aurora
