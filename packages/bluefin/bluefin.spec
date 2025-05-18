@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.3.1
+Version:        0.3.2
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -45,6 +45,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/homebrew/ schemas%{_datadir
 install -Dpm0644 -t %{buildroot}%{_datadir}/glib-2.0/schemas/ schemas%{_datadir}/glib-2.0/schemas/zz0-bluefin-modifications.gschema.override
 install -Dpm0644 -t %{buildroot}%{_datadir}/applications/ schemas%{_datadir}/applications/*.desktop
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/gnome-initial-setup/ schemas%{_sysconfdir}/gnome-initial-setup/vendor.conf
+install -Dpm0644 -t %{buildroot}%{_datadir}/pipewire/pipewire.conf.d/ schemas%{_datadir}/pipewire/pipewire.conf.d/raop.conf
 
 %check
 
@@ -123,6 +124,7 @@ Contains all of the DConf settings that Bluefin ships by default
 %{_datadir}/glib-2.0
 %{_datadir}/applications
 %{_datadir}/ublue-os/homebrew/*.Brewfile
+%{_datadir}/pipewire/pipewire.conf.d/raop.conf
 
 
 %package backgrounds
