@@ -1,6 +1,6 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
-Version:        0.44
+Version:        0.45
 Release:        1%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
@@ -83,6 +83,9 @@ just --completions fish | sed -E 's/([\(_" ])just/\1ujust/g' > %{_datadir}/fish/
 chmod 644 %{_datadir}/fish/completions/ujust.fish
 
 %changelog
+* Sun May 18 2025 renner0e <Renner03@protonmail.com> - 0.45
+- move brew.sh to ublue-brew
+
 * Mon May 12 2025 coxde <63153334+coxde@users.noreply.github.com> - 0.44
 - Add fish ujust completion
 
