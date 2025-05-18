@@ -1,4 +1,4 @@
-# renovate: datasource=git-refs depName=https://github.com/Ultramarine-Linux/taidan
+# renovate: datasource=git-refs depName=https://github.com/Ultramarine-Linux/taidan versioning=loose currentValue=master
 %global commit 943c0bdb360c60746af701292250ebaff2fa08f5
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
