@@ -59,7 +59,6 @@ install -Dpm0644 ./src/etc-toolbox/* %{buildroot}/%{_sysconfdir}/toolbox/
 
 %files
 %{_sysconfdir}/profile.d/user-motd.sh
-%{_sysconfdir}/profile.d/brew.sh
 %{_datadir}/%{VENDOR}/%{sub_name}/*.just
 %{_datadir}/%{VENDOR}/justfile
 %{_datadir}/%{VENDOR}/motd/tips/*.md
