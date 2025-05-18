@@ -47,7 +47,7 @@ install -Dpm0644 -t %{buildroot}%{_prefix}/lib/tmpfiles.d/ ./src%{_prefix}/lib/t
 %systemd_preun brew-setup.service
 
 %files
-%ghost %{_sysconfdir}/profile.d/brew.sh
+%{_sysconfdir}/profile.d/brew.sh
 %{_datadir}/homebrew.tar.zst
 %{_sysconfdir}/profile.d/brew-bash-completion.sh
 %{_datadir}/fish/vendor_conf.d/%{name}.fish
