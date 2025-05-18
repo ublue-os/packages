@@ -4,7 +4,7 @@
 
 Name:           ublue-brew
 Version:        0.1.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Homebrew integration for Universal Blue systems
 
 License:        Apache-2.0
