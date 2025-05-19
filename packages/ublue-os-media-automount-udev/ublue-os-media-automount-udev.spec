@@ -1,6 +1,6 @@
 Name:           ublue-os-media-automount-udev
 Vendor:         ublue-os
-Version:        0.12
+Version:        0.13
 Release:        1%{?dist}
 Summary:        udev rules to mount non-removable disk partitions
 
@@ -35,6 +35,9 @@ install -p -Dm0644 ./ublue-os-media-automount.conf %{buildroot}%{_tmpfilesdir}/u
 %{_tmpfilesdir}/ublue-os-media-automount.conf
 
 %changelog
+* Tue May 20 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.13
+- fix: use getuid to check root
+
 * Sat May 17 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.12
 - fix: Use service instead of udev
 
