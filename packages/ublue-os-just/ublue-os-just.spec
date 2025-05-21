@@ -80,10 +80,13 @@ just --completions zsh | sed -E 's/([\(_" ])just/\1ujust/g' > %{_datadir}/zsh/si
 chmod 644 %{_datadir}/zsh/site-functions/_ujust
 
 # Generate ujust fish completion
-just --completions fish | sed -E 's/([\(_" ])just/\1ujust/g' > %{_datadir}/fish/completions/ujust.fish
-chmod 644 %{_datadir}/fish/completions/ujust.fish
+just --completions fish | sed -E 's/([\(_" ])just/\1ujust/g' > %{_datadir}/fish/vendor_completions.d/ujust.fish
+chmod 644 %{_datadir}/fish/vendor_completions.d/ujust.fish
 
 %changelog
+* Wed May 21 2025 coxde <63153334+coxde@users.noreply.github.com> - 0.45
+- Fix fish completion directory
+
 * Mon May 12 2025 coxde <63153334+coxde@users.noreply.github.com> - 0.44
 - Add fish ujust completion
 
