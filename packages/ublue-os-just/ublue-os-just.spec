@@ -90,6 +90,9 @@ just --completions fish | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{fis
 %{fish_completions_dir}/ujust.fish
 
 %changelog
+* Thu May 22 2025 renner0e <Renner03@protonmail.com> - 0.46
+- Generate ujust shell completions at build time
+
 * Wed May 21 2025 coxde <63153334+coxde@users.noreply.github.com> - 0.45
 - Fix fish completion directory
 
