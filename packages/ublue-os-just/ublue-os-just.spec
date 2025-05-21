@@ -9,6 +9,10 @@ VCS:            {{{ git_dir_vcs }}}
 Source:         {{{ git_dir_pack }}}
 
 BuildArch:      noarch
+
+# Needed for generating shell completions
+BuildRequires: just
+
 Requires:       just
 Requires:       ublue-os-luks
 Recommends:     powerstat
