@@ -15,7 +15,13 @@ FS_MAPPINGS = {
 
 
 def findfs(s: str) -> str:
-    return subprocess.check_output(["findfs", s], text=True).strip()
+    try:
+        return subprocess.check_output(["findfs", s], text=True).strip()
+    except subprocess.CalledProcessError as err:
+        if err.returncode == 1:  # label or uuid cannot be found
+            return ""
+        else:
+            raise err
 
 
 @functools.cache
@@ -26,7 +32,9 @@ def devices_in_fstab() -> set[str]:
             line = line.strip()
             if not line or line.startswith("#"):
                 continue
-            devs.add(findfs(line.split()[0]))
+            dev = findfs(line.split()[0])
+            if dev:
+                devs.add(findfs(line.split()[0]))
     return devs
 
 
