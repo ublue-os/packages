@@ -31,6 +31,10 @@ def devices_in_fstab() -> set[str]:
 
 
 def main() -> None:
+    # Check we are running as root
+    if os.getuid() != 0:
+        raise RuntimeError("This script must run as root")
+
     # Get all the available partition devices
     cmd_out = subprocess.check_output(
         [
@@ -49,10 +53,6 @@ def main() -> None:
 
     # Filter out anything that isnt a partition
     blockdevices = [x for x in blockdevices if x["type"] == "part"]
-
-    # Check if we lacked enough permissions to read fstype
-    if not blockdevices or not blockdevices[0]["fstype"]:
-        raise RuntimeError("we lack root perms to fetch fstype")
 
     def filter_dev(block_dev: dict) -> bool:
         _udev_path = "/etc/udev/rules.d/99-media-automount.rules"
@@ -101,8 +101,6 @@ def main() -> None:
         subprocess.check_call(_cmd) if os.getenv("DRY_RUN") != "1" else print(
             "DRY_RUN", _cmd
         )
-
-
 
 
 if __name__ == "__main__":
