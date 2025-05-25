@@ -28,7 +28,10 @@ HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/home/linuxbrew/.linuxbrew}"
 # Atuin allows these flags: "--disable-up-arrow" and/or "--disable-ctrl-r"
 ATUIN_INIT_FLAGS=${ATUIN_INIT_FLAGS:-""}
 
-if [ "$(basename "$SHELL")" = "bash" ]; then
+# override $SHELL with first script argument if passed
+ACTIVE_SHELL="${1:=${SHELL}}"
+
+if [ "$(basename "$ACTIVE_SHELL")" = "bash" ]; then
     [ -f "/etc/profile.d/bash-preexec.sh" ] && . "/etc/profile.d/bash-preexec.sh"
     [ -f "/usr/share/bash-prexec" ] && . "/usr/share/bash-prexec"
     [ -f "/usr/share/bash-prexec.sh" ] && . "/usr/share/bash-prexec.sh"
@@ -36,7 +39,7 @@ if [ "$(basename "$SHELL")" = "bash" ]; then
     [ "$(command -v starship)" ] && eval "$(starship init bash)"
     [ "$(command -v atuin)" ] && eval "$(atuin init bash ${ATUIN_INIT_FLAGS})"
     [ "$(command -v zoxide)" ] && eval "$(zoxide init bash)"
-elif [ "$(basename "$SHELL")" = "zsh" ]; then
+elif [ "$(basename "$ACTIVE_SHELL")" = "zsh" ]; then
     [ "$(command -v starship)" ] && eval "$(starship init zsh)"
     [ "$(command -v atuin)" ] && eval "$(atuin init zsh ${ATUIN_INIT_FLAGS})"
     [ "$(command -v zoxide)" ] && eval "$(zoxide init zsh)"

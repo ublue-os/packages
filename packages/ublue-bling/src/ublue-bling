@@ -122,7 +122,7 @@ EOF
             echo 'Adding bling to your .zshrc 💤💤💤'
             cat<<EOF >> "${ZDOTDIR:-$HOME}/.zshrc"
 ### bling.sh source start
-test -f $BLING_CLI_DIRECTORY/bling.sh && source $BLING_CLI_DIRECTORY/bling.sh
+test -f $BLING_CLI_DIRECTORY/bling.sh && source $BLING_CLI_DIRECTORY/bling.sh "zsh"
 ### bling.sh source end
 EOF
         ;;
@@ -130,7 +130,7 @@ EOF
             echo 'Adding bling to your .bashrc 💥💥💥'
             cat<<EOF >> "${HOME}/.bashrc"
 ### bling.sh source start
-test -f $BLING_CLI_DIRECTORY/bling.sh && source $BLING_CLI_DIRECTORY/bling.sh
+test -f $BLING_CLI_DIRECTORY/bling.sh && source $BLING_CLI_DIRECTORY/bling.sh "bash"
 ### bling.sh source end
 EOF
         ;;
