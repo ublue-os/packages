@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.2.0](https://github.com/ublue-os/packages/compare/v1.1.0...v1.2.0) (2025-05-25)
+
+
+### Features
+
+* add bazaar to utils folder ([#502](https://github.com/ublue-os/packages/issues/502)) ([93f0d6b](https://github.com/ublue-os/packages/commit/93f0d6be2b7fdd7c8d8d6130acce8de06da2897f))
+* Add PipeWire config enabling RAOP (AirPlay) on Aurora/Bluefin ([#495](https://github.com/ublue-os/packages/issues/495)) ([13a472f](https://github.com/ublue-os/packages/commit/13a472f6271c6ba4faac189effab5045af1dc7dc))
+* **bluefin:** add search keybinding for bazaar ([#505](https://github.com/ublue-os/packages/issues/505)) ([babea59](https://github.com/ublue-os/packages/commit/babea595b67e59c86af1118a88a93c7a0eb11c64))
+* **staging:** add `bazaar` package ([#492](https://github.com/ublue-os/packages/issues/492)) ([7da8178](https://github.com/ublue-os/packages/commit/7da8178b61a3f1ee55a736be3e1c2bcfd5d1c6f1))
+
+
+### Bug Fixes
+
+* : bump ublue-setup-services.spec ([#491](https://github.com/ublue-os/packages/issues/491)) ([92ff8c4](https://github.com/ublue-os/packages/commit/92ff8c45ef1f4f7f8ddad9476010e3b879a0883f))
+* css file fixes  for anaconda  branding ([#473](https://github.com/ublue-os/packages/issues/473)) ([2a772da](https://github.com/ublue-os/packages/commit/2a772dad3bdd8bf260ea5174f53837b2e1f43ba4))
+* generate ujust shell completions on build time ([#523](https://github.com/ublue-os/packages/issues/523)) ([b3a5d03](https://github.com/ublue-os/packages/commit/b3a5d03f763ba8e1bf15dc80fb83a759b551eb3c))
+* **just:** fix fish completion file directory ([#521](https://github.com/ublue-os/packages/issues/521)) ([0ba72ed](https://github.com/ublue-os/packages/commit/0ba72edb6042c1600ed3b0b8372adeea3934495f))
+* **media-automount-udev:** Start mounting before graphical session ([#519](https://github.com/ublue-os/packages/issues/519)) ([e15fc81](https://github.com/ublue-os/packages/commit/e15fc81b5f45e85c41d122e41d8282f1a0fa9aea))
+* **media-automount-udev:** use getuid to check root ([#513](https://github.com/ublue-os/packages/issues/513)) ([074bbbf](https://github.com/ublue-os/packages/commit/074bbbff60d83d2824ea39f1c1c49f926bbf4a71))
+* **media-automount-udev:** Use service instead of udev ([#488](https://github.com/ublue-os/packages/issues/488)) ([1069c6f](https://github.com/ublue-os/packages/commit/1069c6f0ad44a62b385fec41325be038f03cf735))
+* **ublue-setup-services:** fix secure boot sb-state check ([#461](https://github.com/ublue-os/packages/issues/461)) ([07a3346](https://github.com/ublue-os/packages/commit/07a33463ef5791675ffb60759d35e004972152bb))
+
+
+### Reverts
+
+* "feat(ublue-branding): add ublue-branding-logos package" ([#477](https://github.com/ublue-os/packages/issues/477)) ([de68365](https://github.com/ublue-os/packages/commit/de68365c2eee5b6419487bb19fe8a8fbb0d3f298))
+
 ## [1.1.0](https://github.com/ublue-os/packages/compare/v1.0.0...v1.1.0) (2025-05-14)
 
 
