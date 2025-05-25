@@ -71,7 +71,8 @@
     },
     {
       "type": "disk",
-      "key": ""
+      "key": "",
+      "hideFS": "overlay"
     },
     {
       "type": "display",
