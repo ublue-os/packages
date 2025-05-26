@@ -105,7 +105,7 @@ Logos for CLI applications like Fastfetch
 
 %package fastfetch
 Summary:        Fastfetch configuration for Aurora
-Version:        0.1.3
+Version:        0.1.4
 License:        CC-BY-SA
 
 %description fastfetch
