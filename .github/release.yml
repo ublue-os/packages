@@ -1,6 +1,7 @@
-release:
+changelog:
   exclude:
     authors:
-      - "dependabot[bot]"
-      - "github-actions[bot]"
-      - "renovate[bot]"
+      - dependabot[bot]
+      - github-actions[bot]
+      - renovate[bot]
+      - renovate
