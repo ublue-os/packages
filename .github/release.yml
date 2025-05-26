@@ -1,0 +1,6 @@
+release:
+  exclude:
+    authors:
+      - "dependabot[bot]"
+      - "github-actions[bot]"
+      - "renovate[bot]"
