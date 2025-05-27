@@ -31,8 +31,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_whitelogo.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo.{png,svg}
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-small.png
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-sprite.{png,svg}
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/system-logo.png
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/system-logo-white.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/system-logo{,-white}.png
 install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/ logos/distributor-logo{,-white}.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white.svg
@@ -105,8 +104,7 @@ Replacement logos for KDE
 %{_datadir}/pixmaps/fedora-logo.{png,svg}
 %{_datadir}/pixmaps/fedora-logo-small.png
 %{_datadir}/pixmaps/fedora-logo-sprite.{png,svg}
-%{_datadir}/pixmaps/system-logo.png
-%{_datadir}/pixmaps/system-logo-white.png
+%{_datadir}/pixmaps/system-logo{,-white}.png
 %{_datadir}/icons/hicolor/scalable/distributor-logo{,-white}.svg
 %{_datadir}/icons/hicolor/scalable/places/distributor-logo{,-white}.svg
 
