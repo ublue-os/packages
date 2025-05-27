@@ -24,6 +24,7 @@ Branding for Aurora-related projects
 %install
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/aurora-logos/symbols/ cli-logos/symbols/*
 
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/places/
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/ublue-*.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_logo_med.png
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_whitelogo.svg
@@ -32,9 +33,10 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-small.png
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-sprite.{png,svg}
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/system-logo.png
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/system-logo-white.png
-
-mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/places/
 install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/ logos/distributor-logo{,-white}.svg
+ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo.svg
+ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white.svg
+
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/geoclue/conf.d/ schemas%{_sysconfdir}/geoclue/conf.d/99-beacondb.conf
@@ -106,6 +108,7 @@ Replacement logos for KDE
 %{_datadir}/pixmaps/system-logo.png
 %{_datadir}/pixmaps/system-logo-white.png
 %{_datadir}/icons/hicolor/scalable/distributor-logo{,-white}.svg
+%{_datadir}/icons/hicolor/scalable/places/distributor-logo{,-white}.svg
 
 
 %package cli-logos
