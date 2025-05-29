@@ -79,6 +79,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_sunset/cont
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_sunset/ wallpapers/images/xe_sunset/metadata.json
 ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_sunset/ %{buildroot}%{_datadir}/wallpapers/
 
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/ kde-config/aurora.xml
 
 %check
 
@@ -192,6 +193,7 @@ BuildRequires:  kf6-rpm-macros
 This sets the Aurora defaults for Logos, Wallpapers and theme.
 
 %files kde-config
+%{_datadir}/backgrounds/aurora/aurora.xml
 
 
 %changelog
