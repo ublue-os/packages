@@ -5,6 +5,7 @@
      {PATH: 'start-here-symbolic'},
 +    {PATH: '/Resources/framework-logo-symbolic.svg'},
 +    {PATH: '/Resources/ampere-logo-symbolic.svg'},
++    {PATH: '/Resources/windows-logo-symbolic.svg'},
      {PATH: '/Resources/fedora-logo-symbolic.svg'},
      {PATH: '/Resources/debian-logo-symbolic.svg'},
      {PATH: '/Resources/manjaro-logo-symbolic.svg'},

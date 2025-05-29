@@ -18,6 +18,7 @@ Source0:       %{url}/archive/%{commit}.tar.gz
 Source1:       org.gnome.shell.extensions.logo-menu.gschema.xml
 Source2:       ampere-logo-symbolic.svg
 Source3:       framework-logo-symbolic.svg
+Source4:       windows-logo-symbolic.svg
 
 BuildArch:     noarch
 
@@ -46,6 +47,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}/po/ p
 install -Dpm0644 -t %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}/Resources/ Resources/*.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}/Resources %{SOURCE2}
 install -Dpm0644 -t %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}/Resources %{SOURCE3}
+install -Dpm0644 -t %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}/Resources %{SOURCE4}
 install -Dpm0644 -t %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}/PrefsLib/ PrefsLib/*.js
 glib-compile-schemas %{buildroot}%{_datadir}/gnome-shell/extensions/%{uuid}/schemas/
 
