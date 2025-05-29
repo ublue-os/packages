@@ -180,5 +180,19 @@ Wallpapers included on Aurora by default
 %{_datadir}/wallpapers/xe_sunset
 
 
+%package kde-config
+Version:        0.1.0
+Summary:        Aurora KDE Plasma configuration
+License:        Apache-2.0
+Requires:       aurora-logos
+# Needed when we want to use kf6_datadir macro
+BuildRequires:  kf6-rpm-macros
+
+%description kde-config
+This sets the Aurora defaults for Logos, Wallpapers and theme.
+
+%files kde-config
+
+
 %changelog
 %autochangelog
