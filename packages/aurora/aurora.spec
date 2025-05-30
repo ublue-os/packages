@@ -40,7 +40,9 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/geoclue/conf.d/ schemas%{_sysconfdir}/geoclue/conf.d/99-beacondb.conf
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/homebrew/ schemas%{_datadir}/ublue-os/homebrew/*.Brewfile
+%if ((0%{?fedora} && 0%{?fedora} < 43) || 0%{?rhel})
 install -Dpm0644 -t %{buildroot}%{_datadir}/pipewire/pipewire.conf.d/ schemas%{_datadir}/pipewire/pipewire.conf.d/raop.conf
+%endif
 
 mkdir -p %{buildroot}%{_datadir}/{backgrounds,wallpapers}/
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-1/contents/images/ wallpapers/images/aurora-wallpaper-1/contents/images/15392x8616.jpg
@@ -155,7 +157,9 @@ Default schemas for Aurora
 %files schemas
 %{_sysconfdir}/geoclue
 %{_datadir}/ublue-os/homebrew/*.Brewfile
+%if ((0%{?fedora} && 0%{?fedora} < 43) || 0%{?rhel})
 %{_datadir}/pipewire/pipewire.conf.d/raop.conf
+%endif
 
 
 %package backgrounds
