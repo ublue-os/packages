@@ -6,8 +6,8 @@
 %global gitrel      .git%{shortcommit}
 
 Name:          gnome-shell-extension-logo-menu
-Version:       0.1.0
-Release:       0%{gitrel}%{?dist}
+Version:       0.0.0
+Release:       4%{gitrel}%{?dist}
 Summary:       Quick access menu for the GNOME panel
 
 Group:         User Interface/Desktops
