@@ -1,7 +1,7 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
 Version:        0.46
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
@@ -75,7 +75,6 @@ just --completions fish | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{fis
 
 %files
 %{_sysconfdir}/profile.d/user-motd.sh
-%{_sysconfdir}/profile.d/brew.sh
 %{_datadir}/%{VENDOR}/%{sub_name}/*.just
 %{_datadir}/%{VENDOR}/justfile
 %{_datadir}/%{VENDOR}/motd/tips/*.md
@@ -95,6 +94,9 @@ just --completions fish | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{fis
 
 * Wed May 21 2025 coxde <63153334+coxde@users.noreply.github.com> - 0.45
 - Fix fish completion directory
+
+* Sun May 18 2025 renner0e <Renner03@protonmail.com> - 0.45
+- move brew.sh to ublue-brew
 
 * Mon May 12 2025 coxde <63153334+coxde@users.noreply.github.com> - 0.44
 - Add fish ujust completion
