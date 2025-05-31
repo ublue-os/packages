@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.3.6
+Version:        0.3.7
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -133,7 +133,7 @@ Contains all of the DConf settings that Bluefin ships by default
 
 %package backgrounds
 Summary:        Bluefin wallpapers
-Version:        0.2.2
+Version:        0.2.3
 License:        CC-BY-CA
 
 %description backgrounds
