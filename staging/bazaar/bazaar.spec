@@ -20,6 +20,7 @@ BuildRequires:  glycin-devel
 BuildRequires:  glycin-gtk4-devel
 BuildRequires:  libdex-devel
 BuildRequires:  desktop-file-utils
+BuildRequires:  libyaml-devel
 Requires:       glycin-libs
 Requires:       libadwaita
 
