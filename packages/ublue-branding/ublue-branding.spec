@@ -21,9 +21,9 @@ Branding for Universal Blue related projects
 %build
 
 %install
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps logos/ublue-discourse.svg
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps logos/ublue-docs.svg
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps logos/ublue-update.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/ublue-discourse.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/ublue-docs.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/ublue-update.svg
 
 %check
 
