@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.0](https://github.com/ublue-os/packages/compare/v1.2.0...v1.3.0) (2025-05-31)
+
+
+### Features
+
+* **aurora:** add remaining aurora-logos ([#543](https://github.com/ublue-os/packages/issues/543)) ([7c59252](https://github.com/ublue-os/packages/commit/7c59252b00db269776e2a7a38a27faa25d40da3b))
+* update bluefin wallpaper for june ([#554](https://github.com/ublue-os/packages/issues/554)) ([5757cb9](https://github.com/ublue-os/packages/commit/5757cb9229db50fb6da96a2381f64ce50c0069ce))
+
+
+### Bug Fixes
+
+* **ublue-branding:** add ublue-branding-logos without deletion ([#478](https://github.com/ublue-os/packages/issues/478)) ([0339959](https://github.com/ublue-os/packages/commit/0339959545c886eb9b4a604c6d680501420afa72))
+* wallpaper month ([#555](https://github.com/ublue-os/packages/issues/555)) ([45e1c9a](https://github.com/ublue-os/packages/commit/45e1c9ad70077a28efd18a75b4d451e3779a4f00))
+
 ## [1.1.0](https://github.com/ublue-os/packages/compare/v1.0.0...v1.1.0) (2025-05-14)
 
 
