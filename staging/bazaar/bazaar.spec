@@ -1,5 +1,5 @@
 # renovate: datasource=git-refs depName=https://github.com/kolunmi/bazaar.git versioning=loose currentValue=master
-%global commit 31e246c8b3262f7bedd09e706cc36314db4dba16
+%global commit 662180caaff6fd4e1dc8d8008af21c323d4b0a1c
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global appid io.github.kolunmi.bazaar
 
@@ -20,6 +20,7 @@ BuildRequires:  glycin-devel
 BuildRequires:  glycin-gtk4-devel
 BuildRequires:  libdex-devel
 BuildRequires:  desktop-file-utils
+BuildRequires:  libyaml-devel
 Requires:       glycin-libs
 Requires:       libadwaita
 
