@@ -96,6 +96,7 @@ gzip -c logos/distributor-logo.svg > %{buildroot}/%{_kf6_datadir}/plasma/look-an
 
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews kde-config/dev.getaurora.aurora.desktop/contents/previews/fullscreenpreview.jpg
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews kde-config/dev.getaurora.aurora.desktop/contents/previews/preview.png
+install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews kde-config/dev.getaurora.aurora.desktop/contents/previews/splash.png
 
 
 %check
@@ -221,6 +222,7 @@ This sets the Aurora defaults for Logos, Wallpapers and theme.
 %{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/splash/images/aurora_logo.svgz
 %{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/fullscreenpreview.jpg
 %{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/preview.png
+%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/splash.png
 
 
 %changelog
