@@ -7,7 +7,7 @@
 
 Name:        gnome-shell-extension-search-light
 Version:     0.0.0
-Release:     2%{gitrel}%{?dist}
+Release:     3%{gitrel}%{?dist}
 Summary:     Take the apps search out of overview
 
 Group:       User Interface/Desktops
@@ -31,7 +31,7 @@ This is a Gnome Shell extension that takes the apps search widget out of Overvie
 %prep
 %autosetup -n search-light-%{commit} -N
 
-%if 0%{?fedora} >= 42 || 0%{?rhel} >= 11
+%if 0%{?fedora} >= 42 || 0%{?rhel} >= 10
 %patch -P 0 -p1
 %endif
 
