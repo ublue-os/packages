@@ -1,5 +1,5 @@
 # renovate: datasource=git-refs depName=https://github.com/kolunmi/bazaar.git versioning=loose currentValue=master
-%global commit 4f6d3a3c8f69448e44d207b61c55e40ac3534c65
+%global commit 746f896232e3f57d3c40f3fe9dda23f7c5561ccb
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global appid io.github.kolunmi.bazaar
 
@@ -31,7 +31,7 @@ Requires:       libadwaita
 %autosetup -n bazaar-%{commit}
 
 %build
-%meson
+%meson -Dhardcoded_content_config_path=/usr/share/ublue-os/bazaar/config.yaml
 %meson_build
 
 %install
