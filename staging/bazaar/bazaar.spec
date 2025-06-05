@@ -31,7 +31,7 @@ Requires:       libadwaita
 %autosetup -n bazaar-%{commit}
 
 %build
-%meson -Dhardcoded_content_config_path=/usr/share/ublue-os/bazaar/config.yaml
+%meson -Dhardcoded_content_config_path=/usr/share/ublue-os/bazaar/config.yaml -Dhardcoded_blocklist_path=/usr/share/ublue-os/bazaar/blocklist.txt
 %meson_build
 
 %install
