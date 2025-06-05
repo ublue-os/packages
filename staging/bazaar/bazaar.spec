@@ -4,7 +4,7 @@
 %global appid io.github.kolunmi.bazaar
 
 Name:           bazaar
-Version:        %{shortcommit}
+Version:        {{{ git_dir_version }}}.%{shortcommit}
 Release:        1%{?dist}
 Summary:        A new app store idea for GNOME. 
 
