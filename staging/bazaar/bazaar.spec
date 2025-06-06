@@ -1,10 +1,10 @@
 # renovate: datasource=git-refs depName=https://github.com/kolunmi/bazaar.git versioning=loose currentValue=master
-%global commit edb42125682fb9365a1756fb6fad2e23d8d6e6be
+%global commit ccc15fbf762aca7596b0b63d3b16702402e342ff
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global appid io.github.kolunmi.bazaar
 
 Name:           bazaar
-Version:        %{shortcommit}
+Version:        {{{ git_dir_version }}}.%{shortcommit}
 Release:        1%{?dist}
 Summary:        A new app store idea for GNOME. 
 
@@ -31,7 +31,7 @@ Requires:       libadwaita
 %autosetup -n bazaar-%{commit}
 
 %build
-%meson
+%meson -Dhardcoded_content_config_path=/usr/share/ublue-os/bazaar/config.yaml -Dhardcoded_blocklist_path=/usr/share/ublue-os/bazaar/blocklist.txt
 %meson_build
 
 %install

@@ -1,6 +1,6 @@
 Name:           ublue-os-media-automount-udev
 Vendor:         ublue-os
-Version:        0.14
+Version:        0.15
 Release:        1%{?dist}
 Summary:        udev rules to mount non-removable disk partitions
 
@@ -35,6 +35,9 @@ install -p -Dm0644 ./ublue-os-media-automount.conf %{buildroot}%{_tmpfilesdir}/u
 %{_tmpfilesdir}/ublue-os-media-automount.conf
 
 %changelog
+* Thu May 22 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.15
+- fix: ignore nonexisting entries in fstab
+
 * Wed May 21 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.14
 - fix: Start mounting before graphical session
 
