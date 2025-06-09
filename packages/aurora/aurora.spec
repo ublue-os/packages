@@ -168,7 +168,7 @@ Plymouth logo customization for Aurora
 
 
 %package schemas
-Version:        0.1.6
+Version:        0.1.5
 Summary:        KDE Schemas for Aurora
 
 %description schemas
@@ -205,7 +205,7 @@ Wallpapers included on Aurora by default
 
 
 %package kde-config
-Version:        0.1.0
+Version:        0.1.1
 Summary:        Aurora KDE Plasma configuration
 License:        Apache-2.0 AND GPL-2.0-or-later
 Requires:       aurora-logos
