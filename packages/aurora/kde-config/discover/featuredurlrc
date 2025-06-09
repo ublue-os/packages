@@ -1,2 +1,2 @@
 [Software]
-FeaturedListingURL="file:///usr/share/discover/list.json"
+FeaturedListingURL=file:///usr/share/ublue-os/discover/featured.json
