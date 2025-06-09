@@ -68,29 +68,41 @@ def main() -> None:
             os.path.exists(_udev_path) and os.path.realpath(_udev_path) == "/dev/null"
         )
 
-        if (
-            # Filter out if the device isnt a partition...
-            block_dev["type"] != "part"
-            # ... or is not an SSD or NVME...
-            or not any(
-                [
-                    fnmatch.fnmatch(block_dev["name"].split("/")[-1], pat)
-                    for pat in ["sd[a-z][0-9]", "nvme[0-9]n[0-9]p[0-9]"]
-                ]
-            )
-            # ... or if is not a supported type...
-            or block_dev["fstype"] not in FS_MAPPINGS.keys()
-            # ... or if is in fstab...
-            or block_dev["name"] in devices_in_fstab()
-            # ... or if is mounted somewhere else...
-            or any(block_dev["mountpoints"])
-            # ... or if is removable...
-            or block_dev["hotplug"]
-            # ... or if does not have label/partlabel...
-            or not any([block_dev["label"], block_dev["partlabel"]])
-            # ... or if the udev rule disabling automounting exists
-            or _is_disabled_udev_rule
+        if block_dev["type"] != "part":
+            print(f"Skipping {block_dev['name']}: not a partition")
+            return False
+
+        if not any(
+            [
+                fnmatch.fnmatch(block_dev["name"].split("/")[-1], pat)
+                for pat in ["sd[a-z][0-9]", "nvme[0-9]n[0-9]p[0-9]"]
+            ]
         ):
+            print(f"Skipping {block_dev['name']}: not an SSD or NVME device")
+            return False
+
+        if block_dev["fstype"] not in FS_MAPPINGS.keys():
+            print(f"Skipping {block_dev['name']}: unsupported filesystem type '{block_dev['fstype']}'")
+            return False
+
+        if block_dev["name"] in devices_in_fstab():
+            print(f"Skipping {block_dev['name']}: already in fstab")
+            return False
+
+        if any(block_dev["mountpoints"]):
+            print(f"Skipping {block_dev['name']}: already mounted at {block_dev['mountpoints']}")
+            return False
+
+        if block_dev["hotplug"]:
+            print(f"Skipping {block_dev['name']}: removable device")
+            return False
+
+        if not any([block_dev["label"], block_dev["partlabel"]]):
+            print(f"Skipping {block_dev['name']}: no label or partlabel")
+            return False
+
+        if _is_disabled_udev_rule:
+            print(f"Skipping {block_dev['name']}: udev rule disabling automounting exists")
             return False
 
         return True
