@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.13
+Version:        0.1.14
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -98,6 +98,8 @@ install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaur
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/ kde-config/dev.getaurora.aurora.desktop/contents/previews/preview.png
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/ kde-config/dev.getaurora.aurora.desktop/contents/previews/splash.png
 
+install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/discover/ kde-config/discover/featuredurlrc
+install -Dpm0644 -t %{buildroot}/%{_datadir}/ublue-os/discover kde-config/discover/featured.json
 
 %check
 
@@ -202,7 +204,7 @@ Wallpapers included on Aurora by default
 
 
 %package kde-config
-Version:        0.1.0
+Version:        0.1.1
 Summary:        Aurora KDE Plasma configuration
 License:        Apache-2.0 AND GPL-2.0-or-later
 Requires:       aurora-logos
@@ -210,7 +212,7 @@ Requires:       aurora-logos
 BuildRequires:  kf6-rpm-macros
 
 %description kde-config
-This sets the Aurora defaults for Logos, Wallpapers and theme.
+This sets the Aurora defaults for Logos, Wallpapers, Theme and Editor's choice in Discover.
 
 %files kde-config
 %{_datadir}/backgrounds/aurora/aurora.xml
@@ -223,6 +225,8 @@ This sets the Aurora defaults for Logos, Wallpapers and theme.
 %{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/fullscreenpreview.jpg
 %{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/preview.png
 %{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/splash.png
+%{_kf6_datadir}/discover/featuredurlrc
+%{_datadir}/ublue-os/discover/featured.json
 
 
 %changelog
