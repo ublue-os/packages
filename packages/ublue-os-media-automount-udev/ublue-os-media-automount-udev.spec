@@ -1,6 +1,6 @@
 Name:           ublue-os-media-automount-udev
 Vendor:         ublue-os
-Version:        0.11
+Version:        0.15
 Release:        1%{?dist}
 Summary:        udev rules to mount non-removable disk partitions
 
@@ -23,18 +23,30 @@ BuildRequires:  systemd-rpm-macros
 %build
 
 %install
-install -p -Dm0644 ./99-media-automount.rules %{buildroot}%{_udevrulesdir}/99-media-automount.rules
-install -p -Dm0755 ./is_in_fstab.sh %{buildroot}%{_libexecdir}/is_in_fstab.sh
-install -p -Dm0644 ./media-automount.conf %{buildroot}%{_tmpfilesdir}/media-automount.conf
+install -p -Dm0755 ./ublue-os-media-automount.py %{buildroot}%{_libexecdir}/ublue-os-media-automount.py
+install -p -Dm0644 ./ublue-os-media-automount.service %{buildroot}%{_prefix}/lib/systemd/system/ublue-os-media-automount.service
+install -p -Dm0644 ./ublue-os-media-automount.conf %{buildroot}%{_tmpfilesdir}/ublue-os-media-automount.conf
 
 %check
 
 %files
-%{_udevrulesdir}/99-media-automount.rules
-%{_libexecdir}/is_in_fstab.sh
-%{_tmpfilesdir}/media-automount.conf
+%{_libexecdir}/ublue-os-media-automount.py
+%{_prefix}/lib/systemd/system/ublue-os-media-automount.service
+%{_tmpfilesdir}/ublue-os-media-automount.conf
 
 %changelog
+* Thu May 22 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.15
+- fix: ignore nonexisting entries in fstab
+
+* Wed May 21 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.14
+- fix: Start mounting before graphical session
+
+* Tue May 20 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.13
+- fix: use getuid to check root
+
+* Sat May 17 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.12
+- fix: Use service instead of udev
+
 * Mon May 12 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.11
 - fix: Preload database
 

@@ -4,7 +4,7 @@
 
 Name:           ublue-brew
 Version:        0.1.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Homebrew integration for Universal Blue systems
 
 License:        Apache-2.0
@@ -47,7 +47,7 @@ install -Dpm0644 -t %{buildroot}%{_prefix}/lib/tmpfiles.d/ ./src%{_prefix}/lib/t
 %systemd_preun brew-setup.service
 
 %files
-%ghost %{_sysconfdir}/profile.d/brew.sh
+%{_sysconfdir}/profile.d/brew.sh
 %{_datadir}/homebrew.tar.zst
 %{_sysconfdir}/profile.d/brew-bash-completion.sh
 %{_datadir}/fish/vendor_conf.d/%{name}.fish

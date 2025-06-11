@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.9
+Version:        0.1.14
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -23,11 +23,26 @@ Branding for Aurora-related projects
 
 %install
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/aurora-logos/symbols/ cli-logos/symbols/*
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/*
+
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/places/
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/ublue-*.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_logo_med.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_whitelogo.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo.{png,svg}
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-small.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-sprite.{png,svg}
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/system-logo{,-white}.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/ logos/distributor-logo{,-white}.svg
+ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo.svg
+ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white.svg
+
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/geoclue/conf.d/ schemas%{_sysconfdir}/geoclue/conf.d/99-beacondb.conf
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/homebrew/ schemas%{_datadir}/ublue-os/homebrew/*.Brewfile
+%if ((0%{?fedora} && 0%{?fedora} < 43) || 0%{?rhel})
+install -Dpm0644 -t %{buildroot}%{_datadir}/pipewire/pipewire.conf.d/ schemas%{_datadir}/pipewire/pipewire.conf.d/raop.conf
+%endif
 
 mkdir -p %{buildroot}%{_datadir}/{backgrounds,wallpapers}/
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-1/contents/images/ wallpapers/images/aurora-wallpaper-1/contents/images/15392x8616.jpg
@@ -37,6 +52,10 @@ ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-1/ %{build
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-2/contents/images/ wallpapers/images/aurora-wallpaper-2/contents/images/3840x2160.png
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-2/ wallpapers/images/aurora-wallpaper-2/metadata.json
 ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-2/ %{buildroot}%{_datadir}/wallpapers/
+
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-3/contents/images/ wallpapers/images/aurora-wallpaper-3/contents/images/3840x2160.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-3/ wallpapers/images/aurora-wallpaper-3/metadata.json
+ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-3/ %{buildroot}%{_datadir}/wallpapers/
 
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/greg-rakozy-aurora/contents/images/ wallpapers/images/greg-rakozy-aurora/contents/images/5616x3744.jxl
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/greg-rakozy-aurora/ wallpapers/images/greg-rakozy-aurora/metadata.json
@@ -62,12 +81,31 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_sunset/cont
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_sunset/ wallpapers/images/xe_sunset/metadata.json
 ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_sunset/ %{buildroot}%{_datadir}/wallpapers/
 
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/ kde-config/aurora.xml
+install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/ kde-config/dev.getaurora.aurora.desktop/metadata.{desktop,json}
+install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/ kde-config/dev.getaurora.aurora.desktop/contents/defaults
+install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/plasmoidsetupscripts/ kde-config/dev.getaurora.aurora.desktop/contents/plasmoidsetupscripts/org.kde.plasma.{folder,kickoff,systemtray}.js
+
+mkdir -p %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/icons/
+ln -sr %{buildroot}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/icons/aurora-logo.svg
+
+mkdir -p %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/splash/images/
+install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/splash/ kde-config/dev.getaurora.aurora.desktop/contents/splash/Splash.qml
+
+gzip -c logos/distributor-logo.svg > %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/splash/images/aurora_logo.svgz
+
+install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/ kde-config/dev.getaurora.aurora.desktop/contents/previews/fullscreenpreview.jpg
+install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/ kde-config/dev.getaurora.aurora.desktop/contents/previews/preview.png
+install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/ kde-config/dev.getaurora.aurora.desktop/contents/previews/splash.png
+
+install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/discover/ kde-config/discover/featuredurlrc
+install -Dpm0644 -t %{buildroot}/%{_datadir}/ublue-os/discover kde-config/discover/featured.json
 
 %check
 
 %package logos
 Summary:        Logos for KDE
-Version:        0.1.3
+Version:        0.1.4
 License:        CC-BY-SA
 Provides: fedora-logos
 Provides: centos-logos
@@ -81,9 +119,15 @@ Conflicts: system-logos
 Replacement logos for KDE
 
 %files logos
-%{_datadir}/pixmaps/fedora*
-%{_datadir}/pixmaps/system-*
 %{_datadir}/pixmaps/ublue-*
+%{_datadir}/pixmaps/fedora_logo_med.png
+%{_datadir}/pixmaps/fedora_whitelogo.svg
+%{_datadir}/pixmaps/fedora-logo.{png,svg}
+%{_datadir}/pixmaps/fedora-logo-small.png
+%{_datadir}/pixmaps/fedora-logo-sprite.{png,svg}
+%{_datadir}/pixmaps/system-logo{,-white}.png
+%{_datadir}/icons/hicolor/scalable/distributor-logo{,-white}.svg
+%{_datadir}/icons/hicolor/scalable/places/distributor-logo{,-white}.svg
 
 
 %package cli-logos
@@ -100,7 +144,7 @@ Logos for CLI applications like Fastfetch
 
 %package fastfetch
 Summary:        Fastfetch configuration for Aurora
-Version:        0.1.3
+Version:        0.1.4
 License:        CC-BY-SA
 
 %description fastfetch
@@ -132,10 +176,13 @@ Default schemas for Aurora
 %files schemas
 %{_sysconfdir}/geoclue
 %{_datadir}/ublue-os/homebrew/*.Brewfile
+%if ((0%{?fedora} && 0%{?fedora} < 43) || 0%{?rhel})
+%{_datadir}/pipewire/pipewire.conf.d/raop.conf
+%endif
 
 
 %package backgrounds
-Version:        0.1.3
+Version:        0.1.4
 Summary:        Aurora wallpapers
 License:        CC-BY-SA
 
@@ -147,12 +194,39 @@ Wallpapers included on Aurora by default
 %{_datadir}/backgrounds/%{vendor}
 %{_datadir}/wallpapers/aurora-wallpaper-1
 %{_datadir}/wallpapers/aurora-wallpaper-2
+%{_datadir}/wallpapers/aurora-wallpaper-3
 %{_datadir}/wallpapers/greg-rakozy-aurora
 %{_datadir}/wallpapers/jonatan-pie-aurora
 %{_datadir}/wallpapers/xe_clouds
 %{_datadir}/wallpapers/xe_foothills
 %{_datadir}/wallpapers/xe_space_needle
 %{_datadir}/wallpapers/xe_sunset
+
+
+%package kde-config
+Version:        0.1.1
+Summary:        Aurora KDE Plasma configuration
+License:        Apache-2.0 AND GPL-2.0-or-later
+Requires:       aurora-logos
+# Needed when we want to use kf6_datadir macro
+BuildRequires:  kf6-rpm-macros
+
+%description kde-config
+This sets the Aurora defaults for Logos, Wallpapers, Theme and Editor's choice in Discover.
+
+%files kde-config
+%{_datadir}/backgrounds/aurora/aurora.xml
+%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/metadata.{desktop,json}
+%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/defaults
+%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/plasmoidsetupscripts/org.kde.plasma.{folder,kickoff,systemtray}.js
+%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/icons/aurora-logo.svg
+%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/splash/Splash.qml
+%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/splash/images/aurora_logo.svgz
+%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/fullscreenpreview.jpg
+%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/preview.png
+%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/splash.png
+%{_kf6_datadir}/discover/featuredurlrc
+%{_datadir}/ublue-os/discover/featured.json
 
 
 %changelog

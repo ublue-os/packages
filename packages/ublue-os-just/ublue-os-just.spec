@@ -1,7 +1,7 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
-Version:        0.44
-Release:        1%{?dist}
+Version:        0.47
+Release:        2%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
@@ -9,6 +9,10 @@ VCS:            {{{ git_dir_vcs }}}
 Source:         {{{ git_dir_pack }}}
 
 BuildArch:      noarch
+
+# Needed for generating shell completions
+BuildRequires: just
+
 Requires:       just
 Requires:       ublue-os-luks
 Recommends:     powerstat
@@ -57,9 +61,20 @@ install -Dpm0644 ./src/etc-distrobox/* %{buildroot}/%{_sysconfdir}/distrobox/
 install -d -m0755 %{buildroot}/%{_sysconfdir}/toolbox
 install -Dpm0644 ./src/etc-toolbox/* %{buildroot}/%{_sysconfdir}/toolbox/
 
+
+mkdir -p %{buildroot}%{bash_completions_dir} %{buildroot}%{zsh_completions_dir} %{buildroot}%{fish_completions_dir}
+
+# Generate ujust bash completion
+just --completions bash | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{bash_completions_dir}/ujust
+
+# Generate ujust zsh completion
+just --completions zsh | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{zsh_completions_dir}/_ujust
+
+# Generate ujust fish completion
+just --completions fish | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{fish_completions_dir}/ujust.fish
+
 %files
 %{_sysconfdir}/profile.d/user-motd.sh
-%{_sysconfdir}/profile.d/brew.sh
 %{_datadir}/%{VENDOR}/%{sub_name}/*.just
 %{_datadir}/%{VENDOR}/justfile
 %{_datadir}/%{VENDOR}/motd/tips/*.md
@@ -69,21 +84,23 @@ install -Dpm0644 ./src/etc-toolbox/* %{buildroot}/%{_sysconfdir}/toolbox/
 %{_exec_prefix}/lib/ujust/lib*.sh
 %{_sysconfdir}/distrobox/*.ini
 %{_sysconfdir}/toolbox/*.ini
-
-%post
-# Generate ujust bash completion
-just --completions bash | sed -E 's/([\(_" ])just/\1ujust/g' > %{_datadir}/bash-completion/completions/ujust
-chmod 644 %{_datadir}/bash-completion/completions/ujust
-
-# Generate ujust zsh completion
-just --completions zsh | sed -E 's/([\(_" ])just/\1ujust/g' > %{_datadir}/zsh/site-functions/_ujust
-chmod 644 %{_datadir}/zsh/site-functions/_ujust
-
-# Generate ujust fish completion
-just --completions fish | sed -E 's/([\(_" ])just/\1ujust/g' > %{_datadir}/fish/completions/ujust.fish
-chmod 644 %{_datadir}/fish/completions/ujust.fish
+%{bash_completions_dir}/ujust
+%{zsh_completions_dir}/_ujust
+%{fish_completions_dir}/ujust.fish
 
 %changelog
+* The Jun 03 2025 omid-1985 <omid.1985@gmail.com> - 0.47
+- Add brew autoremove and cleanup to clean-system recipe
+
+* Thu May 22 2025 renner0e <Renner03@protonmail.com> - 0.46
+- Generate ujust shell completions at build time
+
+* Wed May 21 2025 coxde <63153334+coxde@users.noreply.github.com> - 0.45
+- Fix fish completion directory
+
+* Sun May 18 2025 renner0e <Renner03@protonmail.com> - 0.45
+- move brew.sh to ublue-brew
+
 * Mon May 12 2025 coxde <63153334+coxde@users.noreply.github.com> - 0.44
 - Add fish ujust completion
 

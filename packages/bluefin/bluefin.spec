@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.3.1
+Version:        0.3.8
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -45,6 +45,9 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/homebrew/ schemas%{_datadir
 install -Dpm0644 -t %{buildroot}%{_datadir}/glib-2.0/schemas/ schemas%{_datadir}/glib-2.0/schemas/zz0-bluefin-modifications.gschema.override
 install -Dpm0644 -t %{buildroot}%{_datadir}/applications/ schemas%{_datadir}/applications/*.desktop
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/gnome-initial-setup/ schemas%{_sysconfdir}/gnome-initial-setup/vendor.conf
+%if ((0%{?fedora} && 0%{?fedora} < 43) || 0%{?rhel})
+install -Dpm0644 -t %{buildroot}%{_datadir}/pipewire/pipewire.conf.d/ schemas%{_datadir}/pipewire/pipewire.conf.d/raop.conf
+%endif
 
 %check
 
@@ -84,7 +87,7 @@ Logos for CLI applications like Fastfetch
 
 %package fastfetch
 Summary:        Fastfetch configuration for Bluefin
-Version:        0.2.2
+Version:        0.2.3
 License:        CC-BY-CA
 
 %description fastfetch
@@ -107,7 +110,7 @@ Plymouth logo customization for Bluefin
 
 
 %package schemas
-Version:        0.2.3
+Version:        0.2.4
 Summary:        GNOME Schemas for Bluefin
 
 %description schemas
@@ -123,11 +126,14 @@ Contains all of the DConf settings that Bluefin ships by default
 %{_datadir}/glib-2.0
 %{_datadir}/applications
 %{_datadir}/ublue-os/homebrew/*.Brewfile
+%if ((0%{?fedora} && 0%{?fedora} < 43) || 0%{?rhel})
+%{_datadir}/pipewire/pipewire.conf.d/raop.conf
+%endif
 
 
 %package backgrounds
 Summary:        Bluefin wallpapers
-Version:        0.2.2
+Version:        0.2.4
 License:        CC-BY-CA
 
 %description backgrounds
