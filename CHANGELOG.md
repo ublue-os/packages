@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.3.0](https://github.com/ublue-os/packages/compare/v1.2.0...v1.3.0) (2025-06-14)
+
+
+### Features
+
+* add aurora recommended apps on discover ([#584](https://github.com/ublue-os/packages/issues/584)) ([02a9881](https://github.com/ublue-os/packages/commit/02a988190cd5de730baca039c4c7d3d22d670c5b))
+* Also use a hardcoded blocklist path ([f833dfc](https://github.com/ublue-os/packages/commit/f833dfced84f8b36c5bc655349123660601ca00f))
+* **aurora:** add kde-config package ([#549](https://github.com/ublue-os/packages/issues/549)) ([7102e26](https://github.com/ublue-os/packages/commit/7102e26b43aab16d7b15d78ae7989cab7299d116))
+* **aurora:** add remaining aurora-logos ([#543](https://github.com/ublue-os/packages/issues/543)) ([7c59252](https://github.com/ublue-os/packages/commit/7c59252b00db269776e2a7a38a27faa25d40da3b))
+* turn on bazaar in bluefin's logomenu ([#582](https://github.com/ublue-os/packages/issues/582)) ([7052996](https://github.com/ublue-os/packages/commit/70529960791de453cda8a4920baab797b1b2d56c))
+* update bluefin wallpaper for june ([#554](https://github.com/ublue-os/packages/issues/554)) ([5757cb9](https://github.com/ublue-os/packages/commit/5757cb9229db50fb6da96a2381f64ce50c0069ce))
+
+
+### Bug Fixes
+
+* Add git dir version to bazaar version to ensure it always ratchets forward ([f9f67d0](https://github.com/ublue-os/packages/commit/f9f67d0514c4b5f04f694db7889f7c6e1383d5ce))
+* bump logomenu ([#571](https://github.com/ublue-os/packages/issues/571)) ([c119d2d](https://github.com/ublue-os/packages/commit/c119d2d89581b60f4bbce16ce739f4d8892cab4e))
+* bump schemas spec ([2481048](https://github.com/ublue-os/packages/commit/248104863d9390f82f20792237e1d40724f094bc))
+* **media-automount-udev:** ignore nonexisting entries in fstab ([#524](https://github.com/ublue-os/packages/issues/524)) ([66d72aa](https://github.com/ublue-os/packages/commit/66d72aac833590cf2ef0563b083ed730ac33ea02))
+* **search-light:** enable gnome 48 patches for epel 10 builds ([#562](https://github.com/ublue-os/packages/issues/562)) ([375bd74](https://github.com/ublue-os/packages/commit/375bd74761c7f68c89cb4ec274f74b0502793679))
+* **ublue-branding:** add ublue-branding-logos without deletion ([#478](https://github.com/ublue-os/packages/issues/478)) ([0339959](https://github.com/ublue-os/packages/commit/0339959545c886eb9b4a604c6d680501420afa72))
+* unbind ctrl-alt-\ ([#604](https://github.com/ublue-os/packages/issues/604)) ([8dfd798](https://github.com/ublue-os/packages/commit/8dfd798e4895b34c6d62636ae8750178d9b417e2))
+* Update bazaar commit and add custom config path ([79b7842](https://github.com/ublue-os/packages/commit/79b784226feaf42797b9a11af939b1cecf5755a4))
+* wallpaper month ([#555](https://github.com/ublue-os/packages/issues/555)) ([45e1c9a](https://github.com/ublue-os/packages/commit/45e1c9ad70077a28efd18a75b4d451e3779a4f00))
+
 ## [1.1.0](https://github.com/ublue-os/packages/compare/v1.0.0...v1.1.0) (2025-05-14)
 
 
