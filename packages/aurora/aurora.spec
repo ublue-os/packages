@@ -25,7 +25,6 @@ Branding for Aurora-related projects
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/aurora-logos/symbols/ cli-logos/symbols/*
 
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/places/
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/ublue-*.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_logo_med.png
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_whitelogo.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo.{png,svg}
@@ -119,7 +118,6 @@ Conflicts: system-logos
 Replacement logos for KDE
 
 %files logos
-%{_datadir}/pixmaps/ublue-*
 %{_datadir}/pixmaps/fedora_logo_med.png
 %{_datadir}/pixmaps/fedora_whitelogo.svg
 %{_datadir}/pixmaps/fedora-logo.{png,svg}
