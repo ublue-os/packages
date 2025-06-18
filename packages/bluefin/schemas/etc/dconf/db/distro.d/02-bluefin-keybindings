@@ -21,7 +21,4 @@ binding='<Control><Alt>BackSpace'
 command="flatpak run com.jeffser.Alpaca"
 name='Launch Alpaca'
 
-[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4]
-binding='<Control><Alt>backslash'
-command="bazaar --search"
-name='Search on Bazaar'
+

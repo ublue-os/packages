@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.14
+Version:        0.1.15
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -25,7 +25,6 @@ Branding for Aurora-related projects
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/aurora-logos/symbols/ cli-logos/symbols/*
 
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/places/
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/ublue-*.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_logo_med.png
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_whitelogo.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo.{png,svg}
@@ -105,7 +104,7 @@ install -Dpm0644 -t %{buildroot}/%{_datadir}/ublue-os/discover kde-config/discov
 
 %package logos
 Summary:        Logos for KDE
-Version:        0.1.4
+Version:        0.1.5
 License:        CC-BY-SA
 Provides: fedora-logos
 Provides: centos-logos
@@ -119,7 +118,6 @@ Conflicts: system-logos
 Replacement logos for KDE
 
 %files logos
-%{_datadir}/pixmaps/ublue-*
 %{_datadir}/pixmaps/fedora_logo_med.png
 %{_datadir}/pixmaps/fedora_whitelogo.svg
 %{_datadir}/pixmaps/fedora-logo.{png,svg}
