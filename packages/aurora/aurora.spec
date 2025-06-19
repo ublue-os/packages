@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.15
+Version:        0.1.16
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -55,6 +55,10 @@ ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-2/ %{build
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-3/contents/images/ wallpapers/images/aurora-wallpaper-3/contents/images/3840x2160.png
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-3/ wallpapers/images/aurora-wallpaper-3/metadata.json
 ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-3/ %{buildroot}%{_datadir}/wallpapers/
+
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-4/contents/images/ wallpapers/images/aurora-wallpaper-4/contents/images/3840x2160.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-4/ wallpapers/images/aurora-wallpaper-4/metadata.json
+ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-4/ %{buildroot}%{_datadir}/wallpapers/
 
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/greg-rakozy-aurora/contents/images/ wallpapers/images/greg-rakozy-aurora/contents/images/5616x3744.jxl
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/greg-rakozy-aurora/ wallpapers/images/greg-rakozy-aurora/metadata.json
@@ -180,7 +184,7 @@ Default schemas for Aurora
 
 
 %package backgrounds
-Version:        0.1.4
+Version:        0.1.5
 Summary:        Aurora wallpapers
 License:        CC-BY-SA
 
@@ -193,6 +197,7 @@ Wallpapers included on Aurora by default
 %{_datadir}/wallpapers/aurora-wallpaper-1
 %{_datadir}/wallpapers/aurora-wallpaper-2
 %{_datadir}/wallpapers/aurora-wallpaper-3
+%{_datadir}/wallpapers/aurora-wallpaper-4
 %{_datadir}/wallpapers/greg-rakozy-aurora
 %{_datadir}/wallpapers/jonatan-pie-aurora
 %{_datadir}/wallpapers/xe_clouds
