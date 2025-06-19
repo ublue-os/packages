@@ -47,6 +47,7 @@ Requires:       libadwaita
 %{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
 %{_datadir}/icons/hicolor/symbolic/apps/%{appid}-symbolic.svg
 %{_datadir}/metainfo/%{appid}.metainfo.xml
+%{_datadir}/gnome-shell/search-providers/%{appid}.search-provider.ini
 
 %changelog
 * Sat May 17 2025 Tulip Blossom <tulilirockz@proton.me>
