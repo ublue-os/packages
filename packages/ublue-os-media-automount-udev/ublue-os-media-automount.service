@@ -1,7 +1,7 @@
 [Unit]
 Description=Mount partitons automaticaly
 After=local-fs.target
-Before=graphical.target
+Requires=local-fs.target
 
 [Service]
 ExecStart=/usr/libexec/ublue-os-media-automount.py
