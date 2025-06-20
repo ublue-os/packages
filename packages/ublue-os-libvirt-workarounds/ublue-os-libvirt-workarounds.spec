@@ -1,7 +1,7 @@
 Name:           ublue-os-libvirt-workarounds
 Vendor:         ublue-os
 Version:        1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Services to workaround libvirt issues
 License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
