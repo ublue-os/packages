@@ -31,10 +31,10 @@ install -Dm0644 -t %{buildroot}%{_prefix}/lib/tmpfiles.d src/%{_prefix}/lib/tmpf
 %check
 
 %post
-%systemd_post libvirt-workarounds.service
+%systemd_post ublue-os-libvirt-workarounds.service
 
 %preun
-%systemd_preun libvirt-workarounds.service
+%systemd_preun ublue-os-libvirt-workarounds.service
 
 %files
 %{_presetdir}/54-ublue-os-libvirt-workarounds.preset
