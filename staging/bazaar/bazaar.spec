@@ -21,9 +21,12 @@ BuildRequires:  glycin-gtk4-devel
 BuildRequires:  libdex-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  libyaml-devel
+BuildRequires:  libsoup3-devel
+BuildRequires:  json-glib
 Requires:       glycin-libs
 Requires:       libadwaita
-Requires:       gvfs
+Requires:       libsoup3
+Requires:       json-glib
 
 %description
 %summary
