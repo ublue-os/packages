@@ -1,5 +1,7 @@
 # Universal Blue RPM specs
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ublue-os/packages)
+
 Packages for Universal Blue projects.
 
 We use this repository as the base for [multiple Universal Blue COPRs](https://copr.fedorainfracloud.org/coprs/ublue-os)
