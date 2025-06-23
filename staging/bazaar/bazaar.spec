@@ -1,5 +1,5 @@
 # renovate: datasource=git-refs depName=https://github.com/kolunmi/bazaar.git versioning=loose currentValue=master
-%global commit 340b77f2ebbc6dfc0ae6295dd7936c6a11514667
+%global commit 64335a3132186533e459daf6ab3a7ff28f5d75e1
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global appid io.github.kolunmi.bazaar
 
@@ -56,8 +56,8 @@ Requires:       json-glib
 %doc README.md
 %{_datadir}/applications/%{appid}.desktop
 %{_bindir}/%{name}
-%{_datadir}/dbus-1/services/%{appid}.service
 %{_userunitdir}/%{appid}.service
+%{_datadir}/dbus-1/services/%{appid}.service
 %{_datadir}/glib-2.0/schemas/%{appid}.gschema.xml
 %{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
 %{_datadir}/icons/hicolor/symbolic/apps/%{appid}-symbolic.svg
