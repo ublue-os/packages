@@ -1,5 +1,5 @@
 # renovate: datasource=git-refs depName=https://github.com/kolunmi/bazaar.git versioning=loose currentValue=master
-%global commit 807eb8925d56366c8da4c119451b558de09d35fa
+%global commit 5cb71df5fa01fe82eaf7231991c56dbd7d645593
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global appid io.github.kolunmi.bazaar
 
@@ -23,6 +23,7 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  libyaml-devel
 BuildRequires:  libsoup3-devel
 BuildRequires:  json-glib
+BuildRequires:  systemd-rpm-macros
 Requires:       glycin-libs
 Requires:       libadwaita
 Requires:       libsoup3
@@ -41,12 +42,22 @@ Requires:       json-glib
 %install
 %meson_install
 
+%post
+%systemd_user_post %{appid}.service
+
+%preun
+%systemd_user_preun %{appid}.service
+
+%postun
+%systemd_user_postun_with_restart %{appid}.service
+
 %files
 %license COPYING
 %doc README.md
 %{_datadir}/applications/%{appid}.desktop
 %{_bindir}/%{name}
 %{_datadir}/dbus-1/services/%{appid}.service
+%{_userunitdir}/%{appid}.service
 %{_datadir}/glib-2.0/schemas/%{appid}.gschema.xml
 %{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
 %{_datadir}/icons/hicolor/symbolic/apps/%{appid}-symbolic.svg
