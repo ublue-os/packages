@@ -7,7 +7,7 @@ Summary:        KDE KRunner plugin for searching Flatpak applications via Bazaar
 
 License:        Apache-2.0
 URL:            https://github.com/ledif/krunner-bazaar
-Source:         ${url}/archive/refs/tags/v%{majmin_ver}.zip
+Source:         %{url}/archive/refs/tags/v%{majmin_ver}.zip
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
