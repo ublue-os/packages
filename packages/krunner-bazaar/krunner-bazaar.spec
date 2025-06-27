@@ -16,6 +16,7 @@ BuildRequires:  kf6-krunner-devel
 BuildRequires:  kf6-ki18n-devel
 BuildRequires:  kf6-kcoreaddons-devel
 BuildRequires:  qt6-qtbase-devel
+BuildRequires:  kf6-rpm-macros
 
 Requires:       kf6-krunner
 Requires:       qt6-qtbase
@@ -50,12 +51,12 @@ including a standalone tool for testing Bazaar D-Bus interactions.
 
 %check
 # Basic smoke test - check if the plugin file was created
-test -f %{buildroot}%{_libdir}/qt6/plugins/kf6/krunner/bazaarrunner.so
+test -f %{buildroot}%{_kf6_plugindir}/krunner/bazaarrunner.so
 
 %files
 %license LICENSE
 %doc README.md
-%{_libdir}/qt6/plugins/kf6/krunner/bazaarrunner.so
+%{_kf6_plugindir}/krunner/bazaarrunner.so
 
 %files tools
 %{_bindir}/bazaar-dbus-tool
