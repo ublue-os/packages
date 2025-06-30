@@ -154,3 +154,5 @@ install-resolve ACTION="":
     fi
 
 alias install-resolve-studio := install-resolve
+alias install-davinci := install-resolve
+alias install-davinci-resolve := install-resolve
