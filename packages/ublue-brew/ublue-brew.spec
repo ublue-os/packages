@@ -15,6 +15,7 @@ Source1:        https://github.com/ublue-os/packages/releases/download/%{homebre
 Source2:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-aarch64.tar.zst
 
 BuildRequires:  systemd-rpm-macros
+Requires:       gcc
 
 %description
 Homebrew integration for Universal Blue systems
