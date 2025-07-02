@@ -1,5 +1,5 @@
 # renovate: datasource=git-refs depName=https://github.com/fyralabs/readymade versioning=loose currentValue=main
-%global commit fa75e2d2e444bfcea27270c3dd7b2e45512d92c1
+%global commit 5f9416645827ecf6ed781f2255afef1e05fd8e2f
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:           readymade-nightly
