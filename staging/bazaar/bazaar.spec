@@ -5,7 +5,7 @@
 
 Name:           bazaar
 Version:        {{{ git_dir_version }}}.%{shortcommit}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A new app store idea for GNOME. 
 
 License:        GPL-3.0-only
