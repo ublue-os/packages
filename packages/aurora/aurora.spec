@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.17
+Version:        0.1.18
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -114,7 +114,7 @@ install -Dpm0644 -t %{buildroot}/%{_datadir}/ublue-os/discover kde-config/discov
 
 %package logos
 Summary:        Logos for KDE
-Version:        0.1.6
+Version:        0.1.7
 License:        CC-BY-SA
 BuildRequires: ImageMagick
 Provides: fedora-logos
