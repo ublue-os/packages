@@ -1,11 +1,11 @@
 # renovate: datasource=git-refs depName=https://github.com/kolunmi/bazaar.git versioning=loose currentValue=master
-%global commit f82eea8dfd110bfa9ef1e2e5cbfa4fcec9a1c25b
+%global commit 114154cc7fd2abac582a6826ddbbf60e55e7747b
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global appid io.github.kolunmi.bazaar
 
 Name:           bazaar
 Version:        {{{ git_dir_version }}}.%{shortcommit}
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A new app store idea for GNOME. 
 
 License:        GPL-3.0-only
