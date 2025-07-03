@@ -24,6 +24,7 @@ BuildRequires:  libyaml-devel
 BuildRequires:  libsoup3-devel
 BuildRequires:  json-glib
 BuildRequires:  systemd-rpm-macros
+BuildRequires:  blueprint-compiler
 Requires:       glycin-libs
 Requires:       libadwaita
 Requires:       libsoup3
