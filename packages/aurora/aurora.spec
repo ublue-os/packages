@@ -116,6 +116,7 @@ install -Dpm0644 -t %{buildroot}/%{_datadir}/ublue-os/discover kde-config/discov
 Summary:        Logos for KDE
 Version:        0.1.6
 License:        CC-BY-SA
+BuildRequires: ImageMagick
 Provides: fedora-logos
 Provides: centos-logos
 Provides: system-logos
