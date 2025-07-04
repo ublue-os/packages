@@ -2,7 +2,8 @@
 
 set -x
 
-# Oneshot service script for usb-storage-optimized-async, as a fallback if USB storage device mounts too early through udev
+# Oneshot service script for usb-storage-optimized-async, as a fallback when udev triggers too early during the boot
+# for the script to apply (before login shell), so no USB replug to make the rule work is needed in that case
 
 # Limit the amount of disk cache for USB storage devices, to ensure that writing speed is correct, as opposed to async
 # sync is too slow & has a risk for deteorating USB storage data health, so that's why this balanced solution is being done

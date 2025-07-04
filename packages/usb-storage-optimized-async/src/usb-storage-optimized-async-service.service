@@ -1,5 +1,5 @@
 [Unit]
-Description=Oneshot service for usb-storage-optimized-async, as a fallback if USB storage device mounts too early through udev
+Description=Oneshot service script for usb-storage-optimized-async, as a fallback when udev triggers too early during the boot, so no USB replug is needed in that case for the rule to apply
 Before=systemd-user-sessions.service
 
 [Service]
