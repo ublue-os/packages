@@ -25,10 +25,6 @@ BuildRequires:  libsoup3-devel
 BuildRequires:  json-glib
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  blueprint-compiler
-# Dependencies for building new blueprint-compiler if needed
-BuildRequires:  gtk4-devel
-BuildRequires:  python3-devel
-BuildRequires:  python3-gobject-devel
 
 Requires:       glycin-libs
 Requires:       libadwaita
