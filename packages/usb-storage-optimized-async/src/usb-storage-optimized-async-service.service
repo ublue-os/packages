@@ -1,0 +1,10 @@
+[Unit]
+Description=Oneshot service for usb-storage-optimized-async, as a fallback if USB storage device mounts too early through udev
+Before=systemd-user-sessions.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/usb-dirty-pages-service
+
+[Install]
+WantedBy=multi-user.target

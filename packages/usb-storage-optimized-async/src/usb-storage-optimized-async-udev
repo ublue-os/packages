@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+set -x
+
+# udev rule for usb-storage-optimized-async
+
+# Limit the amount of disk cache for USB storage devices, to ensure that writing speed is correct, as opposed to async
+# sync is too slow & has a risk for deteorating USB storage data health, so that's why this balanced solution is being done
+# See the link below for more details
+# https://github.com/ublue-os/packages/issues/677
+#
+# Credits:
+# - Megavolt (from Manjaro forums): for making it possible through his benchmarks, testings, findings & initial udev rule + script
+
+block_device="${1}"
+# apply strict limit to max_bytes of disk cache
+strict_limit=1
+echo "${strict_limit}" > "/sys/block/${block_device}/bdi/strict_limit"
+
+vendor_id="${2}"
+model_id="${3}"
+
+# Determine current USB device speed, as ATTRS{speed} is unreliable - it detects xHCI USB speed instead of proper USB speed
+current_usb_speed=$(lsusb -t -v | awk -v vendor_id="${vendor_id}" -v model_id="${model_id}" '$0 ~ vendor_id ":" model_id {split(prev, a, " "); print a[length(a)]} {prev=$0}' | grep -o '[0-9]*\.[0-9]*\|[0-9]*')
+
+# Handle the case if float is with , as a decimal separator
+if [[ $(echo "${current_usb_speed}" | wc -l) -gt 1 ]]; then
+  echo "Cannot determine current USB speed for the device to write custom max_bytes dirty value"
+  echo "Exiting"
+  exit 1
+fi
+
+# If current USB speed is somehow not determined or wrongly parsed, then stop the script
+# if it's empty or if USB speed is not in integer or floats
+if [[ -z "${current_usb_speed}" ]] || [[ ! "${current_usb_speed}" =~ ^-?[0-9]+(\.[0-9]+)?$ ]]; then
+  echo "Cannot determine current USB speed for the device to write custom max_bytes dirty value"
+  echo "Exiting"
+  exit 1
+fi
+
+buffer_time="0.05"
+safety_factor="1.3"
+max_bytes_calculation=$(echo "((${current_usb_speed} / 8) * ${buffer_time} * ${safety_factor}) * 1024 * 1024" | bc)
+max_bytes=$(echo "${max_bytes_calculation}" | awk '{print ($1 - int($1) > 0.5) ? int($1) + 1 : int($1)}')
+# General max_bytes ideal value results (thanks to MegaVolt from Manjaro forums):
+# 12.5MB/s: 62915
+# 100MB/s: 817889
+# 500MB/s: 4225761
+# 1000MB/s: 8514437
+# 5000MB/s: 42593157
+# 10000MB/s: 85196800
+
+# apply bandwidth defined value
+echo "${max_bytes}" > "/sys/block/${block_device}/bdi/max_bytes"
