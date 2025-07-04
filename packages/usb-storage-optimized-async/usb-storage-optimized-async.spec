@@ -34,10 +34,10 @@ install -Dm0644 ./src/%{name}-service.service -t %{buildroot}%{_unitdir}/%{name}
 install -Dm0644 ./src/01-%{name}-service.preset -t %{buildroot}%{_presetdir}/01-%{name}-service.preset
 
 %post
-%systemd_post %{name}.service
+%systemd_post %{name}-service.service
 
 %preun
-%systemd_preun %{name}.service
+%systemd_preun %{name}-service.service
 
 %files
 %{_bindir}/%{name}-udev
