@@ -1,0 +1,1 @@
+ACTION=="add|change", KERNEL=="sd[a-z]", ENV{ID_USB_TYPE}=="disk", RUN+="/usr/bin/usb-dirty-pages-udev '%k' '%E{ID_USB_VENDOR_ID}' '%E{ID_USB_MODEL_ID}'"
