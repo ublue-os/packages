@@ -43,6 +43,7 @@ Requires:       json-glib
 
 %install
 %meson_install
+%find_lang %{name}
 
 %post
 %systemd_user_post %{appid}.service
@@ -53,7 +54,7 @@ Requires:       json-glib
 %postun
 %systemd_user_postun_with_restart %{appid}.service
 
-%files
+%files -f %{name}.lang
 %license COPYING
 %doc README.md
 %{_datadir}/applications/%{appid}.desktop
