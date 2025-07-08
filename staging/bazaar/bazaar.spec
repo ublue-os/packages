@@ -1,5 +1,5 @@
 # renovate: datasource=git-refs depName=https://github.com/kolunmi/bazaar.git versioning=loose currentValue=master
-%global commit cb7d086bb801064215a66728d0b8a10c834815f8
+%global commit 7b07266f18260edc26bdd7dcf8c68d8f955e8a09
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global appid io.github.kolunmi.Bazaar
 
