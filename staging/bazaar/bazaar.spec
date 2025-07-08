@@ -1,5 +1,5 @@
 # renovate: datasource=git-refs depName=https://github.com/kolunmi/bazaar.git versioning=loose currentValue=master
-%global commit 9a457139fcea671f59150c1d644677a72ad0e730
+%global commit f0ac13efb323cfc60b030410ec08b7696380b277
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global appid io.github.kolunmi.Bazaar
 
@@ -43,6 +43,7 @@ Requires:       json-glib
 
 %install
 %meson_install
+%find_lang %{name}
 
 %post
 %systemd_user_post %{appid}.service
@@ -53,7 +54,7 @@ Requires:       json-glib
 %postun
 %systemd_user_postun_with_restart %{appid}.service
 
-%files
+%files -f %{name}.lang
 %license COPYING
 %doc README.md
 %{_datadir}/applications/%{appid}.desktop
