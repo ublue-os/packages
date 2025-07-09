@@ -3,7 +3,7 @@
 %define homebrew_release homebrew-2025-05-04-04-03-02
 
 Name:           ublue-brew
-Version:        0.1.6
+Version:        0.1.7
 Release:        1%{?dist}
 Summary:        Homebrew integration for Universal Blue systems
 
@@ -15,6 +15,7 @@ Source1:        https://github.com/ublue-os/packages/releases/download/%{homebre
 Source2:        https://github.com/ublue-os/packages/releases/download/%{homebrew_release}/homebrew-aarch64.tar.zst
 
 BuildRequires:  systemd-rpm-macros
+Requires:       gcc
 
 %description
 Homebrew integration for Universal Blue systems
