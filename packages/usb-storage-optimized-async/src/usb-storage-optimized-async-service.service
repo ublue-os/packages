@@ -1,0 +1,10 @@
+[Unit]
+Description=Oneshot service script for usb-storage-optimized-async, as a fallback when udev triggers too early during the boot, so no USB replug is needed in that case for the rule to apply
+Before=systemd-user-sessions.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/usb-dirty-pages-service
+
+[Install]
+WantedBy=multi-user.target
