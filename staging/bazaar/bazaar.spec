@@ -1,7 +1,7 @@
 # renovate: datasource=git-refs depName=https://github.com/kolunmi/bazaar.git versioning=loose currentValue=master
-%global commit 114154cc7fd2abac582a6826ddbbf60e55e7747b
+%global commit 078cdc2eb5384961dedf163bd2f4378011be2109
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
-%global appid io.github.kolunmi.bazaar
+%global appid io.github.kolunmi.Bazaar
 
 Name:           bazaar
 Version:        {{{ git_dir_version }}}.%{shortcommit}
@@ -25,10 +25,6 @@ BuildRequires:  libsoup3-devel
 BuildRequires:  json-glib
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  blueprint-compiler
-# Dependencies for building new blueprint-compiler if needed
-BuildRequires:  gtk4-devel
-BuildRequires:  python3-devel
-BuildRequires:  python3-gobject-devel
 
 Requires:       glycin-libs
 Requires:       libadwaita
@@ -47,6 +43,7 @@ Requires:       json-glib
 
 %install
 %meson_install
+%find_lang %{name}
 
 %post
 %systemd_user_post %{appid}.service
@@ -57,7 +54,7 @@ Requires:       json-glib
 %postun
 %systemd_user_postun_with_restart %{appid}.service
 
-%files
+%files -f %{name}.lang
 %license COPYING
 %doc README.md
 %{_datadir}/applications/%{appid}.desktop
