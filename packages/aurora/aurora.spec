@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.18
+Version:        0.1.19
 Release:        1%{?dist}
 Summary:        Aurora branding
 
