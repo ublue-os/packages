@@ -1,5 +1,9 @@
 tap "buildpacks/tap"
 brew "cdk8s"
+tap "k0sproject/tap"
+brew "k0sctl
+brew "k3s"
+brew "kind"
 brew "dagger"
 brew "grype"
 brew "helm"
