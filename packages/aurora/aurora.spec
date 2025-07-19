@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.19
+Version:        0.1.20
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -177,7 +177,7 @@ Plymouth logo customization for Aurora
 
 
 %package schemas
-Version:        0.1.6
+Version:        0.1.7
 Summary:        KDE Schemas for Aurora
 
 %description schemas
