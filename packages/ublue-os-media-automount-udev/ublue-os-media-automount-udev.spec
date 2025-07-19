@@ -1,6 +1,6 @@
 Name:           ublue-os-media-automount-udev
 Vendor:         ublue-os
-Version:        0.16
+Version:        0.17
 Release:        1%{?dist}
 Summary:        udev rules to mount non-removable disk partitions
 
@@ -35,6 +35,9 @@ install -p -Dm0644 ./ublue-os-media-automount.conf %{buildroot}%{_tmpfilesdir}/u
 %{_tmpfilesdir}/ublue-os-media-automount.conf
 
 %changelog
+* Sat Jul 19 2025 JMarcosHP <58377032+JMarcosHP@users.noreply.github.com> - 0.17
+- feat: Add x-gvfs-show mount option for partition visibility in Gnome
+
 * Mon Jun 09 2025 Zeglius <33781398+Zeglius@users.noreply.github.com> - 0.16
 - feat: log reason for mounting skip
 
