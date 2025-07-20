@@ -1,11 +1,11 @@
 # renovate: datasource=git-refs depName=https://github.com/kolunmi/bazaar.git versioning=loose currentValue=master
-%global commit 7bca83cf530c5bb486b2986e289b871d18410df9
+%global commit 5e34bcd4f6b831db83ae940d5d2d52b3e80933b9
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global appid io.github.kolunmi.Bazaar
 
 Name:           bazaar
 Version:        {{{ git_dir_version }}}.%{shortcommit}
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A new app store idea for GNOME. 
 
 License:        GPL-3.0-only
@@ -30,6 +30,7 @@ Requires:       glycin-libs
 Requires:       libadwaita
 Requires:       libsoup3
 Requires:       json-glib
+Requires:       libdex = 0.9.1
 
 %description
 %summary
