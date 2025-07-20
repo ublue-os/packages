@@ -5,7 +5,7 @@
 
 Name:           bazaar
 Version:        {{{ git_dir_version }}}.%{shortcommit}
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A new app store idea for GNOME. 
 
 License:        GPL-3.0-only
@@ -30,6 +30,7 @@ Requires:       glycin-libs
 Requires:       libadwaita
 Requires:       libsoup3
 Requires:       json-glib
+Requires:       libdex = 0.9.1
 
 %description
 %summary
