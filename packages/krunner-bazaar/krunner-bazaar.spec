@@ -1,4 +1,4 @@
-%global majmin_ver 1.1.0
+%global majmin_ver 1.2.0
 
 Name:           krunner-bazaar
 Version:        %{majmin_ver}
@@ -17,6 +17,7 @@ BuildRequires:  kf6-ki18n-devel
 BuildRequires:  kf6-kcoreaddons-devel
 BuildRequires:  qt6-qtbase-devel
 BuildRequires:  kf6-rpm-macros
+BuildRequires:  gettext
 
 Requires:       kf6-krunner
 Requires:       qt6-qtbase
@@ -57,6 +58,7 @@ test -f %{buildroot}%{_kf6_plugindir}/krunner/bazaarrunner.so
 %license LICENSE
 %doc README.md
 %{_kf6_plugindir}/krunner/bazaarrunner.so
+%{_kf6_datadir}/locale/*/LC_MESSAGES/plasma_runner_bazaarrunner.mo
 
 %files tools
 %{_bindir}/bazaar-dbus-tool
