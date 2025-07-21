@@ -29,7 +29,7 @@
 %global enable_dummy 1
 
 # fwupd.efi is only available on these arches
-%ifarch x86_64 aarch64 riscv64
+%ifarch i686 x86_64 aarch64 riscv64
 %global have_uefi 1
 %endif
 
@@ -59,11 +59,14 @@
 Summary:   Firmware update daemon
 Name:      fwupd
 # renovate: datasource=yum repo=fedora-42-x86_64 pkg=fwupd
-Version:   2.0.7
+Version:   2.0.12
 Release:   100.ublue
 License:   LGPL-2.1-or-later
 URL:       https://github.com/fwupd/fwupd
 Source0:   %{url}/archive/refs/tags/%{version}.zip
+
+#Fedora upstream source
+#Source0:   http://people.freedesktop.org/~hughsient/releases/%{name}-%{version}.tar.xz
 
 BuildRequires: gettext
 BuildRequires: glib2-devel >= %{glib2_version}
@@ -81,6 +84,7 @@ BuildRequires: systemd-devel
 BuildRequires: libarchive-devel
 BuildRequires: libcbor-devel
 BuildRequires: libblkid-devel
+BuildRequires: readline-devel
 %if 0%{?have_passim}
 BuildRequires: passim-devel
 %endif
@@ -101,6 +105,8 @@ BuildRequires: git-core
 BuildRequires: flashrom-devel >= 1.2-2
 %endif
 BuildRequires: libdrm-devel
+# For fu-polkit-test
+BuildRequires: polkit
 
 %if 0%{?have_modem_manager}
 BuildRequires: ModemManager-glib-devel >= 1.10.0
@@ -195,7 +201,7 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description plugin-uefi-capsule-data
 This provides the pregenerated BMP artwork for the UX capsule, which allows the
-"Installing firmware update..." localized text to be shown during a UEFI firmware
+"Installing firmware update…" localized text to be shown during a UEFI firmware
 update operation. This subpackage is probably not required on embedded hardware
 or server machines.
 %endif
@@ -259,13 +265,6 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/cache/fwupd
 %post
 %systemd_post fwupd.service fwupd-refresh.timer
 
-# change vendor-installed remotes to use the default keyring type
-for fn in /etc/fwupd/remotes.d/*.conf; do
-    if grep -q "Keyring=gpg" "$fn"; then
-        sed -i 's/Keyring=gpg/#Keyring=pkcs/g' "$fn";
-    fi
-done
-
 %preun
 %systemd_preun fwupd.service fwupd-refresh.timer
 
@@ -300,6 +299,7 @@ systemctl --no-reload preset fwupd-refresh.timer &>/dev/null || :
 %if 0%{?have_msr}
 /usr/lib/modules-load.d/fwupd-msr.conf
 %endif
+/usr/lib/modules-load.d/fwupd-i2c.conf
 %{_datadir}/dbus-1/system.d/org.freedesktop.fwupd.conf
 %{_datadir}/bash-completion/completions/fwupdmgr
 %{_datadir}/bash-completion/completions/fwupdtool
@@ -334,7 +334,9 @@ systemctl --no-reload preset fwupd-refresh.timer &>/dev/null || :
 %dir %{_datadir}/fwupd/quirks.d
 %{_datadir}/fwupd/quirks.d/builtin.quirk.gz
 %{_datadir}/doc/fwupd/*.html
+%if 0%{?have_uefi}
 %config(noreplace)%{_sysconfdir}/grub.d/35_fwupd
+%endif
 %{_libdir}/libfwupd.so.3*
 %{_libdir}/girepository-1.0/Fwupd-2.0.typelib
 /usr/lib/systemd/system-shutdown/fwupd.shutdown

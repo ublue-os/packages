@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.14
+Version:        0.1.20
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -24,17 +24,22 @@ Branding for Aurora-related projects
 %install
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/aurora-logos/symbols/ cli-logos/symbols/*
 
-mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/places/
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/ublue-*.svg
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_logo_med.png
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora_whitelogo.svg
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo.{png,svg}
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-small.png
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo-sprite.{png,svg}
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/system-logo{,-white}.png
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/{apps,places}/
+mkdir -p %{buildroot}%{_datadir}/pixmaps/
 install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/ logos/distributor-logo{,-white}.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo.svg
+magick -background none logos/fedora-logo.svg -quality 90 -resize $((400-10*2))x100 -gravity center -extent 400x100 %{buildroot}%{_datadir}/pixmaps/fedora-logo.png
+magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/pixmaps/fedora-logo-small.png
+magick -background none logos/fedora-logo.svg -quality 90 -resize $((200-5*2))x50 -gravity center -extent 200x100 %{buildroot}%{_datadir}/pixmaps/fedora_logo_med.png
+magick -background none logos/distributor-logo.svg -quality 90 -resize 256x256! %{buildroot}%{_datadir}/pixmaps/system-logo.png
+magick -background none logos/distributor-logo.svg -quality 90 -resize 128x128! %{buildroot}%{_datadir}/pixmaps/fedora-logo-sprite.png
+magick -background none logos/distributor-logo.svg -quality 90 -resize 256x256! %{buildroot}%{_datadir}/pixmaps/system-logo-white.png
+ln -sr %{buildroot}%{_datadir}/pixmaps/fedora-logo.svg %{buildroot}%{_datadir}/pixmaps/fedora_whitelogo.svg
+ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}%{_datadir}/pixmaps/fedora-logo-sprite.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white.svg
+ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/start-here.svg
+ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/start-here.svg
 
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
@@ -56,6 +61,10 @@ ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-2/ %{build
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-3/contents/images/ wallpapers/images/aurora-wallpaper-3/contents/images/3840x2160.png
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-3/ wallpapers/images/aurora-wallpaper-3/metadata.json
 ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-3/ %{buildroot}%{_datadir}/wallpapers/
+
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-4/contents/images/ wallpapers/images/aurora-wallpaper-4/contents/images/3840x2160.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-4/ wallpapers/images/aurora-wallpaper-4/metadata.json
+ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-4/ %{buildroot}%{_datadir}/wallpapers/
 
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/greg-rakozy-aurora/contents/images/ wallpapers/images/greg-rakozy-aurora/contents/images/5616x3744.jxl
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/greg-rakozy-aurora/ wallpapers/images/greg-rakozy-aurora/metadata.json
@@ -105,8 +114,9 @@ install -Dpm0644 -t %{buildroot}/%{_datadir}/ublue-os/discover kde-config/discov
 
 %package logos
 Summary:        Logos for KDE
-Version:        0.1.4
+Version:        0.1.7
 License:        CC-BY-SA
+BuildRequires: ImageMagick
 Provides: fedora-logos
 Provides: centos-logos
 Provides: system-logos
@@ -119,7 +129,6 @@ Conflicts: system-logos
 Replacement logos for KDE
 
 %files logos
-%{_datadir}/pixmaps/ublue-*
 %{_datadir}/pixmaps/fedora_logo_med.png
 %{_datadir}/pixmaps/fedora_whitelogo.svg
 %{_datadir}/pixmaps/fedora-logo.{png,svg}
@@ -128,6 +137,7 @@ Replacement logos for KDE
 %{_datadir}/pixmaps/system-logo{,-white}.png
 %{_datadir}/icons/hicolor/scalable/distributor-logo{,-white}.svg
 %{_datadir}/icons/hicolor/scalable/places/distributor-logo{,-white}.svg
+%{_datadir}/icons/hicolor/scalable/{apps,places}/start-here.svg
 
 
 %package cli-logos
@@ -167,7 +177,7 @@ Plymouth logo customization for Aurora
 
 
 %package schemas
-Version:        0.1.5
+Version:        0.1.7
 Summary:        KDE Schemas for Aurora
 
 %description schemas
@@ -182,7 +192,7 @@ Default schemas for Aurora
 
 
 %package backgrounds
-Version:        0.1.4
+Version:        0.1.5
 Summary:        Aurora wallpapers
 License:        CC-BY-SA
 
@@ -195,6 +205,7 @@ Wallpapers included on Aurora by default
 %{_datadir}/wallpapers/aurora-wallpaper-1
 %{_datadir}/wallpapers/aurora-wallpaper-2
 %{_datadir}/wallpapers/aurora-wallpaper-3
+%{_datadir}/wallpapers/aurora-wallpaper-4
 %{_datadir}/wallpapers/greg-rakozy-aurora
 %{_datadir}/wallpapers/jonatan-pie-aurora
 %{_datadir}/wallpapers/xe_clouds
