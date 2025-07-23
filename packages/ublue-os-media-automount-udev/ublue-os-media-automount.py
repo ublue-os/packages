@@ -63,11 +63,6 @@ def main() -> None:
     blockdevices = [x for x in blockdevices if x["type"] == "part"]
 
     def filter_dev(block_dev: dict) -> bool:
-        _udev_path = "/etc/udev/rules.d/99-media-automount.rules"
-        _is_disabled_udev_rule = (
-            os.path.exists(_udev_path) and os.path.realpath(_udev_path) == "/dev/null"
-        )
-
         if block_dev["type"] != "part":
             print(f"Skipping {block_dev['name']}: not a partition")
             return False
@@ -82,7 +77,9 @@ def main() -> None:
             return False
 
         if block_dev["fstype"] not in FS_MAPPINGS.keys():
-            print(f"Skipping {block_dev['name']}: unsupported filesystem type '{block_dev['fstype']}'")
+            print(
+                f"Skipping {block_dev['name']}: unsupported filesystem type '{block_dev['fstype']}'"
+            )
             return False
 
         if block_dev["name"] in devices_in_fstab():
@@ -90,7 +87,9 @@ def main() -> None:
             return False
 
         if any(block_dev["mountpoints"]):
-            print(f"Skipping {block_dev['name']}: already mounted at {block_dev['mountpoints']}")
+            print(
+                f"Skipping {block_dev['name']}: already mounted at {block_dev['mountpoints']}"
+            )
             return False
 
         if block_dev["hotplug"]:
@@ -99,10 +98,6 @@ def main() -> None:
 
         if not any([block_dev["label"], block_dev["partlabel"]]):
             print(f"Skipping {block_dev['name']}: no label or partlabel")
-            return False
-
-        if _is_disabled_udev_rule:
-            print(f"Skipping {block_dev['name']}: udev rule disabling automounting exists")
             return False
 
         return True
