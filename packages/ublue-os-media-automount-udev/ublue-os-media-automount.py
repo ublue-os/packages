@@ -8,8 +8,8 @@ import subprocess
 from typing import Any
 
 FS_MAPPINGS = {
-    "ext4": "defaults,noatime,errors=remount-ro,nofail,rw,users,exec",
-    "btrfs": "defaults,noatime,lazytime,commit=120,discard=async,compress-force=zstd:1,space_cache=v2,nofail,rw,users,exec",
+    "ext4": "defaults,noatime,errors=remount-ro,nofail,rw,users,exec,x-gvfs-show",
+    "btrfs": "defaults,noatime,lazytime,commit=120,discard=async,compress-force=zstd:1,space_cache=v2,nofail,rw,users,exec,x-gvfs-show",
 }
 """ Key: FSTYPE; Value: FSOPTIONS """
 
