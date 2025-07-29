@@ -42,6 +42,38 @@ Make sure your contribution passes linting and the guidelines required by [the N
 - If the package has sources on this repo, bump the `Version:` field;
 - If it has external sources, bump the spec `Release:` field (you can/should do it via `rpmdev-bumpspec` ideally).
 
+#### Bumping Package Versions
+
+When updating an existing package, you need to bump either the `Version` or `Release` field depending on the source of the changes:
+
+**Version Field Bumping** - Use when the upstream software has a new version:
+- For packages with sources in this repository, increment the `Version:` field
+- Example from `bluefin/fedora-logos/fedora-logos.spec`:
+  ```spec
+  Name:           fedora-logos
+  Version:        100.0.0    # <- Bump this when updating branding assets
+  Release:        4%{?dist}
+  ```
+
+**Release Field Bumping** - Use when making packaging changes without upstream version changes:
+- For packages with external sources, increment the `Release:` field
+- Use `rpmdev-bumpspec` for proper formatting and changelog entries
+- Example workflow:
+  ```bash
+  # Automatic release bump with changelog entry
+  rpmdev-bumpspec path/to/package.spec
+  
+  # Manual release bump (if rpmdev-bumpspec is not available)
+  # Change: Release: 1%{?dist}
+  # To:     Release: 2%{?dist}
+  ```
+
+**Best Practices:**
+- Always use `rpmdev-bumpspec` when possible for proper changelog management
+- Reset `Release` to 1 when bumping `Version`
+- Include meaningful changelog entries describing your changes
+- For complex packages, check if they use `%autorelease` or `%global baserelease` patterns
+
 ### For maintainers/approvers
 
 Make sure all the PRs are safe, as in they don't have [RCE](https://www.cloudflare.com/learning/security/what-is-remote-code-execution/)
