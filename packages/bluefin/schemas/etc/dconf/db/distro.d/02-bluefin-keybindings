@@ -30,3 +30,8 @@ name='Take and edit screenshot'
 binding='<Control><Alt>space'
 command="flatpak run it.mijorus.smile"
 name='Open up the emoji picker'
+
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom6]
+binding='<Super>period'
+command="flatpak run it.mijorus.smile"
+name='Open up the emoji picker (Alt)'
