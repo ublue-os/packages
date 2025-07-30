@@ -248,7 +248,7 @@ Summary:        Aurora Character Profile Pictures
 License:        CC-BY-SA
 
 %description faces
-%Summary
+%{summary}.
 
 %files faces
 %{_kf6_datadir}/plasma/avatars/{lumina,scope,tina,vincent}.png
