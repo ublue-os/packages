@@ -251,7 +251,7 @@ License:        CC-BY-SA
 %Summary
 
 %files faces
-%{_kf6_datadir}/plasma/avatars/{lumina,scope,tina,vlc}.png
+%{_kf6_datadir}/plasma/avatars/{lumina,scope,tina,vincent}.png
 
 
 %changelog
