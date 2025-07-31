@@ -20,6 +20,9 @@ if [ "$(command -v ug)" ]
     alias xzfgrep='ug -zF'
 end
 
+# bat for cat
+alias cat='bat --style=plain --pager=never' 2>/dev/null
+
 if status is-interactive
     [ "$(command -v starship)" ] && eval "$(starship init fish)"
     [ "$(command -v atuin)" ] && eval "$(atuin init fish)"
