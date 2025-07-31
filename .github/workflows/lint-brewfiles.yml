@@ -3,8 +3,7 @@ name: Lint Brewfiles
 on:
   pull_request:
     paths:
-      - 'packages/bluefin/schemas/usr/share/ublue-os/homebrew/*.Brewfile'
-      - 'packages/aurora/schemas/usr/share/ublue-os/homebrew/*.Brewfile'
+      - '**/*.Brewfile'
 
 jobs:
   lint_brewfiles:
@@ -22,15 +21,9 @@ jobs:
           export HOMEBREW_BUNDLE_WHALEBREW_SKIP="*"
           export HOMEBREW_BUNDLE_TAP_SKIP="*"
 
-          for file in \
-            packages/bluefin/schemas/usr/share/ublue-os/homebrew/kubernetes.Brewfile \
-            packages/bluefin/schemas/usr/share/ublue-os/homebrew/bluefin-cli.Brewfile \
-            packages/bluefin/schemas/usr/share/ublue-os/homebrew/bluefin-ai.Brewfile \
-            packages/bluefin/schemas/usr/share/ublue-os/homebrew/bluefin-fonts.Brewfile \
-            packages/aurora/schemas/usr/share/ublue-os/homebrew/aurora-fonts.Brewfile \
-            packages/aurora/schemas/usr/share/ublue-os/homebrew/kubernetes.Brewfile \
-            packages/aurora/schemas/usr/share/ublue-os/homebrew/aurora-cli.Brewfile
-          do
+          files=$(find packages/ -type f -name "*.Brewfile")
+
+          for file in $files; do
             echo "🔍 Linting $file"
             brew bundle check --file="$file" --no-upgrade || true
           done
