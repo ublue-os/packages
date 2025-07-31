@@ -1,0 +1,36 @@
+name: Lint Brewfiles
+
+on:
+  pull_request:
+    paths:
+      - 'packages/bluefin/schemas/usr/share/ublue-os/homebrew/*.Brewfile'
+      - 'packages/aurora/schemas/usr/share/ublue-os/homebrew/*.Brewfile'
+
+jobs:
+  lint_brewfiles:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/homebrew/ubuntu22.04:main
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint Brewfiles
+        run: |
+          export HOMEBREW_BUNDLE_BREW_SKIP="*"
+          export HOMEBREW_BUNDLE_CASK_SKIP="*"
+          export HOMEBREW_BUNDLE_MAS_SKIP="*"
+          export HOMEBREW_BUNDLE_WHALEBREW_SKIP="*"
+          export HOMEBREW_BUNDLE_TAP_SKIP="*"
+
+          for file in \
+            packages/bluefin/schemas/usr/share/ublue-os/homebrew/kubernetes.Brewfile \
+            packages/bluefin/schemas/usr/share/ublue-os/homebrew/bluefin-cli.Brewfile \
+            packages/bluefin/schemas/usr/share/ublue-os/homebrew/bluefin-ai.Brewfile \
+            packages/bluefin/schemas/usr/share/ublue-os/homebrew/bluefin-fonts.Brewfile \
+            packages/aurora/schemas/usr/share/ublue-os/homebrew/aurora-fonts.Brewfile \
+            packages/aurora/schemas/usr/share/ublue-os/homebrew/kubernetes.Brewfile \
+            packages/aurora/schemas/usr/share/ublue-os/homebrew/aurora-cli.Brewfile
+          do
+            echo "🔍 Linting $file"
+            brew bundle check --file="$file" --no-upgrade || true
+          done
