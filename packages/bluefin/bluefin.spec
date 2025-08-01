@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.3.20
+Version:        0.3.21
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
