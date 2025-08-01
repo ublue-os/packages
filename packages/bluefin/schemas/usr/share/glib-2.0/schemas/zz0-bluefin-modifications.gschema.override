@@ -27,7 +27,7 @@ theme-name="freedesktop"
 [org.gnome.desktop.wm.preferences]
 button-layout=":minimize,maximize,close"
 num-workspaces=4
-titlebar-font="Inter Bold 12"
+titlebar-font="Adwaita Sans Bold 12 @wght=700"
 
 [org.gnome.desktop.wm.keybindings]
 show-desktop=['<Super>d']
