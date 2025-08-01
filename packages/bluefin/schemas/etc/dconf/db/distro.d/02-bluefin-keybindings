@@ -21,4 +21,17 @@ binding='<Control><Alt>BackSpace'
 command="flatpak run com.jeffser.Alpaca"
 name='Launch Alpaca'
 
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4]
+binding='<Super>Print'
+command="flatpak run be.alexandervanhee.gradia --screenshot"
+name='Take and edit screenshot'
 
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom5]
+binding='<Control><Alt>space'
+command="flatpak run it.mijorus.smile"
+name='Open up the emoji picker'
+
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom6]
+binding='<Super>period'
+command="flatpak run it.mijorus.smile"
+name='Open up the emoji picker (Alt)'
