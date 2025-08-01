@@ -22,6 +22,9 @@ if [ "$(command -v ug)" ]; then
     alias xzfgrep='ug -zF'
 fi
 
+# bat for cat
+alias cat='bat --style=plain --pager=never' 2>/dev/null
+
 HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/home/linuxbrew/.linuxbrew}"
 
 # set ATUIN_INIT_FLAGS in your ~/.bashrc before ublue-bling is sourced.

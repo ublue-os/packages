@@ -1,0 +1,29 @@
+name: Lint Brewfiles
+
+on:
+  pull_request:
+    paths:
+      - '**/*.Brewfile'
+
+jobs:
+  lint_brewfiles:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/homebrew/ubuntu22.04:main
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Lint Brewfiles
+        run: |
+          export HOMEBREW_BUNDLE_BREW_SKIP="*"
+          export HOMEBREW_BUNDLE_CASK_SKIP="*"
+          export HOMEBREW_BUNDLE_MAS_SKIP="*"
+          export HOMEBREW_BUNDLE_WHALEBREW_SKIP="*"
+          export HOMEBREW_BUNDLE_TAP_SKIP="*"
+
+          files=$(find packages/ -type f -name "*.Brewfile")
+
+          for file in $files; do
+            echo "🔍 Linting $file"
+            brew bundle check --file="$file" --no-upgrade || true
+          done

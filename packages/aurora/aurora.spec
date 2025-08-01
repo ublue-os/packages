@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.20
+Version:        0.1.21
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -109,6 +109,8 @@ install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaur
 
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/discover/ kde-config/discover/featuredurlrc
 install -Dpm0644 -t %{buildroot}/%{_datadir}/ublue-os/discover kde-config/discover/featured.json
+mkdir -p %{buildroot}/%{_kf6_datadir}/plasma/avatars/
+install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/avatars/ faces/*
 
 %check
 
@@ -238,6 +240,18 @@ This sets the Aurora defaults for Logos, Wallpapers, Theme and Editor's choice i
 %{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/splash.png
 %{_kf6_datadir}/discover/featuredurlrc
 %{_datadir}/ublue-os/discover/featured.json
+
+
+%package faces
+Version:        0.1.0
+Summary:        Aurora Character Profile Pictures
+License:        CC-BY-SA
+
+%description faces
+%{summary}.
+
+%files faces
+%{_kf6_datadir}/plasma/avatars/{lumina,scope,tina,vincent}.png
 
 
 %changelog
