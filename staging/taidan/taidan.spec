@@ -1,5 +1,5 @@
 # renovate: datasource=git-refs depName=https://github.com/Ultramarine-Linux/taidan versioning=loose currentValue=master
-%global commit 0c6a6234d77c3d40ead92c67733a6721726b5e24
+%global commit b951808e55f0935fab774e33563ca1e37805b80b
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:           taidan
