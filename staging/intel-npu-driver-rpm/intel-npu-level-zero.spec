@@ -2,7 +2,7 @@
 
 Name:		intel-npu-level-zero
 # renovate: datasource=github-releases depName=intel/linux-npu-driver
-Version:	1.16.0
+Version:	1.19.0
 Release:	1%{?dist}
 Summary:	Intel Neural Processing Unit Driver for Linux
 
