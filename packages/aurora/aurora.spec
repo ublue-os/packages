@@ -40,6 +40,7 @@ ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo.svg %{bui
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/start-here.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/start-here.svg
+ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white-circle.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white-circle.svg
 
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
@@ -140,6 +141,7 @@ Replacement logos for KDE
 %{_datadir}/icons/hicolor/scalable/distributor-logo{,-white,-white-circle}.svg
 %{_datadir}/icons/hicolor/scalable/places/distributor-logo{,-white,-white-circle}.svg
 %{_datadir}/icons/hicolor/scalable/{apps,places}/start-here.svg
+%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white-circle.svg
 
 
 %package cli-logos
