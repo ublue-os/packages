@@ -73,6 +73,11 @@ just --completions zsh | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{zsh_
 # Generate ujust fish completion
 just --completions fish | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{fish_completions_dir}/ujust.fish
 
+%check
+find %{buildroot}/%{_datadir}/%{VENDOR}/%{sub_name}/ -type f -name "*.just" | while read -r file; do
+  just --unstable --fmt --check -f $file
+done
+
 %files
 %{_sysconfdir}/profile.d/user-motd.sh
 %{_datadir}/%{VENDOR}/%{sub_name}/*.just
@@ -89,6 +94,9 @@ just --completions fish | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{fis
 %{fish_completions_dir}/ujust.fish
 
 %changelog
+* Mon Aug 04 2025 renner <renner0@posteo.de> - 0.49
+- Add %check for .just files
+
 * Sat Jun 28 2025 renner <renner0@posteo.de> - 0.48
 - Add alias to davinci-resolve
 
