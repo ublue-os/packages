@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.22
+Version:        0.1.23
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -245,7 +245,7 @@ This sets the Aurora defaults for Logos, Wallpapers, Theme and Editor's choice i
 
 
 %package faces
-Version:        0.1.0
+Version:        0.2.0
 Summary:        Aurora Character Profile Pictures
 License:        CC-BY-SA
 
@@ -253,7 +253,7 @@ License:        CC-BY-SA
 %{summary}.
 
 %files faces
-%{_kf6_datadir}/plasma/avatars/{lumina,scope,tina,vincent}.png
+%{_kf6_datadir}/plasma/avatars/{lumina,scope,tina,vincent,echo,phlip}.png
 
 
 %changelog
