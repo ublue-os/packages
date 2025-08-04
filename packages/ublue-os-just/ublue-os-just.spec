@@ -100,7 +100,7 @@ done
 * Sat Jun 28 2025 renner <renner0@posteo.de> - 0.48
 - Add alias to davinci-resolve
 
-* Thu Jun 03 2025 omid-1985 <omid.1985@gmail.com> - 0.47
+* Tue Jun 03 2025 omid-1985 <omid.1985@gmail.com> - 0.47
 - Add brew autoremove and cleanup to clean-system recipe
 
 * Thu May 22 2025 renner0e <Renner03@protonmail.com> - 0.46
