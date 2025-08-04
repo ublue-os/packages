@@ -14,7 +14,7 @@ renovate dry-run="lookup" log-level="debug":
         echo "Warning: No Github token found, renovate will nag at you for this."
         echo "Set it with GITHUB_COM_TOKEN=(your token)"
     fi
-    LOG_LEVEL=${LOG_LEVEL:-debug} renovate --platform=local --dry-run={{dry-run}}
+    LOG_LEVEL=${LOG_LEVEL:-debug} renovate --platform=local --dry-run={{ dry-run }}
     echo "Updates can be found in a section of the logs called \"packageFiles with updates\""
 
 build $spec *MOCK_ARGS:
@@ -134,3 +134,17 @@ clean:
         sudo rm -ri $line
     done
     exit 0
+
+# Check Just Syntax
+
+just := just_executable()
+
+[group('Just')]
+check:
+    #!/usr/bin/bash
+    find . -type f -name "*.just" | while read -r file; do
+      echo "Checking syntax: $file"
+      {{ just }} --unstable --fmt --check -f $file
+    done
+    echo "Checking syntax: Justfile"
+    {{ just }} --unstable --fmt --check -f Justfile
