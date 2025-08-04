@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.21
+Version:        0.1.22
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -26,7 +26,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/aurora-logos/symbols/ cli-l
 
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/{apps,places}/
 mkdir -p %{buildroot}%{_datadir}/pixmaps/
-install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/ logos/distributor-logo{,-white}.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/ logos/distributor-logo{,-white,-white-circle}.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo.svg
 magick -background none logos/fedora-logo.svg -quality 90 -resize $((400-10*2))x100 -gravity center -extent 400x100 %{buildroot}%{_datadir}/pixmaps/fedora-logo.png
 magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/pixmaps/fedora-logo-small.png
@@ -116,7 +116,7 @@ install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/avatars/ faces/*
 
 %package logos
 Summary:        Logos for KDE
-Version:        0.1.7
+Version:        0.1.8
 License:        CC-BY-SA
 BuildRequires: ImageMagick
 Provides: fedora-logos
@@ -137,8 +137,8 @@ Replacement logos for KDE
 %{_datadir}/pixmaps/fedora-logo-small.png
 %{_datadir}/pixmaps/fedora-logo-sprite.{png,svg}
 %{_datadir}/pixmaps/system-logo{,-white}.png
-%{_datadir}/icons/hicolor/scalable/distributor-logo{,-white}.svg
-%{_datadir}/icons/hicolor/scalable/places/distributor-logo{,-white}.svg
+%{_datadir}/icons/hicolor/scalable/distributor-logo{,-white,-white-circle}.svg
+%{_datadir}/icons/hicolor/scalable/places/distributor-logo{,-white,-white-circle}.svg
 %{_datadir}/icons/hicolor/scalable/{apps,places}/start-here.svg
 
 
