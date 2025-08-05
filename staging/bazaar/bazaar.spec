@@ -3,6 +3,9 @@
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global appid io.github.kolunmi.Bazaar
 
+# Force-allow downloads for libdex until it can be updated
+%global __meson_setup_options --wrap-mode=default
+
 Name:           bazaar
 Version:        {{{ git_dir_version }}}.%{shortcommit}
 Release:        4%{?dist}
@@ -41,8 +44,7 @@ Requires:       libdex = 0.9.1
 %build
 %meson \
   -Dhardcoded_content_config_path=/usr/share/ublue-os/bazaar/config.yaml \
-  -Dhardcoded_blocklist_path=/usr/share/ublue-os/bazaar/blocklist.txt \
-  -Dwrap_mode=default
+  -Dhardcoded_blocklist_path=/usr/share/ublue-os/bazaar/blocklist.txt
 %meson_build
 
 %install
