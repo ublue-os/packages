@@ -39,7 +39,10 @@ Requires:       libdex = 0.9.1
 %autosetup -n bazaar-%{commit}
 
 %build
-%meson -Dhardcoded_content_config_path=/usr/share/ublue-os/bazaar/config.yaml -Dhardcoded_blocklist_path=/usr/share/ublue-os/bazaar/blocklist.txt
+%meson \
+  -Dhardcoded_content_config_path=/usr/share/ublue-os/bazaar/config.yaml \
+  -Dhardcoded_blocklist_path=/usr/share/ublue-os/bazaar/blocklist.txt \
+  -Dwrap_mode=default
 %meson_build
 
 %install
