@@ -3,9 +3,6 @@
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global appid io.github.kolunmi.Bazaar
 
-# Force-allow downloads for libdex until it can be updated
-%global __meson_setup_options --wrap-mode=default
-
 Name:           bazaar
 Version:        {{{ git_dir_version }}}.%{shortcommit}
 Release:        4%{?dist}
@@ -28,6 +25,7 @@ BuildRequires:  libsoup3-devel
 BuildRequires:  json-glib
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  blueprint-compiler
+BuildRequires:  wget
 
 Requires:       glycin-libs
 Requires:       libadwaita
@@ -40,6 +38,10 @@ Requires:       libdex = 0.9.1
 
 %prep
 %autosetup -n bazaar-%{commit}
+cd subprojects
+wget https://gitlab.gnome.org/GNOME/libdex/-/archive/0.9.1/libdex-0.9.1.tar.gz
+tar xf libdex-0.9.1.tar.gz
+mv libdex-0.9.1 libdex
 
 %build
 %meson \
