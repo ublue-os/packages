@@ -49,7 +49,6 @@ sed -i '/add_global_arguments/d' libdex/meson.build
 
 %build
 %meson \
-  -DG_DISABLE_CAST_CHECKS=1 \
   -Dhardcoded_content_config_path=/usr/share/ublue-os/bazaar/config.yaml \
   -Dhardcoded_blocklist_path=/usr/share/ublue-os/bazaar/blocklist.txt
 %meson_build
