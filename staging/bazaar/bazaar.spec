@@ -25,7 +25,9 @@ BuildRequires:  libsoup3-devel
 BuildRequires:  json-glib
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  blueprint-compiler
+# Needed until libdex is fixed
 BuildRequires:  wget
+BuildRequires:  sed
 
 Requires:       glycin-libs
 Requires:       libadwaita
@@ -38,13 +40,16 @@ Requires:       libdex = 0.9.1
 
 %prep
 %autosetup -n bazaar-%{commit}
+# Needed until libdex is fixed
 cd subprojects
 wget https://gitlab.gnome.org/GNOME/libdex/-/archive/0.9.1/libdex-0.9.1.tar.gz
 tar xf libdex-0.9.1.tar.gz
 mv libdex-0.9.1 libdex
+sed -i '/add_global_arguments/d' libdex/meson.build
 
 %build
 %meson \
+  -DG_DISABLE_CAST_CHECKS \
   -Dhardcoded_content_config_path=/usr/share/ublue-os/bazaar/config.yaml \
   -Dhardcoded_blocklist_path=/usr/share/ublue-os/bazaar/blocklist.txt
 %meson_build
