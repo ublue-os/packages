@@ -139,10 +139,11 @@ Replacement logos for KDE
 %{_datadir}/pixmaps/fedora-logo-small.png
 %{_datadir}/pixmaps/fedora-logo-sprite.{png,svg}
 %{_datadir}/pixmaps/system-logo{,-white}.png
-%{_datadir}/icons/hicolor/scalable/distributor-logo{,-white,-white-circle}.svg
-%{_datadir}/icons/hicolor/scalable/places/distributor-logo{,-white,-white-circle}.svg
+%{_datadir}/icons/hicolor/scalable/distributor-logo{,-white,-white-circle,-darkwhite-circle}.svg
+%{_datadir}/icons/hicolor/scalable/places/distributor-logo{,-white,-white-circle,-darkwhite-circle}.svg
 %{_datadir}/icons/hicolor/scalable/{apps,places}/start-here.svg
 %{_datadir}/icons/hicolor/scalable/places/distributor-logo-white-circle.svg
+%{_datadir}/icons/hicolor/scalable/places/distributor-logo-darkwhite-circle.svg
 
 
 %package cli-logos
