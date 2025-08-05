@@ -25,6 +25,7 @@ BuildRequires:  libsoup3-devel
 BuildRequires:  json-glib
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  blueprint-compiler
+BuildRequires:  glycin-devel
 # Needed until libdex is fixed
 BuildRequires:  wget
 BuildRequires:  sed
