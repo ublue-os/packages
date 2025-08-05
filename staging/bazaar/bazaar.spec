@@ -3,6 +3,9 @@
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global appid io.github.kolunmi.Bazaar
 
+# Needed until libdex is fixed
+%define _unpackaged_files_terminate_build 0
+
 Name:           bazaar
 Version:        {{{ git_dir_version }}}.%{shortcommit}
 Release:        4%{?dist}
@@ -72,6 +75,7 @@ sed -i '/add_global_arguments/d' libdex/meson.build
 %doc README.md
 %{_datadir}/applications/%{appid}.desktop
 %{_bindir}/%{name}
+%{_bindir}/%{name}-dl-worker
 %{_userunitdir}/%{appid}.service
 %{_datadir}/dbus-1/services/%{appid}.service
 %{_datadir}/glib-2.0/schemas/%{appid}.gschema.xml
