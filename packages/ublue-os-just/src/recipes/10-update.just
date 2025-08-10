@@ -5,10 +5,17 @@ alias upgrade := update
 # Update system, flatpaks, and containers all at once
 update VERB_LEVEL="full":
     #!/usr/bin/bash
+    OVERALL_STATUS=0
+    trap 'if [ $OVERALL_STATUS -eq 0 ]; then \
+             notify-send "Updates Complete" "rpm-ostree, Flatpak, and Distrobox updates finished successfully." --icon=dialog-information; \
+           else \
+             notify-send "Updates Failed" "One or more update steps failed. Check the terminal for details." --icon=dialog-error; \
+           fi' EXIT
+
     if systemctl is-enabled ublue-update.timer | grep -q enabled;
     then
       echo "Starting the ublue-update service"
-      sudo systemctl start ublue-update.service
+      sudo systemctl start ublue-update.service || OVERALL_STATUS=1
     else
       if [ {{ VERB_LEVEL }} = "help" ]; then
           echo "Usage: just update <level>"
@@ -25,7 +32,7 @@ update VERB_LEVEL="full":
           case "{{ VERB_LEVEL }}" in
               full)
                   echo "Running $command..."
-                  $command
+                  $command || OVERALL_STATUS=1
                   echo "Completed $command"
                   ;;
               minimal)
@@ -35,7 +42,7 @@ update VERB_LEVEL="full":
                       echo "Completed $command"
                   else
                       echo "Failed to complete $command"
-                      exit 1
+                      OVERALL_STATUS=1
                   fi
                   ;;
               prompt)
@@ -44,7 +51,7 @@ update VERB_LEVEL="full":
                   user_input=${user_input:-Y}  # Default to Y if Enter is pressed
                   if [ "$user_input" = "Y" ] || [ "$user_input" = "y" ]; then
                       echo "Running $command..."
-                      $command
+                      $command || OVERALL_STATUS=1
                       echo "Completed $command"
                   else
                       echo "Skipped $command"
@@ -52,6 +59,7 @@ update VERB_LEVEL="full":
                   ;;
               *)
                   echo "Invalid level: {{ VERB_LEVEL }}. Please use 'full', 'minimal', 'prompt' or 'help' for usage."
+                  OVERALL_STATUS=1
                   exit 1
                   ;;
           esac
