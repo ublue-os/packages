@@ -6,7 +6,7 @@
 Name:           bazaar
 Version:        {{{ git_dir_version }}}.%{shortcommit}
 Release:        4%{?dist}
-Summary:        A new app store idea for GNOME. 
+Summary:        A flatpak centered app store
 
 License:        GPL-3.0-only
 URL:            https://github.com/kolunmi/bazaar
@@ -33,7 +33,9 @@ Requires:       libsoup3
 Requires:       json-glib
 
 %description
-%summary
+A new app store for GNOME with a focus on discovering and installing applications and add-ons from Flatpak remotes, particularly Flathub.
+It emphasizes supporting the developers who make the Linux desktop possible.
+Bazaar features a "curated" tab that can be configured by distributors to allow for a more locallized experience.
 
 %prep
 %autosetup -n bazaar-%{commit}
