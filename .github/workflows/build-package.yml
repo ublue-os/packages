@@ -13,7 +13,7 @@ jobs:
       any_changed: ${{ steps.changed-package-files.outputs.any_changed }}
       specs: ${{ steps.packages.outputs.specs }}
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
 
       - name: Get directories with spec files
         id: specdirs
@@ -92,7 +92,7 @@ jobs:
         chroot: ["fedora-41", "fedora-42", "epel-10"]
         spec: ${{ fromJson(needs.changed_files.outputs.specs) }}
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
 
       - name: Install dependencies
         if: matrix.platform == 'arm64'
