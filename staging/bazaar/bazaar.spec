@@ -1,10 +1,7 @@
 # renovate: datasource=git-refs depName=https://github.com/kolunmi/bazaar.git versioning=loose currentValue=master
-%global commit 65f6e6821ff9a96669c353f3fc4585c0661c89ef
+%global commit 7a054c9d67cb9a1e999f828ab4477eb6f7891003
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global appid io.github.kolunmi.Bazaar
-
-# Needed until libdex is fixed
-%define _unpackaged_files_terminate_build 0
 
 Name:           bazaar
 Version:        {{{ git_dir_version }}}.%{shortcommit}
@@ -29,27 +26,17 @@ BuildRequires:  json-glib
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  blueprint-compiler
 BuildRequires:  glycin-devel
-# Needed until libdex is fixed
-BuildRequires:  wget
-BuildRequires:  sed
 
 Requires:       glycin-libs
 Requires:       libadwaita
 Requires:       libsoup3
 Requires:       json-glib
-Requires:       libdex = 0.9.1
 
 %description
 %summary
 
 %prep
 %autosetup -n bazaar-%{commit}
-# Needed until libdex is fixed
-cd subprojects
-wget https://gitlab.gnome.org/GNOME/libdex/-/archive/0.9.1/libdex-0.9.1.tar.gz
-tar xf libdex-0.9.1.tar.gz
-mv libdex-0.9.1 libdex
-sed -i '/add_global_arguments/d' libdex/meson.build
 
 %build
 %meson \
