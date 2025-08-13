@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.24
+Version:        0.1.25
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -44,7 +44,12 @@ ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white-cir
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-darkwhite-circle.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-darkwhite-circle.svg
 
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
-install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
+
+mkdir -p %{buildroot}/%{_datadir}/plymouth/themes/spinner/
+
+magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/kinoite.png
+magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/kinoite-watermark.png
+
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/geoclue/conf.d/ schemas%{_sysconfdir}/geoclue/conf.d/99-beacondb.conf
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/homebrew/ schemas%{_datadir}/ublue-os/homebrew/*.Brewfile
 %if ((0%{?fedora} && 0%{?fedora} < 43) || 0%{?rhel})
@@ -177,15 +182,14 @@ Fastfetch configuration for Aurora
 
 %package plymouth
 Summary:        Plymouth customization for Aurora
-Version:        0.1.3
+Version:        0.1.4
 License:        CC-BY-SA
 
 %description plymouth
 Plymouth logo customization for Aurora
 
 %files plymouth
-%{_datadir}/plymouth
-
+%{_datadir}/plymouth/themes/spinner/kinoite{,-watermark}.png
 
 %package schemas
 Version:        0.1.7
