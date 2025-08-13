@@ -115,7 +115,7 @@ install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaur
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/ kde-config/dev.getaurora.aurora.desktop/contents/previews/splash.png
 
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/discover/ kde-config/discover/featuredurlrc
-install -Dpm0644 -t %{buildroot}/%{_datadir}/ublue-os/discover kde-config/discover/featured.json
+install -Dpm0644 -t %{buildroot}/%{_datadir}/ublue-os/discover/ kde-config/discover/featured.json
 mkdir -p %{buildroot}/%{_kf6_datadir}/plasma/avatars/
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/avatars/ faces/*
 
@@ -152,8 +152,6 @@ Replacement logos for KDE
 %{_datadir}/icons/hicolor/scalable/distributor-logo{,-white,-white-circle,-darkwhite-circle}.svg
 %{_datadir}/icons/hicolor/scalable/places/distributor-logo{,-white,-white-circle,-darkwhite-circle}.svg
 %{_datadir}/icons/hicolor/scalable/{apps,places}/start-here.svg
-%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white-circle.svg
-%{_datadir}/icons/hicolor/scalable/places/distributor-logo-darkwhite-circle.svg
 
 
 %package cli-logos
