@@ -114,6 +114,11 @@ install -Dpm0644 -t %{buildroot}/%{_datadir}/ublue-os/discover kde-config/discov
 mkdir -p %{buildroot}/%{_kf6_datadir}/plasma/avatars/
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/avatars/ faces/*
 
+mkdir -p %{buildroot}/%{_datadir}/sddm/themes/01-breeze-aurora/
+install -Dpm0644 -t %{buildroot}/%{_datadir}/sddm/themes/01-breeze-aurora/ kde-config/sddm/01-breeze-aurora/*
+ln -sr %{buildroot}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}/%{_datadir}/sddm/themes/01-breeze-aurora/default-logo.svg
+
+
 %check
 
 %package logos
@@ -221,7 +226,7 @@ Wallpapers included on Aurora by default
 
 
 %package kde-config
-Version:        0.1.1
+Version:        0.1.2
 Summary:        Aurora KDE Plasma configuration
 License:        Apache-2.0 AND GPL-2.0-or-later
 Requires:       aurora-logos
@@ -244,6 +249,11 @@ This sets the Aurora defaults for Logos, Wallpapers, Theme and Editor's choice i
 %{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/splash.png
 %{_kf6_datadir}/discover/featuredurlrc
 %{_datadir}/ublue-os/discover/featured.json
+%{_datadir}/sddm/themes/01-breeze-aurora/{Background,KeyboardButton,Login,Main,SessionButton}.qml
+%{_datadir}/sddm/themes/01-breeze-aurora/default-logo.svg
+%{_datadir}/sddm/themes/01-breeze-aurora/metadata.desktop
+%{_datadir}/sddm/themes/01-breeze-aurora/preview.png
+%{_datadir}/sddm/themes/01-breeze-aurora/theme.conf
 
 
 %package faces
