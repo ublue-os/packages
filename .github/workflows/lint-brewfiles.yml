@@ -15,7 +15,6 @@ jobs:
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@main
 
-
       - name: Lint Brewfiles
         run: |
           export HOMEBREW_BUNDLE_BREW_SKIP="*"
