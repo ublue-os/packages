@@ -16,6 +16,8 @@ jobs:
         uses: Homebrew/actions/setup-homebrew@main
 
       - name: Lint Brewfiles
+        id: lint
+        continue-on-error: true
         run: |
           export HOMEBREW_BUNDLE_BREW_SKIP="*"
           export HOMEBREW_BUNDLE_CASK_SKIP="*"
@@ -24,8 +26,16 @@ jobs:
           export HOMEBREW_BUNDLE_TAP_SKIP="*"
 
           files=$(find packages/ -type f -name "*.Brewfile")
+          exit_code=0
 
           for file in $files; do
             echo "🔍 Linting $file"
-            brew bundle check --file="$file" --no-upgrade || true
+            if ! brew bundle check --file="$file" --no-upgrade; then
+              exit_code=1
+            fi
           done
+          
+          if [ $exit_code -ne 0 ]; then
+            echo "::error::One or more Brewfiles failed linting."
+            exit 1
+          fi
