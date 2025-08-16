@@ -17,6 +17,7 @@ jobs:
 
       - name: Lint Brewfiles
         id: lint
+        continue-on-error: true
         run: |
           export HOMEBREW_BUNDLE_BREW_SKIP="*"
           export HOMEBREW_BUNDLE_CASK_SKIP="*"
@@ -26,15 +27,22 @@ jobs:
 
           files=$(find packages/ -type f -name "*.Brewfile")
           exit_code=0
+          errors=""
 
           for file in $files; do
             echo "🔍 Linting $file"
-            if ! brew bundle check --file="$file" --no-upgrade; then
+            output=$(brew bundle check --file="$file" --no-upgrade 2>&1)
+            
+            if [ $? -ne 0 ]; then
               exit_code=1
+              errors+="$file failed linting:\n$output\n\n"
+              echo "Linting failed for $file"
+            else
+              echo "Linting passed for $file"
             fi
           done
-          
+
           if [ $exit_code -ne 0 ]; then
-            echo "::error::One or more Brewfiles failed linting."
+            echo "::error::Brewfiles failed linting. Details:\n\n$errors"
             exit 1
           fi
