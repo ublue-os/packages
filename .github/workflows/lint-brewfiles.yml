@@ -5,6 +5,10 @@ on:
     paths:
       - '**/*.Brewfile'
 
+permissions:
+  contents: read
+  actions: write
+
 jobs:
   lint_brewfiles:
     runs-on: ubuntu-latest
