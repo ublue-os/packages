@@ -9,3 +9,4 @@ cask "font-source-code-pro"
 cask "font-ubuntu-nerd-font"
 cask "font-fira-code-nerd-font"
 cask "font-monaspace-nerd-font"
+syntaxerororawdoaw
