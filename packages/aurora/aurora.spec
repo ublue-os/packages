@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.25
+Version:        0.1.26
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -48,7 +48,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/th
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/geoclue/conf.d/ schemas%{_sysconfdir}/geoclue/conf.d/99-beacondb.conf
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/homebrew/ schemas%{_datadir}/ublue-os/homebrew/*.Brewfile
 %if ((0%{?fedora} && 0%{?fedora} < 43) || 0%{?rhel})
-install -Dpm0644 -t %{buildroot}%{_sysconfdir}/pipewire/pipewire.conf.d/ schemas%{_sysconfdir}/pipewire/pipewire.conf.d/raop.conf
+install -Dpm0644 -t %{buildroot}%{_datadir}/pipewire/pipewire.conf.d/ schemas%{_datadir}/pipewire/pipewire.conf.d/raop.conf
 %endif
 
 mkdir -p %{buildroot}%{_datadir}/{backgrounds,wallpapers}/
@@ -183,7 +183,7 @@ Plymouth logo customization for Aurora
 
 
 %package schemas
-Version:        0.1.8
+Version:        0.1.9
 Summary:        KDE Schemas for Aurora
 
 %description schemas
@@ -193,7 +193,7 @@ Default schemas for Aurora
 %{_sysconfdir}/geoclue
 %{_datadir}/ublue-os/homebrew/*.Brewfile
 %if ((0%{?fedora} && 0%{?fedora} < 43) || 0%{?rhel})
-%{_sysconfdir}/pipewire/pipewire.conf.d/raop.conf
+%{_datadir}/pipewire/pipewire.conf.d/raop.conf
 %endif
 
 
