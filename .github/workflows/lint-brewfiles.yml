@@ -17,7 +17,6 @@ jobs:
 
       - name: Lint Brewfiles
         id: lint
-        continue-on-error: true
         run: |
           export HOMEBREW_BUNDLE_BREW_SKIP="*"
           export HOMEBREW_BUNDLE_CASK_SKIP="*"
