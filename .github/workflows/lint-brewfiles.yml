@@ -15,7 +15,7 @@ jobs:
 
       - name: Change file permissions to linuxbrew user
         run: |
-          chown -R linuxbrew:linuxbrew .
+          sudo chown -R linuxbrew:linuxbrew .
 
       - name: Lint Brewfiles
         run: |
