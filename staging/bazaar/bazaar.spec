@@ -7,7 +7,7 @@ Summary:        A flatpak centered app store
 
 License:        GPL-3.0-only
 URL:            https://github.com/kolunmi/bazaar
-Source0:        %{url}/archive/refs/tags/v{%version}.tar.gz
+Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 
 BuildRequires:  meson
 BuildRequires:  libadwaita-devel
