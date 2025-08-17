@@ -1,16 +1,13 @@
-# renovate: datasource=git-refs depName=https://github.com/kolunmi/bazaar.git versioning=loose currentValue=master
-%global commit 295849037ce22908a38d9cd7c4d2239bbcd4f83b
-%global shortcommit %(c=%{commit}; echo ${c:0:7})
 %global appid io.github.kolunmi.Bazaar
 
 Name:           bazaar
-Version:        {{{ git_dir_version }}}.%{shortcommit}
+Version:        0.3.1
 Release:        4%{?dist}
 Summary:        A flatpak centered app store
 
 License:        GPL-3.0-only
 URL:            https://github.com/kolunmi/bazaar
-Source0:        %{url}/archive/%{commit}.tar.gz
+Source0:        %{url}/archive/refs/tags/v{%version}.tar.gz
 
 BuildRequires:  meson
 BuildRequires:  libadwaita-devel
@@ -74,5 +71,8 @@ Bazaar features a "curated" tab that can be configured by distributors to allow 
 %{_datadir}/gnome-shell/search-providers/%{appid}.search-provider.ini
 
 %changelog
+* Sun August 17 2025 Kyle Gospodnetich <me@kylegospodneti.ch>
+- Update to version v0.3.1
+
 * Sat May 17 2025 Tulip Blossom <tulilirockz@proton.me>
 - Init package
