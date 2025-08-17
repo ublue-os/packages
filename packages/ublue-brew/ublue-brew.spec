@@ -16,6 +16,7 @@ Source2:        https://github.com/ublue-os/packages/releases/download/%{homebre
 
 BuildRequires:  systemd-rpm-macros
 Requires:       gcc
+Requires:       zstd
 
 %description
 Homebrew integration for Universal Blue systems

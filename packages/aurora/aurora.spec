@@ -190,7 +190,7 @@ Plymouth logo customization for Aurora
 %{_datadir}/plymouth/themes/spinner/kinoite{,-watermark}.png
 
 %package schemas
-Version:        0.1.7
+Version:        0.1.10
 Summary:        KDE Schemas for Aurora
 
 %description schemas
