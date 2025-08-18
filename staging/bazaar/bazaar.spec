@@ -1,6 +1,7 @@
 %global appid io.github.kolunmi.Bazaar
 
 Name:           bazaar
+# renovate: datasource=github-releases depName=kolunmi/bazaar
 Version:        0.3.1
 Release:        4%{?dist}
 Summary:        A flatpak centered app store
