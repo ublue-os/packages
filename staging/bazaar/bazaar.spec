@@ -2,15 +2,13 @@
 
 Name:           bazaar
 # renovate: datasource=github-releases depName=kolunmi/bazaar
-Version:        0.3.1
-Release:        5%{?dist}
+Version:        0.3.2
+Release:        1%{?dist}
 Summary:        A flatpak centered app store
 
 License:        GPL-3.0-only
 URL:            https://github.com/kolunmi/bazaar
 Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
-
-Patch0:         flathub.patch
 
 BuildRequires:  meson
 BuildRequires:  libadwaita-devel
