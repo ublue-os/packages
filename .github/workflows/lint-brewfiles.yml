@@ -1,39 +1,31 @@
-name: Lint Brewfiles
-
-on:
-  pull_request:
-    paths:
-      - '**/*.Brewfile'
-
-jobs:
-  lint_brewfiles:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Homebrew
-        id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@main
-
-      - name: Lint Brewfiles
+- name: Lint Brewfiles
         id: lint
         run: |
-          files=$(find . -type f -name "*.Brewfile") # Using '.' to search the whole repo
-          failed_files=false
+          files=$(find . -type f -name "*.Brewfile")
+          failed=false
 
           for file in $files; do
-            echo "🔍 Linting $file"
-            # Attempt to run the check command and capture its output (stdout & stderr) if it fails
-            if ! output=$(brew bundle check --file="$file" --no-upgrade 2>&1); then
-              failed_files=true
-              # Print the captured output from brew as a GitHub error annotation
-              # This will clearly show which packages are missing for the specific file
-              echo "::error file=$file::Linting failed for $file"
-              echo "$output"
-              echo # Add a newline for better readability in logs
+            echo "🔍 Validating packages in $file"
+            
+            # Read the Brewfile line by line, skipping comments and empty lines
+            # Use grep to extract brew, cask, and tap package names
+            packages=$(grep -E "^\s*(brew|cask|tap)\s+'" "$file" | sed -E "s/^\s*(brew|cask|tap)\s+'([^']+)'.*/\2/")
+            
+            if [ -z "$packages" ]; then
+              echo "No packages found to validate in $file."
+              continue
             fi
+
+            for pkg in $packages; do
+              echo "  Validating package: $pkg"
+              # Use brew info to check if the package exists. Redirect output to /dev/null.
+              if ! brew info "$pkg" > /dev/null 2>&1; then
+                echo "::error file=$file::Validation failed. Package '$pkg' in '$file' is invalid or not found."
+                failed=true
+              fi
+            done
           done
-          
-          if [ "$failed_files" = true ]; then
+
+          if [ "$failed" = true ]; then
             exit 1
           fi
