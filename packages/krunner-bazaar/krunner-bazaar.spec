@@ -1,4 +1,4 @@
-%global majmin_ver 1.2.0
+%global majmin_ver 1.2.1
 
 Name:           krunner-bazaar
 Version:        %{majmin_ver}
