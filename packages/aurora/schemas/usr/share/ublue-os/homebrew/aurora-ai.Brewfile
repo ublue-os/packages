@@ -4,4 +4,4 @@ brew "codex"
 brew "gemini-cli"
 brew "mods"
 brew "ramalama"
-brew "claude-code"
+
