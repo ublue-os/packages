@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.29
+Version:        0.1.30
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -96,6 +96,11 @@ ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_space_needle/ %{buildroo
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_sunset/contents/images/ wallpapers/images/xe_sunset/contents/images/6000x4000.jxl
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_sunset/ wallpapers/images/xe_sunset/metadata.json
 ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_sunset/ %{buildroot}%{_datadir}/wallpapers/
+
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/konqi/contents/images/ wallpapers/images/konqi/contents/images/1920x1080.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/konqi/contents/images_dark/ wallpapers/images/konqi/contents/images_dark/1920x1080.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/konqi/ wallpapers/images/konqi/metadata.json
+ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/konqi/ %{buildroot}%{_datadir}/wallpapers/
 
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/ kde-config/aurora.xml
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/ kde-config/dev.getaurora.aurora.desktop/metadata.{desktop,json}
@@ -205,7 +210,7 @@ Default schemas for Aurora
 
 
 %package backgrounds
-Version:        0.1.5
+Version:        0.1.6
 Summary:        Aurora wallpapers
 License:        CC-BY-SA
 
@@ -225,6 +230,7 @@ Wallpapers included on Aurora by default
 %{_datadir}/wallpapers/xe_foothills
 %{_datadir}/wallpapers/xe_space_needle
 %{_datadir}/wallpapers/xe_sunset
+%{_datadir}/wallpapers/konqi
 
 
 %package kde-config
