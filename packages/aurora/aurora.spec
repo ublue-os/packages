@@ -44,7 +44,12 @@ ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white-cir
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-darkwhite-circle.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-darkwhite-circle.svg
 
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
-install -Dpm0644 -t %{buildroot}%{_datadir}/plymouth/themes/spinner/ plymouth/themes/spinner/*.png
+
+mkdir -p %{buildroot}/%{_datadir}/plymouth/themes/spinner/
+
+magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/kinoite.png
+magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/kinoite-watermark.png
+
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/geoclue/conf.d/ schemas%{_sysconfdir}/geoclue/conf.d/99-beacondb.conf
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/homebrew/ schemas%{_datadir}/ublue-os/homebrew/*.Brewfile
 %if ((0%{?fedora} && 0%{?fedora} < 43) || 0%{?rhel})
@@ -110,9 +115,14 @@ install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaur
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/ kde-config/dev.getaurora.aurora.desktop/contents/previews/splash.png
 
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/discover/ kde-config/discover/featuredurlrc
-install -Dpm0644 -t %{buildroot}/%{_datadir}/ublue-os/discover kde-config/discover/featured.json
+install -Dpm0644 -t %{buildroot}/%{_datadir}/ublue-os/discover/ kde-config/discover/featured.json
 mkdir -p %{buildroot}/%{_kf6_datadir}/plasma/avatars/
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/avatars/ faces/*
+
+mkdir -p %{buildroot}/%{_datadir}/sddm/themes/01-breeze-aurora/
+install -Dpm0644 -t %{buildroot}/%{_datadir}/sddm/themes/01-breeze-aurora/ kde-config/sddm/01-breeze-aurora/*
+ln -sr %{buildroot}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}/%{_datadir}/sddm/themes/01-breeze-aurora/default-logo.svg
+
 
 %check
 
@@ -142,8 +152,6 @@ Replacement logos for KDE
 %{_datadir}/icons/hicolor/scalable/distributor-logo{,-white,-white-circle,-darkwhite-circle}.svg
 %{_datadir}/icons/hicolor/scalable/places/distributor-logo{,-white,-white-circle,-darkwhite-circle}.svg
 %{_datadir}/icons/hicolor/scalable/{apps,places}/start-here.svg
-%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white-circle.svg
-%{_datadir}/icons/hicolor/scalable/places/distributor-logo-darkwhite-circle.svg
 
 
 %package cli-logos
@@ -172,15 +180,14 @@ Fastfetch configuration for Aurora
 
 %package plymouth
 Summary:        Plymouth customization for Aurora
-Version:        0.1.3
+Version:        0.1.4
 License:        CC-BY-SA
 
 %description plymouth
 Plymouth logo customization for Aurora
 
 %files plymouth
-%{_datadir}/plymouth
-
+%{_datadir}/plymouth/themes/spinner/kinoite{,-watermark}.png
 
 %package schemas
 Version:        0.1.12
@@ -221,7 +228,7 @@ Wallpapers included on Aurora by default
 
 
 %package kde-config
-Version:        0.1.1
+Version:        0.1.2
 Summary:        Aurora KDE Plasma configuration
 License:        Apache-2.0 AND GPL-2.0-or-later
 Requires:       aurora-logos
@@ -244,6 +251,11 @@ This sets the Aurora defaults for Logos, Wallpapers, Theme and Editor's choice i
 %{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/previews/splash.png
 %{_kf6_datadir}/discover/featuredurlrc
 %{_datadir}/ublue-os/discover/featured.json
+%{_datadir}/sddm/themes/01-breeze-aurora/{Background,KeyboardButton,Login,Main,SessionButton}.qml
+%{_datadir}/sddm/themes/01-breeze-aurora/default-logo.svg
+%{_datadir}/sddm/themes/01-breeze-aurora/metadata.desktop
+%{_datadir}/sddm/themes/01-breeze-aurora/preview.png
+%{_datadir}/sddm/themes/01-breeze-aurora/theme.conf
 
 
 %package faces
