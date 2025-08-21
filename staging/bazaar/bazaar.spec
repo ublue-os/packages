@@ -72,7 +72,7 @@ Bazaar features a "curated" tab that can be configured by distributors to allow 
 %{_datadir}/gnome-shell/search-providers/%{appid}.search-provider.ini
 
 %changelog
-* Sun August 17 2025 Kyle Gospodnetich <me@kylegospodneti.ch>
+* Sun Aug 17 2025 Kyle Gospodnetich <me@kylegospodneti.ch>
 - Update to version v0.3.1
 
 * Sat May 17 2025 Tulip Blossom <tulilirockz@proton.me>
