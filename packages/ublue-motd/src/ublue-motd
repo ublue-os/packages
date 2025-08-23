@@ -67,4 +67,4 @@ sed -e "s/%IMAGE_NAME%/$IMAGE_NAME_ESCAPED/g" \
 	-e "s/%IMAGE_TAG%/$IMAGE_TAG_ESCAPED/g" \
 	-e "s/%TIP%/$TIP_ESCAPED/g" \
 	-e "s/%KEY_WARN%/$KEY_WARN_ESCAPED/g" \
-	"$TEMPLATE_FILE" | tr '~' '\n' | /usr/bin/glow -s "${THEMES_DIRECTORY}/${THEME}.json" -w 78 -
+	"$TEMPLATE_FILE" | tr '~' '\n' | /usr/bin/glow -s "${THEMES_DIRECTORY}/${THEME}.json" -w $(tput cols) -
