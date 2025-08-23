@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           ublue-motd
-Version:        0.2.5
+Version:        0.2.6
 Release:        1%{?dist}
 Summary:        MOTD scripts for Universal Blue images
 
