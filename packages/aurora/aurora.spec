@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.29
+Version:        0.1.30
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -97,6 +97,11 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_sunset/cont
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_sunset/ wallpapers/images/xe_sunset/metadata.json
 ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/xe_sunset/ %{buildroot}%{_datadir}/wallpapers/
 
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/looking_towards_the_future/contents/images/ wallpapers/images/looking_towards_the_future/contents/images/1920x1080.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/looking_towards_the_future/contents/images_dark/ wallpapers/images/looking_towards_the_future/contents/images_dark/1920x1080.png
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/looking_towards_the_future/ wallpapers/images/looking_towards_the_future/metadata.json
+ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/looking_towards_the_future/ %{buildroot}%{_datadir}/wallpapers/
+
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/ kde-config/aurora.xml
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/ kde-config/dev.getaurora.aurora.desktop/metadata.{desktop,json}
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaurora.aurora.desktop/contents/ kde-config/dev.getaurora.aurora.desktop/contents/defaults
@@ -190,7 +195,7 @@ Plymouth logo customization for Aurora
 %{_datadir}/plymouth/themes/spinner/kinoite{,-watermark}.png
 
 %package schemas
-Version:        0.1.12
+Version:        0.1.13
 Summary:        KDE Schemas for Aurora
 
 %description schemas
@@ -205,7 +210,7 @@ Default schemas for Aurora
 
 
 %package backgrounds
-Version:        0.1.5
+Version:        0.1.6
 Summary:        Aurora wallpapers
 License:        CC-BY-SA
 
@@ -225,6 +230,7 @@ Wallpapers included on Aurora by default
 %{_datadir}/wallpapers/xe_foothills
 %{_datadir}/wallpapers/xe_space_needle
 %{_datadir}/wallpapers/xe_sunset
+%{_datadir}/wallpapers/looking_towards_the_future
 
 
 %package kde-config
