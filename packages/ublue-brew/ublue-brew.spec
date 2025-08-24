@@ -3,8 +3,8 @@
 %define homebrew_release homebrew-2025-05-04-04-03-02
 
 Name:           ublue-brew
-Version:        0.1.8
-Release:        2%{?dist}
+Version:        0.1.9
+Release:        1%{?dist}
 Summary:        Homebrew integration for Universal Blue systems
 
 License:        Apache-2.0
