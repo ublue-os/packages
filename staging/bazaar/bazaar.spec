@@ -2,7 +2,7 @@
 
 Name:           bazaar
 # renovate: datasource=github-releases depName=kolunmi/bazaar
-Version:        0.4.0
+Version:        0.4.1
 Release:        1%{?dist}
 Summary:        A flatpak centered app store
 
