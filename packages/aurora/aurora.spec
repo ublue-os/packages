@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.31
+Version:        0.1.32
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -47,7 +47,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 
 mkdir -p %{buildroot}/%{_datadir}/plymouth/themes/spinner/
 
-magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/kinoite.png
+magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/watermark.png
 magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/kinoite-watermark.png
 
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/geoclue/conf.d/ schemas%{_sysconfdir}/geoclue/conf.d/99-beacondb.conf
@@ -185,14 +185,15 @@ Fastfetch configuration for Aurora
 
 %package plymouth
 Summary:        Plymouth customization for Aurora
-Version:        0.1.4
+Version:        0.1.5
 License:        CC-BY-SA
 
 %description plymouth
 Plymouth logo customization for Aurora
 
 %files plymouth
-%{_datadir}/plymouth/themes/spinner/kinoite{,-watermark}.png
+%{_datadir}/plymouth/themes/spinner/watermark.png
+%{_datadir}/plymouth/themes/spinner/kinoite-watermark.png
 
 %package schemas
 Version:        0.1.14
