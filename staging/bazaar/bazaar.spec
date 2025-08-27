@@ -11,19 +11,18 @@ URL:            https://github.com/kolunmi/bazaar
 Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 
 BuildRequires:  meson
-BuildRequires:  libadwaita-devel
-BuildRequires:  libxmlb-devel
-BuildRequires:  flatpak-devel
-BuildRequires:  glycin-devel
-BuildRequires:  glycin-gtk4-devel
-BuildRequires:  libdex-devel
-BuildRequires:  desktop-file-utils
-BuildRequires:  libyaml-devel
-BuildRequires:  libsoup3-devel
-BuildRequires:  json-glib
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  blueprint-compiler
-BuildRequires:  glycin-devel
+BuildRequires:  desktop-file-utils
+BuildRequires:  pkgconfig(libadwaita-1)
+BuildRequires:  pkgconfig(xmlb)
+BuildRequires:  pkgconfig(flatpak)
+BuildRequires:  pkgconfig(libdex-1)
+BuildRequires:  pkgconfig(yaml-0.1)
+BuildRequires:  pkgconfig(libsoup-3.0)
+BuildRequires:  pkgconfig(json-glib-1.0)
+BuildRequires:  pkgconfig(glycin-1)
+BuildRequires:  pkgconfig(glycin-gtk4-1)
 
 Requires:       glycin-libs
 Requires:       libadwaita
