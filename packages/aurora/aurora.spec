@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.31
+Version:        0.1.32
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -47,7 +47,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 
 mkdir -p %{buildroot}/%{_datadir}/plymouth/themes/spinner/
 
-magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/kinoite.png
+magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/watermark.png
 magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/kinoite-watermark.png
 
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/geoclue/conf.d/ schemas%{_sysconfdir}/geoclue/conf.d/99-beacondb.conf
@@ -124,8 +124,10 @@ install -Dpm0644 -t %{buildroot}/%{_datadir}/ublue-os/discover/ kde-config/disco
 mkdir -p %{buildroot}/%{_kf6_datadir}/plasma/avatars/
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/avatars/ faces/*
 
-mkdir -p %{buildroot}/%{_datadir}/sddm/themes/01-breeze-aurora/
-install -Dpm0644 -t %{buildroot}/%{_datadir}/sddm/themes/01-breeze-aurora/ kde-config/sddm/01-breeze-aurora/*
+mkdir -p %{buildroot}/%{_datadir}/sddm/themes/01-breeze-aurora/faces
+install -Dpm0644 -t %{buildroot}/%{_datadir}/sddm/themes/01-breeze-aurora/ kde-config/sddm/01-breeze-aurora/*.qml kde-config/sddm/01-breeze-aurora/*.desktop kde-config/sddm/01-breeze-aurora/*.png kde-config/sddm/01-breeze-aurora/*.conf
+
+install -Dpm0644 -t %{buildroot}/%{_datadir}/sddm/themes/01-breeze-aurora/faces/ kde-config/sddm/01-breeze-aurora/faces/.face.icon
 ln -sr %{buildroot}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}/%{_datadir}/sddm/themes/01-breeze-aurora/default-logo.svg
 
 
@@ -185,14 +187,15 @@ Fastfetch configuration for Aurora
 
 %package plymouth
 Summary:        Plymouth customization for Aurora
-Version:        0.1.4
+Version:        0.1.5
 License:        CC-BY-SA
 
 %description plymouth
 Plymouth logo customization for Aurora
 
 %files plymouth
-%{_datadir}/plymouth/themes/spinner/kinoite{,-watermark}.png
+%{_datadir}/plymouth/themes/spinner/watermark.png
+%{_datadir}/plymouth/themes/spinner/kinoite-watermark.png
 
 %package schemas
 Version:        0.1.14
@@ -234,7 +237,7 @@ Wallpapers included on Aurora by default
 
 
 %package kde-config
-Version:        0.1.2
+Version:        0.1.3
 Summary:        Aurora KDE Plasma configuration
 License:        Apache-2.0 AND GPL-2.0-or-later
 Requires:       aurora-logos
@@ -262,6 +265,7 @@ This sets the Aurora defaults for Logos, Wallpapers, Theme and Editor's choice i
 %{_datadir}/sddm/themes/01-breeze-aurora/metadata.desktop
 %{_datadir}/sddm/themes/01-breeze-aurora/preview.png
 %{_datadir}/sddm/themes/01-breeze-aurora/theme.conf
+%{_datadir}/sddm/themes/01-breeze-aurora/faces/.face.icon
 
 
 %package faces
