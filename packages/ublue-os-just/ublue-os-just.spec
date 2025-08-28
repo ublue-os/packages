@@ -57,9 +57,6 @@ install -Dpm0644 ./src/lib-ujust/* %{buildroot}/%{_exec_prefix}/lib/ujust/
 install -d -m0755 %{buildroot}/%{_sysconfdir}/distrobox
 install -Dpm0644 ./src/etc-distrobox/* %{buildroot}/%{_sysconfdir}/distrobox/
 
-# Add default manifest file for toolbox
-install -d -m0755 %{buildroot}/%{_sysconfdir}/toolbox
-install -Dpm0644 ./src/etc-toolbox/* %{buildroot}/%{_sysconfdir}/toolbox/
 
 
 mkdir -p %{buildroot}%{bash_completions_dir} %{buildroot}%{zsh_completions_dir} %{buildroot}%{fish_completions_dir}
@@ -88,7 +85,6 @@ done
 %{_exec_prefix}/lib/ujust/ujust.sh
 %{_exec_prefix}/lib/ujust/lib*.sh
 %{_sysconfdir}/distrobox/*.ini
-%{_sysconfdir}/toolbox/*.ini
 %{bash_completions_dir}/ujust
 %{zsh_completions_dir}/_ujust
 %{fish_completions_dir}/ujust.fish
