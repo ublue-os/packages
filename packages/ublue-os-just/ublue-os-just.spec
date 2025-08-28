@@ -94,6 +94,9 @@ done
 %{fish_completions_dir}/ujust.fish
 
 %changelog
+* Sun Aug 10 2025 cloudwithdan <nikoloskid@pm.me> - 0.50
+- Add System Update notfication
+
 * Mon Aug 04 2025 renner <renner0@posteo.de> - 0.49
 - Removed 31-toolbox.just
 - Removed etc-toolbox/toolbox.ini
