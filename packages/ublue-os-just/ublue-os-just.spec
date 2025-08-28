@@ -95,10 +95,6 @@ done
 - Removed etc-toolbox/toolbox.ini
 
 * Mon Aug 04 2025 renner <renner0@posteo.de> - 0.49
-- Removed 31-toolbox.just
-- Removed etc-toolbox/toolbox.ini
-
-* Mon Aug 04 2025 renner <renner0@posteo.de> - 0.49
 - Add %check for .just files
 
 * Sat Jun 28 2025 renner <renner0@posteo.de> - 0.48
