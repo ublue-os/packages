@@ -12,6 +12,7 @@ Source:         %{url}/archive/refs/heads/master.tar.gz
 
 # Windows driver and firmware file:
 Source1:        1cd6a87c-623f-4407-a52d-c31be49e925c_e19f60808bdcbfbd3c3df6be3e71ffc52e43261e.cab
+Source2:        20810869_8ce2975a7fbaa06bcfb0d8762a6275a1cf7c1dd3.cab
 
 BuildRequires:  cabextract
 # UDev rule location (_udevrulesdir) and systemd macros:
