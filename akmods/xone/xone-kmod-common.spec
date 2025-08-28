@@ -29,8 +29,9 @@ Linux kernel driver for Xbox One and Xbox Series X|S accessories common files.
 %autosetup -p1 -n xonedo-master
 
 # Firmware:
+cabextract -F FW_ACC_0OU.bin %{SOURCE2}
+mv FW_ACC_0OU.bin FW_ACC_00U-2.bin
 cabextract -F FW_ACC_00U.bin %{SOURCE1}
-cabextract -F FW_ACC_01U.bin %{SOURCE2}
 
 %install
 mkdir -p %{buildroot}%{_udevrulesdir}
@@ -41,7 +42,7 @@ install -p -m 0644 install/modprobe.conf %{buildroot}%{_prefix}/lib/modprobe.d/x
 
 # Firmware:
 install -p -m 0644 -D FW_ACC_00U.bin %{buildroot}%{_prefix}/lib/firmware/xow_dongle.bin
-install -p -m 0644 -D FW_ACC_01U.bin %{buildroot}%{_prefix}/lib/firmware/xow_dongle_045e_02e6.bin
+install -p -m 0644 -D FW_ACC_00U-2.bin %{buildroot}%{_prefix}/lib/firmware/xow_dongle_045e_02e6.bin
 
 %files
 %license LICENSE
