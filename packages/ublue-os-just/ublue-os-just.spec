@@ -94,7 +94,7 @@ done
 %{fish_completions_dir}/ujust.fish
 
 %changelog
-* Mon Aug 04 2025 renner <renner0@posteo.de> - 0.49
+* Mon Aug 28 2025 renner <renner0@posteo.de> - 0.49
 - Removed 31-toolbox.just
 - Removed etc-toolbox/toolbox.ini
 
