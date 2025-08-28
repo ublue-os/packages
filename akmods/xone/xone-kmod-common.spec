@@ -29,8 +29,8 @@ Linux kernel driver for Xbox One and Xbox Series X|S accessories common files.
 %autosetup -p1 -n xonedo-master
 
 # Firmware:
-cabextract -F FW_ACC_0OU.bin %{SOURCE2}
-mv FW_ACC_0OU.bin FW_ACC_00U-2.bin
+cabextract -F FW_ACC_00U.bin %{SOURCE2}
+mv FW_ACC_00U.bin FW_ACC_00U-2.bin
 cabextract -F FW_ACC_00U.bin %{SOURCE1}
 
 %install
