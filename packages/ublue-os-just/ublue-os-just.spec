@@ -57,8 +57,6 @@ install -Dpm0644 ./src/lib-ujust/* %{buildroot}/%{_exec_prefix}/lib/ujust/
 install -d -m0755 %{buildroot}/%{_sysconfdir}/distrobox
 install -Dpm0644 ./src/etc-distrobox/* %{buildroot}/%{_sysconfdir}/distrobox/
 
-
-
 mkdir -p %{buildroot}%{bash_completions_dir} %{buildroot}%{zsh_completions_dir} %{buildroot}%{fish_completions_dir}
 
 # Generate ujust bash completion
@@ -90,6 +88,10 @@ done
 %{fish_completions_dir}/ujust.fish
 
 %changelog
+* Thu Aug 28 2025 noelmiller <noel@noelmiller.dev> - 0.51
+- Remove %install steps for deprecated files
+- Removed toolbox related files from %files
+
 * Thu Aug 28 2025 noelmiller <noel@noelmiller.dev> - 0.50
 - Removed 31-toolbox.just
 - Removed etc-toolbox/toolbox.ini
