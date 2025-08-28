@@ -1,6 +1,6 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
-Version:        0.49
+Version:        0.50
 Release:        1%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
@@ -94,6 +94,10 @@ done
 %{fish_completions_dir}/ujust.fish
 
 %changelog
+* Mon Aug 04 2025 renner <renner0@posteo.de> - 0.49
+- Removed 31-toolbox.just
+- Removed etc-toolbox/toolbox.ini
+
 * Mon Aug 04 2025 renner <renner0@posteo.de> - 0.49
 - Add %check for .just files
 
