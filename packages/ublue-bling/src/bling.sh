@@ -45,7 +45,7 @@ if [ "$(basename "$SHELL")" = "bash" ]; then
 elif [ "$(basename "$SHELL")" = "zsh" ]; then
     [ "$(command -v carapace)" ] && source <(carapace _carapace zsh)
     [ "$(command -v fzf)" ] && eval "$(fzf --zsh)"
-    [ "$(command -v tv)" ] && eval "$(tv init bash)"
+    [ "$(command -v tv)" ] && eval "$(tv init zsh)"
     [ "$(command -v starship)" ] && eval "$(starship init zsh)"
     [ "$(command -v atuin)" ] && eval "$(atuin init zsh ${ATUIN_INIT_FLAGS})"
     [ "$(command -v zoxide)" ] && eval "$(zoxide init zsh)"
