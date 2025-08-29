@@ -1,6 +1,6 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
-Version:        0.50
+Version:        0.52
 Release:        1%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
@@ -57,11 +57,6 @@ install -Dpm0644 ./src/lib-ujust/* %{buildroot}/%{_exec_prefix}/lib/ujust/
 install -d -m0755 %{buildroot}/%{_sysconfdir}/distrobox
 install -Dpm0644 ./src/etc-distrobox/* %{buildroot}/%{_sysconfdir}/distrobox/
 
-# Add default manifest file for toolbox
-install -d -m0755 %{buildroot}/%{_sysconfdir}/toolbox
-install -Dpm0644 ./src/etc-toolbox/* %{buildroot}/%{_sysconfdir}/toolbox/
-
-
 mkdir -p %{buildroot}%{bash_completions_dir} %{buildroot}%{zsh_completions_dir} %{buildroot}%{fish_completions_dir}
 
 # Generate ujust bash completion
@@ -88,14 +83,21 @@ done
 %{_exec_prefix}/lib/ujust/ujust.sh
 %{_exec_prefix}/lib/ujust/lib*.sh
 %{_sysconfdir}/distrobox/*.ini
-%{_sysconfdir}/toolbox/*.ini
 %{bash_completions_dir}/ujust
 %{zsh_completions_dir}/_ujust
 %{fish_completions_dir}/ujust.fish
 
 %changelog
-* Tue Aug 26 2025 renner <renner0@posteo.de> - 0.50
+* Fri Aug 29 2025 renner <renner0@posteo.de> - 0.52
 - Add check if brew is installed for clean-system
+
+* Thu Aug 28 2025 noelmiller <noel@noelmiller.dev> - 0.51
+- Remove %install steps for deprecated files
+- Removed toolbox related files from %files
+
+* Thu Aug 28 2025 noelmiller <noel@noelmiller.dev> - 0.50
+- Removed 31-toolbox.just
+- Removed etc-toolbox/toolbox.ini
 
 * Mon Aug 04 2025 renner <renner0@posteo.de> - 0.49
 - Add %check for .just files
