@@ -36,13 +36,17 @@ if [ "$(basename "$SHELL")" = "bash" ]; then
     [ -f "/usr/share/bash-prexec" ] && . "/usr/share/bash-prexec"
     [ -f "/usr/share/bash-prexec.sh" ] && . "/usr/share/bash-prexec.sh"
     [ -f "${HOMEBREW_PREFIX}/etc/profile.d/bash-preexec.sh" ] && . "${HOMEBREW_PREFIX}/etc/profile.d/bash-preexec.sh"
+    [ "$(command -v carapace)" ] && source <(carapace _carapace bash)
+    [ "$(command -v fzf)" ] && eval "$(fzf --bash)"
+    [ "$(command -v tv)" ] && eval "$(tv init bash)"
     [ "$(command -v starship)" ] && eval "$(starship init bash)"
     [ "$(command -v atuin)" ] && eval "$(atuin init bash ${ATUIN_INIT_FLAGS})"
     [ "$(command -v zoxide)" ] && eval "$(zoxide init bash)"
-    [ "$(command -v carapace)" ] && source <(carapace _carapace bash)
 elif [ "$(basename "$SHELL")" = "zsh" ]; then
+    [ "$(command -v carapace)" ] && source <(carapace _carapace zsh)
+    [ "$(command -v fzf)" ] && eval "$(fzf --zsh)"
+    [ "$(command -v tv)" ] && eval "$(tv init bash)"
     [ "$(command -v starship)" ] && eval "$(starship init zsh)"
     [ "$(command -v atuin)" ] && eval "$(atuin init zsh ${ATUIN_INIT_FLAGS})"
     [ "$(command -v zoxide)" ] && eval "$(zoxide init zsh)"
-    [ "$(command -v carapace)" ] && source <(carapace _carapace zsh)
 fi
