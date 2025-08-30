@@ -21,7 +21,7 @@ monospace-font-name="JetBrains Mono 16"
 accent-color="slate"
 
 [org.gnome.desktop.search-providers]
-enabled='io.github.kolunmi.Bazaar.desktop'
+enabled = ['io.github.kolunmi.Bazaar.desktop']```
 
 [org.gnome.desktop.sound]
 allow-volume-above-100-percent=true
