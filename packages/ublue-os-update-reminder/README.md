@@ -10,8 +10,6 @@ This package provides a reboot reminder system for Universal Blue systems that h
 4. When active, it monitors D-Bus for screen unlock events and shows notifications if uptime ≥ 30 days
 5. After a reboot, the trigger file automatically disappears (tmpfs cleanup) and notifications stop
 
-This approach uses systemd's `ConditionPathExists` to avoid running unnecessary services while providing responsive notifications. State is stored in `/run/user/` which automatically cleans up on reboot.
-
 ## Components
 
 ### Systemd Services
@@ -23,11 +21,4 @@ This approach uses systemd's `ConditionPathExists` to avoid running unnecessary 
 ### Scripts
 
 - `ublue-uptime-checker.sh` - Checks system uptime and manages trigger file
-- `ublue-reboot-notifier-watcher.py` - D-Bus monitor for screen unlock events with integrated notification display
-
-## Dependencies
-
-- `python3-dbus-next` - For D-Bus communication in Python
-- `libnotify` - For desktop notifications
-- `kdialog` (optional) - For KDE notifications
-
+- `ublue-reboot-notifier-watcher.py` - D-Bus monitor for screen unlock events + notifier
