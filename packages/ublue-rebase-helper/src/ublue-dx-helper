@@ -46,7 +46,11 @@ if [[ "${OPTION,,}" =~ ^enable ]]; then
     fi
     echo "Rebasing to a developer image"
     NEW_IMAGE=$(sed "s/$IMAGE_BASE_NAME/$IMAGE_BASE_NAME-dx/" <<< $CURRENT_IMAGE)
-    rpm-ostree rebase $NEW_IMAGE && echo -e "\nUse \`ujust dx-group\` to add your user to the correct groups and complete the installation"
+    if [ "$(jq -r '."image-tag"' /usr/share/ublue-os/image-info.json)" = "lts" ]; then
+        rpm-ostree rebase $NEW_IMAGE
+    else
+        rpm-ostree rebase $NEW_IMAGE && echo -e "\nUse \`ujust dx-group\` to add your user to the correct groups and complete the installation"
+    fi
 fi
 
 if [[ "${OPTION,,}" =~ ^disable ]]; then
