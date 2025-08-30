@@ -20,6 +20,9 @@ document-font-name="Adwaita Sans 12"
 monospace-font-name="JetBrains Mono 16"
 accent-color="slate"
 
+[org.gnome.desktop.search-providers]
+enabled = ['io.github.kolunmi.Bazaar.desktop']
+
 [org.gnome.desktop.sound]
 allow-volume-above-100-percent=true
 theme-name="freedesktop"
@@ -70,11 +73,6 @@ sort-directories-first=true
 [org.gnome.mutter]
 center-new-windows=true
 check-alive-timeout=uint32 20000
-
-[org.gnome.software]
-allow-updates=false
-download-updates=false
-download-updates-notify=false
 
 [com.github.stunkymonkey.nautilus-open-any-terminal]
 terminal='ptyxis'
