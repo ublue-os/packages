@@ -1,2 +1,3 @@
 enable ublue-uptime-checker.timer
-enable ublue-uptime-checker-boot.service
+# Enable but will only run when condition file exists
+enable ublue-reboot-notifier.service

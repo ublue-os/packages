@@ -28,7 +28,6 @@ Provides systemd units and scripts for reminding users to reboot systems that ha
 install -Dm0644 -t %{buildroot}%{_userpresetdir}/ src/%{_userpresetdir}/99-ublue-reboot-notifier.preset
 # Install systemd user units
 install -Dm0644 -t %{buildroot}%{_userunitdir}/ src/%{_userunitdir}/ublue-reboot-notifier.service
-install -Dm0644 -t %{buildroot}%{_userunitdir}/ src/%{_userunitdir}/ublue-uptime-checker-boot.service
 install -Dm0644 -t %{buildroot}%{_userunitdir}/ src/%{_userunitdir}/ublue-uptime-checker.service
 install -Dm0644 -t %{buildroot}%{_userunitdir}/ src/%{_userunitdir}/ublue-uptime-checker.timer
 
@@ -36,25 +35,19 @@ install -Dm0644 -t %{buildroot}%{_userunitdir}/ src/%{_userunitdir}/ublue-uptime
 install -Dm0755 -t %{buildroot}%{_libexecdir}/ src/%{_libexecdir}/ublue-reboot-notifier-watcher.py
 install -Dm0755 -t %{buildroot}%{_libexecdir}/ src/%{_libexecdir}/ublue-uptime-checker.sh
 
-# scripts
-install -Dm0755 -t %{buildroot}%{_libexecdir}/ src/%{_libexecdir}/ublue-reboot-notifier-show.sh
-install -Dm0755 -t %{buildroot}%{_libexecdir}/ src/%{_libexecdir}/ublue-reboot-notifier-watcher.py
-install -Dm0755 -t %{buildroot}%{_libexecdir}/ src/%{_libexecdir}/ublue-uptime-checker.sh
-
 %check
 
 %post
 %systemd_user_post ublue-uptime-checker.timer
-%systemd_user_post ublue-uptime-checker-boot.service
+%systemd_user_post ublue-reboot-notifier.service
 
 %preun
 %systemd_user_preun ublue-uptime-checker.timer
-%systemd_user_preun ublue-uptime-checker-boot.service
+%systemd_user_preun ublue-reboot-notifier.service
 
 %files
 %{_userpresetdir}/99-ublue-reboot-notifier.preset
 %{_userunitdir}/ublue-reboot-notifier.service
-%{_userunitdir}/ublue-uptime-checker-boot.service
 %{_userunitdir}/ublue-uptime-checker.service
 %{_userunitdir}/ublue-uptime-checker.timer
 %{_libexecdir}/ublue-reboot-notifier-watcher.py

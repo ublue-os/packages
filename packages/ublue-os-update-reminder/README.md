@@ -5,25 +5,24 @@ This package provides a reboot reminder system for Universal Blue systems that h
 ## How it works
 
 1. The `ublue-uptime-checker.timer` runs daily and executes `ublue-uptime-checker.service`
-2. If system uptime is 28+ days, it enables the `ublue-reboot-notifier.service`
-3. The reboot notifier watches for screen unlock events via D-Bus
-4. When the screen is unlocked and uptime is 30+ days, it directly shows a notification
-5. After a reboot, `ublue-uptime-checker-boot.service` automatically disables the notifier
+2. If system uptime is 28+ days, it creates a trigger file in `/run/user/$UID/`
+3. The `ublue-reboot-notifier.service` is enabled by default but only starts when the trigger file exists
+4. When active, it monitors D-Bus for screen unlock events and shows notifications if uptime ≥ 30 days
+5. After a reboot, the trigger file automatically disappears (tmpfs cleanup) and notifications stop
 
-This two-service approach was taken so that the D-Bus watcher is not active/ running until the uptime exceeds 28 days. This could also be implemented perhaps by using systemd's capabilities to subscribe to D-Bus interfaces.
+This approach uses systemd's `ConditionPathExists` to avoid running unnecessary services while providing responsive notifications. State is stored in `/run/user/` which automatically cleans up on reboot.
 
 ## Components
 
 ### Systemd Services
 
 - `ublue-uptime-checker.timer` - Runs daily to check system uptime
-- `ublue-uptime-checker.service` - Checks uptime and enables/disables the reboot notifier
-- `ublue-uptime-checker-boot.service` - Runs on boot to disable notifications after reboot
-- `ublue-reboot-notifier.service` - Watches for screen unlock events and shows notifications directly
+- `ublue-uptime-checker.service` - Checks uptime and manages trigger file in `/run/user/`
+- `ublue-reboot-notifier.service` - Watches for screen unlock events via D-Bus (only active when needed)
 
 ### Scripts
 
-- `ublue-uptime-checker.sh` - Checks system uptime and manages notification service
+- `ublue-uptime-checker.sh` - Checks system uptime and manages trigger file
 - `ublue-reboot-notifier-watcher.py` - D-Bus monitor for screen unlock events with integrated notification display
 
 ## Dependencies
