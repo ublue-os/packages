@@ -14,28 +14,18 @@ FS_MAPPINGS = {
 """ Key: FSTYPE; Value: FSOPTIONS """
 
 
-def findfs(s: str) -> str:
-    try:
-        return subprocess.check_output(["findfs", s], text=True).strip()
-    except subprocess.CalledProcessError as err:
-        if err.returncode == 1:  # label or uuid cannot be found
-            return ""
-        else:
-            raise err
-
-
 @functools.cache
-def devices_in_fstab() -> set[str]:
-    devs: set[str] = set()
-    with open("/etc/fstab") as f:
-        for line in f.readlines():
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
-            dev = findfs(line.split()[0])
-            if dev:
-                devs.add(findfs(line.split()[0]))
-    return devs
+def partuuids_in_fstab() -> set[str]:
+    partuuids: set[str] = set()
+
+    cmd_out = subprocess.check_output(
+        ["findmnt", "-s", "--json", "--output=FSTYPE,OPTIONS,PARTUUID"], text=True
+    ).strip()
+    filesystems: list[Any] = json.loads(cmd_out)["filesystems"]
+    for filesystem in filesystems:
+        partuuids.add(filesystem["partuuid"])
+
+    return partuuids
 
 
 def main() -> None:
@@ -50,7 +40,7 @@ def main() -> None:
             "--noheadings",
             "--paths",
             "--list",
-            "--output=NAME,FSTYPE,TYPE,HOTPLUG,MOUNTPOINTS,LABEL,PARTLABEL",
+            "--output=NAME,FSTYPE,TYPE,HOTPLUG,MOUNTPOINTS,LABEL,PARTLABEL,PARTUUID",
             "--json",
         ],
         text=True,
@@ -82,7 +72,7 @@ def main() -> None:
             )
             return False
 
-        if block_dev["name"] in devices_in_fstab():
+        if block_dev["partuuid"] in partuuids_in_fstab():
             print(f"Skipping {block_dev['name']}: already in fstab")
             return False
 
