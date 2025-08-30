@@ -1,6 +1,6 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
-Version:        0.51
+Version:        0.52
 Release:        1%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
@@ -88,6 +88,9 @@ done
 %{fish_completions_dir}/ujust.fish
 
 %changelog
+* Fri Aug 29 2025 renner <renner0@posteo.de> - 0.52
+- Add check if brew is installed for clean-system
+
 * Thu Aug 28 2025 noelmiller <noel@noelmiller.dev> - 0.51
 - Remove %install steps for deprecated files
 - Removed toolbox related files from %files
