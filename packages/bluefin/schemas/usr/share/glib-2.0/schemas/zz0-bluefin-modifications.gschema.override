@@ -67,6 +67,11 @@ power-button-action='interactive'
 [org.gtk.Settings.FileChooser]
 sort-directories-first=true
 
+[org.gnome.software]
+allow-updates=false
+download-updates=false
+download-updates-notify=false
+
 [org.gtk.gtk4.Settings.FileChooser]
 sort-directories-first=true
 
