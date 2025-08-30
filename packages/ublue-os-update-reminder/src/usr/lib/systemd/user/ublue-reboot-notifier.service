@@ -1,0 +1,10 @@
+[Unit]
+Description=Watch for unlock events
+After=graphical-session.target
+
+[Service]
+ExecStart=/usr/libexec/ublue-reboot-notifier-watcher.py
+Restart=always
+
+[Install]
+WantedBy=default.target

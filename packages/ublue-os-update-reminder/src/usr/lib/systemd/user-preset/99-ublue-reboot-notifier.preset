@@ -1,0 +1,2 @@
+enable ublue-uptime-checker.timer
+enable ublue-uptime-checker-boot.service
