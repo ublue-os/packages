@@ -1,0 +1,6 @@
+[Unit]
+Description=Check system uptime and enable reboot notifier if needed
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/ublue-uptime-checker.sh
