@@ -2,6 +2,7 @@
 Description=Monitor screen unlock and show reboot notifications
 After=graphical-session.target
 ConditionPathExists=/run/user/%i/ublue-reboot-notifier-enabled
+StartLimitIntervalSec=600
 
 [Service]
 Type=simple
@@ -9,7 +10,6 @@ ExecStart=/usr/libexec/ublue-reboot-notifier-watcher.py
 Restart=on-failure
 RestartSec=5
 StartLimitBurst=3
-StartLimitIntervalSec=600
 
 [Install]
 WantedBy=default.target
