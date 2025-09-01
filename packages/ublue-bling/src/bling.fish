@@ -24,12 +24,13 @@ end
 alias cat='bat --style=plain --pager=never' 2>/dev/null
 
 if status is-interactive
-    [ "$(command -v starship)" ] && eval "$(starship init fish)"
-
+    # Initialize atuin before starship to ensure proper command history capture
     # Atuin allows these flags: "--disable-up-arrow" and/or "--disable-ctrl-r"
     # Use by setting a universal variable, e.g. set -U ATUIN_INIT_FLAGS "--disable-up-arrow"
     # Or set in config.fish before this file is sourced
     [ "$(command -v atuin)" ] && eval "$(atuin init fish $ATUIN_INIT_FLAGS)"
+
+    [ "$(command -v starship)" ] && eval "$(starship init fish)"
 
     [ "$(command -v zoxide)" ] && eval "$(zoxide init fish)"
 end
