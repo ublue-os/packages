@@ -36,11 +36,11 @@ if [ "$(basename "$SHELL")" = "bash" ]; then
     [ -f "/usr/share/bash-prexec" ] && . "/usr/share/bash-prexec"
     [ -f "/usr/share/bash-prexec.sh" ] && . "/usr/share/bash-prexec.sh"
     [ -f "${HOMEBREW_PREFIX}/etc/profile.d/bash-preexec.sh" ] && . "${HOMEBREW_PREFIX}/etc/profile.d/bash-preexec.sh"
-    [ "$(command -v starship)" ] && eval "$(starship init bash)"
     [ "$(command -v atuin)" ] && eval "$(atuin init bash ${ATUIN_INIT_FLAGS})"
+    [ "$(command -v starship)" ] && eval "$(starship init bash)"
     [ "$(command -v zoxide)" ] && eval "$(zoxide init bash)"
 elif [ "$(basename "$SHELL")" = "zsh" ]; then
-    [ "$(command -v starship)" ] && eval "$(starship init zsh)"
     [ "$(command -v atuin)" ] && eval "$(atuin init zsh ${ATUIN_INIT_FLAGS})"
+    [ "$(command -v starship)" ] && eval "$(starship init zsh)"
     [ "$(command -v zoxide)" ] && eval "$(zoxide init zsh)"
 fi
