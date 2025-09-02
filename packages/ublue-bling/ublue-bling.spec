@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           ublue-bling
-Version:        0.1.9
+Version:        0.1.11
 Release:        1%{?dist}
 Summary:        Universal Blue Bling CLI setup scripts
 

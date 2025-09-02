@@ -1,6 +1,6 @@
 Name:           ublue-rebase-helper
 Version:        0.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Rebase helper for Universal Blue images
 
 License:        Apache-2.0
