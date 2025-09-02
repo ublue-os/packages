@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.32
+Version:        0.1.33
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -135,7 +135,7 @@ ln -sr %{buildroot}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}/%{_
 
 %package logos
 Summary:        Logos for KDE
-Version:        0.1.9
+Version:        0.2.0
 License:        CC-BY-SA
 BuildRequires: ImageMagick
 Provides: fedora-logos
@@ -187,7 +187,7 @@ Fastfetch configuration for Aurora
 
 %package plymouth
 Summary:        Plymouth customization for Aurora
-Version:        0.1.5
+Version:        0.1.6
 License:        CC-BY-SA
 
 %description plymouth
