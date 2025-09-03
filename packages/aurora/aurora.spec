@@ -237,7 +237,7 @@ Wallpapers included on Aurora by default
 
 
 %package kde-config
-Version:        0.1.3
+Version:        0.1.4
 Summary:        Aurora KDE Plasma configuration
 License:        Apache-2.0 AND GPL-2.0-or-later
 Requires:       aurora-logos
