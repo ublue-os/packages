@@ -31,7 +31,7 @@ source /usr/lib/ujust/ujust.sh
 
 CURRENT_IMAGE=$(rpm-ostree status -b --json | jq -r '.deployments[0]."container-image-reference"')
 
-if /bin/grep -q "\-dx" <<< $CURRENT_IMAGE ; then
+if /bin/grep -q "\-dx\|\-gdx" <<< $CURRENT_IMAGE ; then
     CURRENT_STATE="enabled"
 else
     CURRENT_STATE="disabled"
@@ -59,7 +59,7 @@ if [[ "${OPTION,,}" =~ ^disable ]]; then
         exit 0
     fi
     echo "Rebasing to a non developer image"
-    # Remove -dx suffix from image, specifies ":" to mark the end of the image name
-    NEW_IMAGE=$(sed "s/\-dx//" <<< $CURRENT_IMAGE)
+    # Remove -dx or -gdx suffix from image, specifies ":" to mark the end of the image name
+    NEW_IMAGE=$(sed "s/\-dx\|\-gdx//" <<< $CURRENT_IMAGE)
     rpm-ostree rebase $NEW_IMAGE
 fi
