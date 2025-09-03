@@ -26,7 +26,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/aurora-logos/symbols/ cli-l
 
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/{apps,places}/
 mkdir -p %{buildroot}%{_datadir}/pixmaps/
-install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/ logos/distributor-logo{,-white,-white-circle,-darkwhite-circle}.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/ logos/distributor-logo{,-white}.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo.svg
 magick -background none logos/fedora-logo.svg -quality 90 -resize $((400-10*2))x100 -gravity center -extent 400x100 %{buildroot}%{_datadir}/pixmaps/fedora-logo.png
 magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/pixmaps/fedora-logo-small.png
@@ -40,8 +40,6 @@ ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo.svg %{bui
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/start-here.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/start-here.svg
-ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white-circle.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white-circle.svg
-ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-darkwhite-circle.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-darkwhite-circle.svg
 
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 
@@ -156,8 +154,8 @@ Replacement logos for KDE
 %{_datadir}/pixmaps/fedora-logo-small.png
 %{_datadir}/pixmaps/fedora-logo-sprite.{png,svg}
 %{_datadir}/pixmaps/system-logo{,-white}.png
-%{_datadir}/icons/hicolor/scalable/distributor-logo{,-white,-white-circle,-darkwhite-circle}.svg
-%{_datadir}/icons/hicolor/scalable/places/distributor-logo{,-white,-white-circle,-darkwhite-circle}.svg
+%{_datadir}/icons/hicolor/scalable/distributor-logo{,-white}.svg
+%{_datadir}/icons/hicolor/scalable/places/distributor-logo{,-white}.svg
 %{_datadir}/icons/hicolor/scalable/{apps,places}/start-here.svg
 
 
