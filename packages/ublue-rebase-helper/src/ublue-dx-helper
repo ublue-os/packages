@@ -58,8 +58,13 @@ if [[ "${OPTION,,}" =~ ^disable ]]; then
         echo "You are not currently on a developer image"
         exit 0
     fi
+    # Check if user is on a -gdx image
+    if /bin/grep -q "\-gdx" <<< $CURRENT_IMAGE ; then
+        echo "You are on a GDX image. Developer mode cannot be disabled for GDX images."
+        exit 0
+    fi
     echo "Rebasing to a non developer image"
-    # Remove -dx or -gdx suffix from image, specifies ":" to mark the end of the image name
-    NEW_IMAGE=$(sed "s/\-dx\|\-gdx//" <<< $CURRENT_IMAGE)
+    # Remove -dx suffix from image, specifies ":" to mark the end of the image name
+    NEW_IMAGE=$(sed "s/\-dx//" <<< $CURRENT_IMAGE)
     rpm-ostree rebase $NEW_IMAGE
 fi
