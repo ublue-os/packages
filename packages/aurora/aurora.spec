@@ -30,6 +30,8 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/ logos/distri
 install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-white.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/distributor-logo-symbolic.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-circle-symbolic.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-g.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-t.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo.svg
 magick -background none logos/fedora-logo.svg -quality 90 -resize $((400-10*2))x100 -gravity center -extent 400x100 %{buildroot}%{_datadir}/pixmaps/fedora-logo.png
 magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/pixmaps/fedora-logo-small.png
@@ -164,6 +166,8 @@ Replacement logos for KDE
 %{_datadir}/icons/hicolor/scalable/places/auroralogo-white.svg
 %{_datadir}/icons/hicolor/scalable/{apps,places}/start-here.svg
 %{_datadir}/icons/hicolor/scalable/places/auroralogo-circle-symbolic.svg
+%{_datadir}/icons/hicolor/scalable/places/auroralogo-g.svg
+%{_datadir}/icons/hicolor/scalable/places/auroralogo-t.svg
 
 
 %package cli-logos
