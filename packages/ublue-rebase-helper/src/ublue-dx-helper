@@ -31,7 +31,7 @@ source /usr/lib/ujust/ujust.sh
 
 CURRENT_IMAGE=$(rpm-ostree status -b --json | jq -r '.deployments[0]."container-image-reference"')
 
-if /bin/grep -q "\-dx" <<< $CURRENT_IMAGE ; then
+if /bin/grep -q "\-dx\|\-gdx" <<< $CURRENT_IMAGE ; then
     CURRENT_STATE="enabled"
 else
     CURRENT_STATE="disabled"
@@ -56,6 +56,11 @@ fi
 if [[ "${OPTION,,}" =~ ^disable ]]; then
     if [ "$CURRENT_STATE" != "enabled" ]; then
         echo "You are not currently on a developer image"
+        exit 0
+    fi
+    # Check if user is on a -gdx image
+    if /bin/grep -q "\-gdx" <<< $CURRENT_IMAGE ; then
+        echo "You are on a GDX image. Developer mode cannot be disabled for GDX images."
         exit 0
     fi
     echo "Rebasing to a non developer image"
