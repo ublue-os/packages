@@ -7,5 +7,7 @@ clean-system:
     podman volume prune -f
     flatpak uninstall --unused
     rpm-ostree cleanup -bm
-    brew autoremove
-    brew cleanup
+    if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+        brew autoremove
+        brew cleanup
+    fi
