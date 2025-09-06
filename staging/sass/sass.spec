@@ -5,7 +5,7 @@
 
 Name: sass
 # renovate: datasource=github-releases depName=sass/dart-sass
-Version: 1.92.0
+Version: 1.92.1
 Release: 1%?dist
 Summary: The reference implementation of Sass, written in Dart
 License: MIT
