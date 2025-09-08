@@ -64,7 +64,6 @@ Bazaar features a "curated" tab that can be configured by distributors to allow 
 %{_bindir}/%{name}-dl-worker
 %{_userunitdir}/%{appid}.service
 %{_datadir}/dbus-1/services/%{appid}.service
-%{_datadir}/dbus-1/services/%{appid}.SearchProvider.service
 %{_datadir}/glib-2.0/schemas/%{appid}.gschema.xml
 %{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
 %{_datadir}/icons/hicolor/symbolic/apps/%{appid}-symbolic.svg
