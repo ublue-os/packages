@@ -30,7 +30,7 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/ logos/distri
 install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-white.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/distributor-logo-symbolic.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-circle-symbolic.svg
-install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-pride-gay.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-pride.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-pride-trans.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo.svg
 magick -background none logos/fedora-logo.svg -quality 90 -resize $((400-10*2))x100 -gravity center -extent 400x100 %{buildroot}%{_datadir}/pixmaps/fedora-logo.png
@@ -166,7 +166,7 @@ Replacement logos for KDE
 %{_datadir}/icons/hicolor/scalable/places/auroralogo-white.svg
 %{_datadir}/icons/hicolor/scalable/{apps,places}/start-here.svg
 %{_datadir}/icons/hicolor/scalable/places/auroralogo-circle-symbolic.svg
-%{_datadir}/icons/hicolor/scalable/places/auroralogo-pride-gay.svg
+%{_datadir}/icons/hicolor/scalable/places/auroralogo-pride.svg
 %{_datadir}/icons/hicolor/scalable/places/auroralogo-pride-trans.svg
 
 
