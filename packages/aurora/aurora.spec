@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.32
+Version:        0.1.33
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -26,7 +26,12 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/aurora-logos/symbols/ cli-l
 
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/{apps,places}/
 mkdir -p %{buildroot}%{_datadir}/pixmaps/
-install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/ logos/distributor-logo{,-white,-white-circle,-darkwhite-circle}.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/ logos/distributor-logo.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-white.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/distributor-logo-symbolic.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-circle-symbolic.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-pride.svg
+install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-pride-trans.svg
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo.svg
 magick -background none logos/fedora-logo.svg -quality 90 -resize $((400-10*2))x100 -gravity center -extent 400x100 %{buildroot}%{_datadir}/pixmaps/fedora-logo.png
 magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/pixmaps/fedora-logo-small.png
@@ -37,11 +42,9 @@ magick -background none logos/distributor-logo.svg -quality 90 -resize 256x256! 
 ln -sr %{buildroot}%{_datadir}/pixmaps/fedora-logo.svg %{buildroot}%{_datadir}/pixmaps/fedora_whitelogo.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}%{_datadir}/pixmaps/fedora-logo-sprite.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo.svg
-ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white.svg
-ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/start-here.svg
-ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/start-here.svg
-ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-white-circle.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white-circle.svg
-ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo-darkwhite-circle.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-darkwhite-circle.svg
+ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white.svg
+ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/start-here.svg
+ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/start-here.svg
 
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
 
@@ -135,7 +138,7 @@ ln -sr %{buildroot}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}/%{_
 
 %package logos
 Summary:        Logos for KDE
-Version:        0.1.9
+Version:        0.2.0
 License:        CC-BY-SA
 BuildRequires: ImageMagick
 Provides: fedora-logos
@@ -156,9 +159,15 @@ Replacement logos for KDE
 %{_datadir}/pixmaps/fedora-logo-small.png
 %{_datadir}/pixmaps/fedora-logo-sprite.{png,svg}
 %{_datadir}/pixmaps/system-logo{,-white}.png
-%{_datadir}/icons/hicolor/scalable/distributor-logo{,-white,-white-circle,-darkwhite-circle}.svg
-%{_datadir}/icons/hicolor/scalable/places/distributor-logo{,-white,-white-circle,-darkwhite-circle}.svg
+%{_datadir}/icons/hicolor/scalable/distributor-logo.svg
+%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg
+%{_datadir}/icons/hicolor/scalable/places/distributor-logo.svg
+%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white.svg
+%{_datadir}/icons/hicolor/scalable/places/auroralogo-white.svg
 %{_datadir}/icons/hicolor/scalable/{apps,places}/start-here.svg
+%{_datadir}/icons/hicolor/scalable/places/auroralogo-circle-symbolic.svg
+%{_datadir}/icons/hicolor/scalable/places/auroralogo-pride.svg
+%{_datadir}/icons/hicolor/scalable/places/auroralogo-pride-trans.svg
 
 
 %package cli-logos
@@ -187,7 +196,7 @@ Fastfetch configuration for Aurora
 
 %package plymouth
 Summary:        Plymouth customization for Aurora
-Version:        0.1.5
+Version:        0.1.6
 License:        CC-BY-SA
 
 %description plymouth
@@ -237,7 +246,7 @@ Wallpapers included on Aurora by default
 
 
 %package kde-config
-Version:        0.1.3
+Version:        0.1.4
 Summary:        Aurora KDE Plasma configuration
 License:        Apache-2.0 AND GPL-2.0-or-later
 Requires:       aurora-logos
