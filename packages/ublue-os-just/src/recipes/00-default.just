@@ -30,9 +30,11 @@ logs-last-boot:
 
 # Enroll Nvidia driver & KMOD signing key for secure boot - Enter password "universalblue" if prompted
 enroll-secure-boot-key:
+    #!/usr/bin/bash
+    ENROLLMENT_PASSWORD="universalblue"
+    SECUREBOOT_KEY=/etc/pki/akmods/certs/akmods-ublue.der
     sudo mokutil --timeout -1
-    echo 'The next line will prompt for a MOK password. Then, input "universalblue"'
-    sudo mokutil --import /etc/pki/akmods/certs/akmods-ublue.der
+    echo -e "$ENROLLMENT_PASSWORD\n$ENROLLMENT_PASSWORD" | sudo mokutil --import "$SECUREBOOT_KEY"
     echo 'At next reboot, the mokutil UEFI menu UI will be displayed (*QWERTY* keyboard input and navigation).\nThen, select "Enroll MOK", and input "universalblue" as the password'
 
 # Toggle display of the user-motd in terminal
