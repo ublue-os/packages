@@ -10,6 +10,7 @@ License:        GPL-3.0-only
 URL:            https://github.com/kolunmi/bazaar
 Source:         %{url}/archive/v%{version}/bazaar-%{version}.tar.gz
 
+BuildRequires:  gcc
 BuildRequires:  meson
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  blueprint-compiler
@@ -30,7 +31,7 @@ applications and add-ons from Flatpak remotes, particularly Flathub.
 It emphasizes supporting the developers who make the Linux desktop possible.
 
 %prep
-%autosetup -n bazaar-%{version}
+%autosetup -n bazaar-%{version} -p1
 
 %conf
 %meson \
