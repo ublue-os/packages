@@ -2,14 +2,15 @@
 
 Name:           bazaar
 # renovate: datasource=github-releases depName=kolunmi/bazaar
-Version:        0.4.5
+Version:        0.4.10
 Release:        1%{?dist}
-Summary:        A flatpak centered app store
+Summary:        Flatpak-centric software center and app store
 
 License:        GPL-3.0-only
 URL:            https://github.com/kolunmi/bazaar
-Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
+Source:         %{url}/archive/v%{version}/bazaar-%{version}.tar.gz
 
+BuildRequires:  gcc
 BuildRequires:  meson
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  blueprint-compiler
@@ -24,23 +25,20 @@ BuildRequires:  pkgconfig(json-glib-1.0)
 BuildRequires:  pkgconfig(glycin-1)
 BuildRequires:  pkgconfig(glycin-gtk4-1)
 
-Requires:       glycin-libs
-Requires:       libadwaita
-Requires:       libsoup3
-Requires:       json-glib
-
 %description
-A new app store for GNOME with a focus on discovering and installing applications and add-ons from Flatpak remotes, particularly Flathub.
+A new app store for GNOME with a focus on discovering and installing
+applications and add-ons from Flatpak remotes, particularly Flathub.
 It emphasizes supporting the developers who make the Linux desktop possible.
-Bazaar features a "curated" tab that can be configured by distributors to allow for a more locallized experience.
 
 %prep
-%autosetup -n bazaar-%{version}
+%autosetup -n bazaar-%{version} -p1
 
-%build
+%conf
 %meson \
   -Dhardcoded_content_config_path=/usr/share/ublue-os/bazaar/config.yaml \
   -Dhardcoded_blocklist_path=/usr/share/ublue-os/bazaar/blocklist.txt
+
+%build
 %meson_build
 
 %install
