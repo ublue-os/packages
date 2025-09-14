@@ -3,10 +3,10 @@
 
 Name:           fedora-logos
 Version:        100.0.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Aurora branding
 
-License:        CC-BY-CA
+License:        CC-BY-SA
 URL:            https://github.com/ublue-os/packages
 VCS:            {{{ git_dir_vcs }}}
 Source:         {{{ git_dir_pack }}}
