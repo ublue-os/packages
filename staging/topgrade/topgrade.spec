@@ -2,7 +2,7 @@
 
 Name:           topgrade
 # renovate: datasource=github-releases depName=topgrade-rs/topgrade
-Version:        16.0.4
+Version:        14.0.0
 Release:        1%{?dist}
 Summary:        Upgrade all the things
 
