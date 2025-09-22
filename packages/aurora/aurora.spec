@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.33
+Version:        0.1.34
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -55,9 +55,6 @@ magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x3
 
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/geoclue/conf.d/ schemas%{_sysconfdir}/geoclue/conf.d/99-beacondb.conf
 install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/homebrew/ schemas%{_datadir}/ublue-os/homebrew/*.Brewfile
-%if ((0%{?fedora} && 0%{?fedora} < 43) || 0%{?rhel})
-install -Dpm0644 -t %{buildroot}%{_datadir}/pipewire/pipewire.conf.d/ schemas%{_datadir}/pipewire/pipewire.conf.d/raop.conf
-%endif
 
 mkdir -p %{buildroot}%{_datadir}/{backgrounds,wallpapers}/
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-1/contents/images/ wallpapers/images/aurora-wallpaper-1/contents/images/15392x8616.jpg
@@ -207,7 +204,7 @@ Plymouth logo customization for Aurora
 %{_datadir}/plymouth/themes/spinner/kinoite-watermark.png
 
 %package schemas
-Version:        0.1.14
+Version:        0.1.15
 Summary:        KDE Schemas for Aurora
 
 %description schemas
@@ -216,9 +213,6 @@ Default schemas for Aurora
 %files schemas
 %{_sysconfdir}/geoclue
 %{_datadir}/ublue-os/homebrew/*.Brewfile
-%if ((0%{?fedora} && 0%{?fedora} < 43) || 0%{?rhel})
-%{_datadir}/pipewire/pipewire.conf.d/raop.conf
-%endif
 
 
 %package backgrounds
