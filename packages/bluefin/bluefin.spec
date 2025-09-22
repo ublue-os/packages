@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.3.31
+Version:        0.3.32
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -46,9 +46,6 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/glib-2.0/schemas/ schemas%{_datadir}
 install -Dpm0644 -t %{buildroot}%{_datadir}/applications/ schemas%{_datadir}/applications/*.desktop
 install -Dpm0755 schemas%{_bindir}/bluefin-bazaar-launcher %{buildroot}%{_bindir}/bluefin-bazaar-launcher
 install -Dpm0644 -t %{buildroot}%{_sysconfdir}/gnome-initial-setup/ schemas%{_sysconfdir}/gnome-initial-setup/vendor.conf
-%if ((0%{?fedora} && 0%{?fedora} < 43) || 0%{?rhel})
-install -Dpm0644 -t %{buildroot}%{_datadir}/pipewire/pipewire.conf.d/ schemas%{_datadir}/pipewire/pipewire.conf.d/raop.conf
-%endif
 
 %check
 
@@ -111,7 +108,7 @@ Plymouth logo customization for Bluefin
 
 
 %package schemas
-Version:        0.2.20
+Version:        0.2.21
 Summary:        GNOME Schemas for Bluefin
 
 %description schemas
@@ -128,9 +125,6 @@ Contains all of the DConf settings that Bluefin ships by default
 %{_datadir}/applications
 %{_datadir}/ublue-os/homebrew/*.Brewfile
 %{_bindir}/bluefin-bazaar-launcher
-%if ((0%{?fedora} && 0%{?fedora} < 43) || 0%{?rhel})
-%{_datadir}/pipewire/pipewire.conf.d/raop.conf
-%endif
 
 
 %package backgrounds
