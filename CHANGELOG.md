@@ -1,5 +1,67 @@
 # Changelog
 
+## [1.3.0](https://github.com/ublue-os/packages/compare/v1.2.0...v1.3.0) (2025-07-29)
+
+
+### Features
+
+* add aurora recommended apps on discover ([#584](https://github.com/ublue-os/packages/issues/584)) ([02a9881](https://github.com/ublue-os/packages/commit/02a988190cd5de730baca039c4c7d3d22d670c5b))
+* add krunner-bazaar ([#659](https://github.com/ublue-os/packages/issues/659)) ([d120b2a](https://github.com/ublue-os/packages/commit/d120b2a9bcee8ddb0d1c5f76af795d0444c970d2))
+* add summer wallpaper ([40ad155](https://github.com/ublue-os/packages/commit/40ad155337c838ce47324ca87d20f1219b98204c))
+* Add Wallpaper for June 2025 ([#616](https://github.com/ublue-os/packages/issues/616)) ([90a1be3](https://github.com/ublue-os/packages/commit/90a1be3f0ee7afffb8e010948e81e41d81cd5889))
+* **ai:** add bluefin-ai brewfile ([#676](https://github.com/ublue-os/packages/issues/676)) ([80651be](https://github.com/ublue-os/packages/commit/80651becfb715b1c884e0b340af02c33cf7fe1fc))
+* alias rl to ramalama ([#599](https://github.com/ublue-os/packages/issues/599)) ([0538f0f](https://github.com/ublue-os/packages/commit/0538f0fd3cf33c5cad29689ba20ebe34582cf494))
+* Also use a hardcoded blocklist path ([f833dfc](https://github.com/ublue-os/packages/commit/f833dfced84f8b36c5bc655349123660601ca00f))
+* **aurora:** add bold-brew to aurora-cli ([#722](https://github.com/ublue-os/packages/issues/722)) ([d325050](https://github.com/ublue-os/packages/commit/d32505004f4e0c667f2584489126de4d8076adb6))
+* **aurora:** add brew tool carapace ([#731](https://github.com/ublue-os/packages/issues/731)) ([5cec80c](https://github.com/ublue-os/packages/commit/5cec80c3c8e89260bbebd830a0aad1de7ff0a9c0))
+* **aurora:** add kde-config package ([#549](https://github.com/ublue-os/packages/issues/549)) ([7102e26](https://github.com/ublue-os/packages/commit/7102e26b43aab16d7b15d78ae7989cab7299d116))
+* **aurora:** add remaining aurora-logos ([#543](https://github.com/ublue-os/packages/issues/543)) ([7c59252](https://github.com/ublue-os/packages/commit/7c59252b00db269776e2a7a38a27faa25d40da3b))
+* **aurora:** add start-here logo ([#651](https://github.com/ublue-os/packages/issues/651)) ([75bf612](https://github.com/ublue-os/packages/commit/75bf61274d26207e9303a00735c0b6dfae728737))
+* **aurora:** generate multiple resolution logos at build time ([#716](https://github.com/ublue-os/packages/issues/716)) ([14da1e5](https://github.com/ublue-os/packages/commit/14da1e55ca2955c5c5e405c349e90352e32087f5))
+* **bazaar:** bump bluefin schema spec ([#646](https://github.com/ublue-os/packages/issues/646)) ([6279d4b](https://github.com/ublue-os/packages/commit/6279d4b158f702a82f4ebf53c3fdb5074521ff70))
+* **brew:** add bbrew ([#721](https://github.com/ublue-os/packages/issues/721)) ([4ce31c0](https://github.com/ublue-os/packages/commit/4ce31c0ba2f71164b540f3e4a24a9577874210ec))
+* **homebrew:** k8s - k0s,k3s, kind AI - aichat, goose, clio CLI - carapace ([#730](https://github.com/ublue-os/packages/issues/730)) ([7c9351f](https://github.com/ublue-os/packages/commit/7c9351f1b8645c6ad681f408af69466a0238a5aa))
+* **media-automount-udev:** Add x-gvfs-show mount option for partition visibility in Gnome ([#735](https://github.com/ublue-os/packages/issues/735)) ([a68f085](https://github.com/ublue-os/packages/commit/a68f085c5c40af2b11ff35f18b5808c871ce5c46))
+* **media-automount-udev:** log reason for mounting skip ([#586](https://github.com/ublue-os/packages/issues/586)) ([6fbf337](https://github.com/ublue-os/packages/commit/6fbf337e54b5b9bb4f03ca033f134072805f562a))
+* switch bluefin to bazaar ([#638](https://github.com/ublue-os/packages/issues/638)) ([e13c6f9](https://github.com/ublue-os/packages/commit/e13c6f990e299f639024319aa39b167de2504688))
+* turn on bazaar in bluefin's logomenu ([#582](https://github.com/ublue-os/packages/issues/582)) ([7052996](https://github.com/ublue-os/packages/commit/70529960791de453cda8a4920baab797b1b2d56c))
+* **ublue-brew:** unlink bash ([#636](https://github.com/ublue-os/packages/issues/636)) ([9cc1bf5](https://github.com/ublue-os/packages/commit/9cc1bf5489c3ba2d05e588c949e0f8d314a8ba74))
+* **ujust:** add more aliases to davinci-resolve ([#661](https://github.com/ublue-os/packages/issues/661)) ([7de9b73](https://github.com/ublue-os/packages/commit/7de9b73c4e09c90c3af6ca3b2bef1cbeebe150ec))
+* update bluefin wallpaper for june ([#554](https://github.com/ublue-os/packages/issues/554)) ([5757cb9](https://github.com/ublue-os/packages/commit/5757cb9229db50fb6da96a2381f64ce50c0069ce))
+
+
+### Bug Fixes
+
+* Add git dir version to bazaar version to ensure it always ratchets forward ([f9f67d0](https://github.com/ublue-os/packages/commit/f9f67d0514c4b5f04f694db7889f7c6e1383d5ce))
+* Add missing blueprint compiler dependency ([fcd3d30](https://github.com/ublue-os/packages/commit/fcd3d30eb194987e3f9d39a0fb2c63a6a6cfdb9e))
+* **bazaar:** add gvfs dependency ([#625](https://github.com/ublue-os/packages/issues/625)) ([8bdadb5](https://github.com/ublue-os/packages/commit/8bdadb55e5ca31dcb186946fc5f760cb4e7c0b31))
+* **bazaar:** explictly require libdex 0.9.1 ([#736](https://github.com/ublue-os/packages/issues/736)) ([3fa6ddb](https://github.com/ublue-os/packages/commit/3fa6ddb7aa155364410c1d24a3c90157d8ef72e5))
+* **bazaar:** update .desktop file ([#682](https://github.com/ublue-os/packages/issues/682)) ([d4131ef](https://github.com/ublue-os/packages/commit/d4131efcc3f2e6abc81a0aa794f60b7e4881afbf))
+* **bluefin:** update discussions url ([#726](https://github.com/ublue-os/packages/issues/726)) ([13c9c1b](https://github.com/ublue-os/packages/commit/13c9c1bb8fb4d93783dccc74dbf6ae5a858a521b))
+* bump logomenu ([#571](https://github.com/ublue-os/packages/issues/571)) ([c119d2d](https://github.com/ublue-os/packages/commit/c119d2d89581b60f4bbce16ce739f4d8892cab4e))
+* bump package and wallpapers ([#680](https://github.com/ublue-os/packages/issues/680)) ([20fd09b](https://github.com/ublue-os/packages/commit/20fd09bd9bf0739dca3a15450e5dfa9f8f42acf5))
+* bump schemas spec ([2481048](https://github.com/ublue-os/packages/commit/248104863d9390f82f20792237e1d40724f094bc))
+* bump spec ([#647](https://github.com/ublue-os/packages/issues/647)) ([02a6616](https://github.com/ublue-os/packages/commit/02a6616ea87ed7c9d87ab1492152103aa7bff6e5))
+* ensure libvirt group and libvirtdbus user/group are created ([#619](https://github.com/ublue-os/packages/issues/619)) ([372c47a](https://github.com/ublue-os/packages/commit/372c47af2570bdc7a54216cb9adcc7e3608458d9))
+* **media-automount-udev:** ignore nonexisting entries in fstab ([#524](https://github.com/ublue-os/packages/issues/524)) ([66d72aa](https://github.com/ublue-os/packages/commit/66d72aac833590cf2ef0563b083ed730ac33ea02))
+* **search-light:** enable gnome 48 patches for epel 10 builds ([#562](https://github.com/ublue-os/packages/issues/562)) ([375bd74](https://github.com/ublue-os/packages/commit/375bd74761c7f68c89cb4ec274f74b0502793679))
+* syntax error k8s Brewfile ([#746](https://github.com/ublue-os/packages/issues/746)) ([a55090e](https://github.com/ublue-os/packages/commit/a55090eba9206bde15fd5fa03e8b2522251b00dc))
+* **ublue-branding:** add ublue-branding-logos without deletion ([#478](https://github.com/ublue-os/packages/issues/478)) ([0339959](https://github.com/ublue-os/packages/commit/0339959545c886eb9b4a604c6d680501420afa72))
+* **ublue-brew:** add gcc to requires ([#672](https://github.com/ublue-os/packages/issues/672)) ([534a439](https://github.com/ublue-os/packages/commit/534a439f0d3b3859e001bf9140784dcbe2c055d5))
+* **ublue-setup-services:** set service user as root ([#602](https://github.com/ublue-os/packages/issues/602)) ([dc122e3](https://github.com/ublue-os/packages/commit/dc122e35bbfcdefbaf0d77f567602a63aa0dd7e9))
+* unbind ctrl-alt-\ ([#604](https://github.com/ublue-os/packages/issues/604)) ([8dfd798](https://github.com/ublue-os/packages/commit/8dfd798e4895b34c6d62636ae8750178d9b417e2))
+* Update appid ([7434e9b](https://github.com/ublue-os/packages/commit/7434e9b47b811d87a883aa6d6c3c7bfbe1cc5cbb))
+* Update bazaar commit and add custom config path ([79b7842](https://github.com/ublue-os/packages/commit/79b784226feaf42797b9a11af939b1cecf5755a4))
+* update zz0-bluefin-modifications.gschema.override ([#665](https://github.com/ublue-os/packages/issues/665)) ([9c349ce](https://github.com/ublue-os/packages/commit/9c349ce740941360e30b3a2e94e666173ae29749))
+* **update-services:** enable timers, not services, for timer-triggered units ([#691](https://github.com/ublue-os/packages/issues/691)) ([84c4c67](https://github.com/ublue-os/packages/commit/84c4c670cbdc7d7622aa85c5b33f30ef9ee4cd6a))
+* wallpaper month ([#555](https://github.com/ublue-os/packages/issues/555)) ([45e1c9a](https://github.com/ublue-os/packages/commit/45e1c9ad70077a28efd18a75b4d451e3779a4f00))
+* wallpapers ([#670](https://github.com/ublue-os/packages/issues/670)) ([b525a94](https://github.com/ublue-os/packages/commit/b525a94f8f68c10ee85068ea4269d7b9922a6e20))
+
+
+### Reverts
+
+* add gnome-software back to the dock. ([b91ebe8](https://github.com/ublue-os/packages/commit/b91ebe898e226ca4d191378801d1e032c392bb14))
+
 ## [1.1.0](https://github.com/ublue-os/packages/compare/v1.0.0...v1.1.0) (2025-05-14)
 
 
