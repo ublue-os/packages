@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.34
+Version:        0.1.35
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -181,7 +181,7 @@ Logos for CLI applications like Fastfetch
 
 %package fastfetch
 Summary:        Fastfetch configuration for Aurora
-Version:        0.1.4
+Version:        0.1.5
 License:        CC-BY-SA
 
 %description fastfetch
