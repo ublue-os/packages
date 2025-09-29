@@ -7,7 +7,7 @@ update VERB_LEVEL="full":
     #!/usr/bin/bash
     OVERALL_STATUS=0
     trap 'if [ $OVERALL_STATUS -eq 0 ]; then \
-             notify-send "Updates Complete" "rpm-ostree, Flatpak, and Distrobox updates finished successfully." --icon=dialog-information; \
+             notify-send "Updates Complete" "Updates finished successfully." --icon=dialog-information; \
            else \
              notify-send "Updates Failed" "One or more update steps failed. Check the terminal for details." --icon=dialog-error; \
            fi' EXIT
