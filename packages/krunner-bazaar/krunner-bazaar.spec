@@ -2,7 +2,7 @@
 
 Name:           krunner-bazaar
 Version:        %{majmin_ver}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        KDE KRunner plugin for searching Flatpak applications via Bazaar
 
 License:        Apache-2.0
@@ -22,7 +22,7 @@ BuildRequires:  gettext
 Requires:       kf6-krunner
 Requires:       qt6-qtbase
 Requires:       flatpak
-Requires:       bazaar
+Suggests:       bazaar
 
 %description
 A KDE KRunner plugin that integrates with Bazaar, a GTK application for browsing
