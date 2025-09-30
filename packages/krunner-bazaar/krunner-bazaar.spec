@@ -1,8 +1,8 @@
-%global majmin_ver 1.2.1
+%global majmin_ver 1.2.2
 
 Name:           krunner-bazaar
 Version:        %{majmin_ver}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        KDE KRunner plugin for searching Flatpak applications via Bazaar
 
 License:        Apache-2.0
