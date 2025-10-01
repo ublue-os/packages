@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.35
+Version:        0.1.36
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -225,7 +225,7 @@ Default schemas for Aurora
 
 
 %package backgrounds
-Version:        0.1.6
+Version:        1.1.7
 Summary:        Aurora wallpapers
 License:        CC-BY-SA
 
