@@ -1,7 +1,7 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
 Version:        0.53
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
@@ -88,11 +88,14 @@ done
 %{fish_completions_dir}/ujust.fish
 
 %changelog
+* Tue Sep 30 2025 renner <renner0@posteo.de> - 0.53-2
+- fix epel builds by removing macros from changelog
+
 * Fri Aug 29 2025 renner <renner0@posteo.de> - 0.52
 - Add check if brew is installed for clean-system
 
 * Thu Aug 28 2025 noelmiller <noel@noelmiller.dev> - 0.51
-- Remove %install steps for deprecated files
+- Remove install steps for deprecated files
 - Removed toolbox related files from %files
 
 * Thu Aug 28 2025 noelmiller <noel@noelmiller.dev> - 0.50
@@ -100,7 +103,7 @@ done
 - Removed etc-toolbox/toolbox.ini
 
 * Mon Aug 04 2025 renner <renner0@posteo.de> - 0.49
-- Add %check for .just files
+- Add check for .just files
 
 * Sat Jun 28 2025 renner <renner0@posteo.de> - 0.48
 - Add alias to davinci-resolve
