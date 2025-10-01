@@ -225,7 +225,7 @@ Default schemas for Aurora
 
 
 %package backgrounds
-Version:        1.1.7
+Version:        0.1.7
 Summary:        Aurora wallpapers
 License:        CC-BY-SA
 
