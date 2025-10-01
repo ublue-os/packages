@@ -2,12 +2,12 @@
     "KPlugin": {
         "Authors": [
             {
-                "Email": "",
+                "Email": "https://ko-fi.com/chandeleer",
                 "Name": "Chandeleer"
             }
         ],
-        "Id": "AuroraWallpaper3",
+        "Id": "Luna",
         "License": "CC-BY-SA",
-        "Name": "Aurora Wallpaper 3 with Scopey"
+        "Name": "Luna"
     }
 }
