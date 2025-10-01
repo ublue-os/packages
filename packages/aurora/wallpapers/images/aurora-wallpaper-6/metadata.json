@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "https://ko-fi.com/chandeleer",
+                "Name": "Chandeleer"
+            }
+        ],
+        "Id": "Globetrotter",
+        "License": "CC-BY-SA",
+        "Name": "Globetrotter"
+    }
+}

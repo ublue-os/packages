@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "https://ko-fi.com/chandeleer",
+                "Name": "Chandeleer"
+            }
+        ],
+        "Id": "AuroraVerse",
+        "License": "CC-BY-SA",
+        "Name": "AuroraVerse"
+    }
+}
