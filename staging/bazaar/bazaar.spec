@@ -10,10 +10,12 @@ License:        GPL-3.0-only
 URL:            https://github.com/kolunmi/bazaar
 Source:         %{url}/archive/v%{version}/bazaar-%{version}.tar.gz
 
+# https://fedoraproject.org/wiki/Changes/EncourageI686LeafRemoval
+ExcludeArch:    %{ix86}
+
 BuildRequires:  gcc
 BuildRequires:  meson
 BuildRequires:  systemd-rpm-macros
-BuildRequires:  desktop-file-utils
 BuildRequires:  blueprint-compiler
 BuildRequires:  desktop-file-utils
 BuildRequires:  pkgconfig(libadwaita-1)
@@ -23,8 +25,8 @@ BuildRequires:  pkgconfig(libdex-1)
 BuildRequires:  pkgconfig(yaml-0.1)
 BuildRequires:  pkgconfig(libsoup-3.0)
 BuildRequires:  pkgconfig(json-glib-1.0)
-BuildRequires:  pkgconfig(glycin-1)
-BuildRequires:  pkgconfig(glycin-gtk4-1)
+BuildRequires:  pkgconfig(glycin-2)
+BuildRequires:  pkgconfig(glycin-gtk4-2)
 
 %description
 A new app store for GNOME with a focus on discovering and installing
@@ -32,7 +34,7 @@ applications and add-ons from Flatpak remotes, particularly Flathub.
 It emphasizes supporting the developers who make the Linux desktop possible.
 
 %prep
-%autosetup -n bazaar-%{version} -p1
+%autosetup -n bazaar-%{version}
 
 %conf
 %meson \
