@@ -2,7 +2,7 @@
 
 Name:           bazaar
 # renovate: datasource=github-releases depName=kolunmi/bazaar
-Version:        0.5.1
+Version:        0.5.2
 Release:        1%{?dist}
 Summary:        Flatpak-centric software center and app store
 
@@ -13,6 +13,7 @@ Source:         %{url}/archive/v%{version}/bazaar-%{version}.tar.gz
 BuildRequires:  gcc
 BuildRequires:  meson
 BuildRequires:  systemd-rpm-macros
+BuildRequires:  desktop-file-utils
 BuildRequires:  blueprint-compiler
 BuildRequires:  desktop-file-utils
 BuildRequires:  pkgconfig(libadwaita-1)
@@ -44,6 +45,9 @@ It emphasizes supporting the developers who make the Linux desktop possible.
 %install
 %meson_install
 %find_lang %{name}
+
+%check
+desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 
 %post
 %systemd_user_post %{appid}.service
