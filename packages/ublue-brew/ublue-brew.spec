@@ -3,7 +3,7 @@
 %define homebrew_release homebrew-2025-05-04-04-03-02
 
 Name:           ublue-brew
-Version:        0.1.10
+Version:        0.1.11
 Release:        1%{?dist}
 Summary:        Homebrew integration for Universal Blue systems
 
