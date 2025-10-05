@@ -192,6 +192,11 @@ get_config() {
 - System extensions directory: `/var/lib/extensions`
 - Always disable pagers in git commands: `git --no-pager`
 
+## Additional Rules for this Repository
+
+- Always use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages
+- Be clean and surgical when making improvements, do not be overly verbose. 
+
 ## Getting Help
 
 - Documentation: [Universal Blue Just Documentation](https://docs.projectbluefin.io/administration#community-aliases-and-workarounds)
