@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.36
+Version:        0.1.37
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -22,8 +22,6 @@ Branding for Aurora-related projects
 %build
 
 %install
-install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/aurora-logos/symbols/ cli-logos/symbols/*
-
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/{apps,places}/
 mkdir -p %{buildroot}%{_datadir}/pixmaps/
 install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/ logos/distributor-logo.svg
@@ -46,15 +44,10 @@ ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-sy
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/start-here.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/start-here.svg
 
-install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/ fastfetch/fastfetch.jsonc
-
 mkdir -p %{buildroot}/%{_datadir}/plymouth/themes/spinner/
 
 magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/watermark.png
 magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/kinoite-watermark.png
-
-install -Dpm0644 -t %{buildroot}%{_sysconfdir}/geoclue/conf.d/ schemas%{_sysconfdir}/geoclue/conf.d/99-beacondb.conf
-install -Dpm0644 -t %{buildroot}%{_datadir}/ublue-os/homebrew/ schemas%{_datadir}/ublue-os/homebrew/*.Brewfile
 
 mkdir -p %{buildroot}%{_datadir}/{backgrounds,wallpapers}/
 
@@ -130,8 +123,6 @@ install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/look-and-feel/dev.getaur
 
 install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/discover/ kde-config/discover/featuredurlrc
 install -Dpm0644 -t %{buildroot}/%{_datadir}/ublue-os/discover/ kde-config/discover/featured.json
-mkdir -p %{buildroot}/%{_kf6_datadir}/plasma/avatars/
-install -Dpm0644 -t %{buildroot}/%{_kf6_datadir}/plasma/avatars/ faces/*
 
 mkdir -p %{buildroot}/%{_datadir}/sddm/themes/01-breeze-aurora/faces
 install -Dpm0644 -t %{buildroot}/%{_datadir}/sddm/themes/01-breeze-aurora/ kde-config/sddm/01-breeze-aurora/*.qml kde-config/sddm/01-breeze-aurora/*.desktop kde-config/sddm/01-breeze-aurora/*.png kde-config/sddm/01-breeze-aurora/*.conf
@@ -175,31 +166,6 @@ Replacement logos for KDE
 %{_datadir}/icons/hicolor/scalable/places/auroralogo-pride.svg
 %{_datadir}/icons/hicolor/scalable/places/auroralogo-pride-trans.svg
 
-
-%package cli-logos
-Version:        0.1.3
-Summary:        Logos for CLI
-License:        CC-BY-SA
-
-%description cli-logos
-Logos for CLI applications like Fastfetch
-
-%files cli-logos
-%{_datadir}/ublue-os/aurora-logos/*
-
-
-%package fastfetch
-Summary:        Fastfetch configuration for Aurora
-Version:        0.1.5
-License:        CC-BY-SA
-
-%description fastfetch
-Fastfetch configuration for Aurora
-
-%files fastfetch
-%{_datadir}/ublue-os/fastfetch.jsonc
-
-
 %package plymouth
 Summary:        Plymouth customization for Aurora
 Version:        0.1.6
@@ -211,18 +177,6 @@ Plymouth logo customization for Aurora
 %files plymouth
 %{_datadir}/plymouth/themes/spinner/watermark.png
 %{_datadir}/plymouth/themes/spinner/kinoite-watermark.png
-
-%package schemas
-Version:        0.1.15
-Summary:        KDE Schemas for Aurora
-
-%description schemas
-Default schemas for Aurora
-
-%files schemas
-%{_sysconfdir}/geoclue
-%{_datadir}/ublue-os/homebrew/*.Brewfile
-
 
 %package backgrounds
 Version:        0.1.7
@@ -280,18 +234,6 @@ This sets the Aurora defaults for Logos, Wallpapers, Theme and Editor's choice i
 %{_datadir}/sddm/themes/01-breeze-aurora/preview.png
 %{_datadir}/sddm/themes/01-breeze-aurora/theme.conf
 %{_datadir}/sddm/themes/01-breeze-aurora/faces/.face.icon
-
-
-%package faces
-Version:        0.2.0
-Summary:        Aurora Character Profile Pictures
-License:        CC-BY-SA
-
-%description faces
-%{summary}.
-
-%files faces
-%{_kf6_datadir}/plasma/avatars/{lumina,scope,tina,vincent,echo,phlip}.png
 
 
 %changelog
