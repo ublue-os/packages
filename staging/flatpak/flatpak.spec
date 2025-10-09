@@ -24,6 +24,12 @@ Source0:        https://github.com/flatpak/flatpak/releases/download/%{version}/
 Source1:        flatpak-add-fedora-repos.service
 %endif
 
+# Add support for preinstalling flatpaks
+# https://github.com/flatpak/flatpak/pull/6116
+# https://gitlab.com/redhat/centos-stream/rpms/flatpak/-/blob/c10s/flatpak-add-support-for-preinstalling-flatpaks.patch?ref_type=heads
+# This is a slightly modified patch so it applies on top of 1.16.1
+Patch0:         1.16.1-to-pre-install-builds.patch
+
 # ostree not on i686 for RHEL 10
 # https://github.com/containers/composefs/pull/229#issuecomment-1838735764
 %if 0%{?rhel} >= 10
