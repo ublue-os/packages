@@ -66,9 +66,6 @@ License:   LGPL-2.1-or-later
 URL:       https://github.com/fwupd/fwupd
 Source0:   %{url}/archive/refs/tags/%{version}.zip
 
-#Fedora upstream source
-#Source0:   http://people.freedesktop.org/~hughsient/releases/%{name}-%{version}.tar.xz
-
 BuildRequires: gettext
 BuildRequires: hwdata
 BuildRequires: glib2-devel >= %{glib2_version}
