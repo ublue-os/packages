@@ -1,3 +1,4 @@
+# https://github.com/ublue-os/bazzite/issues/1400
 # NOTE: The diff between this spec and the upstream spec at
 #       https://src.fedoraproject.org/rpms/fwupd is:
 #    --- fwupd.spec	2025-04-12 23:04:28.281040805 -0500
@@ -9,8 +10,8 @@
 #  +    -Dsupported_build=enabled \
 #  +    -Defi_os_dir="fedora"
 #  +
-%global glib2_version 2.45.8
-%global libxmlb_version 0.1.3
+%global glib2_version 2.68.0
+%global libxmlb_version 0.3.24
 %global libusb_version 1.0.9
 %global libcurl_version 7.62.0
 %global libjcat_version 0.1.0
@@ -59,7 +60,7 @@
 Summary:   Firmware update daemon
 Name:      fwupd
 # renovate: datasource=yum repo=fedora-42-x86_64 pkg=fwupd
-Version:   2.0.12
+Version:   2.0.16
 Release:   100.ublue
 License:   LGPL-2.1-or-later
 URL:       https://github.com/fwupd/fwupd
@@ -69,6 +70,7 @@ Source0:   %{url}/archive/refs/tags/%{version}.zip
 #Source0:   http://people.freedesktop.org/~hughsient/releases/%{name}-%{version}.tar.xz
 
 BuildRequires: gettext
+BuildRequires: hwdata
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: libxmlb-devel >= %{libxmlb_version}
 BuildRequires: libusb1-devel >= %{libusb_version}
@@ -224,11 +226,6 @@ or server machines.
 %else
     -Dplugin_flashrom=disabled \
 %endif
-%if 0%{?have_uefi}
-    -Dplugin_uefi_capsule_splash=true \
-%else
-    -Dplugin_uefi_capsule_splash=false \
-%endif
 %if 0%{?have_modem_manager}
     -Dplugin_modem_manager=enabled \
 %else
@@ -284,7 +281,9 @@ systemctl --no-reload preset fwupd-refresh.timer &>/dev/null || :
 %ifarch x86_64
 %{_libexecdir}/fwupd/fwupd-detect-cet
 %endif
+%if 0%{?have_uefi}
 %{_bindir}/dbxtool
+%endif
 %{_bindir}/fwupdmgr
 %{_bindir}/fwupdtool
 %dir %{_sysconfdir}/fwupd
@@ -316,7 +315,9 @@ systemctl --no-reload preset fwupd-refresh.timer &>/dev/null || :
 %{_datadir}/polkit-1/rules.d/org.freedesktop.fwupd.rules
 %{_datadir}/dbus-1/system-services/org.freedesktop.fwupd.service
 %{_mandir}/man1/fwupdtool.1*
+%if 0%{?have_uefi}
 %{_mandir}/man1/dbxtool.*
+%endif
 %{_mandir}/man1/fwupdmgr.1*
 %{_mandir}/man5/*
 %{_mandir}/man8/*
