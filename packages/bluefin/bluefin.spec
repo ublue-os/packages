@@ -129,7 +129,7 @@ Contains all of the DConf settings that Bluefin ships by default
 
 %package backgrounds
 Summary:        Bluefin wallpapers
-Version:        0.2.9
+Version:        0.2.10
 License:        CC-BY-SA
 
 %description backgrounds
