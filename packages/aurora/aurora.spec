@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.37
+Version:        0.1.38
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -40,6 +40,8 @@ magick -background none logos/distributor-logo.svg -quality 90 -resize 256x256! 
 ln -sr %{buildroot}%{_datadir}/pixmaps/fedora-logo.svg %{buildroot}%{_datadir}/pixmaps/fedora_whitelogo.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}%{_datadir}/pixmaps/fedora-logo-sprite.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo.svg
+ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/auroralogo-gradient.svg
+ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/auroralogo-symbolic.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/start-here.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/start-here.svg
@@ -135,7 +137,7 @@ ln -sr %{buildroot}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}/%{_
 
 %package logos
 Summary:        Logos for KDE
-Version:        0.2.0
+Version:        0.2.1
 License:        CC-BY-SA
 BuildRequires: ImageMagick
 Provides: fedora-logos
@@ -165,6 +167,8 @@ Replacement logos for KDE
 %{_datadir}/icons/hicolor/scalable/places/auroralogo-circle-symbolic.svg
 %{_datadir}/icons/hicolor/scalable/places/auroralogo-pride.svg
 %{_datadir}/icons/hicolor/scalable/places/auroralogo-pride-trans.svg
+%{_datadir}/icons/hicolor/scalable/places/auroralogo-symbolic.svg
+%{_datadir}/icons/hicolor/scalable/places/auroralogo-gradient.svg
 
 %package plymouth
 Summary:        Plymouth customization for Aurora
