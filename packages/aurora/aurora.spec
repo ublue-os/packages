@@ -75,7 +75,7 @@ ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-6/ %{build
 
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-7/contents/images/ wallpapers/images/aurora-wallpaper-7/contents/images/3840x2160.jxl
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-7/ wallpapers/images/aurora-wallpaper-7/metadata.json
-ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-6/ %{buildroot}%{_datadir}/wallpapers/
+ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-7/ %{buildroot}%{_datadir}/wallpapers/
 
 # Replace the old wallpaper with the new one
 ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-6/ %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-1
