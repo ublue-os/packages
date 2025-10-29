@@ -19,11 +19,6 @@ License:        LGPL-2.1-or-later
 URL:            https://flatpak.org/
 Source0:        https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
 
-%if 0%{?fedora}
-# Add Fedora flatpak repositories
-Source1:        flatpak-add-fedora-repos.service
-%endif
-
 # Add support for preinstalling flatpaks
 # https://github.com/flatpak/flatpak/pull/6116
 # https://gitlab.com/redhat/centos-stream/rpms/flatpak/-/blob/c10s/flatpak-add-support-for-preinstalling-flatpaks.patch?ref_type=heads
@@ -179,10 +174,6 @@ install -pm 644 NEWS README.md %{buildroot}/%{_pkgdocdir}
 # The system repo is not installed by the flatpak build system.
 install -d %{buildroot}%{_localstatedir}/lib/flatpak
 install -d %{buildroot}%{_sysconfdir}/flatpak/remotes.d
-
-%if 0%{?fedora}
-install -D -t %{buildroot}%{_unitdir} %{SOURCE1}
-%endif
 
 %find_lang %{name}
 
