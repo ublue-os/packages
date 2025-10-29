@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "https://ko-fi.com/chandeleer",
+                "Name": "Chandeleer"
+            }
+        ],
+        "Id": "FallBlues",
+        "License": "CC-BY-SA",
+        "Name": "FallBlues"
+    }
+}
