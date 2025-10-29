@@ -178,26 +178,8 @@ install -d %{buildroot}%{_sysconfdir}/flatpak/remotes.d
 %find_lang %{name}
 
 
-%if 0%{?fedora}
-%post
-%systemd_post flatpak-add-fedora-repos.service
-%endif
-
-
 %post selinux
 %selinux_modules_install %{_datadir}/selinux/packages/flatpak.pp.bz2
-
-
-%if 0%{?fedora}
-%preun
-%systemd_preun flatpak-add-fedora-repos.service
-%endif
-
-
-%if 0%{?fedora}
-%postun
-%systemd_postun_with_restart flatpak-add-fedora-repos.service
-%endif
 
 
 %postun selinux
