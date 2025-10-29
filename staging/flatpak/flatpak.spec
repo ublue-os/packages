@@ -234,10 +234,6 @@ fi
 %{_systemd_user_env_generator_dir}/60-flatpak
 %{_tmpfilesdir}/%{name}.conf
 
-%if 0%{?fedora}
-%{_unitdir}/flatpak-add-fedora-repos.service
-%endif
-
 %files devel
 %{_datadir}/gir-1.0/Flatpak-1.0.gir
 %{_datadir}/gtk-doc/
