@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.1.38
+Version:        0.1.39
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -71,6 +71,10 @@ ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-5/ %{build
 
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-6/contents/images/ wallpapers/images/aurora-wallpaper-6/contents/images/3840x2160.jxl
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-6/ wallpapers/images/aurora-wallpaper-6/metadata.json
+ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-6/ %{buildroot}%{_datadir}/wallpapers/
+
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-7/contents/images/ wallpapers/images/aurora-wallpaper-7/contents/images/3840x2160.jxl
+install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-7/ wallpapers/images/aurora-wallpaper-7/metadata.json
 ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-6/ %{buildroot}%{_datadir}/wallpapers/
 
 # Replace the old wallpaper with the new one
@@ -183,7 +187,7 @@ Plymouth logo customization for Aurora
 %{_datadir}/plymouth/themes/spinner/kinoite-watermark.png
 
 %package backgrounds
-Version:        0.1.7
+Version:        0.1.8
 Summary:        Aurora wallpapers
 License:        CC-BY-SA
 
@@ -199,6 +203,7 @@ Wallpapers included on Aurora by default
 %{_datadir}/wallpapers/aurora-wallpaper-4
 %{_datadir}/wallpapers/aurora-wallpaper-5
 %{_datadir}/wallpapers/aurora-wallpaper-6
+%{_datadir}/wallpapers/aurora-wallpaper-7
 %{_datadir}/wallpapers/greg-rakozy-aurora
 %{_datadir}/wallpapers/jonatan-pie-aurora
 %{_datadir}/wallpapers/xe_clouds
