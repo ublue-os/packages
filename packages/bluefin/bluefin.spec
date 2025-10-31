@@ -2,7 +2,7 @@
 %global vendor bluefin
 
 Name:           bluefin
-Version:        0.3.33
+Version:        0.3.34
 Release:        1%{?dist}
 Summary:        Bluefin branding
 
@@ -85,7 +85,7 @@ Logos for CLI applications like Fastfetch
 
 %package fastfetch
 Summary:        Fastfetch configuration for Bluefin
-Version:        0.2.4
+Version:        0.2.5
 License:        CC-BY-SA
 
 %description fastfetch
