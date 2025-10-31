@@ -44,6 +44,23 @@
     },
     "break",
     {
+      "type": "command",
+      "key": "󱍢",
+      "keyColor": "#0066cc",
+      "text": "cat /usr/share/ublue-os/fastfetch-user-count",
+      "shell": "/bin/bash",
+      "format": "Murder Chickens: {1} (weekly)"
+    },
+    {
+      "type": "command",
+      "key": "",
+      "keyColor": "#ff5c00",
+      "text": "cat /usr/share/ublue-os/bazaar-install-count",
+      "shell": "/bin/bash",
+      "format": "Bazaar Installs: {1} (weekly)"
+    },
+    "break",
+    {
       "type": "host",
       "key": "󰾰"
     },
