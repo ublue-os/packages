@@ -1,9 +1,9 @@
 %global debug_package %{nil}
 # renovate: datasource=github-releases depName=ublue-os/packages
-%define homebrew_release homebrew-2025-05-04-04-03-02
+%define homebrew_release homebrew-2025-11-04-01-29-53
 
 Name:           ublue-brew
-Version:        0.1.11
+Version:        0.1.12
 Release:        1%{?dist}
 Summary:        Homebrew integration for Universal Blue systems
 
