@@ -27,6 +27,7 @@ BuildRequires:  pkgconfig(libsoup-3.0)
 BuildRequires:  pkgconfig(json-glib-1.0)
 BuildRequires:  pkgconfig(glycin-2)
 BuildRequires:  pkgconfig(glycin-gtk4-2)
+BuildRequires:  pkgconfig(md4c)
 
 %description
 A new app store for GNOME with a focus on discovering and installing
