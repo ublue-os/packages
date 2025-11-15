@@ -32,16 +32,21 @@ HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/home/linuxbrew/.linuxbrew}"
 ATUIN_INIT_FLAGS=${ATUIN_INIT_FLAGS:-""}
 
 if [ "$(basename $(readlink /proc/$$/exe))" = "bash" ]; then
+    # Initialize direnv before bash-preexec to avoid PROMPT_COMMAND conflicts
+    # See: https://github.com/rcaloras/bash-preexec/pull/143
+    [ "$(command -v direnv)" ] && eval "$(direnv hook bash)"
     [ -f "/etc/profile.d/bash-preexec.sh" ] && . "/etc/profile.d/bash-preexec.sh"
     [ -f "/usr/share/bash-prexec" ] && . "/usr/share/bash-prexec"
     [ -f "/usr/share/bash-prexec.sh" ] && . "/usr/share/bash-prexec.sh"
     [ -f "${HOMEBREW_PREFIX}/etc/profile.d/bash-preexec.sh" ] && . "${HOMEBREW_PREFIX}/etc/profile.d/bash-preexec.sh"
     # Initialize atuin before starship to ensure proper command history capture
-    # See: https://github.com/atuinsh/atuin/issues/2804 
+    # See: https://github.com/atuinsh/atuin/issues/2804
     [ "$(command -v atuin)" ] && eval "$(atuin init bash ${ATUIN_INIT_FLAGS})"
     [ "$(command -v starship)" ] && eval "$(starship init bash)"
     [ "$(command -v zoxide)" ] && eval "$(zoxide init bash)"
 elif [ "$(basename $(readlink /proc/$$/exe))" = "zsh" ]; then
+    # Initialize direnv before atuin to avoid PROMPT_COMMAND conflicts
+    [ "$(command -v direnv)" ] && eval "$(direnv hook zsh)"
     # Initialize atuin before starship to ensure proper command history capture
     [ "$(command -v atuin)" ] && eval "$(atuin init zsh ${ATUIN_INIT_FLAGS})"
     [ "$(command -v starship)" ] && eval "$(starship init zsh)"
