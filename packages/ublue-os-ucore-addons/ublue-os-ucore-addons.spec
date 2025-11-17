@@ -18,11 +18,10 @@ Adds the signing key for importing with mokutil to enable secure boot for kernel
 %setup -q -c -T
 
 
-%build
+%install
 # Have different name for *.der in case kmodgenca is needed for creating more keys
 install -Dm0644 %{SOURCE0} %{buildroot}%{_datadir}/ublue-os/%{_sysconfdir}/pki/akmods/certs/akmods-ublue.der
-
-install -Dm0644 %{buildroot}%{_datadir}/ublue-os/%{_sysconfdir}/pki/akmods/certs/akmods-ublue.der            %{buildroot}%{_sysconfdir}/pki/akmods/certs/akmods-ublue.der
+install -Dm0644 %{SOURCE0} %{buildroot}%{_sysconfdir}/pki/akmods/certs/akmods-ublue.der
 
 %files
 %attr(0644,root,root) %{_datadir}/ublue-os/%{_sysconfdir}/pki/akmods/certs/akmods-ublue.der
