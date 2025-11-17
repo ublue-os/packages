@@ -9,7 +9,9 @@ URL:            https://github.com/ublue-os/packages
 BuildArch:      noarch
 Supplements:    mokutil policycoreutils
 
-Source0:        https://github.com/ublue-os/akmods/raw/refs/heads/main/certs/public_key.der
+# renovate: datasource=github-tags depName=ublue-os/akmods
+%global commit_hash 4388220452a1b71892472bf23e4082bfd477c106
+Source0: https://github.com/ublue-os/akmods/raw/%{commit_hash}/certs/public_key.der
 
 %description
 Adds the signing key for importing with mokutil to enable secure boot for kernel modules.
