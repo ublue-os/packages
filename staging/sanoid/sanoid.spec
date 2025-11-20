@@ -104,10 +104,11 @@ echo "* * * * * root %{_sbindir}/sanoid --cron" > %{buildroot}%{_docdir}/%{name}
 %endif
 
 %post
-%{?_with_systemd:%{_bindir}/systemctl daemon-reload}
+%post
+%{?_with_systemd:%{_bindir}/systemctl daemon-reload || :}
 
 %postun
-%{?_with_systemd:%{_bindir}/systemctl daemon-reload}
+%{?_with_systemd:%{_bindir}/systemctl daemon-reload || :}
 
 %files
 %doc CHANGELIST VERSION README.md FREEBSD.readme
