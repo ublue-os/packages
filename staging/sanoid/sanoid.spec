@@ -6,7 +6,7 @@
 
 Name:		   sanoid
 Version:	   %{version}
-Release:	   1%{?dist}.ucore2
+Release:	   1%{?dist}.ucore3
 BuildArch:	   noarch
 Summary:	   A policy-driven snapshot management tool for ZFS file systems
 Group:		   Applications/System
@@ -104,10 +104,10 @@ echo "* * * * * root %{_sbindir}/sanoid --cron" > %{buildroot}%{_docdir}/%{name}
 %endif
 
 %post
-%{?_with_systemd:%{_bindir}/systemctl daemon-reload}
+%{?_with_systemd:%{_bindir}/systemctl daemon-reload || :}
 
 %postun
-%{?_with_systemd:%{_bindir}/systemctl daemon-reload}
+%{?_with_systemd:%{_bindir}/systemctl daemon-reload || :}
 
 %files
 %doc CHANGELIST VERSION README.md FREEBSD.readme
@@ -131,6 +131,8 @@ echo "* * * * * root %{_sbindir}/sanoid --cron" > %{buildroot}%{_docdir}/%{name}
 %endif
 
 %changelog
+* Thu Nov 20 2025 Benjamin Sherman <benjamin@holyarmy.org> - 2.2.0.ucore3
+- Safely handle container installs where systemd is not running
 * Wed Oct 13 2024 John McGee <john@johnmcgee.net> - 2.2.0.ucore2
 - Correct typo in systemctl description
 * Wed Oct 09 2024 John McGee <john@johnmcgee.net> - 2.2.0.ucore1
