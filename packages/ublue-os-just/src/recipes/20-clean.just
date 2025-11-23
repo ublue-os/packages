@@ -1,6 +1,6 @@
 # vim: set ft=make :
 
-# Clean up old up unused podman images, volumes, flatpak packages and rpm-ostree content
+# Clean up old and unused podman images, volumes, flatpak packages and rpm-ostree content
 clean-system:
     #!/usr/bin/bash
     podman image prune -af
