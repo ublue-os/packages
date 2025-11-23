@@ -22,30 +22,6 @@ Branding for Aurora-related projects
 %build
 
 %install
-mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/{apps,places}/
-mkdir -p %{buildroot}%{_datadir}/pixmaps/
-install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/ logos/distributor-logo.svg
-install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-white.svg
-install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/distributor-logo-symbolic.svg
-install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-circle-symbolic.svg
-install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-pride.svg
-install -Dpm0644 -t %{buildroot}%{_datadir}/icons/hicolor/scalable/places/ logos/auroralogo-pride-trans.svg
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ logos/fedora-logo.svg
-magick -background none logos/fedora-logo.svg -quality 90 -resize $((400-10*2))x100 -gravity center -extent 400x100 %{buildroot}%{_datadir}/pixmaps/fedora-logo.png
-magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/pixmaps/fedora-logo-small.png
-magick -background none logos/fedora-logo.svg -quality 90 -resize $((200-5*2))x50 -gravity center -extent 200x100 %{buildroot}%{_datadir}/pixmaps/fedora_logo_med.png
-magick -background none logos/distributor-logo.svg -quality 90 -resize 256x256! %{buildroot}%{_datadir}/pixmaps/system-logo.png
-magick -background none logos/distributor-logo.svg -quality 90 -resize 128x128! %{buildroot}%{_datadir}/pixmaps/fedora-logo-sprite.png
-magick -background none logos/distributor-logo.svg -quality 90 -resize 256x256! %{buildroot}%{_datadir}/pixmaps/system-logo-white.png
-ln -sr %{buildroot}%{_datadir}/pixmaps/fedora-logo.svg %{buildroot}%{_datadir}/pixmaps/fedora_whitelogo.svg
-ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}%{_datadir}/pixmaps/fedora-logo-sprite.svg
-ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo.svg
-ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/distributor-logo.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/auroralogo-gradient.svg
-ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/auroralogo-symbolic.svg
-ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white.svg
-ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/start-here.svg
-ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/start-here.svg
-
 mkdir -p %{buildroot}/%{_datadir}/plymouth/themes/spinner/
 
 magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/watermark.png
@@ -111,41 +87,6 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/looking_toward
 ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/looking_towards_the_future/ %{buildroot}%{_datadir}/wallpapers/
 
 %check
-
-%package logos
-Summary:        Logos for KDE
-Version:        0.2.1
-License:        CC-BY-SA
-BuildRequires: ImageMagick
-Provides: fedora-logos
-Provides: centos-logos
-Provides: system-logos
-Conflicts: bluefin-logos
-Conflicts: fedora-logos
-Conflicts: centos-logos
-Conflicts: system-logos
-
-%description logos
-Replacement logos for KDE
-
-%files logos
-%{_datadir}/pixmaps/fedora_logo_med.png
-%{_datadir}/pixmaps/fedora_whitelogo.svg
-%{_datadir}/pixmaps/fedora-logo.{png,svg}
-%{_datadir}/pixmaps/fedora-logo-small.png
-%{_datadir}/pixmaps/fedora-logo-sprite.{png,svg}
-%{_datadir}/pixmaps/system-logo{,-white}.png
-%{_datadir}/icons/hicolor/scalable/distributor-logo.svg
-%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg
-%{_datadir}/icons/hicolor/scalable/places/distributor-logo.svg
-%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white.svg
-%{_datadir}/icons/hicolor/scalable/places/auroralogo-white.svg
-%{_datadir}/icons/hicolor/scalable/{apps,places}/start-here.svg
-%{_datadir}/icons/hicolor/scalable/places/auroralogo-circle-symbolic.svg
-%{_datadir}/icons/hicolor/scalable/places/auroralogo-pride.svg
-%{_datadir}/icons/hicolor/scalable/places/auroralogo-pride-trans.svg
-%{_datadir}/icons/hicolor/scalable/places/auroralogo-symbolic.svg
-%{_datadir}/icons/hicolor/scalable/places/auroralogo-gradient.svg
 
 %package plymouth
 Summary:        Plymouth customization for Aurora
