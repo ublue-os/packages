@@ -33,7 +33,6 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ src/misc/*
 
 %files
 %{_datadir}/pixmaps/
-%{_datadir}/anaconda/pixmaps/
 
 %changelog
 %autochangelog
