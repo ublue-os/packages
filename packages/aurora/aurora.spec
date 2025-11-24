@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.2.0
+Version:        0.2.1
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -22,11 +22,6 @@ Branding for Aurora-related projects
 %build
 
 %install
-mkdir -p %{buildroot}/%{_datadir}/plymouth/themes/spinner/
-
-magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/watermark.png
-magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/kinoite-watermark.png
-
 mkdir -p %{buildroot}%{_datadir}/{backgrounds,wallpapers}/
 
 install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/aurora-wallpaper-2/contents/images/ wallpapers/images/aurora-wallpaper-2/contents/images/3840x2160.png
@@ -87,18 +82,6 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/backgrounds/%{vendor}/looking_toward
 ln -sr %{buildroot}%{_datadir}/backgrounds/%{vendor}/looking_towards_the_future/ %{buildroot}%{_datadir}/wallpapers/
 
 %check
-
-%package plymouth
-Summary:        Plymouth customization for Aurora
-Version:        0.1.6
-License:        CC-BY-SA
-
-%description plymouth
-Plymouth logo customization for Aurora
-
-%files plymouth
-%{_datadir}/plymouth/themes/spinner/watermark.png
-%{_datadir}/plymouth/themes/spinner/kinoite-watermark.png
 
 %package backgrounds
 Version:        0.2.0
