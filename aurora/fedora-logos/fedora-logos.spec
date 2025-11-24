@@ -3,7 +3,7 @@
 
 Name:           fedora-logos
 Version:        100.0.0
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Aurora branding
 
 License:        CC-BY-SA
@@ -27,8 +27,6 @@ Branding for Aurora's anaconda
 %build
 
 %install
-install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ src/logos/*
-install -Dpm0644 -t %{buildroot}%{_datadir}/anaconda/pixmaps/ src/anaconda/*
 install -Dpm0644 -t %{buildroot}%{_datadir}/pixmaps/ src/misc/*
 
 %check
