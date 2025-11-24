@@ -2,7 +2,7 @@
 %global vendor aurora
 
 Name:           aurora
-Version:        0.2.0
+Version:        0.2.1
 Release:        1%{?dist}
 Summary:        Aurora branding
 
@@ -45,11 +45,6 @@ ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-sy
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-white.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/places/start-here.svg
 ln -sr %{buildroot}%{_datadir}/icons/hicolor/scalable/places/distributor-logo-symbolic.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/start-here.svg
-
-mkdir -p %{buildroot}/%{_datadir}/plymouth/themes/spinner/
-
-magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/watermark.png
-magick -background none logos/fedora-logo.svg -quality 90 -resize $((128-3*2))x32 -gravity center -extent 128x32 %{buildroot}%{_datadir}/plymouth/themes/spinner/kinoite-watermark.png
 
 mkdir -p %{buildroot}%{_datadir}/{backgrounds,wallpapers}/
 
@@ -146,18 +141,6 @@ Replacement logos for KDE
 %{_datadir}/icons/hicolor/scalable/places/auroralogo-pride-trans.svg
 %{_datadir}/icons/hicolor/scalable/places/auroralogo-symbolic.svg
 %{_datadir}/icons/hicolor/scalable/places/auroralogo-gradient.svg
-
-%package plymouth
-Summary:        Plymouth customization for Aurora
-Version:        0.1.6
-License:        CC-BY-SA
-
-%description plymouth
-Plymouth logo customization for Aurora
-
-%files plymouth
-%{_datadir}/plymouth/themes/spinner/watermark.png
-%{_datadir}/plymouth/themes/spinner/kinoite-watermark.png
 
 %package backgrounds
 Version:        0.2.0
