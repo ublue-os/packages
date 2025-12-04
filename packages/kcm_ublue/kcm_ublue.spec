@@ -1,4 +1,4 @@
-%global majmin_ver_kcm 0.6.0
+%global majmin_ver_kcm 0.6.1
 
 Name:           kcm_ublue
 Version:        %{majmin_ver_kcm}
