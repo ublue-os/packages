@@ -3,7 +3,7 @@
 Name:           bazaar
 # renovate: datasource=github-releases depName=kolunmi/bazaar
 Version:        0.6.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Flatpak-centric software center and app store
 
 License:        GPL-3.0-only
@@ -41,7 +41,7 @@ It emphasizes supporting the developers who make the Linux desktop possible.
 %meson \
   -Dhardcoded_main_config_path=/usr/share/ublue-os/bazaar/main.yaml \
   -Dhardcoded_content_config_path=/usr/share/ublue-os/bazaar/content.yaml \
-  -Dhardcoded_blocklist_path=/usr/share/ublue-os/bazaar/blocklist.txt
+  -Dhardcoded_blocklist_path=/usr/share/ublue-os/bazaar/blocklist.yaml
 
 %build
 %meson_build
