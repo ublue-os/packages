@@ -2,8 +2,8 @@
 
 Name:           bazaar
 # renovate: datasource=github-releases depName=kolunmi/bazaar
-Version:        0.6.0
-Release:        4%{?dist}
+Version:        0.6.1
+Release:        1%{?dist}
 Summary:        Flatpak-centric software center and app store
 
 License:        GPL-3.0-only
