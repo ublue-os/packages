@@ -62,7 +62,6 @@ jobs:
           sudo apt update -y
           sudo apt install -y \
             podman
-            libstdc++6
 
       - name: Build Image
         id: build_image
@@ -164,6 +163,7 @@ jobs:
             conmon \
             crun \
             netavark \
+            libstdc++ \
             fuse-overlayfs
           ln -sf /bin/bash /bin/sh
           mkdir -p /etc/containers
