@@ -6,24 +6,19 @@
 %global ostree_version 2020.8
 %global wayland_protocols_version 1.32
 %global wayland_scanner_version 1.15
+%global xdg_portal_version 1.7.0
 
 # Disable parental control for RHEL builds
 %bcond malcontent %[!0%{?rhel}]
 
 Name:           flatpak
-Version:        1.16.1
+Version:        1.17.2
 Release:        %autorelease
 Summary:        Application deployment framework for desktop apps
 
 License:        LGPL-2.1-or-later
 URL:            https://flatpak.org/
 Source0:        https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
-
-# Add support for preinstalling flatpaks
-# https://github.com/flatpak/flatpak/pull/6116
-# https://gitlab.com/redhat/centos-stream/rpms/flatpak/-/blob/c10s/flatpak-add-support-for-preinstalling-flatpaks.patch?ref_type=heads
-# This is a slightly modified patch so it applies on top of 1.16.1
-Patch0:         1.16.1-to-pre-install-builds.patch
 
 # ostree not on i686 for RHEL 10
 # https://github.com/containers/composefs/pull/229#issuecomment-1838735764
@@ -87,9 +82,9 @@ Recommends:     p11-kit-server
 
 # Make sure the document portal is installed
 %if 0%{?fedora} || 0%{?rhel} > 7
-Recommends:     xdg-desktop-portal > 0.10
+Recommends:     xdg-desktop-portal >= %{xdg_portal_version}
 %else
-Requires:       xdg-desktop-portal > 0.10
+Requires:       xdg-desktop-portal >= %{xdg_portal_version}
 %endif
 
 %description
@@ -153,7 +148,6 @@ This package contains installed tests for %{name}.
 
 %build
 %meson \
-    -Ddbus_config_dir=/usr/share/dbus-1/system.d \
     -Dinstalled_tests=true \
     -Dsystem_bubblewrap=/usr/bin/bwrap \
     -Dsystem_dbus_proxy=/usr/bin/xdg-dbus-proxy \
@@ -172,7 +166,11 @@ This package contains installed tests for %{name}.
 %meson_install
 install -pm 644 NEWS README.md %{buildroot}/%{_pkgdocdir}
 # The system repo is not installed by the flatpak build system.
+install -d %{buildroot}%{_datadir}/%{name}/preinstall.d
+install -d %{buildroot}%{_datadir}/%{name}/remotes.d
 install -d %{buildroot}%{_localstatedir}/lib/flatpak
+install -d %{buildroot}%{_sysconfdir}/%{name}/installations.d
+install -d %{buildroot}%{_sysconfdir}/%{name}/preinstall.d
 install -d %{buildroot}%{_sysconfdir}/flatpak/remotes.d
 
 %find_lang %{name}
@@ -223,6 +221,8 @@ fi
 %{_mandir}/man5/flatpakref.5*
 %{_mandir}/man5/flatpakrepo.5*
 %dir %{_sysconfdir}/flatpak
+%{_sysconfdir}/%{name}/installations.d
+%{_sysconfdir}/%{name}/preinstall.d
 %{_sysconfdir}/flatpak/remotes.d
 %{_sysconfdir}/profile.d/flatpak.csh
 %{_sysconfdir}/profile.d/flatpak.sh
