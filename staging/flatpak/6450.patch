@@ -1,0 +1,98 @@
+From b6beed6fb6351c4f26669d58e95e6ca3ded5fbc1 Mon Sep 17 00:00:00 2001
+From: Christian Hergert <chergert@redhat.com>
+Date: Wed, 24 Dec 2025 10:28:36 -0800
+Subject: [PATCH] app: be selective about when to map font-dirs.xml
+
+If the command calling `flatpak build` has already specified a
+font-dirs.xml to map, then mapping in again may break (as exemplified in
+Builder and Foundry).
+
+This checks to see if an argument has already been mapped in before doing
+so and resolves the issue with Builder/Foundry.
+
+Follow-up to !6138
+
+Fixes: GNOME/gnome-builder#2387
+---
+ app/flatpak-builtins-build.c | 46 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 43 insertions(+), 3 deletions(-)
+
+diff --git a/app/flatpak-builtins-build.c b/app/flatpak-builtins-build.c
+index 6b549dd8f3..8d3397bd20 100644
+--- a/app/flatpak-builtins-build.c
++++ b/app/flatpak-builtins-build.c
+@@ -59,14 +59,53 @@ static GOptionEntry options[] = {
+   { NULL }
+ };
+ 
++static gboolean
++has_bind_mount_for_path (FlatpakBwrap *bwrap, const char *dest_path)
++{
++  guint i;
++
++  for (i = 0; i < bwrap->argv->len; i++)
++    {
++      const char *arg = g_ptr_array_index (bwrap->argv, i);
++
++      if (g_strcmp0 (arg, "--bind") == 0 ||
++          g_strcmp0 (arg, "--bind-try") == 0 ||
++          g_strcmp0 (arg, "--ro-bind") == 0 ||
++          g_strcmp0 (arg, "--ro-bind-try") == 0 ||
++          g_strcmp0 (arg, "--bind-data") == 0 ||
++          g_strcmp0 (arg, "--ro-bind-data") == 0)
++        {
++          /* For all bind mount types, the destination path is at index i+2.
++           *
++           *   --bind/--ro-bind/--bind-try/--ro-bind-try: type, src, dest
++           *   --bind-data/--ro-bind-data: type, fd_string, dest
++           */
++          if (i + 2 < bwrap->argv->len)
++            {
++              const char *dest = g_ptr_array_index (bwrap->argv, i + 2);
++              if (dest != NULL && g_strcmp0 (dest, dest_path) == 0)
++                return TRUE;
++            }
++        }
++    }
++
++  return FALSE;
++}
++
+ static void
+ add_empty_font_dirs_xml (FlatpakBwrap *bwrap)
+ {
++  const char *font_dirs_path = "/run/host/font-dirs.xml";
++
++  /* Check if a bind mount already exists for this path */
++  if (has_bind_mount_for_path (bwrap, font_dirs_path))
++    return;
++
+   g_autoptr(GString) xml_snippet = g_string_new ("<?xml version=\"1.0\"?>\n"
+                                                  "<!DOCTYPE fontconfig SYSTEM \"urn:fontconfig:fonts.dtd\">\n"
+                                                  "<fontconfig></fontconfig>\n");
+ 
+-  if (!flatpak_bwrap_add_args_data (bwrap, "font-dirs.xml", xml_snippet->str, xml_snippet->len, "/run/host/font-dirs.xml", NULL))
++  if (!flatpak_bwrap_add_args_data (bwrap, "font-dirs.xml", xml_snippet->str, xml_snippet->len, font_dirs_path, NULL))
+     g_warning ("Unable to add fontconfig data snippet");
+ }
+ 
+@@ -581,8 +620,6 @@ flatpak_builtin_build (int argc, char **argv, GCancellable *cancellable, GError
+                                          instance_id, NULL, cancellable, error))
+     return FALSE;
+ 
+-  add_empty_font_dirs_xml (bwrap);
+-
+   for (i = 0; opt_bind_mounts != NULL && opt_bind_mounts[i] != NULL; i++)
+     {
+       char *split = strchr (opt_bind_mounts[i], '=');
+@@ -599,6 +636,9 @@ flatpak_builtin_build (int argc, char **argv, GCancellable *cancellable, GError
+                               NULL);
+     }
+ 
++  /* Add empty font-dirs.xml only if user hasn't already mapped it */
++  add_empty_font_dirs_xml (bwrap);
++
+   if (opt_build_dir != NULL)
+     {
+       flatpak_bwrap_add_args (bwrap,
+
