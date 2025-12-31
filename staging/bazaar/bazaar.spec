@@ -78,6 +78,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 %{_datadir}/gnome-shell/search-providers/%{appid}.search-provider.ini
 
 %changelog
+* Tue Dec 30 2025 Kyle Gospodnetich <me@kylegospodneti.ch>
+- Update to version v0.7.0
+
 * Sun Aug 17 2025 Kyle Gospodnetich <me@kylegospodneti.ch>
 - Update to version v0.3.1
 
