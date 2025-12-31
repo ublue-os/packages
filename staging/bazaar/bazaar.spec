@@ -28,6 +28,7 @@ BuildRequires:  pkgconfig(json-glib-1.0)
 BuildRequires:  pkgconfig(glycin-2)
 BuildRequires:  pkgconfig(glycin-gtk4-2)
 BuildRequires:  pkgconfig(webkitgtk-6.0)
+BuildRequires:  pkgconfig(libsecret-1)
 BuildRequires:  pkgconfig(md4c)
 
 %description
