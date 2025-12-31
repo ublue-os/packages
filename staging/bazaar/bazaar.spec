@@ -32,7 +32,7 @@ BuildRequires:  pkgconfig(libsecret-1)
 BuildRequires:  pkgconfig(md4c)
 
 %description
-A new app store for GNOME with a focus on discovering and installing
+A new app store with a focus on discovering and installing
 applications and add-ons from Flatpak remotes, particularly Flathub.
 It emphasizes supporting the developers who make the Linux desktop possible.
 
