@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:latest@sha256:47e5d402651e4819edd6f1a518990935ebbe569c014e4f322d24d08b1184a511
+FROM registry.fedoraproject.org/fedora:latest@sha256:b893cac2ecb56b32e99aa270435baf95cd7ad869e8ef431f2f93c77c03407dbd
 
 COPY mock-wrapper /usr/bin
 
