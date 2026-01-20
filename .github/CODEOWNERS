@@ -1,11 +1,8 @@
 # All Files
-* @inffy @p5 @m2Giles @renner0e
+* @p5 @m2Giles
 
 # AKMODS
 akmods/ @bsherman
-
-# Aurora
-packages/aurora/ @inffy @ledif @NiHaiden @renner0e
 
 # UCore
 ucore/ @bsherman
@@ -14,10 +11,7 @@ ucore/ @bsherman
 packages/ublue-os-* @bsherman
 
 # Ublue Packages
-packages/ublue-* @zeglius @inffy @renner0e
-
-# Bluefin Packages
-packages/bluefin/ @inffy @renner0e
+packages/ublue-* @zeglius
 
 # Bazzite Packages
 bazzite/ @zeglius @kylegospo
