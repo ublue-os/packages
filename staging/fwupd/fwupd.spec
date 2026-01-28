@@ -43,11 +43,6 @@
 %global have_msr 1
 %endif
 
-# Until we actually have seen it outside x86
-%ifarch i686 x86_64
-%global have_thunderbolt 1
-%endif
-
 # only available recently
 %if 0%{?fedora} >= 30
 %global have_modem_manager 1
@@ -59,8 +54,8 @@
 
 Summary:   Firmware update daemon
 Name:      fwupd
-# renovate: datasource=yum repo=fedora-42-x86_64 pkg=fwupd
-Version:   2.0.16
+# renovate: datasource=yum repo=fedora-43-x86_64 pkg=fwupd
+Version:   2.0.19
 Release:   100.ublue
 License:   LGPL-2.1-or-later
 URL:       https://github.com/fwupd/fwupd
@@ -84,6 +79,7 @@ BuildRequires: libarchive-devel
 BuildRequires: libcbor-devel
 BuildRequires: libblkid-devel
 BuildRequires: readline-devel
+BuildRequires: libmnl-devel
 %if 0%{?have_passim}
 BuildRequires: passim-devel
 %endif
