@@ -4,12 +4,7 @@ Release:        2%{?dist}
 Summary:       Centralized update service/checker made for Universal Blue
 Vendor:        ublue-os
 URL:           https://github.com/%{vendor}/%{name}
-# Detailed information about the source Git repository and the source commit
-# for the created rpm package
-VCS:           {{{ git_dir_vcs }}}
-# git_dir_pack macro places the repository content (the source files) into a tarball
-# and returns its filename. The tarball will be used to build the rpm.
-Source:        {{{ git_dir_pack }}}
+Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 License:        Apache-2.0
 
 BuildRequires:  golang
