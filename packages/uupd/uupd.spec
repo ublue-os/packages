@@ -56,8 +56,4 @@ go test -v ./...
 %{_unitdir}/%{name}-manual.service
 %config(noreplace) %{_sysconfdir}/polkit-1/rules.d/%{name}.rules
 %config(noreplace) %{_sysconfdir}/%{name}/config.json
-%changelog
-* Fri Feb 20 2026 Robert French <178658682+rfrench3@users.noreply.github.com>
-- rebuilt
-
 %autochangelog
