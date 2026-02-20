@@ -22,7 +22,7 @@ A simple updater for Universal Blue systems
 %global debug_package %{nil}
 
 %prep
-{{{ git_dir_setup_macro }}}
+%autosetup
 
 %build
 go build -v -o %{name}
