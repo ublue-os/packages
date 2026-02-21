@@ -1,7 +1,6 @@
 Name:           uupd
-# renovate: datasource=github-releases depName=ublue-os/uupd
 Version:        1.3.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:       Centralized update service/checker made for Universal Blue
 Vendor:        ublue-os
 URL:           https://github.com/%{vendor}/%{name}
@@ -10,7 +9,6 @@ License:        Apache-2.0
 
 BuildRequires:  golang
 BuildRequires:  systemd-rpm-macros
-BuildRequires:  git
 Recommends:     bootc
 Recommends:     distrobox
 Recommends:     flatpak
@@ -32,8 +30,10 @@ go build -v -o %{name}
 %install
 install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 install -Dpm 644 %{name}.service %{buildroot}%{_unitdir}/%{name}.service
+install -Dpm 644 %{name}-manual.service %{buildroot}%{_unitdir}/%{name}-manual.service
 install -Dpm 644 %{name}.timer %{buildroot}%{_unitdir}/%{name}.timer
 install -Dpm 644 %{name}.rules %{buildroot}%{_sysconfdir}/polkit-1/rules.d/%{name}.rules
+install -Dpm 644 config.json %{buildroot}/%{_sysconfdir}/%{name}/config.json
 
 %check
 go test -v ./...
@@ -48,8 +48,8 @@ go test -v ./...
 %{_bindir}/%{name}
 %{_unitdir}/%{name}.service
 %{_unitdir}/%{name}.timer
+%{_unitdir}/%{name}-manual.service
 %config(noreplace) %{_sysconfdir}/polkit-1/rules.d/%{name}.rules
-
+%config(noreplace) %{_sysconfdir}/%{name}/config.json
 %changelog
 %autochangelog
-
