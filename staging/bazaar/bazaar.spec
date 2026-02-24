@@ -30,6 +30,7 @@ BuildRequires:  pkgconfig(glycin-gtk4-2)
 BuildRequires:  pkgconfig(webkitgtk-6.0)
 BuildRequires:  pkgconfig(libsecret-1)
 BuildRequires:  pkgconfig(md4c)
+BuildRequires:  pkgconfig(libproxy-1.0)
 
 %description
 A new app store with a focus on discovering and installing
