@@ -23,7 +23,9 @@ if [ "$(command -v ug)" ]; then
 fi
 
 # bat for cat
-alias cat='bat --style=plain --pager=never' 2>/dev/null
+if [ "$(command -v bat)" ]; then
+    alias cat='bat --style=plain --pager=never'
+fi
 
 HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/home/linuxbrew/.linuxbrew}"
 
