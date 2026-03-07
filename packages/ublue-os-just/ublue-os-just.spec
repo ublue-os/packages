@@ -1,7 +1,7 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
 Version:        0.53
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
