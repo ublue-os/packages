@@ -3,7 +3,7 @@
 Name:           bazaar
 # renovate: datasource=github-releases depName=kolunmi/bazaar
 Version:        0.7.12
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Flatpak-centric software center and app store
 
 License:        GPL-3.0-only
@@ -31,6 +31,7 @@ BuildRequires:  pkgconfig(webkitgtk-6.0)
 BuildRequires:  pkgconfig(libsecret-1)
 BuildRequires:  pkgconfig(md4c)
 BuildRequires:  pkgconfig(libproxy-1.0)
+BuildRequires:  pkgconfig(malcontent-0)
 
 %description
 A new app store with a focus on discovering and installing
