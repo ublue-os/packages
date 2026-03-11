@@ -7,7 +7,7 @@
 
 Name:           ublue-os-udev-rules
 Vendor:         ublue-os
-Version:        0.9
+Version:        0.10
 Release:        1%{?dist}
 Summary:        Additional udev files for device support
 
