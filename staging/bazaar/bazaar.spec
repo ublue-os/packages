@@ -21,7 +21,7 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  pkgconfig(libadwaita-1)
 BuildRequires:  pkgconfig(xmlb)
 BuildRequires:  pkgconfig(flatpak)
-BuildRequires:  pkgconfig(libdex-1)
+BuildRequires:  pkgconfig(libdex-1) >= 1.0.0
 BuildRequires:  pkgconfig(yaml-0.1)
 BuildRequires:  pkgconfig(libsoup-3.0)
 BuildRequires:  pkgconfig(json-glib-1.0)
@@ -54,6 +54,7 @@ It emphasizes supporting the developers who make the Linux desktop possible.
 %find_lang %{name}
 rm %{buildroot}%{_libdir}/pkgconfig/bge-0.1.pc
 rm -rf %{buildroot}%{_includedir}/bge/
+rm -rf %{buildroot}/lib/debug/
 
 %check
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
@@ -80,7 +81,7 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 %{_datadir}/icons/hicolor/symbolic/apps/%{appid}-symbolic.svg
 %{_datadir}/metainfo/%{appid}.metainfo.xml
 %{_datadir}/gnome-shell/search-providers/%{appid}.search-provider.ini
-${_libdir}/libbge-0.1.so
+%{_libdir}/libbge-0.1.so
 
 %changelog
 * Tue Dec 30 2025 Kyle Gospodnetich <me@kylegospodneti.ch>
