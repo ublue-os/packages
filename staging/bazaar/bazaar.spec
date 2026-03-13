@@ -3,7 +3,7 @@
 Name:           bazaar
 # renovate: datasource=github-releases depName=kolunmi/bazaar
 Version:        0.7.12
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Flatpak-centric software center and app store
 
 License:        GPL-3.0-only
@@ -16,7 +16,7 @@ ExcludeArch:    %{ix86}
 BuildRequires:  gcc
 BuildRequires:  meson
 BuildRequires:  systemd-rpm-macros
-BuildRequires:  blueprint-compiler
+BuildRequires:  blueprint-compiler >= 0.20.0
 BuildRequires:  desktop-file-utils
 BuildRequires:  pkgconfig(libadwaita-1)
 BuildRequires:  pkgconfig(xmlb)
@@ -52,6 +52,8 @@ It emphasizes supporting the developers who make the Linux desktop possible.
 %install
 %meson_install
 %find_lang %{name}
+rm %{buildroot}%{_libdir}/pkgconfig/bge-0.1.pc
+rm -rf %{buildroot}%{_includedir}/bge/
 
 %check
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
@@ -78,6 +80,7 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 %{_datadir}/icons/hicolor/symbolic/apps/%{appid}-symbolic.svg
 %{_datadir}/metainfo/%{appid}.metainfo.xml
 %{_datadir}/gnome-shell/search-providers/%{appid}.search-provider.ini
+${_libdir}/libbge-0.1.so
 
 %changelog
 * Tue Dec 30 2025 Kyle Gospodnetich <me@kylegospodneti.ch>
