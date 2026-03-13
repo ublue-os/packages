@@ -54,7 +54,6 @@ It emphasizes supporting the developers who make the Linux desktop possible.
 %find_lang %{name}
 rm %{buildroot}%{_libdir}/pkgconfig/bge-0.1.pc
 rm -rf %{buildroot}%{_includedir}/bge/
-rm -rf %{buildroot}/lib/debug/
 
 %check
 desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
