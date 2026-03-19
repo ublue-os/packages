@@ -2,7 +2,8 @@
 # they use the Vapor Theme which is also used on SteamOS, the theme that
 # is used during the user creation with plasma-setup will also be the
 # theme that is gonna be used when you first boot into the actual desktop.
-# This needs to always match up!
+# Vapor is modified breezedark, no need to change breezelight then as
+# bazzite doesn't offer any additional light themes
 # https://invent.kde.org/plasma/plasma-setup/-/issues/72
 diff --git i/modules/prepareutil/prepareutil.cpp w/modules/prepareutil/prepareutil.cpp
 index 7c9d768..c124eed 100644
@@ -15,8 +16,6 @@ index 7c9d768..c124eed 100644
 -        QProcess::execute(u"plasma-apply-lookandfeel"_s, {QStringLiteral("--apply"), QStringLiteral("org.kde.breezedark.desktop")});
 +        QProcess::execute(u"plasma-apply-lookandfeel"_s, {QStringLiteral("--apply"), QStringLiteral("com.valve.vapor.desktop")});
      } else {
--        QProcess::execute(u"plasma-apply-lookandfeel"_s, {QStringLiteral("--apply"), QStringLiteral("org.kde.breeze.desktop")});
-+        QProcess::execute(u"plasma-apply-lookandfeel"_s, {QStringLiteral("--apply"), QStringLiteral("com.valve.vapor.desktop")});
      }
  
      m_usingDarkTheme = usingDarkTheme;
