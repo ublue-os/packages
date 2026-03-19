@@ -1,5 +1,6 @@
+# https://invent.kde.org/plasma/plasma-setup/-/issues/72
 diff --git i/src/qml/LandingComponent.qml w/src/qml/LandingComponent.qml
-index d975eba..359d680 100644
+index d975eba..2ba2dd3 100644
 --- i/src/qml/LandingComponent.qml
 +++ w/src/qml/LandingComponent.qml
 @@ -44,9 +44,9 @@ Item {
@@ -10,9 +11,8 @@ index d975eba..359d680 100644
 -            const lightWallpaperFolder = 'wallpapers/Next/contents/images/';
 -            const darkWallpaperFolder = 'wallpapers/Next/contents/images_dark/';
 +            const imgFile = '3940x2160.jxl'
-+            const lightWallpaperFolder = 'wallpapers/.ublue-plasma-setup/contents/images/';
-+            const darkWallpaperFolder = 'wallpapers/.ublue-plasma-setup/contents/images/';
++            const lightWallpaperFolder = 'wallpapers/bazzite/convergence/contents/images/';
++            const darkWallpaperFolder = 'wallpapers/bazzite/convergence/contents/images/';
  
              const wallpaperUrl = StandardPaths.locate(
                  StandardPaths.GenericDataLocation,
-

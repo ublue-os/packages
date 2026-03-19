@@ -1,0 +1,22 @@
+# This is needed because Aurora by default doesn't use the Breeze Theme,
+# Aurora's KDE Plasma customisations rely on their theming being set,
+# in a similiar fashion how fedora kde does things
+# If we don't have this the first boot into the actual installed system
+# with the new user won't have the wallpaper etc set
+# https://invent.kde.org/plasma/plasma-setup/-/issues/72
+diff --git i/modules/prepareutil/prepareutil.cpp w/modules/prepareutil/prepareutil.cpp
+index 7c9d768..20635d8 100644
+--- i/modules/prepareutil/prepareutil.cpp
++++ w/modules/prepareutil/prepareutil.cpp
+@@ -93,9 +93,9 @@ void PrepareUtil::setUsingDarkTheme(bool usingDarkTheme)
+ {
+     // use plasma-apply-lookandfeel since it has logic for notifying the shell of changes
+     if (usingDarkTheme) {
+-        QProcess::execute(u"plasma-apply-lookandfeel"_s, {QStringLiteral("--apply"), QStringLiteral("org.kde.breezedark.desktop")});
++        QProcess::execute(u"plasma-apply-lookandfeel"_s, {QStringLiteral("--apply"), QStringLiteral("dev.getaurora.aurora.desktop")});
+     } else {
+-        QProcess::execute(u"plasma-apply-lookandfeel"_s, {QStringLiteral("--apply"), QStringLiteral("org.kde.breeze.desktop")});
++        QProcess::execute(u"plasma-apply-lookandfeel"_s, {QStringLiteral("--apply"), QStringLiteral("dev.getaurora.auroralight.desktop")});
+     }
+ 
+     m_usingDarkTheme = usingDarkTheme;
