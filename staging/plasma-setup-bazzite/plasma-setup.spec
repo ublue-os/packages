@@ -7,8 +7,9 @@
 %global _hardened_build 1
 
 Name:           plasma-setup
+# renovate: datasource=github-releases depName=KDE/plasma-setup
 Version:        6.6.2
-Release:        100.ublue
+Release:        100.bazzite
 Summary:        Initial setup for systems using KDE Plasma
 License:        (GPL-2.0-or-later or GPL-3.0-or-later) and GPL-2.0-or-later and GPL-3.0-or-later and (LGPL-2.0-or-later or LGPL-3.0-or-later) and (LGPL-2.1-or-later or LGPL-3.0-or-later) and LGPL-2.1-or-later and BSD-2-Clause and CC0-1.0
 URL:            https://invent.kde.org/plasma/%{name}
@@ -21,7 +22,8 @@ Source1: https://download.kde.org/stable/plasma/%{version}/%{name}-%{version}.ta
 # Proposed changes
 
 # Downstream only changes
-Patch1001:      ublue-branding.patch
+Patch1001:      bazzite-vapor-theme.patch
+Patch1002:      bazzite-set-wallpaper.patch
 
 BuildRequires:  cmake(Qt6Core) >= %{qt6_minver}
 BuildRequires:  cmake(Qt6Gui) >= %{qt6_minver}

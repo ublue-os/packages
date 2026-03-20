@@ -1,0 +1,20 @@
+# https://invent.kde.org/plasma/plasma-setup/-/issues/72
+# we currently don't have any light/dark variants, this needs to be
+# changed if we eventually do
+diff --git i/src/qml/LandingComponent.qml w/src/qml/LandingComponent.qml
+index d975eba..3f6c999 100644
+--- i/src/qml/LandingComponent.qml
++++ w/src/qml/LandingComponent.qml
+@@ -44,9 +44,9 @@ Item {
+ 
+         source: {
+             // default wallpaper background
+-            const imgFile = isLandscape ? '5120x2880.png' : '1080x1920.png';
+-            const lightWallpaperFolder = 'wallpapers/Next/contents/images/';
+-            const darkWallpaperFolder = 'wallpapers/Next/contents/images_dark/';
++            const imgFile = '3840x2160.jxl'
++            const lightWallpaperFolder = 'wallpapers/Aurora/images/';
++            const darkWallpaperFolder = 'wallpapers/Aurora/images/';
+ 
+             const wallpaperUrl = StandardPaths.locate(
+                 StandardPaths.GenericDataLocation,
