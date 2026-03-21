@@ -7,8 +7,8 @@
 %global _hardened_build 1
 
 Name:           plasma-setup
-# renovate: datasource=github-tags depName=KDE/plasma-setup
-Version:        6.6.2
+# renovate: datasource=github-releases depName=KDE/plasma-setup
+Version:        6.6.3
 Release:        100.aurora
 Summary:        Initial setup for systems using KDE Plasma
 License:        (GPL-2.0-or-later or GPL-3.0-or-later) and GPL-2.0-or-later and GPL-3.0-or-later and (LGPL-2.0-or-later or LGPL-3.0-or-later) and (LGPL-2.1-or-later or LGPL-3.0-or-later) and LGPL-2.1-or-later and BSD-2-Clause and CC0-1.0
