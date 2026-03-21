@@ -7,7 +7,7 @@
 %global _hardened_build 1
 
 Name:           plasma-setup
-# renovate: datasource=github-releases depName=KDE/plasma-setup
+# renovate: datasource=github-tags depName=KDE/plasma-setup
 Version:        6.6.3
 Release:        100.aurora
 Summary:        Initial setup for systems using KDE Plasma
