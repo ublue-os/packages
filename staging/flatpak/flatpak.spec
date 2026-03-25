@@ -13,12 +13,16 @@
 
 Name:           flatpak
 Version:        1.17.3
-Release:        1
+Release:        2
 Summary:        Application deployment framework for desktop apps
 
 License:        LGPL-2.1-or-later
 URL:            https://flatpak.org/
 Source0:        https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
+
+# https://github.com/flatpak/flatpak/pull/6535
+# https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher/issues/5388
+Patch:          0001-fix-a-crash-in-flatpak_context_make_sandboxed.patch
 
 # ostree not on i686 for RHEL 10
 # https://github.com/containers/composefs/pull/229#issuecomment-1838735764
