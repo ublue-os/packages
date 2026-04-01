@@ -8,7 +8,7 @@ Summary:        Flatpak-centric software center and app store
 
 License:        GPL-3.0-only
 URL:            https://usebazaar.org/
-Source:         %{url}/archive/v%{version}/bazaar-%{version}.tar.gz
+Source:         https://github.com/bazaar-org/bazaar/archive/v%{version}/bazaar-%{version}.tar.gz
 
 # https://fedoraproject.org/wiki/Changes/EncourageI686LeafRemoval
 ExcludeArch:    %{ix86}
