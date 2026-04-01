@@ -1,13 +1,13 @@
 %global appid io.github.kolunmi.Bazaar
 
 Name:           bazaar
-# renovate: datasource=github-releases depName=kolunmi/bazaar
-Version:        0.7.12
-Release:        3%{?dist}
+# renovate: datasource=github-releases depName=bazaar-org/bazaar
+Version:        0.7.13
+Release:        1%{?dist}
 Summary:        Flatpak-centric software center and app store
 
 License:        GPL-3.0-only
-URL:            https://github.com/kolunmi/bazaar
+URL:            https://usebazaar.org/
 Source:         %{url}/archive/v%{version}/bazaar-%{version}.tar.gz
 
 # https://fedoraproject.org/wiki/Changes/EncourageI686LeafRemoval
@@ -18,6 +18,7 @@ BuildRequires:  meson
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  blueprint-compiler >= 0.20.0
 BuildRequires:  desktop-file-utils
+BuildRequires:  pkgconfig(gtk4) >= 4.22.1
 BuildRequires:  pkgconfig(libadwaita-1)
 BuildRequires:  pkgconfig(xmlb)
 BuildRequires:  pkgconfig(flatpak)
@@ -83,6 +84,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 %{_libdir}/libbge-0.1.so
 
 %changelog
+* Wed Apr 1 2026 Jill Fiore <contact@lumaeris.com>
+- Update to version v0.7.13 and enforce GTK4 version
+
 * Tue Dec 30 2025 Kyle Gospodnetich <me@kylegospodneti.ch>
 - Update to version v0.7.0
 
