@@ -18,6 +18,7 @@ BuildRequires:  meson
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  blueprint-compiler >= 0.20.0
 BuildRequires:  desktop-file-utils
+BuildRequires:  python3-babel
 BuildRequires:  pkgconfig(gtk4) >= 4.22.1
 BuildRequires:  pkgconfig(libadwaita-1)
 BuildRequires:  pkgconfig(xmlb)
