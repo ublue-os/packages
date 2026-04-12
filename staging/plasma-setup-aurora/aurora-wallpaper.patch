@@ -13,8 +13,8 @@ index d975eba..3f6c999 100644
 -            const lightWallpaperFolder = 'wallpapers/Next/contents/images/';
 -            const darkWallpaperFolder = 'wallpapers/Next/contents/images_dark/';
 +            const imgFile = '3840x2160.jxl'
-+            const lightWallpaperFolder = 'wallpapers/Aurora/images/';
-+            const darkWallpaperFolder = 'wallpapers/Aurora/images/';
++            const lightWallpaperFolder = 'wallpapers/Aurora/contents/images/';
++            const darkWallpaperFolder = 'wallpapers/Aurora/contents/images/';
  
              const wallpaperUrl = StandardPaths.locate(
                  StandardPaths.GenericDataLocation,
