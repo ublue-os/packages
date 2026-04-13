@@ -11,6 +11,13 @@
                     "type": "signedBy",
                     "keyType": "GPGKeys",
                     "keyPath": "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+                },
+                {
+                    "type": "sigstoreSigned",
+                    "keyPath": "/etc/pki/sigstore/SIGSTORE-redhat-release3",
+                    "signedIdentity": {
+                        "type": "matchRepository"
+                    }
                 }
             ],
             "registry.redhat.io": [
