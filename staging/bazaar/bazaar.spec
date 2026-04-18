@@ -2,7 +2,7 @@
 
 Name:           bazaar
 # renovate: datasource=github-releases depName=bazaar-org/bazaar
-Version:        0.7.13
+Version:        0.7.15
 Release:        1%{?dist}
 Summary:        Flatpak-centric software center and app store
 
@@ -54,7 +54,8 @@ It emphasizes supporting the developers who make the Linux desktop possible.
 %install
 %meson_install
 %find_lang %{name}
-rm %{buildroot}%{_libdir}/pkgconfig/bge-0.1.pc
+rm %{buildroot}%{_bindir}/bge-demo
+rm %{buildroot}%{_libdir}/pkgconfig/bge-%{version}.pc
 rm -rf %{buildroot}%{_includedir}/bge/
 
 %check
@@ -82,7 +83,7 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 %{_datadir}/icons/hicolor/symbolic/apps/%{appid}-symbolic.svg
 %{_datadir}/metainfo/%{appid}.metainfo.xml
 %{_datadir}/gnome-shell/search-providers/%{appid}.search-provider.ini
-%{_libdir}/libbge-0.1.so
+%{_libdir}/libbge-%{version}.so
 
 %changelog
 * Wed Apr 1 2026 Jill Fiore <contact@lumaeris.com>
