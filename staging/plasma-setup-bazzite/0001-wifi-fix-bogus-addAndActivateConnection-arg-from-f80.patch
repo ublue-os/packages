@@ -1,0 +1,42 @@
+From 0b2c1cafc1b19e14b7144dc40f7a64d4603a974e Mon Sep 17 00:00:00 2001
+From: Adam Williamson <awilliam@redhat.com>
+Date: Tue, 14 Apr 2026 15:02:47 -0700
+Subject: [PATCH] wifi: fix bogus addAndActivateConnection() arg from f801862
+
+f801862 added this extra arg to the addAndActivateConnection()
+call here which, AFAICT, is simply bogus. I'm fairly sure this is
+the addAndActivateConnection() from plasma-nm Handler::Handler,
+which takes exactly three arguments. The original commit seems
+to have been trying to fix the connection to be system-wide(?),
+but the commit message gives no indication why the author thought
+this was the way to do it, and I'm pretty sure it's not.
+
+I suspect this might be the cause of some of the "strange"
+behavior Brandon Nielsen reported in
+https://bugzilla.redhat.com/show_bug.cgi?id=2455469#c0 -
+specifically "3. Password window disappears?" I suspect at that
+point we hit this bogus call and the ConnectDialog crashed, or
+something like that. The later steps probably wind up hitting the
+not-broken addAndActivateConnection() call in main.qml ?
+
+Signed-off-by: Adam Williamson <awilliam@redhat.com>
+---
+ modules/wifi/contents/ui/ConnectDialog.qml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/modules/wifi/contents/ui/ConnectDialog.qml b/modules/wifi/contents/ui/ConnectDialog.qml
+index 5baaa58..ac7992b 100644
+--- a/modules/wifi/contents/ui/ConnectDialog.qml
++++ b/modules/wifi/contents/ui/ConnectDialog.qml
+@@ -41,7 +41,7 @@ Components.MessageDialog {
+     onAccepted: {
+         if (passwordField.acceptableInput) {
+             root.close();
+-            root.handler.addAndActivateConnection(devicePath, specificPath, passwordField.text, PlasmaNM.Handler.StoreForAllUsers);
++            root.handler.addAndActivateConnection(devicePath, specificPath, passwordField.text);
+         }
+         passwordField.focus = false;
+     }
+-- 
+2.53.0
+
