@@ -55,7 +55,7 @@
 Summary:   Firmware update daemon
 Name:      fwupd
 # renovate: datasource=github-releases depName=fwupd/fwupd
-Version:   2.0.19
+Version:   2.1.2
 Release:   100.ublue
 License:   LGPL-2.1-or-later
 URL:       https://github.com/fwupd/fwupd
