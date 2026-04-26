@@ -9,7 +9,7 @@
 Name:           plasma-setup
 # renovate: datasource=github-tags depName=KDE/plasma-setup
 Version:        6.6.4
-Release:        100.bazzite
+Release:        101.bazzite
 Summary:        Initial setup for systems using KDE Plasma
 License:        (GPL-2.0-or-later or GPL-3.0-or-later) and GPL-2.0-or-later and GPL-3.0-or-later and (LGPL-2.0-or-later or LGPL-3.0-or-later) and (LGPL-2.1-or-later or LGPL-3.0-or-later) and LGPL-2.1-or-later and BSD-2-Clause and CC0-1.0
 URL:            https://invent.kde.org/plasma/%{name}
@@ -20,6 +20,19 @@ Source1: https://download.kde.org/stable/plasma/%{version}/%{name}-%{version}.ta
 # Backported changes
 
 # Proposed changes
+# https://invent.kde.org/plasma/plasma-setup/-/merge_requests/98
+# https://bugs.kde.org/show_bug.cgi?id=514841
+# https://bugzilla.redhat.com/show_bug.cgi?id=2455469
+# grant ourselves polkit permission to create system-wide network connections
+Patch501:       0001-fix-give-us-permission-to-create-system-wide-network.patch
+# https://invent.kde.org/plasma/plasma-setup/-/merge_requests/100
+# fix incorrect addAndActivateConnection() call in wifi module, may fix
+# some of the "strange" behavior observed in
+# https://bugzilla.redhat.com/show_bug.cgi?id=2455469#c0
+Patch502:       0001-wifi-fix-bogus-addAndActivateConnection-arg-from-f80.patch
+# https://invent.kde.org/plasma/plasma-setup/-/merge_requests/101
+# https://bugzilla.redhat.com/show_bug.cgi?id=2453216
+Patch503:       101.patch
 
 # Downstream only changes
 Patch1001:      bazzite-vapor-theme.patch

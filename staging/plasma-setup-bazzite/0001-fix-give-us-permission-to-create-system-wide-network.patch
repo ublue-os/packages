@@ -1,0 +1,33 @@
+From f37d789ee8866b02e22b70780cdcdff8ca9c6d5b Mon Sep 17 00:00:00 2001
+From: Adam Williamson <awilliam@redhat.com>
+Date: Tue, 14 Apr 2026 14:19:36 -0700
+Subject: [PATCH] fix: give us permission to create system-wide network
+ connections
+
+We need the org.freedesktop.NetworkManager.settings.modify.system
+polkit action in order for any network connections we create to
+be system-wide. Without this, they will be created tied to the
+plasma-setup user, which is useless.
+
+Resolves https://bugs.kde.org/show_bug.cgi?id=514841
+
+Signed-off-by: Adam Williamson <awilliam@redhat.com>
+---
+ files/plasma-setup-polkit.rules | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/files/plasma-setup-polkit.rules b/files/plasma-setup-polkit.rules
+index 21143c0..10f72e3 100644
+--- a/files/plasma-setup-polkit.rules
++++ b/files/plasma-setup-polkit.rules
+@@ -19,6 +19,7 @@ polkit.addRule(function (action, subject) {
+ 
+     // Actions that are allowed without authentication for the "plasma-setup" user.
+     var allowedActions = [
++        "org.freedesktop.NetworkManager.settings.modify.system", // System-wide network connections
+         "org.freedesktop.hostname1.set-hostname", // Transient hostname
+         "org.freedesktop.hostname1.set-static-hostname", // Static hostname
+         "org.freedesktop.locale1.set-keyboard", // Keyboard layout
+-- 
+2.53.0
+
