@@ -12,6 +12,7 @@ Source:         %{url}/archive/refs/tags/v%{majmin_ver}.zip
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
 BuildRequires:  extra-cmake-modules
+BuildRequires:  kf6-kconfig-devel
 BuildRequires:  kf6-krunner-devel
 BuildRequires:  kf6-ki18n-devel
 BuildRequires:  kf6-kcoreaddons-devel
