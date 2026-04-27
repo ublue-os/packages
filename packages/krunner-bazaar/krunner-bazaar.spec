@@ -65,7 +65,7 @@ test -f %{buildroot}%{_kf6_plugindir}/krunner/bazaarrunner.so
 %{_bindir}/bazaar-dbus-tool
 
 %changelog
-* Mon Apr 27 2026 - 1.3.0-1
+* Mon Apr 27 2026 Adam Fidel <adam@fidel.cloud> - 1.3.0-1
 - Update to 1.3.0
 
 * Tue Jun 24 2025 Adam Fidel <adam@fidel.cloud> - 1.0.0-1
