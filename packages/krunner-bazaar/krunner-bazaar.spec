@@ -1,4 +1,4 @@
-%global majmin_ver 1.2.2
+%global majmin_ver 1.3.0
 
 Name:           krunner-bazaar
 Version:        %{majmin_ver}
@@ -6,7 +6,7 @@ Release:        1%{?dist}
 Summary:        KDE KRunner plugin for searching Flatpak applications via Bazaar
 
 License:        Apache-2.0
-URL:            https://github.com/ublue-os/krunner-bazaar
+URL:            https://github.com/bazaar-org/krunner-bazaar
 Source:         %{url}/archive/refs/tags/v%{majmin_ver}.zip
 
 BuildRequires:  cmake
@@ -64,5 +64,8 @@ test -f %{buildroot}%{_kf6_plugindir}/krunner/bazaarrunner.so
 %{_bindir}/bazaar-dbus-tool
 
 %changelog
+* Mon Apr 27 2026 - 1.3.0-1
+- Update to 1.3.0
+
 * Tue Jun 24 2025 Adam Fidel <adam@fidel.cloud> - 1.0.0-1
 - Initial RPM package
