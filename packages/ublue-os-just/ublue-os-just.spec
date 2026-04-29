@@ -1,7 +1,7 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
-Version:        0.53
-Release:        4%{?dist}
+Version:        0.54
+Release:        1%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
@@ -88,6 +88,9 @@ done
 %{fish_completions_dir}/ujust.fish
 
 %changelog
+* Wed Apr 29 2026 Jill Fiore <contact@lumaeris.com> - 0.54-1
+- Remove no longer used configure-nvidia and configure-nvidia-optimus
+
 * Tue Sep 30 2025 renner <renner0@posteo.de> - 0.53-2
 - fix epel builds by removing macros from changelog
 
