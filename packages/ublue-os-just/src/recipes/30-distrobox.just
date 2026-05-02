@@ -19,7 +19,7 @@ distrobox-new IMAGE="prompt" NAME="prompt" HOMEDIR="":
     # Supported images
     IMAGES='
       New
-      Bazzite-arch
+      Steambox
     '
     IMAGE={{ IMAGE }}
     NAME={{ NAME }}
@@ -42,16 +42,16 @@ distrobox-new IMAGE="prompt" NAME="prompt" HOMEDIR="":
       exit 1
     fi
     # Tailored image selection logic
-    # Logic for bazzite-arch
-    if [ ${IMAGE,,} == "bazzite-arch" ]; then
-      echo "${b}Creating Bazzite distrobox ...${n}"
+    # Logic for Steambox
+    if [ ${IMAGE,,} == "steambox" ]; then
+      echo "${b}Creating Steambox distrobox ...${n}"
       if command -v /usr/bin/mutter > /dev/null; then
-        IMAGE="ghcr.io/ublue-os/bazzite-arch-gnome"
-        NAME="bazzite-arch"
+        IMAGE="ghcr.io/ublue-os/steambox-gnome"
+        NAME="steambox"
         ARGS="--unshare-netns"
       else
-        IMAGE="ghcr.io/ublue-os/bazzite-arch"
-        NAME="bazzite-arch"
+        IMAGE="ghcr.io/ublue-os/steambox"
+        NAME="steambox"
         ARGS="--unshare-netns"
       fi
     # Anything else
@@ -63,10 +63,6 @@ distrobox-new IMAGE="prompt" NAME="prompt" HOMEDIR="":
     fi
     # Create the distrobox
     Distrobox "$IMAGE" "$NAME" "$HOMEDIR" $ARGS
-    # If IMAGE is bazzite-arch, link to documentation
-    if [ "${IMAGE,,}" == "bazzite-arch" ]; then
-      echo $(Urllink "https://github.com/ublue-os/bazzite-arch" "Check out the docs for exportable apps and instructions")
-    fi
 
 # Install specialized application containers (like brew)
 setup-distrobox-app CONTAINER="prompt":
