@@ -1,7 +1,7 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
-Version:        0.54
-Release:        2%{?dist}
+Version:        0.55
+Release:        1%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
@@ -88,7 +88,7 @@ done
 %{fish_completions_dir}/ujust.fish
 
 %changelog
-* Sat May 02 2026 Jill Fiore <contact@lumaeris.com> - 0.54-2
+* Sat May 02 2026 Jill Fiore <contact@lumaeris.com> - 0.55-1
 - Replace Bazzite-Arch with Steambox
 - Replace ublue-update with uupd
 
