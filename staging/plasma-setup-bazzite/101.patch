@@ -1,0 +1,364 @@
+From d89fa3e6952d3b203774a7e77430c94cb9ed60a5 Mon Sep 17 00:00:00 2001
+From: Kristen McWilliam <kristen@kde.org>
+Date: Sat, 18 Apr 2026 15:33:50 -0400
+Subject: [PATCH] feat: preselect default keyboard layout based on system
+ settings
+
+We were just hard-coding en_US as the default layout, this change makes
+it so that we actually read the system's current keyboard layout and
+preselect that in the UI. If the user makes no changes the layouts
+configured before setup will be left unchanged.
+
+Resolves https://invent.kde.org/plasma/plasma-setup/-/work_items/71
+---
+ modules/keyboard/contents/ui/main.qml | 68 +++++++++++++++++++-----
+ src/keyboardutil.cpp                  | 76 ++++++++++++++++++++++-----
+ src/keyboardutil.h                    | 74 ++++++++++++++++++++------
+ 3 files changed, 175 insertions(+), 43 deletions(-)
+
+diff --git a/modules/keyboard/contents/ui/main.qml b/modules/keyboard/contents/ui/main.qml
+index 9eac2f3..968ee5e 100644
+--- a/modules/keyboard/contents/ui/main.qml
++++ b/modules/keyboard/contents/ui/main.qml
+@@ -28,10 +28,14 @@ PlasmaSetupComponents.SetupModule {
+         // Temporarily disable the highlight move duration so the correct
+         // layout is preselected when the page is activated.
+         layoutsView.highlightMoveDuration = 0;
+-        // Set the initial current item to the system locale's layout.
+-        layoutsView.currentIndex = layoutsProxy.layoutForLocaleIndex();
++        variantView.highlightMoveDuration = 0;
++        // Set the initial current item to the system's current layout.
++        layoutsView.currentIndex = layoutsProxy.findCurrentLayoutIndex();
++        // Set the initial current variant to the system's current variant.
++        variantView.currentIndex = variantProxy.findCurrentVariantIndex();
+         // Reset the highlight move duration to the default value.
+         layoutsView.highlightMoveDuration = -1;
++        variantView.highlightMoveDuration = -1;
+     }
+ 
+     KCMKeyboard.LayoutSearchModel {
+@@ -77,26 +81,26 @@ PlasmaSetupComponents.SetupModule {
+             return true;
+         }
+ 
+-        // Reads the default locale and returns the index of the keyboard layout
+-        // that matches it.
+-        function layoutForLocaleIndex(): int {
+-            const locale = Qt.locale();
+-            const localeName = locale.name;
++        // Returns the index matching the system's current keyboard layout, or -1 if not found.
++        function findCurrentLayoutIndex(): int {
++            // If there are multiple layouts configured (e.g. "us,ru") we only want to consider the
++            // second one for layout selection — in such a case the first one should be `us` to
++            // pair with a non-latin layout.
++            const layoutName = KeyboardUtil.layoutName.split(",").pop().trim();
+ 
+-            // Iterate through the rows to find the layout that matches the locale
++            // Iterate through the rows to find the layout that matches the system's current layout.
+             for (let i = 0; i < rowCount(); i++) {
+                 const proxyIndex = index(i, 0);
+                 const shortName = data(proxyIndex, KItemModels.KRoleNames.role("shortName"));
+                 const description = data(proxyIndex, KItemModels.KRoleNames.role("description"));
+-                const variantName = data(proxyIndex, KItemModels.KRoleNames.role("variantName"));
+ 
+-                // For now just hardcode the English (US) layout.
+-                // TODO: Add support for _actually_ finding the layout for the current locale.
+-                if (description === "English (US)" && variantName === "") {
+-                    return i; // Return the index of the matching layout
++                if (shortName === layoutName) {
++                    console.warn("Found keyboard layout matching system default:", shortName, description);
++                    return i;
+                 }
+             }
+ 
++            console.warn("No keyboard layout matching system default found for layout name:", layoutName);
+             return -1; // Not found
+         }
+     }
+@@ -127,6 +131,40 @@ PlasmaSetupComponents.SetupModule {
+ 
+             return true;
+         }
++
++        // Returns the index matching the system's current keyboard layout variant, or -1 if not found.
++        function findCurrentVariantIndex(): int {
++            const layoutIndex = layoutsView.currentIndex;
++            if (layoutIndex === -1) {
++                return -1; // No layout selected, so no variant to find
++            }
++
++            const layoutModelIndex = layoutsProxy.index(layoutIndex, 0);
++            const layoutShortName = layoutsProxy.data(layoutModelIndex, KItemModels.KRoleNames.role("shortName"));
++
++            // The system's current layout variant, if any (e.g. "dvorak" in "us(dvorak)").
++            //
++            // If there are multiple variants configured (e.g. a layout of "us,ru(bak)") we only
++            // want to consider the second one for variant selection — in such a case the first one
++            // should be a blank variant for the latin fallback layout, while the second one is for
++            // the actual non-latin layout we care about showing in the picker.
++            const currentVariantName = KeyboardUtil.layoutVariant.split(",").pop().trim();
++
++            // Iterate through the rows to find the variant that matches the system's current variant for the selected layout.
++            for (let i = 0; i < rowCount(); i++) {
++                const proxyIndex = index(i, 0);
++                const shortName = data(proxyIndex, KItemModels.KRoleNames.role("shortName"));
++                const variantName = data(proxyIndex, KItemModels.KRoleNames.role("variantName"));
++
++                if (shortName === layoutShortName && variantName === currentVariantName) {
++                    console.warn("Found keyboard variant matching system default. Layout:", shortName, "Variant:", variantName);
++                    return i;
++                }
++            }
++
++            console.warn("No keyboard variant matching system default found for layout:", layoutShortName, "and variant name:", currentVariantName);
++            return -1; // Not found
++        }
+     }
+ 
+     contentItem: ColumnLayout {
+@@ -223,7 +261,9 @@ PlasmaSetupComponents.SetupModule {
+ 
+         onClicked: {
+             ListView.view.currentIndex = index;
+-            KeyboardUtil.setLayout(shortName, variantName);
++            KeyboardUtil.layoutName = shortName;
++            KeyboardUtil.layoutVariant = variantName;
++            KeyboardUtil.applyLayout();
+         }
+ 
+         Accessible.name: delegate.description
+diff --git a/src/keyboardutil.cpp b/src/keyboardutil.cpp
+index a8908b4..1989f39 100644
+--- a/src/keyboardutil.cpp
++++ b/src/keyboardutil.cpp
+@@ -21,33 +21,68 @@
+ KeyboardUtil::KeyboardUtil(QObject *parent)
+     : QObject(parent)
+ {
++    readCurrentKeyboardLayout();
+ }
+ 
+-void KeyboardUtil::setLayout(const QString &layout, const QString &variant)
++QString KeyboardUtil::layoutName() const
+ {
+-    if (m_layout.name == layout && m_layout.variant == variant) {
++    return m_layoutName;
++}
++
++void KeyboardUtil::setLayoutName(const QString &layoutName)
++{
++    if (m_layoutName == layoutName) {
++        return;
++    }
++
++    m_layoutName = layoutName;
++    Q_EMIT layoutNameChanged();
++}
++
++QString KeyboardUtil::layoutVariant() const
++{
++    return m_layoutVariant;
++}
++
++void KeyboardUtil::setLayoutVariant(const QString &layoutVariant)
++{
++    if (m_layoutVariant == layoutVariant) {
++        return;
++    }
++
++    m_layoutVariant = layoutVariant;
++    Q_EMIT layoutVariantChanged();
++}
++
++QString KeyboardUtil::layoutOptions() const
++{
++    return m_layoutOptions;
++}
++
++void KeyboardUtil::setLayoutOptions(const QString &layoutOptions)
++{
++    if (m_layoutOptions == layoutOptions) {
+         return;
+     }
+ 
+-    m_layout.name = layout;
+-    m_layout.variant = variant;
+-    applyLayout();
++    m_layoutOptions = layoutOptions;
++    Q_EMIT layoutOptionsChanged();
+ }
+ 
+ void KeyboardUtil::applyLayout()
+ {
+-    if (m_layout.name.isEmpty()) {
++    if (m_layoutName.isEmpty()) {
+         qCWarning(PlasmaSetup) << "No keyboard layout set.";
+         return;
+     }
+ 
+     if (!InitialStartUtil::runningAsPlasmaSetupUser()) {
+-        qCInfo(PlasmaSetup) << "Not running as plasma-setup user; skipping keyboard layout application. Would have applied layout:" << m_layout.name
+-                            << "with variant:" << m_layout.variant;
++        qCInfo(PlasmaSetup) << "Not running as plasma-setup user; skipping keyboard layout application. Would have applied layout:" << m_layoutName
++                            << "with variant:" << m_layoutVariant << "and options:" << m_layoutOptions;
+         return;
+     }
+ 
+-    qCInfo(PlasmaSetup) << "Applying keyboard layout:" << m_layout.name << "with variant:" << m_layout.variant;
++    qCInfo(PlasmaSetup) << "Applying keyboard layout:" << m_layoutName << "with variant:" << m_layoutVariant << "and options:" << m_layoutOptions;
+ 
+     applyLayoutForCurrentUser();
+     applyLayoutAsSystemDefault();
+@@ -58,8 +93,8 @@ void KeyboardUtil::applyLayoutForCurrentUser()
+     auto config = new KConfig(QStringLiteral("kxkbrc"), KConfig::NoGlobals);
+     KConfigGroup group = config->group(QStringLiteral("Layout"));
+     group.writeEntry(QStringLiteral("DisplayNames"), "", KConfig::Notify);
+-    group.writeEntry(QStringLiteral("LayoutList"), m_layout.name, KConfig::Notify);
+-    group.writeEntry(QStringLiteral("VariantList"), m_layout.variant, KConfig::Notify);
++    group.writeEntry(QStringLiteral("LayoutList"), m_layoutName, KConfig::Notify);
++    group.writeEntry(QStringLiteral("VariantList"), m_layoutVariant, KConfig::Notify);
+     config->sync();
+     delete config;
+ }
+@@ -78,12 +113,11 @@ void KeyboardUtil::applyLayoutAsSystemDefault()
+ 
+     // Default model is hardcoded, since we don't have a way to detect the actual model for now.
+     const QString model = QStringLiteral("pc105");
+-    const QString options = QString();
+     // Convert option allows the layout to be applied everywhere with a single command.
+     const bool convert = true;
+     const bool interactive = false;
+ 
+-    message << m_layout.name << model << m_layout.variant << options << convert << interactive;
++    message << m_layoutName << model << m_layoutVariant << m_layoutOptions << convert << interactive;
+ 
+     QDBusMessage resultMessage = QDBusConnection::systemBus().call(message);
+ 
+@@ -94,4 +128,20 @@ void KeyboardUtil::applyLayoutAsSystemDefault()
+     }
+ }
+ 
++void KeyboardUtil::readCurrentKeyboardLayout()
++{
++    const QString locale1Service = QStringLiteral("org.freedesktop.locale1");
++    const QString locale1Path = QStringLiteral("/org/freedesktop/locale1");
++
++    QDBusInterface interface(locale1Service, locale1Path, QStringLiteral("org.freedesktop.locale1"), QDBusConnection::systemBus());
++    if (!interface.isValid()) {
++        qCWarning(PlasmaSetup) << "Failed to connect to dbus interface for reading current keyboard layout:" << interface.lastError().message();
++        return;
++    }
++
++    m_layoutName = interface.property("X11Layout").toString();
++    m_layoutVariant = interface.property("X11Variant").toString();
++    m_layoutOptions = interface.property("X11Options").toString();
++}
++
+ #include "moc_keyboardutil.cpp"
+diff --git a/src/keyboardutil.h b/src/keyboardutil.h
+index 8041a06..6ad7c1f 100644
+--- a/src/keyboardutil.h
++++ b/src/keyboardutil.h
+@@ -6,11 +6,6 @@
+ #include <QObject>
+ #include <QQmlEngine>
+ 
+-struct Layout {
+-    QString name;
+-    QString variant;
+-};
+-
+ /**
+  * Handles keyboard layout choice.
+  *
+@@ -26,23 +21,63 @@ class KeyboardUtil : public QObject
+     QML_ELEMENT
+     QML_SINGLETON
+ 
+-public:
+-    explicit KeyboardUtil(QObject *parent = nullptr);
++    /*!
++     * The name of the currently selected keyboard layout, e.g. "us" or "ru".
++     *
++     * Can also be a comma-separated list of multiple layouts, in which case the first one
++     * is expected to be a latin layout (e.g. "us") and the second one is expected to be a non-latin layout (e.g. "ru").
++     *
++     * Maps to the "X11Layout" value from systemd-localed.
++     */
++    Q_PROPERTY(QString layoutName READ layoutName WRITE setLayoutName NOTIFY layoutNameChanged)
+ 
+-    /**
+-     * Sets the keyboard layout.
++    /*!
++     * The variant of the currently selected keyboard layout, e.g. "intl" for the US
++     * International layout.
++     *
++     * May be an empty string if no variant is set for the current layout. May be a
++     * comma-separated list of multiple variants if there are multiple layouts, in which
++     * case the first variant corresponds to the first layout, the second variant
++     * corresponds to the second layout, and so on. Variants that are empty strings
++     * correspond to layouts with no variant.
+      *
+-     * @param layout The short name of the keyboard layout to set, e.g., "us", "de", etc.
+-     * @param variant The variant of the keyboard layout (optional).
++     * Maps to the "X11Variant" value from systemd-localed.
+      */
+-    Q_INVOKABLE void setLayout(const QString &layout, const QString &variant = QString());
++    Q_PROPERTY(QString layoutVariant READ layoutVariant WRITE setLayoutVariant NOTIFY layoutVariantChanged)
++
++    /*!
++     * The options of the currently selected keyboard layout, e.g. "grp:alt_shift_toggle" for
++     * toggling between multiple layouts with Alt+Shift.
++     *
++     * May be an empty string if no options are set for the current layout.
++     *
++     * Maps to the "X11Options" value from systemd-localed.
++     */
++    Q_PROPERTY(QString layoutOptions READ layoutOptions WRITE setLayoutOptions NOTIFY layoutOptionsChanged)
++
++public:
++    explicit KeyboardUtil(QObject *parent = nullptr);
++
++    QString layoutName() const;
++    void setLayoutName(const QString &layoutName);
++
++    QString layoutVariant() const;
++    void setLayoutVariant(const QString &layoutVariant);
++
++    QString layoutOptions() const;
++    void setLayoutOptions(const QString &layoutOptions);
+ 
+-private:
+     /**
+-     * Applies the currently set keyboard layout.
++     * Applies the current keyboard layout choices to the current user and the system default.
+      */
+-    void applyLayout();
++    Q_INVOKABLE void applyLayout();
++
++Q_SIGNALS:
++    void layoutNameChanged();
++    void layoutVariantChanged();
++    void layoutOptionsChanged();
+ 
++private:
+     /**
+      * Applies the currently set keyboard layout for the current user.
+      */
+@@ -53,5 +88,12 @@ private:
+      */
+     void applyLayoutAsSystemDefault();
+ 
+-    Layout m_layout;
++    /**
++     * Reads the current keyboard layout from the system and updates the properties accordingly.
++     */
++    void readCurrentKeyboardLayout();
++
++    QString m_layoutName;
++    QString m_layoutVariant;
++    QString m_layoutOptions;
+ };
+-- 
+GitLab
+

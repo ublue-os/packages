@@ -35,7 +35,7 @@ enroll-secure-boot-key:
     SECUREBOOT_KEY=/etc/pki/akmods/certs/akmods-ublue.der
     sudo mokutil --timeout -1
     echo -e "$ENROLLMENT_PASSWORD\n$ENROLLMENT_PASSWORD" | sudo mokutil --import "$SECUREBOOT_KEY"
-    echo 'At next reboot, the mokutil UEFI menu UI will be displayed (*QWERTY* keyboard input and navigation).\nThen, select "Enroll MOK", and input "universalblue" as the password'
+    echo -e 'At next reboot, the mokutil UEFI menu UI will be displayed (*QWERTY* keyboard input and navigation).\nThen, select "Enroll MOK", and input "universalblue" as the password'
 
 # Toggle display of the user-motd in terminal
 toggle-user-motd:
