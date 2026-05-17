@@ -3,7 +3,7 @@
 Name:           bazaar
 # renovate: datasource=github-releases depName=bazaar-org/bazaar
 Version:        0.8.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Flatpak-centric software center and app store
 
 License:        GPL-3.0-only
@@ -77,6 +77,7 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 %{_datadir}/applications/%{appid}.desktop
 %{_bindir}/%{name}
 %{_bindir}/%{name}-dl-worker
+%{_bindir}/%{name}-refresh-worker
 %{_userunitdir}/%{appid}.service
 %{_datadir}/dbus-1/services/%{appid}.service
 %{_datadir}/glib-2.0/schemas/%{appid}.gschema.xml
