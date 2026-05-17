@@ -3,7 +3,7 @@
 Name:           bazaar
 # renovate: datasource=github-releases depName=bazaar-org/bazaar
 Version:        0.8.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Flatpak-centric software center and app store
 
 License:        GPL-3.0-only
@@ -20,6 +20,7 @@ BuildRequires:  blueprint-compiler >= 0.20.0
 BuildRequires:  desktop-file-utils
 BuildRequires:  python3-babel
 BuildRequires:  pkgconfig(gtk4) >= 4.22.1
+BuildRequires:  pkgconfig(gtksourceview-5)
 BuildRequires:  pkgconfig(libadwaita-1)
 BuildRequires:  pkgconfig(xmlb)
 BuildRequires:  pkgconfig(flatpak)
