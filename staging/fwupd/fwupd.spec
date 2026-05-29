@@ -9,14 +9,12 @@
 #  -    -Dsupported_build=enabled
 #  +    -Dsupported_build=enabled \
 #  +    -Defi_os_dir="fedora"
-#  +
 %global glib2_version 2.68.0
 %global libxmlb_version 0.3.24
 %global libusb_version 1.0.9
 %global libcurl_version 7.62.0
 %global libjcat_version 0.1.0
 %global systemd_version 249
-%global json_glib_version 1.1.1
 
 # although we ship a few tiny python files these are utilities that 99.99%
 # of users do not need -- use this to avoid dragging python onto CoreOS
@@ -30,7 +28,7 @@
 %global enable_dummy 1
 
 # fwupd.efi is only available on these arches
-%ifarch i686 x86_64 aarch64 riscv64
+%ifarch x86_64 aarch64 riscv64
 %global have_uefi 1
 %endif
 
@@ -55,7 +53,7 @@
 Summary:   Firmware update daemon
 Name:      fwupd
 # renovate: datasource=github-releases depName=fwupd/fwupd
-Version:   2.0.19
+Version:   2.1.3
 Release:   100.ublue
 License:   LGPL-2.1-or-later
 URL:       https://github.com/fwupd/fwupd
@@ -69,14 +67,11 @@ BuildRequires: libusb1-devel >= %{libusb_version}
 BuildRequires: libcurl-devel >= %{libcurl_version}
 BuildRequires: libjcat-devel >= %{libjcat_version}
 BuildRequires: polkit-devel >= 0.103
-BuildRequires: protobuf-c-devel
 BuildRequires: python3-packaging
 BuildRequires: python3-jinja2
 BuildRequires: sqlite-devel
 BuildRequires: systemd >= %{systemd_version}
 BuildRequires: systemd-devel
-BuildRequires: libarchive-devel
-BuildRequires: libcbor-devel
 BuildRequires: libblkid-devel
 BuildRequires: readline-devel
 BuildRequires: libmnl-devel
@@ -92,7 +87,6 @@ BuildRequires: gi-docgen
 BuildRequires: gnutls-devel
 BuildRequires: gnutls-utils
 BuildRequires: meson
-BuildRequires: json-glib-devel >= %{json_glib_version}
 BuildRequires: vala
 BuildRequires: pkgconfig(bash-completion)
 BuildRequires: git-core
@@ -229,6 +223,11 @@ or server machines.
 %else
     -Dpassim=disabled \
 %endif
+%ifarch i686 x86_64
+    -Dhsi=enabled \
+%else
+    -Dhsi=disabled \
+%endif
     -Dman=true \
     -Dsystemd_unit_user="" \
     -Dbluez=enabled \
@@ -245,7 +244,7 @@ or server machines.
 %install
 %meson_install
 
-mkdir -p --mode=0700 $RPM_BUILD_ROOT%{_localstatedir}/lib/fwupd/gnupg
+mkdir -p --mode=0700 $RPM_BUILD_ROOT%{_localstatedir}/lib/fwupd
 
 # workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1757948
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/cache/fwupd
@@ -336,7 +335,6 @@ systemctl --no-reload preset fwupd-refresh.timer &>/dev/null || :
 /usr/lib/systemd/system-shutdown/fwupd.shutdown
 %dir %{_libdir}/fwupd-%{version}
 %{_libdir}/fwupd-%{version}/libfwupd*.so
-%ghost %{_localstatedir}/lib/fwupd/gnupg
 
 %if 0%{?have_modem_manager}
 %files plugin-modem-manager
@@ -348,7 +346,7 @@ systemctl --no-reload preset fwupd-refresh.timer &>/dev/null || :
 %endif
 %if 0%{?have_uefi}
 %files plugin-uefi-capsule-data
-%{_datadir}/fwupd/uefi-capsule-ux.tar.xz
+%{_datadir}/fwupd/uefi-capsule-ux.zip
 %endif
 
 %files devel
@@ -372,3 +370,4 @@ systemctl --no-reload preset fwupd-refresh.timer &>/dev/null || :
 
 %changelog
 %autochangelog
+
