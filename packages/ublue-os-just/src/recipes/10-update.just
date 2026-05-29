@@ -5,10 +5,10 @@ alias upgrade := update
 # Update system, flatpaks, and containers all at once
 update VERB_LEVEL="full":
     #!/usr/bin/bash
-    if systemctl is-enabled ublue-update.timer | grep -q enabled;
+    if systemctl is-enabled uupd.timer | grep -q enabled;
     then
-      echo "Starting the ublue-update service"
-      sudo systemctl start ublue-update.service
+      echo "Starting the uupd service"
+      sudo systemctl start uupd.service
     else
       if [ {{ VERB_LEVEL }} = "help" ]; then
           echo "Usage: just update <level>"
@@ -88,7 +88,7 @@ toggle-updates ACTION="prompt":
     #!/usr/bin/bash
     source /usr/lib/ujust/ujust.sh
     CURRENT_STATE="Disabled"
-    if systemctl -q is-enabled ublue-update.timer; then
+    if systemctl -q is-enabled uupd.timer; then
       CURRENT_STATE="Enabled"
     elif systemctl -q is-enabled rpm-ostreed-automatic.timer; then
       CURRENT_STATE="Enabled"
@@ -106,19 +106,19 @@ toggle-updates ACTION="prompt":
       exit 0
     fi
     if [ "${OPTION,,}" == "enable" ]; then
-      if systemctl is-enabled ublue-update.timer 2> /dev/null | grep -q not-found; then
+      if systemctl is-enabled uupd.timer 2> /dev/null | grep -q not-found; then
         sudo systemctl enable --now flatpak-system-update.timer rpm-ostreed-automatic.timer
         systemctl enable --now --user flatpak-user-update.timer
       else
-        sudo systemctl enable ublue-update.timer
+        sudo systemctl enable uupd.timer
         sudo systemctl disable --now flatpak-system-update.timer rpm-ostreed-automatic.timer
         systemctl disable --now --user flatpak-user-update.timer
       fi
     elif [ "${OPTION,,}" == "disable" ]; then
-      if systemctl is-enabled ublue-update.timer 2> /dev/null | grep -q not-found; then
+      if systemctl is-enabled uupd.timer 2> /dev/null | grep -q not-found; then
         sudo systemctl disable --now flatpak-system-update.timer rpm-ostreed-automatic.timer
         systemctl disable --now --user flatpak-user-update.timer
       else
-        sudo systemctl disable ublue-update.timer
+        sudo systemctl disable uupd.timer
       fi
     fi
