@@ -1,0 +1,13 @@
+module ublue_os_composefs_execmem 0.1;
+
+require {
+	type kernel_t;
+	class process execmem;
+}
+
+# Temporary mitigation for Linux 7.0 composefs/overlay backing-file mmap checks:
+# user-space mappings from /usr can be evaluated with backing-file credentials
+# that appear as kernel_t, causing legitimate 32-bit userspace mappings to fail.
+#
+# Tracking: https://github.com/ublue-os/akmods/issues/537
+allow kernel_t self:process execmem;
