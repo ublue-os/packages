@@ -1,6 +1,6 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
-Version:        0.56
+Version:        0.57
 Release:        1%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
@@ -88,6 +88,12 @@ done
 %{fish_completions_dir}/ujust.fish
 
 %changelog
+* Tue Jun 02 2026 Jill Fiore <contact@lumaeris.com> - 0.57-1
+- Update PyTorch Nvidia image to 26.05-py3
+- Remove obsolete Bluefin CLI and Arch AMDGPUPRO toolbox images
+- Replace Debian toolbox image with Universal Blue's variant
+- Re-add documentation for SteamBox usage
+
 * Sat May 02 2026 Jill Fiore <contact@lumaeris.com> - 0.55-1
 - Replace Bazzite-Arch with Steambox
 - Replace ublue-update with uupd

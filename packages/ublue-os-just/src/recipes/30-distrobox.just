@@ -63,6 +63,10 @@ distrobox-new IMAGE="prompt" NAME="prompt" HOMEDIR="":
     fi
     # Create the distrobox
     Distrobox "$IMAGE" "$NAME" "$HOMEDIR" $ARGS
+    # If IMAGE is steambox, link to documentation
+    if [ "${IMAGE,,}" == "steambox" ]; then
+      echo $(Urllink "https://github.com/ublue-os/toolboxes#steambox-usage" "Check out the docs for exportable apps and instructions")
+    fi
 
 # Install specialized application containers (like brew)
 setup-distrobox-app CONTAINER="prompt":
