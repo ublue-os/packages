@@ -37,6 +37,7 @@ install -Dm644 -t %{buildroot}%{_exec_prefix}/lib/dracut/dracut.conf.d src/90-ub
 %changelog
 * Mon Jun 08 2026 charel <charel@lotsaspaghetti.com> - 0.4
 - Adapt TPM2 scripts for FIDO2 key enrollment
+- Comment-out crypttab restore in TPM disable script since initramfs is used instead
 
 * Thu Jul 04 2024 m2Giles <69128853+m2Giles@users.noreply.github.com> - 0.3
 - Rewrite enable script to fail out if disk is not found
