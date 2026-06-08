@@ -56,7 +56,8 @@ It emphasizes supporting the developers who make the Linux desktop possible.
 %meson_install
 %find_lang %{name}
 rm %{buildroot}%{_bindir}/bge-demo
-rm %{buildroot}%{_libdir}/pkgconfig/bge-%{version}.pc
+rm %{buildroot}%{_libdir}/pkgconfig/bge.pc
+rm %{buildroot}%{_libdir}/libbge.so
 rm -rf %{buildroot}%{_includedir}/bge/
 
 %check
@@ -85,7 +86,7 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 %{_datadir}/icons/hicolor/symbolic/apps/%{appid}-symbolic.svg
 %{_datadir}/metainfo/%{appid}.metainfo.xml
 %{_datadir}/gnome-shell/search-providers/%{appid}.search-provider.ini
-%{_libdir}/libbge-%{version}.so
+%{_libdir}/libbge.so.0*
 
 %changelog
 * Wed Apr 1 2026 Jill Fiore <contact@lumaeris.com>
