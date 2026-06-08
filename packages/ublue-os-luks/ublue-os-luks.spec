@@ -1,7 +1,7 @@
 Name:           ublue-os-luks
 Vendor:         ublue-os
-Version:        0.3
-Release:        1%{?dist}
+Version:        0.4
+Release:        4%{?dist}
 Summary:        ublue-os scripts for simplified LUKS usage
 License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
@@ -21,6 +21,8 @@ Adds scripts and dracut config to simplify LUKS autounlock
 %install
 install -Dm755 -t %{buildroot}%{_libexecdir}/ src/luks-disable-tpm2-autounlock
 install -Dm755 -t %{buildroot}%{_libexecdir}/ src/luks-enable-tpm2-autounlock
+install -Dm755 -t %{buildroot}%{_libexecdir}/ src/luks-disable-fido2-autounlock
+install -Dm755 -t %{buildroot}%{_libexecdir}/ src/luks-enable-fido2-autounlock
 install -Dm644 -t %{buildroot}%{_exec_prefix}/lib/dracut/dracut.conf.d src/90-ublue-luks.conf
 
 %check
@@ -28,9 +30,14 @@ install -Dm644 -t %{buildroot}%{_exec_prefix}/lib/dracut/dracut.conf.d src/90-ub
 %files
 %{_libexecdir}/luks-disable-tpm2-autounlock
 %{_libexecdir}/luks-enable-tpm2-autounlock
+%{_libexecdir}/luks-disable-fido2-autounlock
+%{_libexecdir}/luks-enable-fido2-autounlock
 %{_exec_prefix}/lib/dracut/dracut.conf.d/90-ublue-luks.conf
 
 %changelog
+* Mon Jun 08 2026 charel <charel@lotsaspaghetti.com> - 0.4
+- Adapt TPM2 scripts for FIDO2 key enrollment
+
 * Thu Jul 04 2024 m2Giles <69128853+m2Giles@users.noreply.github.com> - 0.3
 - Rewrite enable script to fail out if disk is not found
 - LUKs disk is determined from kernel commandline instead of /etc/crypttab
