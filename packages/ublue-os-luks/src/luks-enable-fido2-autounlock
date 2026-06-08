@@ -1,0 +1,131 @@
+#!/bin/bash
+## setup hardware key-unlock LUKS2 encrypted root on Fedora/Silverblue/maybe others
+set -eou pipefail
+
+[ "$UID" -eq 0 ] || {
+  echo "This script must be run as root."
+  exit 1
+}
+
+echo "This script uses systemd-cryptenroll to enable FIDO2 auto-unlock."
+echo "If you do not have any hardware keys (e.g. Yubikey, Nitrokey, etc) you probably want TPM2 auto-unlock instead."
+echo "You can review systemd-cryptenroll's manpage for more information."
+echo "This script will modify your system."
+echo "It will enable FIDO2 auto-unlock of your LUKS partition for your root device!"
+echo "It will enroll one or more hardware keys which are tied to your keys' FIDO2 store."
+read -p "Are you sure are good with this and want to enable FIDO2 auto-unlock? (y/N): " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+  [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
+fi
+
+## Inspect Kernel Cmdline for rd.luks.uuid
+RD_LUKS_UUID="$(xargs -n1 -a /proc/cmdline | grep rd.luks.uuid | cut -d = -f 2)"
+
+# Check to make sure cmdline rd.luks.uuid exists
+if [[ -z ${RD_LUKS_UUID:-} ]]; then
+  printf "LUKS device not defined on Kernel Commandline.\n"
+  printf "This is not supported by this script.\n"
+  printf "Exiting...\n"
+  exit 1
+fi
+
+# Check to make sure that the specified cmdline uuid exists.
+if ! grep -q "${RD_LUKS_UUID}" <<<"$(lsblk)"; then
+  printf "LUKS device not listed in block devices.\n"
+  printf "Exiting...\n"
+  exit 1
+fi
+
+# Cut off the luks-
+LUKS_PREFIX="luks-"
+if grep -q ^${LUKS_PREFIX} <<<"${RD_LUKS_UUID}"; then
+  DISK_UUID=${RD_LUKS_UUID#"$LUKS_PREFIX"}
+else
+  echo "LUKS UUID format mismatch."
+  echo "Exiting..."
+  exit 1
+fi
+
+SET_PIN_ARG=""
+read -p "Would you like to require the keys' FIDO2 PIN? (y/N): " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+  SET_PIN_ARG=" --fido2-with-client-pin=no "
+fi
+
+# Specify Crypt Disk by-uuid
+CRYPT_DISK="/dev/disk/by-uuid/$DISK_UUID"
+
+# Check to make sure crypt disk exists
+if [[ ! -L "$CRYPT_DISK" ]]; then
+  printf "LUKS device not listed in block devices.\n"
+  printf "Exiting...\n"
+  exit 1
+fi
+
+LUKS_DUMP="$(cryptsetup luksDump "$CRYPT_DISK")"
+if echo "$LUKS_DUMP" | grep systemd-tpm2 >/dev/null; then
+  KEYSLOT=$(cryptsetup luksDump "$CRYPT_DISK" | sed -n '/systemd-tpm2$/,/Keyslot:/p' | grep Keyslot | awk '{print $2}')
+  echo "TPM2 already present in LUKS keyslot $KEYSLOT of $CRYPT_DISK."
+  echo "You may enroll FIDO2 keys alongside TPM2 (e.g. as a backup), but auto-unlock is already configured without FIDO2 keys!"
+  echo "If you'd like to use hardware keys for auto-unlock, consider unenrolling the TPM2 slot first."
+  read -p "Proceed with FIDO2 enrollment? (y/N): " -n 1 -r
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo
+    echo "Either clear the existing TPM2 keyslot before retrying, else choose 'y' next time."
+    echo "Exiting..."
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+  fi
+fi
+if echo "$LUKS_DUMP" | grep systemd-fido2 >/dev/null; then
+  ## Need to format with commas because it's usually encouraged to enroll multiple FIDO2 keys as backups, thus there'd likely be multiple slots
+  # TODO: I'm sure there's a way to remove the trailing comma without resorting to a pipe to sed but I'm not an awk wizard (yet)
+  KEYSLOT=$(cryptsetup luksDump /dev/nvme0n1p3 | sed -n '/systemd-fido2$/,/Keyslot:/p' | grep Keyslot | awk '{printf "%s,", $2}' | sed -E 's/,$/\n/')
+  echo "FIDO2 already present in LUKS keyslot(s) $KEYSLOT of $CRYPT_DISK."
+  read -p "Wipe it and re-enroll? (reply 'N' if enrolling additional backup keys!) (y/N): " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo
+    systemd-cryptenroll --wipe-slot=fido2 "$CRYPT_DISK"
+  fi
+fi
+
+## Run crypt enroll, potentially multiple times if user has multiple keys
+ENROLL_LOOP=0
+while [[ $ENROLL_LOOP -eq 0 ]]; do
+  while [[ "$(systemd-cryptenroll --fido2-device=list &>/dev/stdout)" =~ ^No\ FIDO2.* ]]; do
+    echo "Waiting for a FIDO2 device (CTRL+C to cancel)..."
+    sleep 5
+  done
+
+  echo "Enrolling FIDO2 unlock requires your existing LUKS2 unlock password"
+  systemd-cryptenroll --fido2-device=auto $SET_PIN_ARG "$CRYPT_DISK"
+  read -p "Enroll another FIDO2 key? (y/N): " -n 1 -r
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    ENROLL_LOOP=1
+  fi
+done
+
+if lsinitrd 2>&1 | grep -q fido2 >/dev/null; then
+  ## add fido2 to initramfs
+  if rpm-ostree initramfs | grep fido2 >/dev/null; then
+    echo "FIDO2 already present in rpm-ostree initramfs config."
+    rpm-ostree initramfs
+    echo "Re-running initramfs to pickup changes above."
+  fi
+  rpm-ostree initramfs --enable --arg=--force-add --arg=fido2
+else
+  ## initramfs already containts fido2
+  echo "FIDO2 already present in initramfs."
+fi
+
+## Now reboot
+echo
+echo "FIDO2 LUKS auto-unlock configured. Reboot now."
+
+# References:
+#  https://www.reddit.com/r/Fedora/comments/uo4ufq/any_way_to_get_systemdcryptenroll_working_on/
+#  https://0pointer.net/blog/unlocking-luks2-volumes-with-tpm2-fido2-pkcs11-security-hardware-on-systemd-248.html
