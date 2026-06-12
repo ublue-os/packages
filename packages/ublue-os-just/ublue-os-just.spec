@@ -1,7 +1,7 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
 Version:        0.57
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
@@ -57,37 +57,44 @@ install -Dpm0644 ./src/lib-ujust/* %{buildroot}/%{_exec_prefix}/lib/ujust/
 install -d -m0755 %{buildroot}/%{_sysconfdir}/distrobox
 install -Dpm0644 ./src/etc-distrobox/* %{buildroot}/%{_sysconfdir}/distrobox/
 
-mkdir -p %{buildroot}%{bash_completions_dir} %{buildroot}%{zsh_completions_dir} %{buildroot}%{fish_completions_dir}
-
-# Generate ujust bash completion
-just --completions bash | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{bash_completions_dir}/ujust
-
-# Generate ujust zsh completion
-just --completions zsh | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{zsh_completions_dir}/_ujust
-
-# Generate ujust fish completion
-just --completions fish | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{fish_completions_dir}/ujust.fish
-
 %check
 find %{buildroot}/%{_datadir}/%{VENDOR}/%{sub_name}/ -type f -name "*.just" | while read -r file; do
   just --unstable --fmt --check -f $file
 done
 
 %files
-%{_sysconfdir}/profile.d/user-motd.sh
+%{_bindir}/ugum
+%{_bindir}/ujust
 %{_datadir}/%{VENDOR}/%{sub_name}/*.just
 %{_datadir}/%{VENDOR}/justfile
 %{_datadir}/%{VENDOR}/motd/tips/*.md
-%{_bindir}/ujust
-%{_bindir}/ugum
-%{_exec_prefix}/lib/ujust/ujust.sh
 %{_exec_prefix}/lib/ujust/lib*.sh
+%{_exec_prefix}/lib/ujust/ujust.sh
 %{_sysconfdir}/distrobox/*.ini
-%{bash_completions_dir}/ujust
-%{zsh_completions_dir}/_ujust
-%{fish_completions_dir}/ujust.fish
+%{_sysconfdir}/profile.d/user-motd.sh
+%ghost %{bash_completions_dir}/ujust
+%ghost %{fish_completions_dir}/ujust.fish
+%ghost %{zsh_completions_dir}/_ujust
+
+%post
+# We do not want to rebuild ujust when just changes expected completions due to upgrades
+# So generate them on the client instead
+mkdir -p %{_datadir}%{bash_completions_dir} %{_datadir}%{zsh_completions_dir} %{_datadir}%{fish_completions_dir}
+
+# Generate ujust shell completions
+just --completions bash | sed -E 's/([\(_" ])just/\1ujust/g' > %{_datadir}/bash-completion/completions/ujust
+chmod 644 %{_datadir}/bash-completion/completions/ujust
+
+just --completions zsh | sed -E 's/([\(_" ])just/\1ujust/g' > %{_datadir}/zsh/site-functions/_ujust
+chmod 644 %{_datadir}/zsh/site-functions/_ujust
+
+just --completions fish | sed -E 's/([\(_" ])just/\1ujust/g' > %{_datadir}/fish/vendor_completions.d/ujust.fish
+chmod 644 %{_datadir}/fish/vendor_completions.d/ujust.fish
 
 %changelog
+* Fri Jun 12 2026 renner <renner0@posteo.de> - 0.57-2
+- Generate completions on client
+
 * Tue Jun 02 2026 Jill Fiore <contact@lumaeris.com> - 0.57-1
 - Update PyTorch Nvidia image to 26.05-py3
 - Remove obsolete Bluefin CLI and Arch AMDGPUPRO toolbox images
