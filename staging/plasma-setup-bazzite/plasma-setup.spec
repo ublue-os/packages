@@ -9,7 +9,7 @@
 Name:           plasma-setup
 # renovate: datasource=github-tags depName=KDE/plasma-setup
 Version:        6.6.5
-Release:        100.bazzite
+Release:        101.bazzite
 Summary:        Initial setup for systems using KDE Plasma
 License:        (GPL-2.0-or-later or GPL-3.0-or-later) and GPL-2.0-or-later and GPL-3.0-or-later and (LGPL-2.0-or-later or LGPL-3.0-or-later) and (LGPL-2.1-or-later or LGPL-3.0-or-later) and LGPL-2.1-or-later and BSD-2-Clause and CC0-1.0
 URL:            https://invent.kde.org/plasma/%{name}
