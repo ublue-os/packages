@@ -22,10 +22,9 @@ BuildRequires:  python3-devel
 BuildRequires:  python3-pip
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
+BuildRequires:  python3-build
 Requires:       python3
 Requires:       fw-ectool
-
-Patch0:         138-no-build.patch
 
 Source1:        99-fw-fanctrl.rules
 
@@ -42,9 +41,7 @@ Framework Fan control script
 ./install.sh --no-sudo \
     --no-ectool \
     --no-pip-install \
-    --no-pip-build \
     --no-post-install \
-    --no-override-python-installation-path \
     -p %{buildroot}/usr \
     --sysconf-dir %{buildroot}/etc
 %pyproject_install
