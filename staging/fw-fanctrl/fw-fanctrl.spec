@@ -9,7 +9,7 @@
 
 Name:           fw-fanctrl
 Version:        0.0.0
-Release:        10%{gitrel}%{?dist}
+Release:        11%{gitrel}%{?dist}
 Summary:        Framework FanControl Software
 
 License:        BSD-3-Clause
@@ -44,9 +44,14 @@ Framework Fan control script
     --no-post-install \
     -p %{buildroot}/usr \
     --sysconf-dir %{buildroot}/etc
+# Strip the temporary buildroot path out of the generated systemd service files
+sed -i 's|%{buildroot}||g' %{buildroot}%{_unitdir}/fw-fanctrl.service
+sed -i 's|%{buildroot}||g' %{buildroot}%{_unitdir}/fw-fanctrl-suspend.service
 %pyproject_install
 
 install -D -m 0644 %{SOURCE1} %{buildroot}%{_udevrulesdir}/99-fw-fanctrl.rules
+# framework_tool already included in framework-system package
+rm -f %{buildroot}%{_bindir}/framework_tool
 
 %post
 %systemd_post %{name}.service
@@ -65,9 +70,9 @@ install -D -m 0644 %{SOURCE1} %{buildroot}%{_udevrulesdir}/99-fw-fanctrl.rules
 %{_bindir}/%{name}
 %{python3_sitelib}/fw_fanctrl*
 %{_unitdir}/%{name}.service
+%{_unitdir}/%{name}-suspend.service
 %config(noreplace) %{_sysconfdir}/%{name}/config.json
 %{_sysconfdir}/%{name}/config.schema.json
-%{_prefix}/lib/systemd/system-sleep/%{name}-suspend
 %{_udevrulesdir}/99-fw-fanctrl.rules
 
 %changelog
