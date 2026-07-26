@@ -60,13 +60,13 @@ install -Dpm0644 ./src/etc-distrobox/* %{buildroot}/%{_sysconfdir}/distrobox/
 mkdir -p %{buildroot}%{bash_completions_dir} %{buildroot}%{zsh_completions_dir} %{buildroot}%{fish_completions_dir}
 
 # Generate ujust bash completion
-just --completions bash | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{bash_completions_dir}/ujust
+JUST_COMPLETE=bash just | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{bash_completions_dir}/ujust
 
 # Generate ujust zsh completion
-just --completions zsh | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{zsh_completions_dir}/_ujust
+JUST_COMPLETE=zsh just | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{zsh_completions_dir}/_ujust
 
 # Generate ujust fish completion
-just --completions fish | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{fish_completions_dir}/ujust.fish
+JUST_COMPLETE=fish just | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{fish_completions_dir}/ujust.fish
 
 %check
 find %{buildroot}/%{_datadir}/%{VENDOR}/%{sub_name}/ -type f -name "*.just" | while read -r file; do
