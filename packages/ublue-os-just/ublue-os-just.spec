@@ -1,6 +1,6 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
-Version:        0.57
+Version:        0.58
 Release:        1%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
@@ -88,6 +88,9 @@ done
 %{fish_completions_dir}/ujust.fish
 
 %changelog
+* Mon Jun 08 2026 charel <charel@lotsaspaghetti.com> - 0.58
+- Add ujust shortcuts for FIDO2 LUKS enrollment (see ublue-os-luks 0.4)
+
 * Tue Jun 02 2026 Jill Fiore <contact@lumaeris.com> - 0.57-1
 - Update PyTorch Nvidia image to 26.05-py3
 - Remove obsolete Bluefin CLI and Arch AMDGPUPRO toolbox images

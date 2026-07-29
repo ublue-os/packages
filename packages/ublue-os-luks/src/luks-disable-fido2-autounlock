@@ -1,5 +1,5 @@
 #!/bin/bash
-## disable auto-unlock LUKS2 encrypted root on Fedora/Silverblue/maybe others
+## disable hardware key-unlock LUKS2 encrypted root on Fedora/Silverblue/maybe others
 set -euo pipefail
 
 [ "$UID" -eq 0 ] || {
@@ -7,10 +7,10 @@ set -euo pipefail
   exit 1
 }
 
-echo "This script utilizes systemd-cryptenroll for removing tpm2 auto-unlock."
+echo "This script utilizes systemd-cryptenroll for removing fido2 auto-unlock."
 echo "You can review systemd-cryptenroll's manpage for more information."
-echo "This will modify your system and disable TPM2 auto-unlock of your LUKS partition!"
-read -p "Are you sure are good with this and want to disable TPM2 auto-unlock? (y/N): " -n 1 -r
+echo "This will modify your system and disable FIDO2 auto-unlock of your LUKS partition!"
+read -p "Are you sure are good with this and want to disable FIDO2 auto-unlock? (y/N): " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
   [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
@@ -55,30 +55,30 @@ if [[ ! -L "$CRYPT_DISK" ]]; then
 fi
 
 ## Restore the crypttab (not used in current package version)
-#cp -a /etc/crypttab /etc/crypttab.working-before-disable-tpm2
+#cp -a /etc/crypttab /etc/crypttab.working-before-disable-fido2
 #if [ -f /etc/crypttab.known-good ]; then
 #  echo "Restoring /etc/crypttab.known-good to original /etc/crypttab"
 #  mv /etc/crypttab.known-good /etc/crypttab
 #fi
 
 ## Wipe luks slot
-if cryptsetup luksDump "$CRYPT_DISK" | grep systemd-tpm2 >/dev/null; then
-  echo "Wiping systemd-tpm2 from LUKS on $CRYPT_DISK"
-  systemd-cryptenroll --wipe-slot=tpm2 "$CRYPT_DISK"
+if cryptsetup luksDump "$CRYPT_DISK" | grep systemd-fido2 >/dev/null; then
+  echo "Wiping systemd-fido2 from LUKS on $CRYPT_DISK"
+  systemd-cryptenroll --wipe-slot=fido2 "$CRYPT_DISK"
 else
-  echo "No systemd-tpm2 found in LUKS to wipe"
+  echo "No systemd-fido2 found in LUKS to wipe"
 fi
 
 ## Disable initramfs
-if rpm-ostree initramfs | grep tpm2 >/dev/null; then
-  echo "WARNING: if you configured initramfs for anything other than TPM2, this wipes that too..."
+if rpm-ostree initramfs | grep fido2 >/dev/null; then
+  echo "WARNING: if you configured initramfs for anything other than FIDO2, this wipes that too..."
   echo "here's a printout:"
   rpm-ostree initramfs
   echo
   echo "Disabling rpm-ostree initramfs..."
   rpm-ostree initramfs --disable
 else
-  echo "TPM2 is not configured in 'rpm-ostree initramfs'..."
+  echo "FIDO2 is not configured in 'rpm-ostree initramfs'..."
 fi
 
-echo "TPM2 auto-unlock disabled..."
+echo "FIDO2 auto-unlock disabled..."
