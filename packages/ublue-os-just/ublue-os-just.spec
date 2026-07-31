@@ -65,8 +65,11 @@ JUST_COMPLETE=bash just | sed -E 's/just/ujust/g' >> %{buildroot}%{bash_completi
 # Generate ujust zsh completion
 JUST_COMPLETE=zsh just | sed -E 's/just/ujust/g' >> %{buildroot}%{zsh_completions_dir}/_ujust
 
-# Generate ujust fish completion
-JUST_COMPLETE=fish just | sed -E 's/just/ujust/g' >> %{buildroot}%{fish_completions_dir}/ujust.fish
+# Setup ujust fish completion (alias to just --justfile "/usr/share/ublue-os/justfile")
+install -Dpm0755 ./share-fish-vendor/ujust.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/ujust.fish
+
+# zsh and fish completion works 
+%post
 
 %check
 find %{buildroot}/%{_datadir}/%{VENDOR}/%{sub_name}/ -type f -name "*.just" | while read -r file; do
