@@ -1,7 +1,7 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
 Version:        0.57
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
@@ -60,7 +60,7 @@ install -Dpm0644 ./src/etc-distrobox/* %{buildroot}/%{_sysconfdir}/distrobox/
 mkdir -p %{buildroot}%{bash_completions_dir} %{buildroot}%{zsh_completions_dir} %{buildroot}%{fish_completions_dir}
 
 # Generate ujust bash completion
-JUST_COMPLETE=bash just | sed -E 's/just/ujust/g' >> %{buildroot}%{bash_completions_dir}/ujust
+JUST_COMPLETE=bash just | sed -E 's/just/ujust/g' > %{buildroot}%{bash_completions_dir}/ujust
 
 # Setup ujust zsh completion
 install -Dpm0644 ./src/share-zsh-sitevendor/_ujust %{buildroot}%{zsh_completions_dir}/_ujust
