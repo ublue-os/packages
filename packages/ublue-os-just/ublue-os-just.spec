@@ -63,13 +63,10 @@ mkdir -p %{buildroot}%{bash_completions_dir} %{buildroot}%{zsh_completions_dir} 
 JUST_COMPLETE=bash just | sed -E 's/just/ujust/g' >> %{buildroot}%{bash_completions_dir}/ujust
 
 # Setup ujust zsh completion
-install -Dpm0644 ./share-zsh-sitevendor/_ujust %{buildroot}%{zsh_completions_dir}/_ujust
+install -Dpm0644 ./src/share-zsh-sitevendor/_ujust %{buildroot}%{zsh_completions_dir}/_ujust
 
 # Setup ujust fish completion (alias to just --justfile "/usr/share/ublue-os/justfile")
-install -Dpm0644 ./share-fish-vendor/ujust.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/ujust.fish
-
-# zsh and fish completion works 
-%post
+install -Dpm0644 ./src/share-fish-vendor/ujust.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/ujust.fish
 
 %check
 find %{buildroot}/%{_datadir}/%{VENDOR}/%{sub_name}/ -type f -name "*.just" | while read -r file; do
