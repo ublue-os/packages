@@ -85,7 +85,7 @@ done
 %{_sysconfdir}/distrobox/*.ini
 %{bash_completions_dir}/ujust
 %{zsh_completions_dir}/_ujust
-%{fish_completions_dir}/ujust.fish
+%{_datadir}/fish/vendor_conf.d/ujust.fish
 
 %changelog
 * Tue Jun 02 2026 Jill Fiore <contact@lumaeris.com> - 0.57-1
