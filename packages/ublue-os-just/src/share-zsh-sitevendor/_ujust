@@ -1,0 +1,12 @@
+#compdef ujust
+
+_ujust() {
+  # Hardcode justfile arguments into the completion context
+  words=(just --justfile "/usr/share/ublue-os/justfile" "${words[@]:1}")
+  (( CURRENT += 2 ))
+  
+  # Delegate to just's native completion function
+  _just
+}
+
+_ujust "$@"

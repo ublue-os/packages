@@ -1,7 +1,7 @@
 Name:           ublue-os-just
 Vendor:         ublue-os
 Version:        0.57
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        ublue-os just integration
 License:        Apache-2.0
 URL:            https://github.com/ublue-os/packages
@@ -60,13 +60,13 @@ install -Dpm0644 ./src/etc-distrobox/* %{buildroot}/%{_sysconfdir}/distrobox/
 mkdir -p %{buildroot}%{bash_completions_dir} %{buildroot}%{zsh_completions_dir} %{buildroot}%{fish_completions_dir}
 
 # Generate ujust bash completion
-just --completions bash | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{bash_completions_dir}/ujust
+JUST_COMPLETE=bash just | sed -E 's/just/ujust/g' >> %{buildroot}%{bash_completions_dir}/ujust
 
-# Generate ujust zsh completion
-just --completions zsh | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{zsh_completions_dir}/_ujust
+# Setup ujust zsh completion
+install -Dpm0644 ./src/share-zsh-sitevendor/_ujust %{buildroot}%{zsh_completions_dir}/_ujust
 
-# Generate ujust fish completion
-just --completions fish | sed -E 's/([\(_" ])just/\1ujust/g' > %{buildroot}%{fish_completions_dir}/ujust.fish
+# Setup ujust fish completion (alias to just --justfile "/usr/share/ublue-os/justfile")
+install -Dpm0644 ./src/share-fish-vendor/ujust.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/ujust.fish
 
 %check
 find %{buildroot}/%{_datadir}/%{VENDOR}/%{sub_name}/ -type f -name "*.just" | while read -r file; do
@@ -85,7 +85,7 @@ done
 %{_sysconfdir}/distrobox/*.ini
 %{bash_completions_dir}/ujust
 %{zsh_completions_dir}/_ujust
-%{fish_completions_dir}/ujust.fish
+%{_datadir}/fish/vendor_conf.d/ujust.fish
 
 %changelog
 * Tue Jun 02 2026 Jill Fiore <contact@lumaeris.com> - 0.57-1
