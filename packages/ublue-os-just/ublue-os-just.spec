@@ -62,11 +62,11 @@ mkdir -p %{buildroot}%{bash_completions_dir} %{buildroot}%{zsh_completions_dir} 
 # Generate ujust bash completion
 JUST_COMPLETE=bash just | sed -E 's/just/ujust/g' >> %{buildroot}%{bash_completions_dir}/ujust
 
-# Generate ujust zsh completion
-JUST_COMPLETE=zsh just | sed -E 's/just/ujust/g' >> %{buildroot}%{zsh_completions_dir}/_ujust
+# Setup ujust zsh completion
+install -Dpm0644 ./share-zsh-sitevendor/_ujust %{buildroot}%{zsh_completions_dir}/_ujust
 
 # Setup ujust fish completion (alias to just --justfile "/usr/share/ublue-os/justfile")
-install -Dpm0755 ./share-fish-vendor/ujust.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/ujust.fish
+install -Dpm0644 ./share-fish-vendor/ujust.fish %{buildroot}%{_datadir}/fish/vendor_conf.d/ujust.fish
 
 # zsh and fish completion works 
 %post
