@@ -60,7 +60,7 @@ install -Dpm0644 ./src/etc-distrobox/* %{buildroot}/%{_sysconfdir}/distrobox/
 mkdir -p %{buildroot}%{bash_completions_dir} %{buildroot}%{zsh_completions_dir} %{buildroot}%{fish_completions_dir}
 
 # Generate ujust bash completion
-JUST_COMPLETE=bash just | sed -E 's/just/ujust/g' >> %{buildroot}%{bash_completions_dir}/ujust
+JUST_COMPLETE=bash just | sed -E 's/just/ujust/g' > %{buildroot}%{bash_completions_dir}/ujust
 
 # Setup ujust zsh completion
 install -Dpm0644 ./src/share-zsh-sitevendor/_ujust %{buildroot}%{zsh_completions_dir}/_ujust
