@@ -3,7 +3,7 @@
 Name:           bazaar
 # renovate: datasource=github-releases depName=bazaar-org/bazaar
 Version:        0.9.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Flatpak-centric software center and app store
 
 License:        GPL-3.0-only
@@ -18,23 +18,27 @@ BuildRequires:  meson
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  blueprint-compiler >= 0.20.0
 BuildRequires:  desktop-file-utils
+BuildRequires:  /usr/bin/xmllint
 BuildRequires:  python3-babel
+BuildRequires:  python3-gobject-base
 BuildRequires:  pkgconfig(gtk4) >= 4.22.1
-BuildRequires:  pkgconfig(gtksourceview-5)
-BuildRequires:  pkgconfig(libadwaita-1)
-BuildRequires:  pkgconfig(xmlb)
-BuildRequires:  pkgconfig(flatpak)
+BuildRequires:  pkgconfig(gtksourceview-5) >= 5.17
+BuildRequires:  pkgconfig(libadwaita-1) >= 1.8
+BuildRequires:  pkgconfig(appstream) >= 1.0
+BuildRequires:  pkgconfig(xmlb) >= 0.3.4
+BuildRequires:  pkgconfig(flatpak) >= 1.9
 BuildRequires:  pkgconfig(libdex-1) >= 1.0.0
-BuildRequires:  pkgconfig(yaml-0.1)
-BuildRequires:  pkgconfig(libsoup-3.0)
-BuildRequires:  pkgconfig(json-glib-1.0)
-BuildRequires:  pkgconfig(glycin-2)
-BuildRequires:  pkgconfig(glycin-gtk4-2)
-BuildRequires:  pkgconfig(webkitgtk-6.0)
-BuildRequires:  pkgconfig(libsecret-1)
-BuildRequires:  pkgconfig(md4c)
-BuildRequires:  pkgconfig(libproxy-1.0)
-BuildRequires:  pkgconfig(malcontent-0)
+BuildRequires:  pkgconfig(yaml-0.1) >= 0.2.5
+BuildRequires:  pkgconfig(libsoup-3.0) >= 3.6.0
+BuildRequires:  pkgconfig(json-glib-1.0) >= 1.10.0
+BuildRequires:  pkgconfig(glycin-2) >= 2.0
+BuildRequires:  pkgconfig(glycin-gtk4-2) >= 2.0
+BuildRequires:  pkgconfig(webkitgtk-6.0) >= 2.50.2
+BuildRequires:  pkgconfig(libsecret-1) >= 0.20
+BuildRequires:  pkgconfig(md4c) >= 0.5.1
+BuildRequires:  pkgconfig(libproxy-1.0) >= 0.5
+BuildRequires:  pkgconfig(malcontent-0) >= 0.12.0
+BuildRequires:  pkgconfig(libsystemd) >= 245
 
 %description
 A new app store with a focus on discovering and installing
@@ -77,10 +81,10 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 %doc README.md
 %{_datadir}/applications/%{appid}.desktop
 %{_bindir}/%{name}
+%{_bindir}/%{name}-daemon
 %{_bindir}/%{name}-dl-worker
-%{_bindir}/%{name}-refresh-worker
 %{_userunitdir}/%{appid}.service
-%{_datadir}/dbus-1/services/%{appid}.service
+%{_datadir}/dbus-1/services/%{appid}.SearchProvider.service
 %{_datadir}/glib-2.0/schemas/%{appid}.gschema.xml
 %{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
 %{_datadir}/icons/hicolor/symbolic/apps/%{appid}-symbolic.svg
@@ -89,6 +93,12 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 %{_libdir}/libbge.so.0*
 
 %changelog
+* Wed Aug 5 2026 Kyle Gospodnetich <me@kylegospodneti.ch>
+- Fix file list for 0.9.2: bazaar-refresh-worker is now a bazaar subcommand,
+  add bazaar-daemon, rename D-Bus service to *.SearchProvider.service
+- Add appstream, libsystemd, xmllint and PyGObject build dependencies
+- Pin minimum versions for all upstream-declared dependencies
+
 * Wed Apr 1 2026 Jill Fiore <contact@lumaeris.com>
 - Update to version v0.7.13 and enforce GTK4 version
 
