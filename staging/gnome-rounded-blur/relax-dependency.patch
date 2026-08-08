@@ -1,0 +1,54 @@
+--- meson.build.orig	2026-08-07 21:20:51.674685436 +0200
++++ meson.build	2026-08-07 21:55:23.173022181 +0200
+@@ -21,23 +21,39 @@
+ includedir = join_paths(prefix, get_option('includedir'))
+ datadir = join_paths(prefix, get_option('datadir'))
+ 
+-mutter_api_version = '18'
++mutter_api_versions = ['51', '18']
+ mutter_req = '>= 50.0'
+ 
+-clutter_pc = 'mutter-clutter-' + mutter_api_version
+-cogl_pc = 'mutter-cogl-' + mutter_api_version
+-
+ # Dependencies
++mutter_api_version = ''
++clutter_dep = disabler()
++cogl_dep = disabler()
++libmutter_dep = disabler()
++
++foreach ver : mutter_api_versions
++  clutter_pc = 'mutter-clutter-' + ver
++  cogl_pc = 'mutter-cogl-' + ver
++  libmutter_pc = 'libmutter-' + ver
++
++  clutter_try = dependency(clutter_pc, version: mutter_req, required: false)
++  cogl_try = dependency(cogl_pc, version: mutter_req, required: false)
++  libmutter_try = dependency(libmutter_pc, required: false)
++
++  if clutter_try.found() and cogl_try.found() and libmutter_try.found()
++    mutter_api_version = ver
++    clutter_dep = clutter_try
++    cogl_dep = cogl_try
++    libmutter_dep = libmutter_try
++    break
++  endif
++endforeach
++
++if mutter_api_version == ''
++  error('The only supported versions of the mutter api are: ' + ', '.join(mutter_api_versions))
++endif
++
+ glib_dep = dependency('glib-2.0', version: '>= 2.66')
+ gobject_dep = dependency('gobject-2.0', version: '>= 2.66')
+-clutter_dep = dependency(clutter_pc, version: mutter_req,
+-  required: false,
+-)
+-
+-cogl_dep = dependency(cogl_pc, version: mutter_req,
+-  required: false,
+-)
+-libmutter_dep = dependency('libmutter-18')
+ 
+ # Required dependencies
+ deps = [
