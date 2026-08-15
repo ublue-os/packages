@@ -2,7 +2,7 @@
 
 Name:           bazaar
 # renovate: datasource=github-releases depName=bazaar-org/bazaar
-Version:        0.9.2
+Version:        0.9.4
 Release:        4%{?dist}
 Summary:        Flatpak-centric software center and app store
 
