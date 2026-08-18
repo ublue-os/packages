@@ -2,13 +2,13 @@
 
 Name:           bazaar
 # renovate: datasource=github-releases depName=bazaar-org/bazaar
-Version:        0.9.2
+Version:        0.9.4
 Release:        4%{?dist}
 Summary:        Flatpak-centric software center and app store
 
 License:        GPL-3.0-only
 URL:            https://usebazaar.org/
-Source:         https://github.com/bazaar-org/bazaar/archive/v%{version}/bazaar-%{version}.tar.gz
+Source:         https://gitlab.gnome.org/World/bazaar/-/archive/v%{version}/bazaar-v%{version}.tar.gz
 
 # https://fedoraproject.org/wiki/Changes/EncourageI686LeafRemoval
 ExcludeArch:    %{ix86}
