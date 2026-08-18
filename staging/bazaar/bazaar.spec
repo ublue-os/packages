@@ -1,9 +1,9 @@
 %global appid io.github.kolunmi.Bazaar
 
 Name:           bazaar
-# renovate: datasource=gitlab-releases depName=bazaar-org/bazaar
+# renovate: datasource=gitlab-releases depName=World/bazaar registryUrl=https://gitlab.gnome.org
 Version:        0.9.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Flatpak-centric software center and app store
 
 License:        GPL-3.0-only
@@ -27,7 +27,7 @@ BuildRequires:  pkgconfig(libadwaita-1) >= 1.8
 BuildRequires:  pkgconfig(appstream) >= 1.0
 BuildRequires:  pkgconfig(xmlb) >= 0.3.4
 BuildRequires:  pkgconfig(flatpak) >= 1.9
-BuildRequires:  pkgconfig(libdex-1) >= 1.0.0
+BuildRequires:  pkgconfig(libdex-1) >= 1.2.beta
 BuildRequires:  pkgconfig(yaml-0.1) >= 0.2.5
 BuildRequires:  pkgconfig(libsoup-3.0) >= 3.6.0
 BuildRequires:  pkgconfig(json-glib-1.0) >= 1.10.0
@@ -46,7 +46,7 @@ applications and add-ons from Flatpak remotes, particularly Flathub.
 It emphasizes supporting the developers who make the Linux desktop possible.
 
 %prep
-%autosetup -n bazaar-%{version}
+%autosetup -n bazaar-v%{version}
 
 %conf
 %meson \
