@@ -1,7 +1,7 @@
-# Build only the akmod package and no kernel module packages:
+%if 0%{?fedora} || 0%{?rhel} >= 10
 %define buildforkernels akmod
-
 %global debug_package %{nil}
+%endif
 
 Name:           xone-kmod
 Version:        1000.{{{ git_dir_version }}}
