@@ -13,7 +13,7 @@ jobs:
       any_changed: ${{ steps.changed-package-files.outputs.any_changed }}
       specs: ${{ steps.packages.outputs.specs }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Get directories with spec files
         id: specdirs
@@ -79,7 +79,7 @@ jobs:
           echo "specs=$(jq -r -c '.specs' <<< "${MATRIX}")" >> $GITHUB_OUTPUT
 
   build_packages:
-    runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
+    runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-26.04' || 'ubuntu-26.04-arm' }}
     needs: changed_files
     name: Build RPM package
     if: needs.changed_files.outputs.any_changed == 'true'
@@ -92,14 +92,13 @@ jobs:
         chroot: ["fedora-43", "fedora-44", "epel-10"]
         spec: ${{ fromJson(needs.changed_files.outputs.specs) }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      - name: Install dependencies
-        if: matrix.platform == 'arm64'
+      - name: Show container tooling versions
         run: |
-          sudo apt update -y
-          sudo apt install -y \
-            podman
+          podman --version
+          buildah --version
+          podman info
 
       - name: Setup Just
         uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4
@@ -139,7 +138,7 @@ jobs:
 
       - name: Upload to Job Artifacts
         if: steps.build_package.outputs.skipped_arch == 'false'
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: ${{ matrix.chroot }}-${{ matrix.platform }}-${{ steps.build_package.outputs.package }}
           if-no-files-found: error
