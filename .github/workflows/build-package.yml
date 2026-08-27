@@ -79,7 +79,7 @@ jobs:
           echo "specs=$(jq -r -c '.specs' <<< "${MATRIX}")" >> $GITHUB_OUTPUT
 
   build_packages:
-    runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
+    runs-on: ${{ matrix.platform == 'amd64' && 'ubuntu-26.04' || 'ubuntu-26.04-arm' }}
     needs: changed_files
     name: Build RPM package
     if: needs.changed_files.outputs.any_changed == 'true'
@@ -94,12 +94,11 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      - name: Install dependencies
-        if: matrix.platform == 'arm64'
+      - name: Show container tooling versions
         run: |
-          sudo apt update -y
-          sudo apt install -y \
-            podman
+          podman --version
+          buildah --version
+          podman info
 
       - name: Setup Just
         uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4
