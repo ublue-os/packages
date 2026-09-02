@@ -1,3 +1,4 @@
+# renovate: datasource=github-tags depName=bazaar-org/krunner-bazaar
 %global majmin_ver 1.3.0
 
 Name:           krunner-bazaar
