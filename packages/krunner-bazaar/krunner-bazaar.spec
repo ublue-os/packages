@@ -1,5 +1,4 @@
-# renovate: datasource=github-tags depName=bazaar-org/krunner-bazaar
-%global majmin_ver 1.3.0
+%global majmin_ver 1.4.0
 
 Name:           krunner-bazaar
 Version:        %{majmin_ver}
@@ -66,6 +65,9 @@ test -f %{buildroot}%{_kf6_plugindir}/krunner/bazaarrunner.so
 %{_bindir}/bazaar-dbus-tool
 
 %changelog
+* Wed Sep 02 2026 renner <renner0@posteo.de> - 1.4.0-1
+- Update to 1.4.0
+
 * Mon Apr 27 2026 Adam Fidel <adam@fidel.cloud> - 1.3.0-1
 - Update to 1.3.0
 
