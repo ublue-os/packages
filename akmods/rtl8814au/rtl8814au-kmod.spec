@@ -2,7 +2,7 @@
 %global modname rtl8814au
 %global srcname 8814au
 
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} >= 10
 %global buildforkernels akmod
 %global debug_package %{nil}
 %endif
