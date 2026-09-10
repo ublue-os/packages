@@ -8,8 +8,8 @@
 
 Name:           plasma-setup
 # renovate: datasource=github-tags depName=KDE/plasma-setup
-Version:        6.7.4
-Release:        100.aurora
+Version:        6.7.5
+Release:        101.aurora
 Summary:        Initial setup for systems using KDE Plasma
 License:        (GPL-2.0-or-later or GPL-3.0-or-later) and GPL-2.0-or-later and GPL-3.0-or-later and (LGPL-2.0-or-later or LGPL-3.0-or-later) and (LGPL-2.1-or-later or LGPL-3.0-or-later) and LGPL-2.1-or-later and BSD-2-Clause and CC0-1.0
 URL:            https://invent.kde.org/plasma/%{name}
@@ -135,6 +135,70 @@ exit 0
 
 
 %changelog
+* Tue Sep 08 2026 Steve Cossette <farchord@gmail.com> - 6.7.5-1
+- 6.7.5
+
+* Tue Aug 04 2026 Steve Cossette <farchord@gmail.com> - 6.7.4-1
+- 6.7.4
+
+* Tue Jul 28 2026 Adam Williamson <awilliam@redhat.com> - 6.7.3-4
+- Revert MR #109 backport (it causes a regression)
+
+* Wed Jul 22 2026 Adam Williamson <awilliam@redhat.com> - 6.7.3-3
+- Backport MR #109 to fix language search
+
+* Thu Jul 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 6.7.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
+
+* Tue Jul 14 2026 Steve Cossette <farchord@gmail.com> - 6.7.3-1
+- 6.7.3
+
+* Wed Jul 01 2026 Steve Cossette <farchord@gmail.com> - 6.7.2-1
+- 6.7.2
+
+* Tue Jun 23 2026 Steve Cossette <farchord@gmail.com> - 6.7.1-1
+- 6.7.1
+
+* Thu Jun 11 2026 Steve Cossette <farchord@gmail.com> - 6.7.0-1
+- 6.7.0
+
+* Fri May 29 2026 Steve Cossette <farchord@gmail.com> - 6.6.91-1
+- 6.6.91
+
+* Sat May 23 2026 Steve Cossette <farchord@gmail.com> - 6.6.90-1
+- 6.6.90
+
+* Thu May 21 2026 Adam Williamson <awilliam@redhat.com> - 6.6.5-2
+- Re-backport MR #101 to pre-select configured keyboard layout (#2453216)
+
+* Thu May 14 2026 Steve Cossette <farchord@gmail.com> - 6.6.5-1
+- 6.6.5
+
+* Thu May 14 2026 Jan Grulich <jgrulich@redhat.com> - 6.6.4-7
+- Rebuild (qt6)
+
+* Sun Apr 19 2026 Adam Williamson <awilliam@redhat.com> - 6.6.4-6
+- Backport MR #101 to pre-select configured keyboard layout (#2453216)
+
+* Fri Apr 17 2026 Jan Grulich <jgrulich@redhat.com> - 6.6.4-5
+- Rebuild (qt6)
+
+* Tue Apr 14 2026 Adam Williamson <awilliam@redhat.com> - 6.6.4-4
+- Drop MR #99 backport, it's broken (desktop doesn't load right)
+
+* Tue Apr 14 2026 Adam Williamson <awilliam@redhat.com> - 6.6.4-3
+- Backport MR #99 to fix launcher icon when selecting dark mode
+- Backport MR #100 to maybe fix strange behavior in wifi page
+
+* Tue Apr 14 2026 Adam Williamson <awilliam@redhat.com> - 6.6.4-2
+- Backport MR #98 to fix system-wide network connection creation
+
+* Fri Apr 10 2026 Steve Cossette <farchord@gmail.com> - 6.6.4-1
+- 6.6.4
+
+* Tue Mar 17 2026 Steve Cossette <farchord@gmail.com> - 6.6.3-1
+- 6.6.3
+
 * Tue Mar 03 2026 Steve Cossette <farchord@gmail.com> - 6.6.2-1
 - 6.6.2
 
