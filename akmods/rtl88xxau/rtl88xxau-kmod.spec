@@ -3,7 +3,7 @@
 %global srcname rtl8812au
 %global pkgname rtl88xxau
 
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} >= 10
 %global buildforkernels akmod
 %global debug_package %{nil}
 %endif
