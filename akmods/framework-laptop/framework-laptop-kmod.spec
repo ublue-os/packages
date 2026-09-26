@@ -1,9 +1,10 @@
-# Build only the akmod package and no kernel module packages:
-%define buildforkernels akmod
 %global real_name framework-laptop
 %global modname   framework_laptop
 
+%if 0%{?fedora} || 0%{?rhel} >= 10
+%define buildforkernels akmod
 %global debug_package %{nil}
+%endif
 
 Name:           %{real_name}-kmod
 Version:        {{{ git_dir_version }}}

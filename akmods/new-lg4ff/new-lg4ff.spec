@@ -1,5 +1,7 @@
+%if 0%{?fedora} || 0%{?rhel} >= 10
 %global buildforkernels akmod
 %global debug_package %{nil}
+%endif
 
 Name:           new-lg4ff
 Version:        0.4.0
