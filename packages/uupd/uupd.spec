@@ -1,6 +1,6 @@
 Name:           uupd
-Version:        1.4.0
-Release:        2%{?dist}
+Version:        1.5.0
+Release:        1%{?dist}
 Summary:       Centralized update service/checker made for Universal Blue
 Vendor:        ublue-os
 URL:           https://github.com/%{vendor}/%{name}
@@ -32,7 +32,7 @@ install -Dpm 0755 %{name} %{buildroot}%{_bindir}/%{name}
 install -Dpm 644 %{name}.service %{buildroot}%{_unitdir}/%{name}.service
 install -Dpm 644 %{name}-manual.service %{buildroot}%{_unitdir}/%{name}-manual.service
 install -Dpm 644 %{name}.timer %{buildroot}%{_unitdir}/%{name}.timer
-install -Dpm 644 %{name}.rules %{buildroot}%{_sysconfdir}/polkit-1/rules.d/%{name}.rules
+install -Dpm 644 %{name}.rules %{buildroot}%{_datadir}/polkit-1/rules.d/%{name}.rules
 install -Dpm 644 config.json %{buildroot}/%{_sysconfdir}/%{name}/config.json
 
 %check
@@ -49,7 +49,7 @@ go test -v ./...
 %{_unitdir}/%{name}.service
 %{_unitdir}/%{name}.timer
 %{_unitdir}/%{name}-manual.service
-%config(noreplace) %{_sysconfdir}/polkit-1/rules.d/%{name}.rules
+%{_datadir}/polkit-1/rules.d/%{name}.rules
 %config(noreplace) %{_sysconfdir}/%{name}/config.json
 %changelog
 %autochangelog
