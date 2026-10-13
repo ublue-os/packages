@@ -1,6 +1,6 @@
 Name:           gnome-rounded-blur
 # renovate: datasource=github-tags depName=kancko/gnome-rounded-blur
-Version:        1.0.1 
+Version:        v1.0.2
 Release:        1%{?dist}
 Summary:        Library providing Blur.Blur Effect with corner radius support
 
