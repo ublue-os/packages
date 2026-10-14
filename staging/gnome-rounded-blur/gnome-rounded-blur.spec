@@ -1,15 +1,12 @@
 Name:           gnome-rounded-blur
 # renovate: datasource=github-tags depName=kancko/gnome-rounded-blur
-Version:        1.0.1 
+Version:        1.0.2 
 Release:        1%{?dist}
 Summary:        Library providing Blur.Blur Effect with corner radius support
 
 License:        GPL-3.0-or-later
 URL:            https://github.com/kancko/gnome-rounded-blur 
 Source0:        %{url}/archive/v%{version}.tar.gz
-#This patch allows building on fedora 45/rawhide
-#https://github.com/kancko/gnome-rounded-blur/pull/4
-Patch0:         relax-dependency.patch
 
 BuildRequires:  meson
 BuildRequires:  gcc
