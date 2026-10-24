@@ -1,6 +1,6 @@
 Name:           ublue-os-media-automount-udev
 Vendor:         ublue-os
-Version:        0.19
+Version:        0.20
 Release:        1%{?dist}
 Summary:        udev rules to mount non-removable disk partitions
 
@@ -35,6 +35,9 @@ install -p -Dm0644 ./ublue-os-media-automount.conf %{buildroot}%{_tmpfilesdir}/u
 %{_tmpfilesdir}/ublue-os-media-automount.conf
 
 %changelog
+* Sun Oct 24 biebel <3123111+biebel@users.noreply.github.com> - 0.20
+- fix: wait for udev settle in service
+
 * Sat Aug 02 2025 Pim Vermeer <pim.vermeer@gmail.com> - 0.19
 - fix: Match fstab entries by uuid
 
