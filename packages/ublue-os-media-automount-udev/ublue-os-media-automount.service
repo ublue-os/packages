@@ -4,6 +4,7 @@ After=local-fs.target
 Requires=local-fs.target
 
 [Service]
+ExecStartPre=/usr/bin/udevadm settle --timeout=15
 ExecStart=/usr/libexec/ublue-os-media-automount.py
 RemainAfterExit=yes
 
