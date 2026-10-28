@@ -33,6 +33,7 @@ Framework Fan control script
 %install
 ./install.sh --no-sudo \
     --no-ectool \
+    --ignore-tool framework_tool \
     --no-pip-install \
     --no-post-install \
     -p %{buildroot}/usr \
@@ -42,20 +43,14 @@ sed -i 's|%{buildroot}||g' %{buildroot}%{_unitdir}/fw-fanctrl.service
 sed -i 's|%{buildroot}||g' %{buildroot}%{_unitdir}/fw-fanctrl-suspend.service
 %pyproject_install
 
-# framework_tool already included in framework-system package
-rm -f %{buildroot}%{_bindir}/framework_tool
-
 %post
 %systemd_post %{name}.service
-%udev_rules_update
 
 %preun
 %systemd_preun %{name}.service
-%udev_rules_update
 
 %postun
 %systemd_postun %{name}.service
-%udev_rules_update
 
 %files
 %license LICENSE
