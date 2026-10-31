@@ -89,7 +89,7 @@ jobs:
         platform: ["arm64","amd64"]
         # These are our target environments
         # FIXME: renovate rule for this would be awesome
-        chroot: ["fedora-43", "fedora-44", "epel-10"]
+        chroot: ["fedora-44", "fedora-45", "epel-10"]
         spec: ${{ fromJson(needs.changed_files.outputs.specs) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
