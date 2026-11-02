@@ -29,8 +29,6 @@ This package contains the %{kmod_name} kernel module.
 %prep
 %{?kmodtool_check}
 
-kmodtool --target %{_target_cpu} --kmodname %{kmod_name} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null
-
 %autosetup -c %{name}-%{version}
 
 for kernel_version in %{?kernel_versions}; do
