@@ -1,5 +1,5 @@
 Name:           uupd
-Version:        1.5.2
+Version:        1.5.6
 Release:        1%{?dist}
 Summary:       Centralized update service/checker made for Universal Blue
 Vendor:        ublue-os
