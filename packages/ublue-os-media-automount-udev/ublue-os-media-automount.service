@@ -2,9 +2,10 @@
 Description=Mount partitons automaticaly
 After=local-fs.target
 Requires=local-fs.target
+Wants=plymouth-quit-wait.service
+After=plymouth-quit-wait.service
 
 [Service]
-ExecStartPre=/usr/bin/udevadm settle --timeout=15
 ExecStart=/usr/libexec/ublue-os-media-automount.py
 RemainAfterExit=yes
 
