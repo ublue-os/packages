@@ -1,6 +1,6 @@
 Name:           ublue-os-media-automount-udev
 Vendor:         ublue-os
-Version:        0.20
+Version:        0.21
 Release:        1%{?dist}
 Summary:        udev rules to mount non-removable disk partitions
 
