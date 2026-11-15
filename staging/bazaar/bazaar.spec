@@ -3,7 +3,7 @@
 Name:           bazaar
 # renovate: datasource=gitlab-releases depName=World/bazaar registryUrl=https://gitlab.gnome.org
 Version:        0.10.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Flatpak-centric software center and app store
 
 License:        GPL-3.0-only
@@ -85,12 +85,14 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 %{_bindir}/%{name}-daemon
 %{_bindir}/%{name}-dl-worker
 %{_userunitdir}/%{appid}.service
+%{_datadir}/dbus-1/services/%{appid}.service
 %{_datadir}/dbus-1/services/%{appid}.SearchProvider.service
 %{_datadir}/glib-2.0/schemas/%{appid}.gschema.xml
 %{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
 %{_datadir}/icons/hicolor/symbolic/apps/%{appid}-symbolic.svg
 %{_datadir}/metainfo/%{appid}.metainfo.xml
 %{_datadir}/gnome-shell/search-providers/%{appid}.search-provider.ini
+%{_libdir}/%{name}/
 %{_libdir}/libbge.so.0*
 
 %changelog
