@@ -2,7 +2,7 @@
 
 Name:           bazaar
 # renovate: datasource=gitlab-releases depName=World/bazaar registryUrl=https://gitlab.gnome.org
-Version:        0.9.4
+Version:        0.10.0
 Release:        5%{?dist}
 Summary:        Flatpak-centric software center and app store
 
@@ -94,8 +94,8 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 
 %changelog
 * Wed Aug 5 2026 Kyle Gospodnetich <me@kylegospodneti.ch>
-- Fix file list for 0.9.2: bazaar-refresh-worker is now a bazaar subcommand,
-  add bazaar-daemon, rename D-Bus service to *.SearchProvider.service
+- Fix file list for 0.9.2: bazaar-refresh-worker is now a bazaar subcommand
+- Add bazaar-daemon, rename D-Bus service to *.SearchProvider.service
 - Add appstream, libsystemd, xmllint and PyGObject build dependencies
 - Pin minimum versions for all upstream-declared dependencies
 
