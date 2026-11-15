@@ -39,6 +39,7 @@ BuildRequires:  pkgconfig(md4c) >= 0.5.1
 BuildRequires:  pkgconfig(libproxy-1.0) >= 0.5
 BuildRequires:  pkgconfig(malcontent-0) >= 0.12.0
 BuildRequires:  pkgconfig(libsystemd) >= 245
+BuildRequires:  pkgconfig(dbus-1)
 
 %description
 A new app store with a focus on discovering and installing
