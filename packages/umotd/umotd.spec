@@ -4,7 +4,7 @@ Release:        1%{?dist}
 Summary:        Translatable MOTD made for Universal Blue
 Vendor:         projectbluefin
 URL:            https://github.com/%{vendor}/%{name}
-Source0:        %{url}/archive/refs/tags/v{version}.tar.gz
+Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 License:        Apache-2.0
 
 BuildRequires:  golang
