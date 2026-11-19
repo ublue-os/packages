@@ -11,14 +11,20 @@ Version: 1.8.2.5
 
 %forgemeta
 
-Release: %autorelease
-Summary: Another tool for containerized command line environments on Linux 
+Release: 100.ublue
+Summary: Another tool for containerized command line environments on Linux
 # Automatically converted from old format: GPLv3 - review is highly recommended.
 License: GPL-3.0-only
 URL:     %{forgeurl}
 Source:  %{forgesource}
 
 BuildArch: noarch
+
+# Downstream only changes
+# https://github.com/89luca89/distrobox/pull/2086
+Patch1001:      fix-ro-rslave-mount-flags.patch
+# https://github.com/89luca89/distrobox/pull/2256
+Patch1002:      fix-runc-detection.patch
 
 Requires: (podman or %{_bindir}/docker)
 Requires: %{_bindir}/basename
@@ -30,14 +36,14 @@ Requires: hicolor-icon-theme
 Suggests: bash-completions
 
 %description
-Use any linux distribution inside your terminal. Distrobox uses podman 
-or docker to create containers using the linux distribution of your 
-choice. Created container will be tightly integrated with the host, 
-allowing to share the HOME directory of the user, external storage, 
+Use any linux distribution inside your terminal. Distrobox uses podman
+or docker to create containers using the linux distribution of your
+choice. Created container will be tightly integrated with the host,
+allowing to share the HOME directory of the user, external storage,
 external usb devices and graphical apps (X11/Wayland) and audio.
 
 %prep
-%autosetup
+%autosetup -p1
 
 %build
 
