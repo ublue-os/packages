@@ -1,0 +1,34 @@
+From 11ddbc0c9e52888b8b80ce384609479dda4b41e0 Mon Sep 17 00:00:00 2001
+From: Fred Fu <moonsolo@gmail.com>
+Date: Sat, 2 May 2026 15:41:21 -0400
+Subject: [PATCH] fix the flags for read-only and recursive slave mount
+
+closes #2083
+---
+ distrobox-create | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/distrobox-create b/distrobox-create
+index f1ccfb01c6..57e0ca2a20 100755
+--- a/distrobox-create
++++ b/distrobox-create
+@@ -678,8 +678,10 @@ generate_create_command()
+ 	# so rslave/rshared bind propagation is not supported.
+ 	if [ "$(uname -s)" = "Darwin" ]; then
+ 		rslave=""
++		rorslave=":ro"
+ 	else
+ 		rslave=":rslave"
++		rorslave=":ro,rslave"
+ 	fi
+ 
+ 	# Set the container hostname the same as the container name.
+@@ -751,7 +753,7 @@ generate_create_command()
+ 				tr ',' '\n' | grep -q "^ro$"; then
+ 
+ 				result_command="${result_command}
+-				--volume ${rootdir}:/run/host${rootdir}:ro${rslave}"
++				--volume ${rootdir}:/run/host${rootdir}${rorslave}"
+ 				continue
+ 			fi
+ 
