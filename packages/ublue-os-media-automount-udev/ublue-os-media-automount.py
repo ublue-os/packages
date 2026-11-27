@@ -15,17 +15,18 @@ FS_MAPPINGS = {
 
 
 @functools.cache
-def partuuids_in_fstab() -> set[str]:
-    partuuids: set[str] = set()
+def ids_in_fstab() -> set[str]:
+    ids: set[str] = set()
 
     cmd_out = subprocess.check_output(
-        ["findmnt", "-s", "--json", "--output=FSTYPE,OPTIONS,PARTUUID"], text=True
+        ["findmnt", "-s", "--json", "--output=FSTYPE,OPTIONS,UUID,PARTUUID"], text=True
     ).strip()
     filesystems: list[Any] = json.loads(cmd_out)["filesystems"]
     for filesystem in filesystems:
-        partuuids.add(filesystem["partuuid"])
+        # Entries without an id (tmpfs, unresolved devices) are null, never add them
+        ids.update(i for i in (filesystem["uuid"], filesystem["partuuid"]) if i)
 
-    return partuuids
+    return ids
 
 
 def main() -> None:
@@ -40,7 +41,7 @@ def main() -> None:
             "--noheadings",
             "--paths",
             "--list",
-            "--output=NAME,FSTYPE,TYPE,HOTPLUG,MOUNTPOINTS,LABEL,PARTLABEL,PARTUUID",
+            "--output=NAME,FSTYPE,TYPE,HOTPLUG,MOUNTPOINTS,LABEL,PARTLABEL,UUID,PARTUUID",
             "--json",
         ],
         text=True,
@@ -49,21 +50,23 @@ def main() -> None:
     # Read the json output
     blockdevices: list[Any] = json.loads(cmd_out)["blockdevices"]
 
-    # Filter out anything that isnt a partition
-    blockdevices = [x for x in blockdevices if x["type"] == "part"]
+    # Filter out anything that isnt a partition or an md array (TYPE raid0, raid1...)
+    blockdevices = [
+        x for x in blockdevices if x["type"] == "part" or x["type"].startswith("raid")
+    ]
 
     def filter_dev(block_dev: dict) -> bool:
-        if block_dev["type"] != "part":
-            print(f"Skipping {block_dev['name']}: not a partition")
-            return False
-
         if not any(
             [
                 fnmatch.fnmatch(block_dev["name"].split("/")[-1], pat)
-                for pat in ["sd[a-z][0-9]", "nvme[0-9]n[0-9]p[0-9]"]
+                for pat in (
+                    ["sd[a-z][0-9]", "nvme[0-9]n[0-9]p[0-9]"]
+                    if block_dev["type"] == "part"
+                    else ["md[0-9]*"]
+                )
             ]
         ):
-            print(f"Skipping {block_dev['name']}: not an SSD or NVME device")
+            print(f"Skipping {block_dev['name']}: not an SSD, NVME or md device")
             return False
 
         if block_dev["fstype"] not in FS_MAPPINGS.keys():
@@ -72,7 +75,8 @@ def main() -> None:
             )
             return False
 
-        if block_dev["partuuid"] in partuuids_in_fstab():
+        # An md array has no partuuid, match its filesystem uuid instead
+        if (block_dev["partuuid"] or block_dev["uuid"]) in ids_in_fstab():
             print(f"Skipping {block_dev['name']}: already in fstab")
             return False
 
