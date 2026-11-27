@@ -2,8 +2,8 @@
 
 Name:           bazaar
 # renovate: datasource=gitlab-releases depName=World/bazaar registryUrl=https://gitlab.gnome.org
-Version:        0.9.4
-Release:        5%{?dist}
+Version:        0.10.0
+Release:        6%{?dist}
 Summary:        Flatpak-centric software center and app store
 
 License:        GPL-3.0-only
@@ -39,6 +39,7 @@ BuildRequires:  pkgconfig(md4c) >= 0.5.1
 BuildRequires:  pkgconfig(libproxy-1.0) >= 0.5
 BuildRequires:  pkgconfig(malcontent-0) >= 0.12.0
 BuildRequires:  pkgconfig(libsystemd) >= 245
+BuildRequires:  pkgconfig(dbus-1)
 
 %description
 A new app store with a focus on discovering and installing
@@ -84,18 +85,20 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{appid}.desktop
 %{_bindir}/%{name}-daemon
 %{_bindir}/%{name}-dl-worker
 %{_userunitdir}/%{appid}.service
+%{_datadir}/dbus-1/services/%{appid}.service
 %{_datadir}/dbus-1/services/%{appid}.SearchProvider.service
 %{_datadir}/glib-2.0/schemas/%{appid}.gschema.xml
 %{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
 %{_datadir}/icons/hicolor/symbolic/apps/%{appid}-symbolic.svg
 %{_datadir}/metainfo/%{appid}.metainfo.xml
 %{_datadir}/gnome-shell/search-providers/%{appid}.search-provider.ini
+%{_libdir}/%{name}/
 %{_libdir}/libbge.so.0*
 
 %changelog
 * Wed Aug 5 2026 Kyle Gospodnetich <me@kylegospodneti.ch>
-- Fix file list for 0.9.2: bazaar-refresh-worker is now a bazaar subcommand,
-  add bazaar-daemon, rename D-Bus service to *.SearchProvider.service
+- Fix file list for 0.9.2: bazaar-refresh-worker is now a bazaar subcommand
+- Add bazaar-daemon, rename D-Bus service to *.SearchProvider.service
 - Add appstream, libsystemd, xmllint and PyGObject build dependencies
 - Pin minimum versions for all upstream-declared dependencies
 
